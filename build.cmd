@@ -1,9 +1,10 @@
 @echo off
 cls
 
-dotnet restore build.proj
+SET TOOL_PATH=.fake
 
-IF NOT EXIST build.fsx (
-  fake run init.fsx
+IF NOT EXIST "%TOOL_PATH%\fake.exe" (
+  dotnet tool install fake-cli --tool-path ./%TOOL_PATH%
 )
-fake build %*
+
+"%TOOL_PATH%/fake.exe" run build.fsx %*
