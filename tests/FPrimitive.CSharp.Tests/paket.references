@@ -1,0 +1,6 @@
+﻿FSharp.Core
+
+group Test
+    Xunit
+    Xunit.Runner.VisualStudio
+    Microsoft.NET.Test.Sdk

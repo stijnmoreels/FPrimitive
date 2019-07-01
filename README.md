@@ -8,6 +8,6 @@
 
 ## Build Status
 
-| Mono                                                                                                                                      | .NET                                                                                                                                                   |
-| ----------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| [![Mono CI Build Status](https://travis-ci.org/stijnmoreels/FPrimitive.svg?branch=master)](https://travis-ci.org/stijnmoreels/FPrimitive) | [![.NET Build status](https://ci.appveyor.com/api/projects/status/2ijw1am46pyhqnur?svg=true)](https://ci.appveyor.com/project/stijnmoreels/fprimitive) |
+| Mono                                                                                                                              | .NET                                                                                                                                                   |
+| --------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| [![Build Status](https://travis-ci.org/stijnmoreels/FPrimitive.svg?branch=master)](https://travis-ci.org/stijnmoreels/FPrimitive) | [![.NET Build status](https://ci.appveyor.com/api/projects/status/2ijw1am46pyhqnur?svg=true)](https://ci.appveyor.com/project/stijnmoreels/fprimitive) |

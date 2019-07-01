@@ -1,0 +1,1295 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doc>
+<assembly><name>FPrimitive</name></assembly>
+<members>
+<member name="M:FPrimitive.Untrust`1.tryGetValue``1(Microsoft.FSharp.Core.FSharpFunc{`0,Microsoft.FSharp.Core.FSharpResult{``0,Microsoft.FSharp.Collections.FSharpList{System.String}}})">
+<summary>
+ Tries to get the wrapped value out of the untrusted boundary by validating the value.
+</summary>
+</member>
+<member name="M:FPrimitive.Untrust`1.tryGetValue``1(Microsoft.FSharp.Core.FSharpFunc{`0,Microsoft.FSharp.Core.FSharpOption{``0}})">
+<summary>
+ Tries to get the wrapped value out of the untrusted boundary by validating the value.
+</summary>
+</member>
+<member name="M:FPrimitive.Untrust`1.tryGetValue(Microsoft.FSharp.Core.FSharpFunc{`0,System.Boolean})">
+<summary>
+ Tries to get the wrapped value out of the untrusted boundary by validating the value.
+</summary>
+</member>
+<member name="M:FPrimitive.Untrust`1.TryGetValue(System.Func{`0,System.Boolean},Microsoft.FSharp.Core.byref{`0,Microsoft.FSharp.Core.ByRefKinds.Out})">
+<summary>
+ Tries to get the wrapped value out of the untrusted boundary by validating the value.
+</summary>
+</member>
+<member name="T:FPrimitive.Untrust`1">
+<summary>
+ Representation of an untrusted value that should be validated first before it can be used. 
+</summary>
+</member>
+<member name="M:FPrimitive.Disposable`1.tryGetValue">
+<summary>
+ Tries to read the possible disposed value.
+</summary>
+</member>
+<member name="M:FPrimitive.Disposable`1.TryGetValue(Microsoft.FSharp.Core.byref{`0,Microsoft.FSharp.Core.ByRefKinds.Out})">
+<summary>
+ Tries to read the possible disposed value.
+</summary>
+</member>
+<member name="M:FPrimitive.Disposable`1.GetValue">
+<summary>
+ Reads the possible disposed value, throws an `ObjectDisposedException` otherwise.
+</summary>
+</member>
+<member name="T:FPrimitive.Disposable`1">
+<summary>
+ Representation of a value that can be disposed/removed any time.
+</summary>
+</member>
+<member name="M:FPrimitive.ReadOnce`1.tryGetValue">
+<summary>
+ Tries to read the read-once value.
+</summary>
+</member>
+<member name="M:FPrimitive.ReadOnce`1.TryGetValue(Microsoft.FSharp.Core.byref{`0,Microsoft.FSharp.Core.ByRefKinds.Out})">
+<summary>
+ Tries to reads the read-once value and throws an `AlreadyReadException` when the value was already been read.
+</summary>
+</member>
+<member name="M:FPrimitive.ReadOnce`1.GetValue">
+<summary>
+ Reads the read-once value and throws an `AlreadyReadException` when the value was already been read.
+</summary>
+</member>
+<member name="T:FPrimitive.ReadOnce`1">
+<summary>
+ Representation of a value that can only be read once.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.ValidateThrow``2(FPrimitive.Spec{``0},``0,System.String)">
+<summary>
+ Validate the specified value to the domain specification.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.Validate``1(FPrimitive.Spec{``0},``0)">
+<summary>
+ Validate the specified value to the domain specification.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.TryCreateModel``2(FPrimitive.Spec{``0},``0,System.Func{``0,``1},Microsoft.FSharp.Core.byref{``1,Microsoft.FSharp.Core.ByRefKinds.Out})">
+<summary>
+ Create a domain model after the validate of the specifed value to the domain specification succeeds.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.Regex(FPrimitive.Spec{System.String},System.String,System.String)">
+<summary>
+ Adds a requirement to check if the value is a match to the specified regular expression pattern.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.Regex``1(FPrimitive.Spec{``0},System.Func{``0,System.String},System.String,System.String)">
+<summary>
+ Adds a requirement for the result of the specified mapping, 
+ which defines that the result should be a match to the specified regular expression pattern.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.NotWhiteSpace(FPrimitive.Spec{System.String},System.String)">
+<summary>
+ Adds a requirement to check if the string is a not-whitespace string.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.NotWhiteSpace``1(FPrimitive.Spec{``0},System.Func{``0,System.String},System.String)">
+<summary>
+ Adds a requirement for the result of the specified mapping, 
+ which defines that the result should not be a not-whitespace string.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.NotNullOrEmpty``1(FPrimitive.Spec{``0},System.Func{``0,System.String},System.String)">
+<summary>
+ Adds a requirement for the result of the specified mapping, 
+ which defines that the result should be a not-null, not-empty string.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.NotNull``1(FPrimitive.Spec{``0},System.String)">
+<summary>
+ Adds a requirement to check for not `null`.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.NotNull``2(FPrimitive.Spec{``0},System.Func{``0,``1},System.String)">
+<summary>
+ Adds a requirement for the result of the specified mapping, 
+ which defines that the result should not be `null`.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.NotEqual``1(FPrimitive.Spec{``0},``0,System.String)">
+<summary>
+ Adds a requirement to check no equality to a specified value.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.NotEqual``2(FPrimitive.Spec{``0},System.Func{``0,``1},``1,System.String)">
+<summary>
+ Adds a requirement for the result of the specified mapping, 
+ which defines that the result should not be equal to the specified value.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.NotEmpty``1(FPrimitive.Spec{``0},System.Func{``0,System.String},System.String)">
+<summary>
+ Adds a requirement for the result of the specified mapping, 
+ which defines that the result should be a non-empty string.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.NotEmpty(FPrimitive.Spec{System.String},System.String)">
+<summary>
+ Adds a requirement to check for non-empty string.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.NonEmpty``2(FPrimitive.Spec{``0},System.String)">
+<summary>
+ Adds a requirement to check for non-empty sequences.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.NonEmpty``3(FPrimitive.Spec{``0},System.Func{``0,``1},System.String)">
+<summary>
+ Adds a requirement for the result of the specified mapping, 
+ which defines that the result should be a non-empty sequence.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.LessThanOrEqual``1(FPrimitive.Spec{``0},``0,System.String)">
+<summary>
+ Adds a requirement to check if the value is less than or equal to (`limit &gt;= value`) to the specified limit.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.LessThanOrEqual``2(FPrimitive.Spec{``0},System.Func{``0,``1},``1,System.String)">
+<summary>
+ Adds a requirement for the result of the specified mapping, 
+ which defines that the result should be less than or equal to (`limit &gt;= value`) the specified limit.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.LessThan``1(FPrimitive.Spec{``0},``0,System.String)">
+<summary>
+ Adds a requirement to check if the value is less than (`limit &gt; value`) the specified limit.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.LessThan``2(FPrimitive.Spec{``0},System.Func{``0,``1},``1,System.String)">
+<summary>
+ Adds a requirement for the result of the specified mapping, 
+ which defines that the result should be less than (`limit &gt; value`) the specified limit.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.LengthMin``2(FPrimitive.Spec{``0},System.Int32,System.String)">
+<summary>
+ Adds a requirement for the sequence to check if the sequence has a minimum length.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.LengthMin``3(FPrimitive.Spec{``0},System.Func{``0,``1},System.Int32,System.String)">
+<summary>
+ Adds a requirement for the resulting sequence of the specified mapping, 
+ which defines that the sequence should have a minimum length.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.LengthMax``2(FPrimitive.Spec{``0},System.Int32,System.String)">
+<summary>
+ Adds a requirement for the sequence to check if the sequence has a maximum length.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.LengthMax``3(FPrimitive.Spec{``0},System.Func{``0,``1},System.Int32,System.String)">
+<summary>
+ Adds a requirement for the resulting sequence of the specified mapping, 
+ which defines that the sequence should have a maximum length.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.LengthBetween``2(FPrimitive.Spec{``0},System.Int32,System.Int32,System.String)">
+<summary>
+ Adds a requirement for the sequence to check if the sequence has a length within the specified range (min, max).
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.LengthBetween``3(FPrimitive.Spec{``0},System.Func{``0,``1},System.Int32,System.Int32,System.String)">
+<summary>
+ Adds a requirement for the resulting sequence of the specified mapping, 
+ which defines that the sequence should have a length within the specified range (min, max).
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.Length``1(FPrimitive.Spec{System.Collections.Generic.IEnumerable{``0}},System.Int32,System.String)">
+<summary>
+ Adds a requirement for the sequence to check if the length matches the specified length.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.Length``2(FPrimitive.Spec{``0},System.Func{``0,System.Collections.Generic.ICollection{``1}},System.Int32,System.String)">
+<summary>
+ Adds a requirement for the resulting sequence of the specified mapping, 
+ which defines that the sequence should have a length of the specified length.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.Length``2(FPrimitive.Spec{``0},System.Func{``0,``1[]},System.Int32,System.String)">
+<summary>
+ Adds a requirement for the resulting sequence of the specified mapping, 
+ which defines that the sequence should have a length of the specified length.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.Length``2(FPrimitive.Spec{``0},System.Func{``0,System.Collections.Generic.IList{``1}},System.Int32,System.String)">
+<summary>
+ Adds a requirement for the resulting sequence of the specified mapping, 
+ which defines that the sequence should have a length of the specified length.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.Length``2(FPrimitive.Spec{``0},System.Func{``0,System.Collections.Generic.IEnumerable{``1}},System.Int32,System.String)">
+<summary>
+ Adds a requirement for the resulting sequence of the specified mapping, 
+ which defines that the sequence should have a length of the specified length.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.IsType``1(FPrimitive.Spec{System.Object},System.String)">
+<summary>
+ Adds a requirement to check if the value is an instance of the specified type `T`.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.IsType``1(FPrimitive.Spec{System.Object},System.Func{System.Object,System.Object},System.String)">
+<summary>
+ Adds a requirement for the result of the specified mapping, 
+ which defines that the result should an instance of the specified type `T`.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.IsSatisfiedBy``1(FPrimitive.Spec{``0},``0)">
+<summary>
+ Determine whether the specified value satisfies the domain specification.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.InclusiveBetween``2(FPrimitive.Spec{``0},System.Func{``0,``1},``1,``1,System.String)">
+<summary>
+ Adds a requirement for the result of the specified mapping, 
+ which defines that the result should be inclusive between (`min &lt;= value &amp;&amp; value &gt;= max`) the specified range.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.InclusiveBetween``1(FPrimitive.Spec{``0},``0,System.String,``0)">
+<summary>
+ Adds a requirement to check if the value is inclusive between (`min &lt;= value &amp;&amp; value &gt;= max`) the specified range.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.GreaterThanOrEqual``1(FPrimitive.Spec{``0},``0,System.String)">
+<summary>
+ Adds a requirement to check if the value is greater than or equal to (`limit &lt;= value`) the specified limit.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.GreaterThanOrEqual``2(FPrimitive.Spec{``0},System.Func{``0,``1},``1,System.String)">
+<summary>
+ Adds a requirement for the result of the specified mapping, 
+ which defines that the result should be greater than or equal to (`limit &lt;= value`) the specified limit.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.GreaterThan``1(FPrimitive.Spec{``0},``0,System.String)">
+<summary>
+ Adds a requirement to check if the value is greater than (`limit &lt; value`) the specified limit.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.GreaterThan``2(FPrimitive.Spec{``0},System.Func{``0,``1},``1,System.String)">
+<summary>
+ Adds a requirement for the result of the specified mapping, 
+ which defines that the result should be greater than (`limit &lt; value`) the specified limit.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.ExclusiveBetween``2(FPrimitive.Spec{``0},System.Func{``0,``1},``1,``1,System.String)">
+<summary>
+ Adds a requirement for the result of the specified mapping, 
+ which defines that the result should be exclusive between (`min &lt; value &amp;&amp; value &gt; max`) the specified range.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.ExclusiveBetween``1(FPrimitive.Spec{``0},``0,``0,System.String)">
+<summary>
+ Adds a requirement to check if the value is exclusive between (`min &lt; value &amp;&amp; value &gt; max`) the specified range.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.Equal``1(FPrimitive.Spec{``0},``0,System.String)">
+<summary>
+ Adds a requirement to check equality to a specified value.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.Equal``2(FPrimitive.Spec{``0},System.Func{``0,``1},``1,System.String)">
+<summary>
+ Adds a requirement for the result of the specified mapping, 
+ which defines that the result should be equal to the specified value.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.CreateModelOrThrow``2(FPrimitive.Spec{System.Object},System.Object,System.Func{System.Object,System.Object},System.String)">
+<summary>
+ Create a domain model after the validate of the specifed value to the domain specification succeeds.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.CreateModelOrThrow``3(FPrimitive.Spec{``0},``0,System.Func{``0,``1},System.String)">
+<summary>
+ Create a domain model after the validate of the specifed value to the domain specification succeeds.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.CreateModel``2(FPrimitive.Spec{``0},``0,System.Func{``0,``1})">
+<summary>
+ Create a domain model after the validate of the specifed value to the domain specification succeeds.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.Cascade``1(FPrimitive.Spec{``0},FPrimitive.CascadeMode)">
+<summary>
+ Change the way the validation of requirements should happen.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.All``2(FPrimitive.Spec{``0},System.Func{``1,System.Boolean},System.String)">
+<summary>
+ Adds a requirement for the sequence to check that all the elements of the sequence satisfy the specified predicate.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.All``3(FPrimitive.Spec{``0},System.Func{``0,``1},System.Func{``2,System.Boolean},System.String)">
+<summary>
+ Adds a requirement for the resulting sequence of the specified mapping, 
+ which defines that all elements of the sequence should satisfy the specified predicate.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.Add``1(FPrimitive.Spec{``0},System.Func{``0,System.Boolean},System.String)">
+<summary>
+ Adds a custom requirement to the specification.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.Add``1(FPrimitive.Spec{``0},System.Func{``0,System.ValueTuple{System.Boolean,System.String}})">
+<summary>
+ Adds a custom requirement to the specification.
+</summary>
+</member>
+<member name="T:FPrimitive.SpecExtensions">
+<summary>
+ Extensions on the `Spec&lt;_&gt;` type to use in C# context.
+</summary>
+</member>
+<member name="P:FPrimitive.ValidationResult`1.Value">
+<summary>
+ Gets the value that was validated (possible `null` when the validation failed).
+</summary>
+</member>
+<member name="P:FPrimitive.ValidationResult`1.IsValid">
+<summary>
+ Gets a value indicating whether the validation succeeded.
+</summary>
+</member>
+<member name="P:FPrimitive.ValidationResult`1.Errors">
+<summary>
+ Gets the series of validation errors that describe to what domain requirements the validated value doesn&apos;t satisfy.
+</summary>
+</member>
+<member name="T:FPrimitive.ValidationResult`1">
+<summary>
+ Result type when a value is validated against a domain specification `Spec&lt;_&gt;`.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecBuilder`2.RegexOf``1(FPrimitive.Spec{``0},Microsoft.FSharp.Core.FSharpFunc{``0,System.String},System.String,System.String)">
+<summary>
+ Adds a requirement for the result of the specified mapping, 
+ which defines that the result should be a match to the specified regular expression pattern.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecBuilder`2.Regex(FPrimitive.Spec{System.String},System.String,System.String)">
+<summary>
+ Adds a requirement to check if the value is a match to the specified regular expression pattern.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecBuilder`2.NotWhiteSpaceOf``1(FPrimitive.Spec{``0},Microsoft.FSharp.Core.FSharpFunc{``0,System.String},System.String)">
+<summary>
+ Adds a requirement for the result of the specified mapping, 
+ which defines that the result should not be a not-whitespace string.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecBuilder`2.NotWhiteSpace(FPrimitive.Spec{System.String},System.String)">
+<summary>
+ Adds a requirement to check if the string is a not-whitespace string.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecBuilder`2.NotNullOrWhiteSpaceOf``1(FPrimitive.Spec{``0},Microsoft.FSharp.Core.FSharpFunc{``0,System.String},System.String)">
+<summary>
+ Adds a requirement for the result of the specified mapping, 
+ which defines that the result should be a not-null, not-empty, not-whitespace string.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecBuilder`2.NotNullOrWhiteSpace(FPrimitive.Spec{System.String},System.String)">
+<summary>
+ Adds a requirement to check if the string is a not-null, not-empty, not-whitespace string.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecBuilder`2.NotNullOrEmptyOf``1(FPrimitive.Spec{``0},Microsoft.FSharp.Core.FSharpFunc{``0,System.String},System.String)">
+<summary>
+ Adds a requirement for the result of the specified mapping, 
+ which defines that the result should be a not-null, not-empty string.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecBuilder`2.NotNullOrEmpty(FPrimitive.Spec{System.String},System.String)">
+<summary>
+ Adds a requirement to check if the string is a not-null, not-empty string.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecBuilder`2.NotNullOf``2(FPrimitive.Spec{``0},Microsoft.FSharp.Core.FSharpFunc{``0,``1},System.String)">
+<summary>
+ Adds a requirement for the result of the specified mapping, 
+ which defines that the result should not be `null`.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecBuilder`2.NotNull``1(FPrimitive.Spec{``0},System.String)">
+<summary>
+ Adds a requirement to check for not `null`.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecBuilder`2.NotEqualOf``2(FPrimitive.Spec{``0},Microsoft.FSharp.Core.FSharpFunc{``0,``1},``1,System.String)">
+<summary>
+ Adds a requirement for the result of the specified mapping, 
+ which defines that the result should not be equal to the specified value.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecBuilder`2.NotEqual``1(FPrimitive.Spec{``0},``0,System.String)">
+<summary>
+ Adds a requirement to check no equality to a specified value.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecBuilder`2.NotEmptyOf``1(FPrimitive.Spec{``0},Microsoft.FSharp.Core.FSharpFunc{``0,System.String},System.String)">
+<summary>
+ Adds a requirement for the result of the specified mapping, 
+ which defines that the result should be a non-empty string.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecBuilder`2.NotEmpty(FPrimitive.Spec{System.String},System.String)">
+<summary>
+ Adds a requirement to check for non-empty string.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecBuilder`2.NonEmptyOf``3(FPrimitive.Spec{``0},Microsoft.FSharp.Core.FSharpFunc{``0,``1},System.String)">
+<summary>
+ Adds a requirement for the result of the specified mapping, 
+ which defines that the result should be a non-empty sequence.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecBuilder`2.NonEmpty``2(FPrimitive.Spec{``0},System.String)">
+<summary>
+ Adds a requirement to check for non-empty sequences.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecBuilder`2.LessThanOrEqualOf``2(FPrimitive.Spec{``0},Microsoft.FSharp.Core.FSharpFunc{``0,``1},``1,System.String)">
+<summary>
+ Adds a requirement for the result of the specified mapping, 
+ which defines that the result should be less than or equal to (`limit &gt;= value`) the specified limit.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecBuilder`2.LessThanOrEqual``1(FPrimitive.Spec{``0},``0,System.String)">
+<summary>
+ Adds a requirement to check if the value is less than or equal to (`limit &gt;= value`) to the specified limit.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecBuilder`2.LessThanOf``2(FPrimitive.Spec{``0},Microsoft.FSharp.Core.FSharpFunc{``0,``1},``1,System.String)">
+<summary>
+ Adds a requirement for the result of the specified mapping, 
+ which defines that the result should be less than (`limit &gt; value`) the specified limit.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecBuilder`2.LessThan``1(FPrimitive.Spec{``0},``0,System.String)">
+<summary>
+ Adds a requirement to check if the value is less than (`limit &gt; value`) the specified limit.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecBuilder`2.LengthOf``3(FPrimitive.Spec{``0},Microsoft.FSharp.Core.FSharpFunc{``0,``1},System.Int32,System.String)">
+<summary>
+ Adds a requirement for the resulting sequence of the specified mapping, 
+ which defines that the sequence should have a length of the specified length.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecBuilder`2.LengthMinOf``3(FPrimitive.Spec{``0},Microsoft.FSharp.Core.FSharpFunc{``0,``1},System.Int32,System.String)">
+<summary>
+ Adds a requirement for the resulting sequence of the specified mapping, 
+ which defines that the sequence should have a minimum length.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecBuilder`2.LengthMin``2(FPrimitive.Spec{``0},System.Int32,System.String)">
+<summary>
+ Adds a requirement for the sequence to check if the sequence has a minimum length.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecBuilder`2.LengthMaxOf``3(FPrimitive.Spec{``0},Microsoft.FSharp.Core.FSharpFunc{``0,``1},System.Int32,System.String)">
+<summary>
+ Adds a requirement for the resulting sequence of the specified mapping, 
+ which defines that the sequence should have a maximum length.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecBuilder`2.LengthMax``2(FPrimitive.Spec{``0},System.Int32,System.String)">
+<summary>
+ Adds a requirement for the sequence to check if the sequence has a maximum length.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecBuilder`2.LengthBetweenOf``3(FPrimitive.Spec{``0},Microsoft.FSharp.Core.FSharpFunc{``0,``1},System.Int32,System.Int32,System.String)">
+<summary>
+ Adds a requirement for the resulting sequence of the specified mapping, 
+ which defines that the sequence should have a length within the specified range (min, max).
+</summary>
+</member>
+<member name="M:FPrimitive.SpecBuilder`2.LengthBetween``2(FPrimitive.Spec{``0},System.Int32,System.Int32,System.String)">
+<summary>
+ Adds a requirement for the sequence to check if the sequence has a length within the specified range (min, max).
+</summary>
+</member>
+<member name="M:FPrimitive.SpecBuilder`2.Length``2(FPrimitive.Spec{``0},System.Int32,System.String)">
+<summary>
+ Adds a requirement for the sequence to check if the length matches the specified length.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecBuilder`2.IsTypeOf``1(FPrimitive.Spec{System.Object},Microsoft.FSharp.Core.FSharpFunc{System.Object,System.Object},System.String)">
+<summary>
+ Adds a requirement for the result of the specified mapping, 
+ which defines that the result should an instance of the specified type `T`.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecBuilder`2.IsType``1(FPrimitive.Spec{System.Object},System.String)">
+<summary>
+ Adds a requirement to check if the value is an instance of the specified type `T`.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecBuilder`2.InclusiveBetweenOf``2(FPrimitive.Spec{``0},Microsoft.FSharp.Core.FSharpFunc{``0,``1},``1,``1,System.String)">
+<summary>
+ Adds a requirement for the result of the specified mapping, 
+ which defines that the result should be inclusive between (`min &lt;= value &amp;&amp; value &gt;= max`) the specified range.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecBuilder`2.InclusiveBetween``1(FPrimitive.Spec{``0},``0,``0,System.String)">
+<summary>
+ Adds a requirement to check if the value is inclusive between (`min &lt;= value &amp;&amp; value &gt;= max`) the specified range.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecBuilder`2.GreaterThanOrEqualOf``2(FPrimitive.Spec{``0},Microsoft.FSharp.Core.FSharpFunc{``0,``1},``1,System.String)">
+<summary>
+ Adds a requirement for the result of the specified mapping, 
+ which defines that the result should be greater than or equal to (`limit &lt;= value`) the specified limit.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecBuilder`2.GreaterThanOrEqual``1(FPrimitive.Spec{``0},``0,System.String)">
+<summary>
+ Adds a requirement to check if the value is greater than or equal to (`limit &lt;= value`) the specified limit.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecBuilder`2.GreaterThanOf``2(FPrimitive.Spec{``0},Microsoft.FSharp.Core.FSharpFunc{``0,``1},``1,System.String)">
+<summary>
+ Adds a requirement for the result of the specified mapping, 
+ which defines that the result should be greater than (`limit &lt; value`) the specified limit.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecBuilder`2.GreaterThan``1(FPrimitive.Spec{``0},``0,System.String)">
+<summary>
+ Adds a requirement to check if the value is greater than (`limit &lt; value`) the specified limit.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecBuilder`2.ForallOf``3(FPrimitive.Spec{``0},Microsoft.FSharp.Core.FSharpFunc{``0,``1},Microsoft.FSharp.Core.FSharpFunc{``2,System.Boolean},System.String)">
+<summary>
+ Adds a requirement for the resulting sequence of the specified mapping, 
+ which defines that all elements of the sequence should satisfy the specified predicate.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecBuilder`2.ForAll``2(FPrimitive.Spec{``0},Microsoft.FSharp.Core.FSharpFunc{``1,System.Boolean},System.String)">
+<summary>
+ Adds a requirement for the sequence to check that all the elements of the sequence satisfy the specified predicate.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecBuilder`2.ExclusiveBetweenOf``2(FPrimitive.Spec{``0},Microsoft.FSharp.Core.FSharpFunc{``0,``1},``1,``1,System.String)">
+<summary>
+ Adds a requirement for the result of the specified mapping, 
+ which defines that the result should be exclusive between (`min &lt; value &amp;&amp; value &gt; max`) the specified range.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecBuilder`2.ExclusiveBetween``1(FPrimitive.Spec{``0},``0,``0,System.String)">
+<summary>
+ Adds a requirement to check if the value is exclusive between (`min &lt; value &amp;&amp; value &gt; max`) the specified range.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecBuilder`2.EqualOf``2(FPrimitive.Spec{``0},Microsoft.FSharp.Core.FSharpFunc{``0,``1},``1,System.String)">
+<summary>
+ Adds a requirement for the result of the specified mapping, 
+ which defines that the result should be equal to the specified value.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecBuilder`2.Equal``1(FPrimitive.Spec{``0},``0,System.String)">
+<summary>
+ Adds a requirement to check equality to a specified value.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecBuilder`2.Add``1(FPrimitive.Spec{``0},Microsoft.FSharp.Core.FSharpFunc{``0,System.Tuple{System.Boolean,System.String}})">
+<summary>
+ Adds a custom requirement to the specification.
+</summary>
+</member>
+<member name="T:FPrimitive.SpecBuilder`2">
+<summary>
+ Computation expression builder for the domain specification `Spec&lt;_&gt;`.
+</summary>
+</member>
+<member name="P:FPrimitive.Spec`1.Cascade">
+<summary>
+ Gets the mode in which the validation of the model should happen.
+</summary>
+</member>
+<member name="P:FPrimitive.Spec`1.Requirements">
+<summary>
+ Gets all the requirements of the domain specification that the model should uphold.
+</summary>
+</member>
+<member name="T:FPrimitive.Spec`1">
+<summary>
+ Representation of a domain specification that contains the validation for the model.
+</summary>
+</member>
+<member name="T:FPrimitive.Requirement`1">
+<summary>
+ Type alias for the validation requirement.
+</summary>
+</member>
+<member name="T:FPrimitive.CascadeMode.FirstFailure">
+<summary>
+ Stop at the first failed validation requirement.
+</summary>
+</member>
+<member name="T:FPrimitive.CascadeMode.Continue">
+<summary>
+ Continue even when a validation requirement failed.
+</summary>
+</member>
+<member name="T:FPrimitive.CascadeMode">
+<summary>
+ Representation on how the model should be validated.
+</summary>
+</member>
+<member name="P:FPrimitive.Access`2.Revokable">
+<summary>
+ Gets the function that revokes the access-controlled function from being further used.
+</summary>
+</member>
+<member name="P:FPrimitive.Access`2.Capability">
+<summary>
+ Gets the function that is decorated with access-controlled functionality.
+</summary>
+</member>
+<member name="T:FPrimitive.Access`2">
+<summary>
+ Represents an access-controlled function.
+</summary>
+</member>
+<member name="T:FPrimitive.AlreadyReadException">
+<summary>
+ Exception that gets thrown when a `ReadOnce&lt;_&gt;` instance was being read more than once.
+</summary>
+</member>
+<member name="T:FPrimitive.ValidationFailureException">
+<summary>
+ Exception thrown when the validation of a value against a domain specification failed.
+</summary>
+</member>
+<member name="M:FPrimitive.Untrust.getWithResult``2(Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.FSharpResult{``1,Microsoft.FSharp.Collections.FSharpList{System.String}}},FPrimitive.Untrust{``0})">
+<summary>
+ Tries to get the wrapped value out of the untrusted boundary by validating the value.
+</summary>
+</member>
+<member name="M:FPrimitive.Untrust.getWithOption``2(Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.FSharpOption{``1}},FPrimitive.Untrust{``0})">
+<summary>
+ Tries to get the wrapped value out of the untrusted boundary by validating the value.
+</summary>
+</member>
+<member name="M:FPrimitive.Untrust.getWith``1(Microsoft.FSharp.Core.FSharpFunc{``0,System.Boolean},FPrimitive.Untrust{``0})">
+<summary>
+ Tries to get the wrapped value out of the untrusted boundary by validating the value.
+</summary>
+</member>
+<member name="M:FPrimitive.Untrust.Create``1(``0)">
+<summary>
+ Wraps an untrusted value into a representation that only exposes untrusted values after validation.
+</summary>
+</member>
+<member name="T:FPrimitive.Untrust">
+<summary>
+ Representation of an untrusted value that should be validated first before it can be used. 
+</summary>
+</member>
+<member name="M:FPrimitive.ReadOnce.tryGetValueError``2(FPrimitive.ReadOnce{``0},``1)">
+<summary>
+ Tries to read the read-once value.
+</summary>
+</member>
+<member name="M:FPrimitive.ReadOnce.tryGetValue``1(FPrimitive.ReadOnce{``0})">
+<summary>
+ Tries to read the read-once value.
+</summary>
+</member>
+<member name="M:FPrimitive.ReadOnce.value``1(``0)">
+<summary>
+ Wraps a value into a value that can only be read once.
+</summary>
+</member>
+<member name="T:FPrimitive.ReadOnce">
+<summary>
+ Representation of a value that can only be read once.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExposure.specModel``2(Microsoft.FSharp.Core.FSharpFunc{``0,``1},``0)">
+<summary>
+ Computation builder to build an `Spec&lt;_&gt;` instance that gets validated a custom domain model when runned.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExposure.specUntrust``1(FPrimitive.Untrust{``0})">
+<summary>
+ Computation builder to build an `Spec,_&gt;` instance that gets validated from an `Untrust&lt;_&gt;` to a `Result&lt;_, string list&gt;` when runned.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExposure.specOption``1(``0)">
+<summary>
+ Computation builder to build an `Spec&lt;_&gt;` instance that gets validated to a `Option&lt;_&gt;` when runned.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExposure.specResult``1(``0)">
+<summary>
+ Computation builder to build an `Spec&lt;_&gt;` instance that gets validated to a `Result&lt;_, string list&gt;` when runned.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExposure.spec``1">
+<summary>
+ Computation builder to create an `Spec&lt;_&gt;` instance.
+</summary>
+</member>
+<member name="T:FPrimitive.SpecExposure">
+<summary>
+ Exposure values/functions for the `Spec&lt;_&gt;` type.
+</summary>
+</member>
+<member name="M:FPrimitive.Spec.isSatisfiedBy``1(``0,FPrimitive.Spec{``0})">
+<summary>
+ Determine whether the specified value satisfies the domain specification.
+</summary>
+</member>
+<member name="M:FPrimitive.Spec.createModel``2(Microsoft.FSharp.Core.FSharpFunc{``0,``1},``0,FPrimitive.Spec{``0})">
+<summary>
+ Create a domain model after the validate of the specifed value to the domain specification succeeds.
+</summary>
+</member>
+<member name="M:FPrimitive.Spec.validateOption``1(``0,FPrimitive.Spec{``0})">
+<summary>
+ Validate the specified value to the domain specification, discarding the error messages.
+</summary>
+</member>
+<member name="M:FPrimitive.Spec.validateUntrust``1(FPrimitive.Untrust{``0},FPrimitive.Spec{``0})">
+<summary>
+ Validate the specified untrusted value to the domain specification.
+</summary>
+</member>
+<member name="M:FPrimitive.Spec.validate``1(``0,FPrimitive.Spec{``0})">
+<summary>
+ Validate the specified value to the domain specification.
+</summary>
+</member>
+<member name="M:FPrimitive.Spec.cascade``1(FPrimitive.CascadeMode,FPrimitive.Spec{``0})">
+<summary>
+ Change the way the validation of requirements should happen.
+</summary>
+</member>
+<member name="M:FPrimitive.Spec.isType``1(System.String,FPrimitive.Spec{System.Object})">
+<summary>
+ Adds a requirement to check if the value is an instance of the specified type `T`.
+</summary>
+</member>
+<member name="M:FPrimitive.Spec.isTypeOf``1(Microsoft.FSharp.Core.FSharpFunc{System.Object,System.Object},System.String,FPrimitive.Spec{System.Object})">
+<summary>
+ Adds a requirement for the result of the specified mapping, 
+ which defines that the result should an instance of the specified type `T`.
+</summary>
+</member>
+<member name="M:FPrimitive.Spec.regex(System.String,System.String,FPrimitive.Spec{System.String})">
+<summary>
+ Adds a requirement to check if the value is a match to the specified regular expression pattern.
+</summary>
+</member>
+<member name="M:FPrimitive.Spec.regexOf``1(Microsoft.FSharp.Core.FSharpFunc{``0,System.String},System.String,System.String,FPrimitive.Spec{``0})">
+<summary>
+ Adds a requirement for the result of the specified mapping, 
+ which defines that the result should be a match to the specified regular expression pattern.
+</summary>
+</member>
+<member name="M:FPrimitive.Spec.exclusiveBetween``1(``0,``0,System.String,FPrimitive.Spec{``0})">
+<summary>
+ Adds a requirement to check if the value is exclusive between (`min &lt; value &amp;&amp; value &gt; max`) the specified range.
+</summary>
+</member>
+<member name="M:FPrimitive.Spec.exclusiveBetweenOf``2(Microsoft.FSharp.Core.FSharpFunc{``0,``1},``1,``1,System.String,FPrimitive.Spec{``0})">
+<summary>
+ Adds a requirement for the result of the specified mapping, 
+ which defines that the result should be exclusive between (`min &lt; value &amp;&amp; value &gt; max`) the specified range.
+</summary>
+</member>
+<member name="M:FPrimitive.Spec.inclusiveBetween``1(``0,``0,System.String,FPrimitive.Spec{``0})">
+<summary>
+ Adds a requirement to check if the value is inclusive between (`min &lt;= value &amp;&amp; value &gt;= max`) the specified range.
+</summary>
+</member>
+<member name="M:FPrimitive.Spec.inclusiveBetweenOf``2(Microsoft.FSharp.Core.FSharpFunc{``0,``1},``1,``1,System.String,FPrimitive.Spec{``0})">
+<summary>
+ Adds a requirement for the result of the specified mapping, 
+ which defines that the result should be inclusive between (`min &lt;= value &amp;&amp; value &gt;= max`) the specified range.
+</summary>
+</member>
+<member name="M:FPrimitive.Spec.greaterThanOrEqual``1(``0,System.String,FPrimitive.Spec{``0})">
+<summary>
+ Adds a requirement to check if the value is greater than or equal to (`limit &lt;= value`) the specified limit.
+</summary>
+</member>
+<member name="M:FPrimitive.Spec.greaterThanOrEqualOf``2(Microsoft.FSharp.Core.FSharpFunc{``0,``1},``1,System.String,FPrimitive.Spec{``0})">
+<summary>
+ Adds a requirement for the result of the specified mapping, 
+ which defines that the result should be greater than or equal to (`limit &lt;= value`) the specified limit.
+</summary>
+</member>
+<member name="M:FPrimitive.Spec.greaterThan``1(``0,System.String,FPrimitive.Spec{``0})">
+<summary>
+ Adds a requirement to check if the value is greater than (`limit &lt; value`) the specified limit.
+</summary>
+</member>
+<member name="M:FPrimitive.Spec.greaterThanOf``2(Microsoft.FSharp.Core.FSharpFunc{``0,``1},``1,System.String,FPrimitive.Spec{``0})">
+<summary>
+ Adds a requirement for the result of the specified mapping, 
+ which defines that the result should be greater than (`limit &lt; value`) the specified limit.
+</summary>
+</member>
+<member name="M:FPrimitive.Spec.lessThanOrEqual``1(``0,System.String,FPrimitive.Spec{``0})">
+<summary>
+ Adds a requirement to check if the value is less than or equal to (`limit &gt;= value`) to the specified limit.
+</summary>
+</member>
+<member name="M:FPrimitive.Spec.lessThanOrEqualOf``2(Microsoft.FSharp.Core.FSharpFunc{``0,``1},``1,System.String,FPrimitive.Spec{``0})">
+<summary>
+ Adds a requirement for the result of the specified mapping, 
+ which defines that the result should be less than or equal to (`limit &gt;= value`) the specified limit.
+</summary>
+</member>
+<member name="M:FPrimitive.Spec.lessThan``1(``0,System.String,FPrimitive.Spec{``0})">
+<summary>
+ Adds a requirement to check if the value is less than (`limit &gt; value`) the specified limit.
+</summary>
+</member>
+<member name="M:FPrimitive.Spec.lessThanOf``2(Microsoft.FSharp.Core.FSharpFunc{``0,``1},``1,System.String,FPrimitive.Spec{``0})">
+<summary>
+ Adds a requirement for the result of the specified mapping, 
+ which defines that the result should be less than (`limit &gt; value`) the specified limit.
+</summary>
+</member>
+<member name="M:FPrimitive.Spec.lengthBetween``2(System.Int32,System.Int32,System.String,FPrimitive.Spec{``0})">
+<summary>
+ Adds a requirement for the sequence to check if the sequence has a length within the specified range (min, max).
+</summary>
+</member>
+<member name="M:FPrimitive.Spec.lengthMax``2(System.Int32,System.String,FPrimitive.Spec{``0})">
+<summary>
+ Adds a requirement for the sequence to check if the sequence has a maximum length.
+</summary>
+</member>
+<member name="M:FPrimitive.Spec.lengthMin``2(System.Int32,System.String,FPrimitive.Spec{``0})">
+<summary>
+ Adds a requirement for the sequence to check if the sequence has a minimum length.
+</summary>
+</member>
+<member name="M:FPrimitive.Spec.length``2(System.Int32,System.String,FPrimitive.Spec{``0})">
+<summary>
+ Adds a requirement for the sequence to check if the length matches the specified length.
+</summary>
+</member>
+<member name="M:FPrimitive.Spec.lengthBetweenOf``3(Microsoft.FSharp.Core.FSharpFunc{``0,``1},System.Int32,System.Int32,System.String,FPrimitive.Spec{``0})">
+<summary>
+ Adds a requirement for the resulting sequence of the specified mapping, 
+ which defines that the sequence should have a length within the specified range (min, max).
+</summary>
+</member>
+<member name="M:FPrimitive.Spec.lengthMaxOf``3(Microsoft.FSharp.Core.FSharpFunc{``0,``1},System.Int32,System.String,FPrimitive.Spec{``0})">
+<summary>
+ Adds a requirement for the resulting sequence of the specified mapping, 
+ which defines that the sequence should have a maximum length.
+</summary>
+</member>
+<member name="M:FPrimitive.Spec.lengthMinOf``3(Microsoft.FSharp.Core.FSharpFunc{``0,``1},System.Int32,System.String,FPrimitive.Spec{``0})">
+<summary>
+ Adds a requirement for the resulting sequence of the specified mapping, 
+ which defines that the sequence should have a minimum length.
+</summary>
+</member>
+<member name="M:FPrimitive.Spec.lengthOf``3(Microsoft.FSharp.Core.FSharpFunc{``0,``1},System.Int32,System.String,FPrimitive.Spec{``0})">
+<summary>
+ Adds a requirement for the resulting sequence of the specified mapping, 
+ which defines that the sequence should have a length of the specified length.
+</summary>
+</member>
+<member name="M:FPrimitive.Spec.forall``2(Microsoft.FSharp.Core.FSharpFunc{``0,System.Boolean},System.String,FPrimitive.Spec{``1})">
+<summary>
+ Adds a requirement for the sequence to check that all the elements of the sequence satisfy the specified predicate.
+</summary>
+</member>
+<member name="M:FPrimitive.Spec.forallOf``3(Microsoft.FSharp.Core.FSharpFunc{``0,``1},Microsoft.FSharp.Core.FSharpFunc{``2,System.Boolean},System.String,FPrimitive.Spec{``0})">
+<summary>
+ Adds a requirement for the resulting sequence of the specified mapping, 
+ which defines that all elements of the sequence should satisfy the specified predicate.
+</summary>
+</member>
+<member name="M:FPrimitive.Spec.nonEmpty``2(System.String,FPrimitive.Spec{``0})">
+<summary>
+ Adds a requirement to check for non-empty sequences.
+</summary>
+</member>
+<member name="M:FPrimitive.Spec.nonEmptyOf``3(Microsoft.FSharp.Core.FSharpFunc{``0,``1},System.String,FPrimitive.Spec{``0})">
+<summary>
+ Adds a requirement for the result of the specified mapping, 
+ which defines that the result should be a non-empty sequence.
+</summary>
+</member>
+<member name="M:FPrimitive.Spec.notNullOrWhiteSpace(System.String,FPrimitive.Spec{System.String})">
+<summary>
+ Adds a requirement to check if the string is a not-null, not-empty, not-whitespace string.
+</summary>
+</member>
+<member name="M:FPrimitive.Spec.notNullOrWhiteSpaceOf``1(Microsoft.FSharp.Core.FSharpFunc{``0,System.String},System.String,FPrimitive.Spec{``0})">
+<summary>
+ Adds a requirement for the result of the specified mapping, 
+ which defines that the result should be a not-null, not-empty, not-whitespace string.
+</summary>
+</member>
+<member name="M:FPrimitive.Spec.notNullOrEmpty(System.String,FPrimitive.Spec{System.String})">
+<summary>
+ Adds a requirement to check if the string is a not-null, not-empty string.
+</summary>
+</member>
+<member name="M:FPrimitive.Spec.notNullOrEmptyOf``1(Microsoft.FSharp.Core.FSharpFunc{``0,System.String},System.String,FPrimitive.Spec{``0})">
+<summary>
+ Adds a requirement for the result of the specified mapping, 
+ which defines that the result should be a not-null, not-empty string.
+</summary>
+</member>
+<member name="M:FPrimitive.Spec.notWhiteSpace(System.String,FPrimitive.Spec{System.String})">
+<summary>
+ Adds a requirement to check if the string is a not-whitespace string.
+</summary>
+</member>
+<member name="M:FPrimitive.Spec.notWhiteSpaceOf``1(Microsoft.FSharp.Core.FSharpFunc{``0,System.String},System.String,FPrimitive.Spec{``0})">
+<summary>
+ Adds a requirement for the result of the specified mapping, 
+ which defines that the result should not be a not-whitespace string.
+</summary>
+</member>
+<member name="M:FPrimitive.Spec.notEmpty(System.String,FPrimitive.Spec{System.String})">
+<summary>
+ Adds a requirement to check for non-empty string.
+</summary>
+</member>
+<member name="M:FPrimitive.Spec.notEmptyOf``1(Microsoft.FSharp.Core.FSharpFunc{``0,System.String},System.String,FPrimitive.Spec{``0})">
+<summary>
+ Adds a requirement for the result of the specified mapping, 
+ which defines that the result should be a non-empty string.
+</summary>
+</member>
+<member name="M:FPrimitive.Spec.notNull``1(System.String,FPrimitive.Spec{``0})">
+<summary>
+ Adds a requirement to check for not `null`.
+</summary>
+</member>
+<member name="M:FPrimitive.Spec.notNullOf``2(Microsoft.FSharp.Core.FSharpFunc{``0,``1},System.String,FPrimitive.Spec{``0})">
+<summary>
+ Adds a requirement for the result of the specified mapping, 
+ which defines that the result should not be `null`.
+</summary>
+</member>
+<member name="M:FPrimitive.Spec.notEqual``1(``0,System.String,FPrimitive.Spec{``0})">
+<summary>
+ Adds a requirement to check no equality to a specified value.
+</summary>
+</member>
+<member name="M:FPrimitive.Spec.notEqualOf``2(Microsoft.FSharp.Core.FSharpFunc{``0,``1},``1,System.String,FPrimitive.Spec{``0})">
+<summary>
+ Adds a requirement for the result of the specified mapping, 
+ which defines that the result should not be equal to the specified value.
+</summary>
+</member>
+<member name="M:FPrimitive.Spec.equal``1(``0,System.String,FPrimitive.Spec{``0})">
+<summary>
+ Adds a requirement to check equality to a specified value.
+</summary>
+</member>
+<member name="M:FPrimitive.Spec.equalOf``2(Microsoft.FSharp.Core.FSharpFunc{``0,``1},``1,System.String,FPrimitive.Spec{``0})">
+<summary>
+ Adds a requirement for the result of the specified mapping, 
+ which defines that the result should be equal to the specified value.
+</summary>
+</member>
+<member name="M:FPrimitive.Spec.add``1(Microsoft.FSharp.Core.FSharpFunc{``0,System.Tuple{System.Boolean,System.String}},FPrimitive.Spec{``0})">
+<summary>
+ Adds a custom requirement to the specification.
+</summary>
+</member>
+<member name="M:FPrimitive.Spec.Of``1">
+<summary>
+ Start defininig a specification for a type.
+</summary>
+</member>
+<member name="T:FPrimitive.Spec">
+<summary>
+ Operations on the `Spec&lt;_&gt;` type. 
+</summary>
+</member>
+<member name="M:FPrimitive.Access.funcOption``2(System.String,Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.FSharpOption{``1}})">
+<summary>
+ Creates an access controlled function from a function, directly using the returned `Option`.
+</summary>
+</member>
+<member name="M:FPrimitive.Access.funcResult``2(Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.FSharpResult{``1,System.String}})">
+<summary>
+ Creates an access-controlled function from a function, directly using the returned `Result`.
+</summary>
+</member>
+<member name="M:FPrimitive.Access.func``2(Microsoft.FSharp.Core.FSharpFunc{``0,``1})">
+<summary>
+ Creates an access-controlled function from a custom function.
+</summary>
+</member>
+<member name="T:FPrimitive.Access">
+<summary>
+ Provides operations on the `Access&lt;_, _&gt;` type.
+</summary>
+</member>
+<member name="T:Microsoft.FSharp.Core.ResultBuilder">
+<summary>
+ Result computation expression.
+</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.ResultExposure.result">
+<summary>
+ Result computation expression
+</summary>
+</member>
+<member name="T:Microsoft.FSharp.Core.ResultExposure">
+<summary>
+ Result auto exposed values.
+</summary>
+</member>
+<member name="M:Microsoft.FSharp.Core.Result.mapBoth``4(Microsoft.FSharp.Core.FSharpFunc{``0,``1},Microsoft.FSharp.Core.FSharpFunc{``2,``3},Microsoft.FSharp.Core.FSharpResult{``0,``2})">
+<summary>
+ Transforms both values in the result to a new value.
+</summary>
+</member>
+<member name="M:Microsoft.FSharp.Core.Result.either``3(Microsoft.FSharp.Core.FSharpFunc{``0,``1},Microsoft.FSharp.Core.FSharpFunc{``2,``1},Microsoft.FSharp.Core.FSharpResult{``0,``2})">
+<summary>
+ Matches both values in the result to the same new value.
+</summary>
+</member>
+<member name="M:Microsoft.FSharp.Core.Result.switch``3(Microsoft.FSharp.Core.FSharpFunc{``0,``1})">
+<summary>
+ Switch a function as a function that returns a `Ok` result value.
+</summary>
+</member>
+<member name="M:Microsoft.FSharp.Core.Result.catchIter``2(Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpFunc{System.Exception,``1},Microsoft.FSharp.Core.FSharpResult{``0,``1})">
+<summary>
+ Catches the `Result.iter` function by handling the exception into a `Error` value.
+</summary>
+</member>
+<member name="M:Microsoft.FSharp.Core.Result.catchBind``3(Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.FSharpResult{``1,``2}},Microsoft.FSharp.Core.FSharpFunc{System.Exception,``2},Microsoft.FSharp.Core.FSharpResult{``0,``2})">
+<summary>
+ Catches the `Result.bind` function by handling the exception into a `Error` value.
+</summary>
+</member>
+<member name="M:Microsoft.FSharp.Core.Result.catchMap``3(Microsoft.FSharp.Core.FSharpFunc{``0,``1},Microsoft.FSharp.Core.FSharpFunc{System.Exception,``2},Microsoft.FSharp.Core.FSharpResult{``0,``2})">
+<summary>
+ Catches the `Result.map` function by handling the exception into a `Error` value.
+</summary>
+</member>
+<member name="M:Microsoft.FSharp.Core.Result.catch``3(Microsoft.FSharp.Core.FSharpFunc{``0,``1},Microsoft.FSharp.Core.FSharpFunc{System.Exception,``2},``0)">
+<summary>
+ Runs a given function, mapping the outcome to a `Ok` value 
+ but handling the possible thrown exception with a given `handler` into a `Error` value.
+</summary>
+</member>
+<member name="M:Microsoft.FSharp.Core.Result.toOption``2(Microsoft.FSharp.Core.FSharpResult{``0,``1})">
+<summary>
+ Transforms the `Ok x` into an option `Some x`, using `None` when the result is `Error`.
+</summary>
+</member>
+<member name="M:Microsoft.FSharp.Core.Result.toSeq``2(Microsoft.FSharp.Core.FSharpResult{``0,``1})">
+<summary>
+ Transforms the `Ok x` into a sequence `seq { yield x }`, using an empty sequence when the result is `Error`.
+</summary>
+</member>
+<member name="M:Microsoft.FSharp.Core.Result.toArray``2(Microsoft.FSharp.Core.FSharpResult{``0,``1})">
+<summary>
+ Transforms the `Ok x` into a array `[|x|]`, using an empty array when the result is `Errro`.
+</summary>
+</member>
+<member name="M:Microsoft.FSharp.Core.Result.toList``2(Microsoft.FSharp.Core.FSharpResult{``0,``1})">
+<summary>
+ Transforms the `Ok x` into a list `[x]`, using an empty list when the result is `Error`.
+</summary>
+</member>
+<member name="M:Microsoft.FSharp.Core.Result.ofOption``2(``0,Microsoft.FSharp.Core.FSharpOption{``1})">
+<summary>
+ Transforms an `option` to a result, using the given `ifNone` value when the option is `None`.
+</summary>
+</member>
+<member name="M:Microsoft.FSharp.Core.Result.ofOptionWith``2(Microsoft.FSharp.Core.FSharpFunc{Microsoft.FSharp.Core.Unit,``0},Microsoft.FSharp.Core.FSharpOption{``1})">
+<summary>
+ Transforms an `option` to a result, using the given `ifNone` function when the option is `None`.
+</summary>
+</member>
+<member name="M:Microsoft.FSharp.Core.Result.orElseValue``3(Microsoft.FSharp.Core.FSharpResult{``0,``1},Microsoft.FSharp.Core.FSharpResult{``0,``2})">
+<summary>
+ Gets the `Ok x` branch or use the `ifError` result value.
+</summary>
+</member>
+<member name="M:Microsoft.FSharp.Core.Result.orElse``3(Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.FSharpResult{``1,``2}},Microsoft.FSharp.Core.FSharpResult{``1,``0})">
+<summary>
+ Gets the `Ok x` branch or evaluate the `ifError` to create a new result.
+</summary>
+</member>
+<member name="M:Microsoft.FSharp.Core.Result.getOrValue``2(``0,Microsoft.FSharp.Core.FSharpResult{``0,``1})">
+<summary>
+ Gets the `x` in the `Ok x` value, but use the given `ifError` value otherwise.
+</summary>
+</member>
+<member name="M:Microsoft.FSharp.Core.Result.getOrElse``2(Microsoft.FSharp.Core.FSharpFunc{``0,``1},Microsoft.FSharp.Core.FSharpResult{``1,``0})">
+<summary>
+ Gets the `x` in the `Ok x` value, but use the given `ifError` function otherwise.
+</summary>
+</member>
+<member name="M:Microsoft.FSharp.Core.Result.multipleErrors``2(Microsoft.FSharp.Core.FSharpResult{``0,``1})">
+<summary>
+ Transforms the `Error` value in the result into a series of errors.
+ Useful when the signature of the required function requires multiple `Error` values.
+</summary>
+</member>
+<member name="M:Microsoft.FSharp.Core.Result.iterError``2(Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpResult{``1,``0})">
+<summary>
+ Runs a function without output (`unit`) over the `Error` value of the result.
+</summary>
+</member>
+<member name="M:Microsoft.FSharp.Core.Result.iter``2(Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpResult{``0,``1})">
+<summary>
+ Runs a function without output (`unit`) over the `Ok` value of the result.
+</summary>
+</member>
+<member name="M:Microsoft.FSharp.Core.Result.flatten``2(Microsoft.FSharp.Core.FSharpResult{Microsoft.FSharp.Core.FSharpResult{``0,``1},``1})">
+<summary>
+ Unwraps result of result into a result.
+</summary>
+</member>
+<member name="M:Microsoft.FSharp.Core.Result.sequence``2(Microsoft.FSharp.Collections.FSharpList{Microsoft.FSharp.Core.FSharpResult{``0,Microsoft.FSharp.Collections.FSharpList{``1}}})">
+<summary>
+ Transforms a list of results into a result of a list.
+</summary>
+</member>
+<member name="M:Microsoft.FSharp.Core.Result.traverse``3(Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.FSharpResult{``1,Microsoft.FSharp.Collections.FSharpList{``2}}},Microsoft.FSharp.Collections.FSharpList{``0})">
+<summary>
+ Traverse over a list running a given mapping function over the elements, 
+ collecting the outcomes into a result.
+</summary>
+</member>
+<member name="M:Microsoft.FSharp.Core.Result.sequenceSeq``2(System.Collections.Generic.IEnumerable{Microsoft.FSharp.Core.FSharpResult{``0,Microsoft.FSharp.Collections.FSharpList{``1}}})">
+<summary>
+ Transorms a sequence of results into a result of a sequence.
+</summary>
+</member>
+<member name="M:Microsoft.FSharp.Core.Result.traverseSeq``3(Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.FSharpResult{``1,Microsoft.FSharp.Collections.FSharpList{``2}}},System.Collections.Generic.IEnumerable{``0})">
+<summary>
+ Traverse over a sequence running a given mapping function over the elements, 
+ collecting the outcomes into a result.
+</summary>
+</member>
+<member name="M:Microsoft.FSharp.Core.Result.zip4``5(Microsoft.FSharp.Core.FSharpResult{``0,Microsoft.FSharp.Collections.FSharpList{``1}},Microsoft.FSharp.Core.FSharpResult{``2,Microsoft.FSharp.Collections.FSharpList{``1}},Microsoft.FSharp.Core.FSharpResult{``3,Microsoft.FSharp.Collections.FSharpList{``1}},Microsoft.FSharp.Core.FSharpResult{``4,Microsoft.FSharp.Collections.FSharpList{``1}})">
+<summary>
+ Combines four results into a result with a quadruple of the `Ok` values.
+</summary>
+</member>
+<member name="M:Microsoft.FSharp.Core.Result.zip3``4(Microsoft.FSharp.Core.FSharpResult{``0,Microsoft.FSharp.Collections.FSharpList{``1}},Microsoft.FSharp.Core.FSharpResult{``2,Microsoft.FSharp.Collections.FSharpList{``1}},Microsoft.FSharp.Core.FSharpResult{``3,Microsoft.FSharp.Collections.FSharpList{``1}})">
+<summary>
+ Combines three results into a result with a triple of the `Ok` values.
+</summary>
+</member>
+<member name="M:Microsoft.FSharp.Core.Result.zip2``3(Microsoft.FSharp.Core.FSharpResult{``0,Microsoft.FSharp.Collections.FSharpList{``1}},Microsoft.FSharp.Core.FSharpResult{``2,Microsoft.FSharp.Collections.FSharpList{``1}})">
+<summary>
+ Combines two results into a result with a tuple of the `Ok` values.
+</summary>
+</member>
+<member name="M:Microsoft.FSharp.Core.Result.map4``6(Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.FSharpFunc{``1,Microsoft.FSharp.Core.FSharpFunc{``2,Microsoft.FSharp.Core.FSharpFunc{``3,``4}}}},Microsoft.FSharp.Core.FSharpResult{``0,Microsoft.FSharp.Collections.FSharpList{``5}},Microsoft.FSharp.Core.FSharpResult{``1,Microsoft.FSharp.Collections.FSharpList{``5}},Microsoft.FSharp.Core.FSharpResult{``2,Microsoft.FSharp.Collections.FSharpList{``5}},Microsoft.FSharp.Core.FSharpResult{``3,Microsoft.FSharp.Collections.FSharpList{``5}})">
+<summary>
+ Transfroms four result types together into a new result.
+</summary>
+</member>
+<member name="M:Microsoft.FSharp.Core.Result.map3``5(Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.FSharpFunc{``1,Microsoft.FSharp.Core.FSharpFunc{``2,``3}}},Microsoft.FSharp.Core.FSharpResult{``0,Microsoft.FSharp.Collections.FSharpList{``4}},Microsoft.FSharp.Core.FSharpResult{``1,Microsoft.FSharp.Collections.FSharpList{``4}},Microsoft.FSharp.Core.FSharpResult{``2,Microsoft.FSharp.Collections.FSharpList{``4}})">
+<summary>
+ Transfroms three result types together into a new result.
+</summary>
+</member>
+<member name="M:Microsoft.FSharp.Core.Result.map2``4(Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.FSharpFunc{``1,``2}},Microsoft.FSharp.Core.FSharpResult{``0,Microsoft.FSharp.Collections.FSharpList{``3}},Microsoft.FSharp.Core.FSharpResult{``1,Microsoft.FSharp.Collections.FSharpList{``3}})">
+<summary>
+ Transforms two result types togheter into a new result.
+</summary>
+</member>
+<member name="M:Microsoft.FSharp.Core.Result.apply``3(Microsoft.FSharp.Core.FSharpResult{Microsoft.FSharp.Core.FSharpFunc{``0,``1},Microsoft.FSharp.Collections.FSharpList{``2}},Microsoft.FSharp.Core.FSharpResult{``0,Microsoft.FSharp.Collections.FSharpList{``2}})">
+<summary>
+ Applies a function `f` in `Ok f` to a `x` in `Ok x` when both are `Ok` values.
+</summary>
+</member>
+<member name="M:Microsoft.FSharp.Core.Result.lift4``6(Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.FSharpFunc{``1,Microsoft.FSharp.Core.FSharpFunc{``2,Microsoft.FSharp.Core.FSharpFunc{``3,``4}}}},Microsoft.FSharp.Core.FSharpResult{``0,Microsoft.FSharp.Collections.FSharpList{``5}},Microsoft.FSharp.Core.FSharpResult{``1,Microsoft.FSharp.Collections.FSharpList{``5}},Microsoft.FSharp.Core.FSharpResult{``2,Microsoft.FSharp.Collections.FSharpList{``5}},Microsoft.FSharp.Core.FSharpResult{``3,Microsoft.FSharp.Collections.FSharpList{``5}})">
+<summary>
+ Lifts a four argument function to work with result types.
+</summary>
+</member>
+<member name="M:Microsoft.FSharp.Core.Result.lift3``5(Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.FSharpFunc{``1,Microsoft.FSharp.Core.FSharpFunc{``2,``3}}},Microsoft.FSharp.Core.FSharpResult{``0,Microsoft.FSharp.Collections.FSharpList{``4}},Microsoft.FSharp.Core.FSharpResult{``1,Microsoft.FSharp.Collections.FSharpList{``4}},Microsoft.FSharp.Core.FSharpResult{``2,Microsoft.FSharp.Collections.FSharpList{``4}})">
+<summary>
+ Lifts a three argument function to work with result types.
+</summary>
+</member>
+<member name="M:Microsoft.FSharp.Core.Result.lift2``4(Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.FSharpFunc{``1,``2}},Microsoft.FSharp.Core.FSharpResult{``0,Microsoft.FSharp.Collections.FSharpList{``3}},Microsoft.FSharp.Core.FSharpResult{``1,Microsoft.FSharp.Collections.FSharpList{``3}})">
+<summary>
+ Lifts a two argument function to work with result types.
+</summary>
+</member>
+<member name="M:Microsoft.FSharp.Core.Result.filterWith``2(Microsoft.FSharp.Core.FSharpFunc{``0,System.Boolean},Microsoft.FSharp.Core.FSharpFunc{Microsoft.FSharp.Core.Unit,``1},Microsoft.FSharp.Core.FSharpResult{``0,``1})">
+<summary>
+ Filters the result based on a given predicate, using an error value if the result doesn&apos;t satisy the predicate.
+</summary>
+</member>
+<member name="M:Microsoft.FSharp.Core.Result.filter``2(Microsoft.FSharp.Core.FSharpFunc{``0,System.Boolean},``1,Microsoft.FSharp.Core.FSharpResult{``0,``1})">
+<summary>
+ Filters the result based on a given predicate, using an error value if the result doesn&apos;t satisy the predicate.
+</summary>
+</member>
+<member name="M:Microsoft.FSharp.Core.Result.contains``2(``0,Microsoft.FSharp.Core.FSharpResult{``0,``1})">
+<summary>
+ Determines whether the `x` in `Ok x` matches a given value.
+</summary>
+</member>
+<member name="M:Microsoft.FSharp.Core.Result.exists``2(Microsoft.FSharp.Core.FSharpFunc{``0,System.Boolean},Microsoft.FSharp.Core.FSharpResult{``0,``1})">
+<summary>
+ Determines whether the `Ok x` satisfies a given predicate
+</summary>
+</member>
+<member name="M:Microsoft.FSharp.Core.Result.fold``3(Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.FSharpFunc{``1,``0}},``0,Microsoft.FSharp.Core.FSharpResult{``1,``2})">
+<summary>
+ Aggregates the `x` in `Ok x` with a provided seed.
+</summary>
+</member>
+<member name="M:Microsoft.FSharp.Core.Result.isError``2(Microsoft.FSharp.Core.FSharpResult{``0,``1})">
+<summary>
+ Determines whether the result is faulted.
+</summary>
+</member>
+<member name="M:Microsoft.FSharp.Core.Result.isOk``2(Microsoft.FSharp.Core.FSharpResult{``0,``1})">
+<summary>
+ Determines whether the result is successful.
+</summary>
+</member>
+<member name="M:Microsoft.FSharp.Core.Result.error``2(``0)">
+<summary>
+ Creates a failure result.
+</summary>
+</member>
+<member name="M:Microsoft.FSharp.Core.Result.ok``2(``0)">
+<summary>
+ Creates a successful result.
+</summary>
+</member>
+<member name="T:Microsoft.FSharp.Core.Result">
+<summary>
+ Additional operations on the `Result&lt;_, _&gt;` type.
+</summary>
+</member>
+</members>
+</doc>

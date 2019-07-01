@@ -2,11 +2,21 @@ version 5.203.2
 source https://www.nuget.org/api/v2
 
 nuget FSharp.Core
-nuget Expecto.TestResults
-nuget Expecto.FsCheck
-nuget Expecto.BenchmarkDotNet
-nuget Expecto.VisualStudio.TestAdapter
-nuget Argu
+
+github stijnmoreels/System Time.fs
+github stijnmoreels/System Result.fs
+
+group Test
+    source https://www.nuget.org/api/v2
+    nuget Expecto.TestResults
+    nuget Expecto.FsCheck
+    nuget Expecto.BenchmarkDotNet
+    nuget Expecto.VisualStudio.TestAdapter
+    nuget Argu
+    
+    nuget Xunit
+    nuget Xunit.Runner.VisualStudio
+    nuget Microsoft.NET.Test.Sdk
 
 // [ FAKE GROUP ]
 group FakeBuild

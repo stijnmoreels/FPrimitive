@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Spec - FPrimitive</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="description" content=""/>
+    <meta name="author" content="Stijn Moreels"/>
+
+    <script src="https://code.jquery.com/jquery-1.8.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.8.23/jquery-ui.js"></script>
+    <script src="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/js/bootstrap.min.js"></script>
+    <link href="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/css/bootstrap-combined.min.css" rel="stylesheet"/>
+
+    <link type="text/css" rel="stylesheet" href="/FPrimitive/content/style.css" />
+    <script type="text/javascript" src="/FPrimitive/content/tips.js"></script>
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="container">
+      <div class="masthead">
+        <ul class="nav nav-pills pull-right">
+          <li><a href="http://fsharp.org">fsharp.org</a></li>
+          <li><a href="https://github.com/stijnmoreels/FPrimitive">github page</a></li>
+        </ul>
+        <h3 class="muted"><a href="/FPrimitive/index.html">FPrimitive</a></h3>
+      </div>
+      <hr />
+      <div class="row">
+        <div class="span9" id="main">
+          
+
+
+
+<h1>Spec</h1>
+<p>
+  <span>Namespace: FPrimitive</span><br />
+  </p>
+<div class="xmldoc">
+<p>Operations on the <code>Spec&lt;_&gt;</code> type.</p>
+
+</div>
+
+<!-- Render nested types and modules, if there are any -->
+
+  <h3>Functions and values</h3>
+  <table class="table table-bordered member-list">
+    <thead>
+      <tr><td>Function or value</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '29', 29)" onmouseover="showTip(event, '29', 29)">
+            add req spec
+          </code>
+          <div class="tip" id="29">
+            <strong>Signature:</strong> req:Requirement&lt;&#39;?8614&gt; -&gt; spec:Spec&lt;&#39;?8614&gt; -&gt; Spec&lt;&#39;?8614&gt;<br />
+                          <strong>Type parameters:</strong> '?8614                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L34-34" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Adds a custom requirement to the specification.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '30', 30)" onmouseover="showTip(event, '30', 30)">
+            cascade mode spec
+          </code>
+          <div class="tip" id="30">
+            <strong>Signature:</strong> mode:CascadeMode -&gt; spec:Spec&lt;&#39;?8722&gt; -&gt; Spec&lt;&#39;?8722&gt;<br />
+                          <strong>Type parameters:</strong> '?8722                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L229-229" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Change the way the validation of requirements should happen.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '31', 31)" onmouseover="showTip(event, '31', 31)">
+            createModel f value spec
+          </code>
+          <div class="tip" id="31">
+            <strong>Signature:</strong> f:(&#39;?8728 -&gt; &#39;?8729) -&gt; value:&#39;?8728 -&gt; spec:Spec&lt;&#39;?8728&gt; -&gt; Result&lt;&#39;?8729,string list&gt;<br />
+                          <strong>Type parameters:</strong> '?8728, '?8729                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L255-255" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Create a domain model after the validate of the specifed value to the domain specification succeeds.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '32', 32)" onmouseover="showTip(event, '32', 32)">
+            def 
+          </code>
+          <div class="tip" id="32">
+            <strong>Signature:</strong> Spec&lt;&#39;a&gt;<br />
+                          <strong>Type parameters:</strong> 'a                        <span>
+            <strong>Attributes:</strong><br />
+[&lt;CompiledName(&quot;Of&quot;)&gt;]<br />
+          </span>
+          </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L29-29" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Start defininig a specification for a type.</p>
+
+
+              <p>CompiledName: <code>Of</code></p>
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '33', 33)" onmouseover="showTip(event, '33', 33)">
+            equal value message spec
+          </code>
+          <div class="tip" id="33">
+            <strong>Signature:</strong> value:&#39;?8619 -&gt; message:string -&gt; spec:Spec&lt;&#39;?8619&gt; -&gt; Spec&lt;&#39;?8619&gt;<br />
+                          <strong>Type parameters:</strong> '?8619                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L43-43" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Adds a requirement to check equality to a specified value.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '34', 34)" onmouseover="showTip(event, '34', 34)">
+            equalOf selector value message spec
+          </code>
+          <div class="tip" id="34">
+            <strong>Signature:</strong> selector:(&#39;?8616 -&gt; &#39;?8617) -&gt; value:&#39;?8617 -&gt; message:string -&gt; spec:Spec&lt;&#39;?8616&gt; -&gt; Spec&lt;&#39;?8616&gt;<br />
+                          <strong>Type parameters:</strong> '?8616, '?8617                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L39-39" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Adds a requirement for the result of the specified mapping,
+which defines that the result should be equal to the specified value.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '35', 35)" onmouseover="showTip(event, '35', 35)">
+            exclusiveBetween min max message spec
+          </code>
+          <div class="tip" id="35">
+            <strong>Signature:</strong> min:&#39;?8713 -&gt; max:&#39;?8713 -&gt; message:string -&gt; spec:Spec&lt;&#39;?8713&gt; -&gt; Spec&lt;&#39;?8713&gt;<br />
+                          <strong>Type parameters:</strong> '?8713                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L206-206" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Adds a requirement to check if the value is exclusive between (<code>min &lt; value &amp;&amp; value &gt; max</code>) the specified range.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '36', 36)" onmouseover="showTip(event, '36', 36)">
+            exclusiveBetweenOf (...)
+          </code>
+          <div class="tip" id="36">
+            <strong>Signature:</strong> selector:(&#39;?8710 -&gt; &#39;?8711) -&gt; min:&#39;?8711 -&gt; max:&#39;?8711 -&gt; message:string -&gt; spec:Spec&lt;&#39;?8710&gt; -&gt; Spec&lt;&#39;?8710&gt;<br />
+                          <strong>Type parameters:</strong> '?8710, '?8711                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L202-202" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Adds a requirement for the result of the specified mapping,
+which defines that the result should be exclusive between (<code>min &lt; value &amp;&amp; value &gt; max</code>) the specified range.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '37', 37)" onmouseover="showTip(event, '37', 37)">
+            forall predicate message spec
+          </code>
+          <div class="tip" id="37">
+            <strong>Signature:</strong> predicate:(&#39;?8654 -&gt; bool) -&gt; message:string -&gt; spec:Spec&lt;&#39;?8655&gt; -&gt; Spec&lt;&#39;?8655&gt;<br />
+                          <strong>Type parameters:</strong> '?8654, '?8655                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L116-116" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Adds a requirement for the sequence to check that all the elements of the sequence satisfy the specified predicate.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '38', 38)" onmouseover="showTip(event, '38', 38)">
+            forallOf selector predicate message spec
+          </code>
+          <div class="tip" id="38">
+            <strong>Signature:</strong> selector:(&#39;?8650 -&gt; &#39;?8651) -&gt; predicate:(&#39;?8652 -&gt; bool) -&gt; message:string -&gt; spec:Spec&lt;&#39;?8650&gt; -&gt; Spec&lt;&#39;?8650&gt;<br />
+                          <strong>Type parameters:</strong> '?8650, '?8651, '?8652                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L112-112" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Adds a requirement for the resulting sequence of the specified mapping,
+which defines that all elements of the sequence should satisfy the specified predicate.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '39', 39)" onmouseover="showTip(event, '39', 39)">
+            greaterThan limit message spec
+          </code>
+          <div class="tip" id="39">
+            <strong>Signature:</strong> limit:&#39;?8698 -&gt; message:string -&gt; spec:Spec&lt;&#39;?8698&gt; -&gt; Spec&lt;&#39;?8698&gt;<br />
+                          <strong>Type parameters:</strong> '?8698                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L179-179" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Adds a requirement to check if the value is greater than (<code>limit &lt; value</code>) the specified limit.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '40', 40)" onmouseover="showTip(event, '40', 40)">
+            greaterThanOf (...)
+          </code>
+          <div class="tip" id="40">
+            <strong>Signature:</strong> selector:(&#39;?8695 -&gt; &#39;?8696) -&gt; limit:&#39;?8696 -&gt; message:string -&gt; spec:Spec&lt;&#39;?8695&gt; -&gt; Spec&lt;&#39;?8695&gt;<br />
+                          <strong>Type parameters:</strong> '?8695, '?8696                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L175-175" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Adds a requirement for the result of the specified mapping,
+which defines that the result should be greater than (<code>limit &lt; value</code>) the specified limit.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '41', 41)" onmouseover="showTip(event, '41', 41)">
+            greaterThanOrEqual limit message spec
+          </code>
+          <div class="tip" id="41">
+            <strong>Signature:</strong> limit:&#39;?8703 -&gt; message:string -&gt; spec:Spec&lt;&#39;?8703&gt; -&gt; Spec&lt;&#39;?8703&gt;<br />
+                          <strong>Type parameters:</strong> '?8703                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L188-188" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Adds a requirement to check if the value is greater than or equal to (<code>limit &lt;= value</code>) the specified limit.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '42', 42)" onmouseover="showTip(event, '42', 42)">
+            greaterThanOrEqualOf (...)
+          </code>
+          <div class="tip" id="42">
+            <strong>Signature:</strong> selector:(&#39;?8700 -&gt; &#39;?8701) -&gt; limit:&#39;?8701 -&gt; message:string -&gt; spec:Spec&lt;&#39;?8700&gt; -&gt; Spec&lt;&#39;?8700&gt;<br />
+                          <strong>Type parameters:</strong> '?8700, '?8701                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L184-184" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Adds a requirement for the result of the specified mapping,
+which defines that the result should be greater than or equal to (<code>limit &lt;= value</code>) the specified limit.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '43', 43)" onmouseover="showTip(event, '43', 43)">
+            inclusiveBetween min max message spec
+          </code>
+          <div class="tip" id="43">
+            <strong>Signature:</strong> min:&#39;?8708 -&gt; max:&#39;?8708 -&gt; message:string -&gt; spec:Spec&lt;&#39;?8708&gt; -&gt; Spec&lt;&#39;?8708&gt;<br />
+                          <strong>Type parameters:</strong> '?8708                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L197-197" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Adds a requirement to check if the value is inclusive between (<code>min &lt;= value &amp;&amp; value &gt;= max</code>) the specified range.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '44', 44)" onmouseover="showTip(event, '44', 44)">
+            inclusiveBetweenOf (...)
+          </code>
+          <div class="tip" id="44">
+            <strong>Signature:</strong> selector:(&#39;?8705 -&gt; &#39;?8706) -&gt; min:&#39;?8706 -&gt; max:&#39;?8706 -&gt; message:string -&gt; spec:Spec&lt;&#39;?8705&gt; -&gt; Spec&lt;&#39;?8705&gt;<br />
+                          <strong>Type parameters:</strong> '?8705, '?8706                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L193-193" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Adds a requirement for the result of the specified mapping,
+which defines that the result should be inclusive between (<code>min &lt;= value &amp;&amp; value &gt;= max</code>) the specified range.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '45', 45)" onmouseover="showTip(event, '45', 45)">
+            isSatisfiedBy value spec
+          </code>
+          <div class="tip" id="45">
+            <strong>Signature:</strong> value:&#39;?8731 -&gt; spec:Spec&lt;&#39;?8731&gt; -&gt; bool<br />
+                          <strong>Type parameters:</strong> '?8731                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L260-260" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Determine whether the specified value satisfies the domain specification.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '46', 46)" onmouseover="showTip(event, '46', 46)">
+            isType message spec
+          </code>
+          <div class="tip" id="46">
+            <strong>Signature:</strong> message:string -&gt; spec:Spec&lt;obj&gt; -&gt; Spec&lt;obj&gt;<br />
+                          <strong>Type parameters:</strong> 'T                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L225-225" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Adds a requirement to check if the value is an instance of the specified type <code>T</code>.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '47', 47)" onmouseover="showTip(event, '47', 47)">
+            isTypeOf selector message spec
+          </code>
+          <div class="tip" id="47">
+            <strong>Signature:</strong> selector:(obj -&gt; obj) -&gt; message:string -&gt; spec:Spec&lt;obj&gt; -&gt; Spec&lt;obj&gt;<br />
+                          <strong>Type parameters:</strong> 'T                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L221-221" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Adds a requirement for the result of the specified mapping,
+which defines that the result should an instance of the specified type <code>T</code>.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '48', 48)" onmouseover="showTip(event, '48', 48)">
+            lessThan limit message spec
+          </code>
+          <div class="tip" id="48">
+            <strong>Signature:</strong> limit:&#39;?8688 -&gt; message:string -&gt; spec:Spec&lt;&#39;?8688&gt; -&gt; Spec&lt;&#39;?8688&gt;<br />
+                          <strong>Type parameters:</strong> '?8688                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L161-161" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Adds a requirement to check if the value is less than (<code>limit &gt; value</code>) the specified limit.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '49', 49)" onmouseover="showTip(event, '49', 49)">
+            lessThanOf selector limit message spec
+          </code>
+          <div class="tip" id="49">
+            <strong>Signature:</strong> selector:(&#39;?8685 -&gt; &#39;?8686) -&gt; limit:&#39;?8686 -&gt; message:string -&gt; spec:Spec&lt;&#39;?8685&gt; -&gt; Spec&lt;&#39;?8685&gt;<br />
+                          <strong>Type parameters:</strong> '?8685, '?8686                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L157-157" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Adds a requirement for the result of the specified mapping,
+which defines that the result should be less than (<code>limit &gt; value</code>) the specified limit.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '50', 50)" onmouseover="showTip(event, '50', 50)">
+            lessThanOrEqual limit message spec
+          </code>
+          <div class="tip" id="50">
+            <strong>Signature:</strong> limit:&#39;?8693 -&gt; message:string -&gt; spec:Spec&lt;&#39;?8693&gt; -&gt; Spec&lt;&#39;?8693&gt;<br />
+                          <strong>Type parameters:</strong> '?8693                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L170-170" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Adds a requirement to check if the value is less than or equal to (<code>limit &gt;= value</code>) to the specified limit.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '51', 51)" onmouseover="showTip(event, '51', 51)">
+            lessThanOrEqualOf (...)
+          </code>
+          <div class="tip" id="51">
+            <strong>Signature:</strong> selector:(&#39;?8690 -&gt; &#39;?8691) -&gt; limit:&#39;?8691 -&gt; message:string -&gt; spec:Spec&lt;&#39;?8690&gt; -&gt; Spec&lt;&#39;?8690&gt;<br />
+                          <strong>Type parameters:</strong> '?8690, '?8691                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L166-166" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Adds a requirement for the result of the specified mapping,
+which defines that the result should be less than or equal to (<code>limit &gt;= value</code>) the specified limit.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '52', 52)" onmouseover="showTip(event, '52', 52)">
+            maxLength max message spec
+          </code>
+          <div class="tip" id="52">
+            <strong>Signature:</strong> max:int -&gt; message:string -&gt; spec:Spec&lt;&#39;?8679&gt; -&gt; Spec&lt;&#39;?8679&gt;<br />
+                          <strong>Type parameters:</strong> '?8679, '?8680                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L148-148" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Adds a requirement for the sequence to check if the sequence has a maximum length.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '53', 53)" onmouseover="showTip(event, '53', 53)">
+            maxLengthOf selector max message spec
+          </code>
+          <div class="tip" id="53">
+            <strong>Signature:</strong> selector:(&#39;?8665 -&gt; &#39;?8666) -&gt; max:int -&gt; message:string -&gt; spec:Spec&lt;&#39;?8665&gt; -&gt; Spec&lt;&#39;?8665&gt;<br />
+                          <strong>Type parameters:</strong> '?8665, '?8666, '?8667                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L131-131" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Adds a requirement for the resulting sequence of the specified mapping,
+which defines that the sequence should have a maximum length.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '54', 54)" onmouseover="showTip(event, '54', 54)">
+            minLength min message spec
+          </code>
+          <div class="tip" id="54">
+            <strong>Signature:</strong> min:int -&gt; message:string -&gt; spec:Spec&lt;&#39;?8676&gt; -&gt; Spec&lt;&#39;?8676&gt;<br />
+                          <strong>Type parameters:</strong> '?8676, '?8677                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L144-144" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Adds a requirement for the sequence to check if the sequence has a minimum length.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '55', 55)" onmouseover="showTip(event, '55', 55)">
+            minLengthOf selector min message spec
+          </code>
+          <div class="tip" id="55">
+            <strong>Signature:</strong> selector:(&#39;?8661 -&gt; &#39;?8662) -&gt; min:int -&gt; message:string -&gt; spec:Spec&lt;&#39;?8661&gt; -&gt; Spec&lt;&#39;?8661&gt;<br />
+                          <strong>Type parameters:</strong> '?8661, '?8662, '?8663                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L126-126" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Adds a requirement for the resulting sequence of the specified mapping,
+which defines that the sequence should have a minimum length.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '56', 56)" onmouseover="showTip(event, '56', 56)">
+            nonEmpty message spec
+          </code>
+          <div class="tip" id="56">
+            <strong>Signature:</strong> message:string -&gt; spec:Spec&lt;&#39;?8647&gt; -&gt; Spec&lt;&#39;?8647&gt;<br />
+                          <strong>Type parameters:</strong> '?8647, '?8648                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L107-107" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Adds a requirement to check for non-empty sequences.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '57', 57)" onmouseover="showTip(event, '57', 57)">
+            nonEmptyOf selector message spec
+          </code>
+          <div class="tip" id="57">
+            <strong>Signature:</strong> selector:(&#39;?8643 -&gt; &#39;?8644) -&gt; message:string -&gt; spec:Spec&lt;&#39;?8643&gt; -&gt; Spec&lt;&#39;?8643&gt;<br />
+                          <strong>Type parameters:</strong> '?8643, '?8644, '?8645                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L103-103" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Adds a requirement for the result of the specified mapping,
+which defines that the result should be a non-empty sequence.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '58', 58)" onmouseover="showTip(event, '58', 58)">
+            notEmpty message spec
+          </code>
+          <div class="tip" id="58">
+            <strong>Signature:</strong> message:string -&gt; spec:Spec&lt;string&gt; -&gt; Spec&lt;string&gt;<br />
+                                  </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L70-70" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Adds a requirement to check for non-empty string.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '59', 59)" onmouseover="showTip(event, '59', 59)">
+            notEmptyOf selector message spec
+          </code>
+          <div class="tip" id="59">
+            <strong>Signature:</strong> selector:(&#39;?8631 -&gt; string) -&gt; message:string -&gt; spec:Spec&lt;&#39;?8631&gt; -&gt; Spec&lt;&#39;?8631&gt;<br />
+                          <strong>Type parameters:</strong> '?8631                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L66-66" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Adds a requirement for the result of the specified mapping,
+which defines that the result should be a non-empty string.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '60', 60)" onmouseover="showTip(event, '60', 60)">
+            notEqual value message spec
+          </code>
+          <div class="tip" id="60">
+            <strong>Signature:</strong> value:&#39;?8624 -&gt; message:string -&gt; spec:Spec&lt;&#39;?8624&gt; -&gt; Spec&lt;&#39;?8624&gt;<br />
+                          <strong>Type parameters:</strong> '?8624                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L52-52" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Adds a requirement to check no equality to a specified value.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '61', 61)" onmouseover="showTip(event, '61', 61)">
+            notEqualOf selector value message spec
+          </code>
+          <div class="tip" id="61">
+            <strong>Signature:</strong> selector:(&#39;?8621 -&gt; &#39;?8622) -&gt; value:&#39;?8622 -&gt; message:string -&gt; spec:Spec&lt;&#39;?8621&gt; -&gt; Spec&lt;&#39;?8621&gt;<br />
+                          <strong>Type parameters:</strong> '?8621, '?8622                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L48-48" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Adds a requirement for the result of the specified mapping,
+which defines that the result should not be equal to the specified value.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '62', 62)" onmouseover="showTip(event, '62', 62)">
+            notNull message spec
+          </code>
+          <div class="tip" id="62">
+            <strong>Signature:</strong> message:string -&gt; spec:Spec&lt;&#39;?8629&gt; -&gt; Spec&lt;&#39;?8629&gt;<br />
+                          <strong>Type parameters:</strong> '?8629                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L61-61" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Adds a requirement to check for not <code>null</code>.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '63', 63)" onmouseover="showTip(event, '63', 63)">
+            notNullOf selector message spec
+          </code>
+          <div class="tip" id="63">
+            <strong>Signature:</strong> selector:(&#39;?8626 -&gt; &#39;?8627) -&gt; message:string -&gt; spec:Spec&lt;&#39;?8626&gt; -&gt; Spec&lt;&#39;?8626&gt;<br />
+                          <strong>Type parameters:</strong> '?8626, '?8627                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L57-57" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Adds a requirement for the result of the specified mapping,
+which defines that the result should not be <code>null</code>.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '64', 64)" onmouseover="showTip(event, '64', 64)">
+            notNullOrEmpty message spec
+          </code>
+          <div class="tip" id="64">
+            <strong>Signature:</strong> message:string -&gt; spec:Spec&lt;string&gt; -&gt; Spec&lt;string&gt;<br />
+                                  </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L89-89" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Adds a requirement to check if the string is a not-null, not-empty string.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '65', 65)" onmouseover="showTip(event, '65', 65)">
+            notNullOrEmptyOf selector message spec
+          </code>
+          <div class="tip" id="65">
+            <strong>Signature:</strong> selector:(&#39;?8637 -&gt; string) -&gt; message:string -&gt; spec:Spec&lt;&#39;?8637&gt; -&gt; Spec&lt;&#39;?8637&gt;<br />
+                          <strong>Type parameters:</strong> '?8637                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L85-85" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Adds a requirement for the result of the specified mapping,
+which defines that the result should be a not-null, not-empty string.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '66', 66)" onmouseover="showTip(event, '66', 66)">
+            notNullOrWhiteSpace message spec
+          </code>
+          <div class="tip" id="66">
+            <strong>Signature:</strong> message:string -&gt; spec:Spec&lt;string&gt; -&gt; Spec&lt;string&gt;<br />
+                                  </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L98-98" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Adds a requirement to check if the string is a not-null, not-empty, not-whitespace string.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '67', 67)" onmouseover="showTip(event, '67', 67)">
+            notNullOrWhiteSpaceOf (...)
+          </code>
+          <div class="tip" id="67">
+            <strong>Signature:</strong> selector:(&#39;?8640 -&gt; string) -&gt; message:string -&gt; spec:Spec&lt;&#39;?8640&gt; -&gt; Spec&lt;&#39;?8640&gt;<br />
+                          <strong>Type parameters:</strong> '?8640                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L94-94" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Adds a requirement for the result of the specified mapping,
+which defines that the result should be a not-null, not-empty, not-whitespace string.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '68', 68)" onmouseover="showTip(event, '68', 68)">
+            notWhiteSpace message spec
+          </code>
+          <div class="tip" id="68">
+            <strong>Signature:</strong> message:string -&gt; spec:Spec&lt;string&gt; -&gt; Spec&lt;string&gt;<br />
+                                  </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L80-80" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Adds a requirement to check if the string is a not-whitespace string.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '69', 69)" onmouseover="showTip(event, '69', 69)">
+            notWhiteSpaceOf selector message spec
+          </code>
+          <div class="tip" id="69">
+            <strong>Signature:</strong> selector:(&#39;?8634 -&gt; string) -&gt; message:string -&gt; spec:Spec&lt;&#39;?8634&gt; -&gt; Spec&lt;&#39;?8634&gt;<br />
+                          <strong>Type parameters:</strong> '?8634                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L75-75" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Adds a requirement for the result of the specified mapping,
+which defines that the result should not be a not-whitespace string.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '70', 70)" onmouseover="showTip(event, '70', 70)">
+            rangeLength min max message spec
+          </code>
+          <div class="tip" id="70">
+            <strong>Signature:</strong> min:int -&gt; max:int -&gt; message:string -&gt; spec:Spec&lt;&#39;?8682&gt; -&gt; Spec&lt;&#39;?8682&gt;<br />
+                          <strong>Type parameters:</strong> '?8682, '?8683                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L152-152" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Adds a requirement for the sequence to check if the sequence has a length within the specified range (min, max).</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '71', 71)" onmouseover="showTip(event, '71', 71)">
+            rangeLengthOf (...)
+          </code>
+          <div class="tip" id="71">
+            <strong>Signature:</strong> selector:(&#39;?8669 -&gt; &#39;?8670) -&gt; min:int -&gt; max:int -&gt; message:string -&gt; spec:Spec&lt;&#39;?8669&gt; -&gt; Spec&lt;&#39;?8669&gt;<br />
+                          <strong>Type parameters:</strong> '?8669, '?8670, '?8671                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L136-136" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Adds a requirement for the resulting sequence of the specified mapping,
+which defines that the sequence should have a length within the specified range (min, max).</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '72', 72)" onmouseover="showTip(event, '72', 72)">
+            regex pattern message spec
+          </code>
+          <div class="tip" id="72">
+            <strong>Signature:</strong> pattern:string -&gt; message:string -&gt; spec:Spec&lt;string&gt; -&gt; Spec&lt;string&gt;<br />
+                                  </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L216-216" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Adds a requirement to check if the value is a match to the specified regular expression pattern.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '73', 73)" onmouseover="showTip(event, '73', 73)">
+            regexOf selector pattern message spec
+          </code>
+          <div class="tip" id="73">
+            <strong>Signature:</strong> selector:(&#39;?8715 -&gt; string) -&gt; pattern:string -&gt; message:string -&gt; spec:Spec&lt;&#39;?8715&gt; -&gt; Spec&lt;&#39;?8715&gt;<br />
+                          <strong>Type parameters:</strong> '?8715                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L211-211" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Adds a requirement for the result of the specified mapping,
+which defines that the result should be a match to the specified regular expression pattern.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '74', 74)" onmouseover="showTip(event, '74', 74)">
+            totalLength l message spec
+          </code>
+          <div class="tip" id="74">
+            <strong>Signature:</strong> l:int -&gt; message:string -&gt; spec:Spec&lt;&#39;?8673&gt; -&gt; Spec&lt;&#39;?8673&gt;<br />
+                          <strong>Type parameters:</strong> '?8673, '?8674                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L140-140" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Adds a requirement for the sequence to check if the length matches the specified length.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '75', 75)" onmouseover="showTip(event, '75', 75)">
+            totalLengthOf selector l message spec
+          </code>
+          <div class="tip" id="75">
+            <strong>Signature:</strong> selector:(&#39;?8657 -&gt; &#39;?8658) -&gt; l:int -&gt; message:string -&gt; spec:Spec&lt;&#39;?8657&gt; -&gt; Spec&lt;&#39;?8657&gt;<br />
+                          <strong>Type parameters:</strong> '?8657, '?8658, '?8659                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L121-121" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Adds a requirement for the resulting sequence of the specified mapping,
+which defines that the sequence should have a length of the specified length.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '76', 76)" onmouseover="showTip(event, '76', 76)">
+            validate value arg2
+          </code>
+          <div class="tip" id="76">
+            <strong>Signature:</strong> value:&#39;?8724 -&gt; Spec&lt;&#39;?8724&gt; -&gt; Result&lt;&#39;?8724,string list&gt;<br />
+                          <strong>Type parameters:</strong> '?8724                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L232-232" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Validate the specified value to the domain specification.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '77', 77)" onmouseover="showTip(event, '77', 77)">
+            validateOption value spec
+          </code>
+          <div class="tip" id="77">
+            <strong>Signature:</strong> value:&#39;?8726 -&gt; spec:Spec&lt;&#39;?8726&gt; -&gt; &#39;?8726 option<br />
+                          <strong>Type parameters:</strong> '?8726                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L249-249" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Validate the specified value to the domain specification, discarding the error messages.</p>
+
+
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+        </div>
+        <div class="span3">
+          <img src="/FPrimitive/img/logo.png" alt="F# Project" style="width:150px;margin:10px" />  
+          <ul class="nav nav-list" id="menu" style="margin-top: 20px;">
+            <li class="nav-header">FPrimitive</li>
+            <li><a href="/FPrimitive/index.html">Home page</a></li>
+            <li class="divider"></li>
+            <li><a href="http://nuget.org/packages/FPrimitive">Get Library via NuGet</a></li>
+            <li><a href="https://github.com/stijnmoreels/FPrimitive">Source Code on GitHub</a></li>
+            <li><a href="/FPrimitive/license.html">License</a></li>
+            <li><a href="/FPrimitive/release-notes.html">Release Notes</a></li>
+            
+            <li class="nav-header">Getting started</li>
+            <li><a href="/FPrimitive/tutorial.html">Sample tutorial</a></li>
+
+            <li class="nav-header">Documentation</li>
+            <li><a href="/FPrimitive/reference/index.html">API Reference</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <a href="https://github.com/stijnmoreels/FPrimitive"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"/></a>
+  </body>
+  </html>
