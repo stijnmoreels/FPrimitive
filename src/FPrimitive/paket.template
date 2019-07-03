@@ -1,6 +1,6 @@
 type file
 id FPrimitive
-version 0.0.1
+version 1.0.0-alpha
 title FPrimitive
 summary .NET project to help developers build a correct and more secure domain model.
 description .NET project to help developers build a correct and more secure domain model by providing building blocks, standard types and trust boundaries.
@@ -11,7 +11,12 @@ tags domain,model,secure,trust,boundaries,blocks,reusable,fsharp
 projectUrl https://github.com/stijnmoreels/FPrimitive
 iconUrl https://raw.githubusercontent.com/stijnmoreels/FPrimitive/master/docs/img/logo.png
 licenseUrl https://github.com/stijnmoreels/FPrimitive/blob/master/LICENSE.txt
-releaseNotes Initial release
+releaseNotes
+    Initial release
+    Specification composition with builder functions and composition expression: `Spec.notEmpty`, `Spec.inclusiveBetween`, `spec { greaterThan }`, ...
+    Access controllers with builder functions and composition express: `Access.onlyUriFromBase`, `Access.once`, `access { revokable }`, ...
+    Access controller types: `ReadOnce` and `Disposable`
+    Untrusted representation with `Untrust<_>`
 files
     bin/Release/netstandard2.0/*.dll ==> lib/netstandard2.0
     bin/Release/netstandard2.0/*.xml ==> lib/netstandard2.0

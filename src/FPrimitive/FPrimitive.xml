@@ -42,6 +42,11 @@
  Reads the possible disposed value, throws an `ObjectDisposedException` otherwise.
 </summary>
 </member>
+<member name="M:FPrimitive.Disposable`1.System-IDisposable-Dispose">
+<summary>
+ Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+</summary>
+</member>
 <member name="T:FPrimitive.Disposable`1">
 <summary>
  Representation of a value that can be disposed/removed any time.
@@ -176,37 +181,151 @@
  which defines that the result should be less than (`limit &gt; value`) the specified limit.
 </summary>
 </member>
-<member name="M:FPrimitive.SpecExtensions.LengthMin``2(FPrimitive.Spec{``0},System.Int32,System.String)">
+<member name="M:FPrimitive.SpecExtensions.LengthMin``1(FPrimitive.Spec{``0[]},System.Int32,System.String)">
 <summary>
  Adds a requirement for the sequence to check if the sequence has a minimum length.
 </summary>
 </member>
-<member name="M:FPrimitive.SpecExtensions.LengthMin``3(FPrimitive.Spec{``0},System.Func{``0,``1},System.Int32,System.String)">
+<member name="M:FPrimitive.SpecExtensions.LengthMin``1(FPrimitive.Spec{System.Collections.Generic.IList{``0}},System.Int32,System.String)">
+<summary>
+ Adds a requirement for the sequence to check if the sequence has a minimum length.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.LengthMin``1(FPrimitive.Spec{System.Collections.Generic.ICollection{``0}},System.Int32,System.String)">
+<summary>
+ Adds a requirement for the sequence to check if the sequence has a minimum length.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.LengthMin``1(FPrimitive.Spec{System.Collections.Generic.IEnumerable{``0}},System.Int32,System.String)">
+<summary>
+ Adds a requirement for the sequence to check if the sequence has a minimum length.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.LengthMin``2(FPrimitive.Spec{``0},System.Func{``0,``1[]},System.Int32,System.String)">
 <summary>
  Adds a requirement for the resulting sequence of the specified mapping, 
  which defines that the sequence should have a minimum length.
 </summary>
 </member>
-<member name="M:FPrimitive.SpecExtensions.LengthMax``2(FPrimitive.Spec{``0},System.Int32,System.String)">
+<member name="M:FPrimitive.SpecExtensions.LengthMin``2(FPrimitive.Spec{``0},System.Func{``0,System.Collections.Generic.ICollection{``1}},System.Int32,System.String)">
+<summary>
+ Adds a requirement for the resulting sequence of the specified mapping, 
+ which defines that the sequence should have a minimum length.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.LengthMin``2(FPrimitive.Spec{``0},System.Func{``0,System.Collections.Generic.IList{``1}},System.Int32,System.String)">
+<summary>
+ Adds a requirement for the resulting sequence of the specified mapping, 
+ which defines that the sequence should have a minimum length.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.LengthMin``2(FPrimitive.Spec{``0},System.Func{``0,System.Collections.Generic.IEnumerable{``1}},System.Int32,System.String)">
+<summary>
+ Adds a requirement for the resulting sequence of the specified mapping, 
+ which defines that the sequence should have a minimum length.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.LengthMax``1(FPrimitive.Spec{``0[]},System.Int32,System.String)">
 <summary>
  Adds a requirement for the sequence to check if the sequence has a maximum length.
 </summary>
 </member>
-<member name="M:FPrimitive.SpecExtensions.LengthMax``3(FPrimitive.Spec{``0},System.Func{``0,``1},System.Int32,System.String)">
+<member name="M:FPrimitive.SpecExtensions.LengthMax``1(FPrimitive.Spec{System.Collections.Generic.ICollection{``0}},System.Int32,System.String)">
+<summary>
+ Adds a requirement for the sequence to check if the sequence has a maximum length.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.LengthMax``1(FPrimitive.Spec{System.Collections.Generic.IList{``0}},System.Int32,System.String)">
+<summary>
+ Adds a requirement for the sequence to check if the sequence has a maximum length.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.LengthMax``1(FPrimitive.Spec{System.Collections.Generic.IEnumerable{``0}},System.Int32,System.String)">
+<summary>
+ Adds a requirement for the sequence to check if the sequence has a maximum length.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.LengthMax``2(FPrimitive.Spec{``0},System.Func{``0,``1[]},System.Int32,System.String)">
 <summary>
  Adds a requirement for the resulting sequence of the specified mapping, 
  which defines that the sequence should have a maximum length.
 </summary>
 </member>
-<member name="M:FPrimitive.SpecExtensions.LengthBetween``2(FPrimitive.Spec{``0},System.Int32,System.Int32,System.String)">
+<member name="M:FPrimitive.SpecExtensions.LengthMax``2(FPrimitive.Spec{``0},System.Func{``0,System.Collections.Generic.ICollection{``1}},System.Int32,System.String)">
+<summary>
+ Adds a requirement for the resulting sequence of the specified mapping, 
+ which defines that the sequence should have a maximum length.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.LengthMax``2(FPrimitive.Spec{``0},System.Func{``0,System.Collections.Generic.IList{``1}},System.Int32,System.String)">
+<summary>
+ Adds a requirement for the resulting sequence of the specified mapping, 
+ which defines that the sequence should have a maximum length.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.LengthMax``2(FPrimitive.Spec{``0},System.Func{``0,System.Collections.Generic.IEnumerable{``1}},System.Int32,System.String)">
+<summary>
+ Adds a requirement for the resulting sequence of the specified mapping, 
+ which defines that the sequence should have a maximum length.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.LengthBetween``1(FPrimitive.Spec{``0[]},System.Int32,System.Int32,System.String)">
 <summary>
  Adds a requirement for the sequence to check if the sequence has a length within the specified range (min, max).
 </summary>
 </member>
-<member name="M:FPrimitive.SpecExtensions.LengthBetween``3(FPrimitive.Spec{``0},System.Func{``0,``1},System.Int32,System.Int32,System.String)">
+<member name="M:FPrimitive.SpecExtensions.LengthBetween``1(FPrimitive.Spec{System.Collections.Generic.IList{``0}},System.Int32,System.Int32,System.String)">
+<summary>
+ Adds a requirement for the sequence to check if the sequence has a length within the specified range (min, max).
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.LengthBetween``1(FPrimitive.Spec{System.Collections.Generic.ICollection{``0}},System.Int32,System.Int32,System.String)">
+<summary>
+ Adds a requirement for the sequence to check if the sequence has a length within the specified range (min, max).
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.LengthBetween``1(FPrimitive.Spec{System.Collections.Generic.IEnumerable{``0}},System.Int32,System.Int32,System.String)">
+<summary>
+ Adds a requirement for the sequence to check if the sequence has a length within the specified range (min, max).
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.LengthBetween``2(FPrimitive.Spec{``0},System.Func{``0,``1[]},System.Int32,System.Int32,System.String)">
 <summary>
  Adds a requirement for the resulting sequence of the specified mapping, 
  which defines that the sequence should have a length within the specified range (min, max).
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.LengthBetween``2(FPrimitive.Spec{``0},System.Func{``0,System.Collections.Generic.ICollection{``1}},System.Int32,System.Int32,System.String)">
+<summary>
+ Adds a requirement for the resulting sequence of the specified mapping, 
+ which defines that the sequence should have a length within the specified range (min, max).
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.LengthBetween``2(FPrimitive.Spec{``0},System.Func{``0,System.Collections.Generic.IList{``1}},System.Int32,System.Int32,System.String)">
+<summary>
+ Adds a requirement for the resulting sequence of the specified mapping, 
+ which defines that the sequence should have a length within the specified range (min, max).
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.LengthBetween``2(FPrimitive.Spec{``0},System.Func{``0,System.Collections.Generic.IEnumerable{``1}},System.Int32,System.Int32,System.String)">
+<summary>
+ Adds a requirement for the resulting sequence of the specified mapping, 
+ which defines that the sequence should have a length within the specified range (min, max).
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.Length``1(FPrimitive.Spec{``0[]},System.Int32,System.String)">
+<summary>
+ Adds a requirement for the sequence to check if the length matches the specified length.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.Length``1(FPrimitive.Spec{System.Collections.Generic.ICollection{``0}},System.Int32,System.String)">
+<summary>
+ Adds a requirement for the sequence to check if the length matches the specified length.
+</summary>
+</member>
+<member name="M:FPrimitive.SpecExtensions.Length``1(FPrimitive.Spec{System.Collections.Generic.IList{``0}},System.Int32,System.String)">
+<summary>
+ Adds a requirement for the sequence to check if the length matches the specified length.
 </summary>
 </member>
 <member name="M:FPrimitive.SpecExtensions.Length``1(FPrimitive.Spec{System.Collections.Generic.IEnumerable{``0}},System.Int32,System.String)">
@@ -260,7 +379,7 @@
  which defines that the result should be inclusive between (`min &lt;= value &amp;&amp; value &gt;= max`) the specified range.
 </summary>
 </member>
-<member name="M:FPrimitive.SpecExtensions.InclusiveBetween``1(FPrimitive.Spec{``0},``0,System.String,``0)">
+<member name="M:FPrimitive.SpecExtensions.InclusiveBetween``1(FPrimitive.Spec{``0},``0,``0,System.String)">
 <summary>
  Adds a requirement to check if the value is inclusive between (`min &lt;= value &amp;&amp; value &gt;= max`) the specified range.
 </summary>
@@ -368,6 +487,36 @@
 <member name="P:FPrimitive.ValidationResult`1.Errors">
 <summary>
  Gets the series of validation errors that describe to what domain requirements the validated value doesn&apos;t satisfy.
+</summary>
+</member>
+<member name="M:FPrimitive.ValidationResult`1.TryGetValue(Microsoft.FSharp.Core.byref{`0,Microsoft.FSharp.Core.ByRefKinds.Out})">
+<summary>
+ Tries to get the value that was validated.
+</summary>
+</member>
+<member name="M:FPrimitive.ValidationResult`1.Combine``5(FPrimitive.ValidationResult{``0},FPrimitive.ValidationResult{``1},FPrimitive.ValidationResult{``2},FPrimitive.ValidationResult{``3},System.Func{``0,``1,``2,``3,``4})">
+<summary>
+ Combines validation results into a new validation result.
+</summary>
+</member>
+<member name="M:FPrimitive.ValidationResult`1.Combine``4(FPrimitive.ValidationResult{``0},FPrimitive.ValidationResult{``1},FPrimitive.ValidationResult{``2},System.Func{``0,``1,``2,``3})">
+<summary>
+ Combines validation results into a new validation result.
+</summary>
+</member>
+<member name="M:FPrimitive.ValidationResult`1.Combine``3(FPrimitive.ValidationResult{``0},FPrimitive.ValidationResult{``1},System.Func{``0,``1,``2})">
+<summary>
+ Combines validation results into a new validation result.
+</summary>
+</member>
+<member name="M:FPrimitive.ValidationResult`1.#ctor(System.String[][])">
+<summary>
+ Initializes a new instance of the `ValidationResult` class.
+</summary>
+</member>
+<member name="M:FPrimitive.ValidationResult`1.#ctor(`0)">
+<summary>
+ Initializes a new instance of the `ValidationResult` class.
 </summary>
 </member>
 <member name="T:FPrimitive.ValidationResult`1">
@@ -529,17 +678,6 @@
  Adds a requirement for the sequence to check if the length matches the specified length.
 </summary>
 </member>
-<member name="M:FPrimitive.SpecBuilder`2.IsTypeOf``1(FPrimitive.Spec{System.Object},Microsoft.FSharp.Core.FSharpFunc{System.Object,System.Object},System.String)">
-<summary>
- Adds a requirement for the result of the specified mapping, 
- which defines that the result should an instance of the specified type `T`.
-</summary>
-</member>
-<member name="M:FPrimitive.SpecBuilder`2.IsType``1(FPrimitive.Spec{System.Object},System.String)">
-<summary>
- Adds a requirement to check if the value is an instance of the specified type `T`.
-</summary>
-</member>
 <member name="M:FPrimitive.SpecBuilder`2.InclusiveBetweenOf``2(FPrimitive.Spec{``0},Microsoft.FSharp.Core.FSharpFunc{``0,``1},``1,``1,System.String)">
 <summary>
  Adds a requirement for the result of the specified mapping, 
@@ -651,6 +789,197 @@
  Representation on how the model should be validated.
 </summary>
 </member>
+<member name="M:FPrimitive.AccessExtensions.Twice``2(FPrimitive.Access{``0,``1})">
+<summary>
+ Let the access-controlled function only evaluate two times.
+</summary>
+</member>
+<member name="M:FPrimitive.AccessExtensions.Times``2(FPrimitive.Access{``0,``1},System.Int32)">
+<summary>
+ Let the access-controlled function only evaluate a certain amount of times.
+</summary>
+</member>
+<member name="M:FPrimitive.AccessExtensions.Satisfy``2(FPrimitive.Access{``0,``1},FPrimitive.Spec{``0})">
+<summary>
+ Adds input-validation to the access-controlled function.
+</summary>
+</member>
+<member name="M:FPrimitive.AccessExtensions.RevokedWhen``3(FPrimitive.Access{``0,``1},System.IObservable{``2})">
+<summary>
+ Automatically revoke the access-controlled function when the specified observable emits a value.
+</summary>
+</member>
+<member name="M:FPrimitive.AccessExtensions.RevokedAfter``2(FPrimitive.Access{``0,``1},System.TimeSpan)">
+<summary>
+ Automatically revoke the access-controlled after a specified delay.
+</summary>
+</member>
+<member name="M:FPrimitive.AccessExtensions.Revoke``2(FPrimitive.Access{``0,``1})">
+<summary>
+ Revokes the access-controlled function.
+</summary>
+</member>
+<member name="M:FPrimitive.AccessExtensions.Revokable``2(FPrimitive.Access{``0,``1})">
+<summary>
+ Make the access-controlled function revokable.
+</summary>
+</member>
+<member name="M:FPrimitive.AccessExtensions.Once``2(FPrimitive.Access{``0,``1})">
+<summary>
+ Let the access-controlled function only evaluate once.
+</summary>
+</member>
+<member name="M:FPrimitive.AccessExtensions.FileExtensions(FPrimitive.Access{System.IO.FileInfo,System.IO.FileInfo},System.String[])">
+<summary>
+ Adds a requirement to the access-controlled function to only allow files with certain extensions.
+</summary>
+</member>
+<member name="M:FPrimitive.AccessExtensions.FileExtension(FPrimitive.Access{System.IO.FileInfo,System.IO.FileInfo},System.String)">
+<summary>
+ Adds a requirement to the access-controlled function to only allow files with a certain extension.
+</summary>
+</member>
+<member name="M:FPrimitive.AccessExtensions.Eval``2(FPrimitive.Access{``0,``1},``0)">
+<summary>
+ Evaluate the access-controlled function.
+</summary>
+</member>
+<member name="M:FPrimitive.AccessExtensions.Eval``1(FPrimitive.Access{Microsoft.FSharp.Core.Unit,``0})">
+<summary>
+ Evaluate the access-controlled function.
+</summary>
+</member>
+<member name="M:FPrimitive.AccessExtensions.DuringHours``2(FPrimitive.Access{``0,``1},System.Int32,System.Int32)">
+<summary>
+ Make the access-controlled function only available during certain hours.
+</summary>
+</member>
+<member name="M:FPrimitive.AccessExtensions.During``2(FPrimitive.Access{``0,``1},System.DateTimeOffset,System.DateTimeOffset)">
+<summary>
+ Make the access-controlled function only available during certain dates.
+</summary>
+</member>
+<member name="T:FPrimitive.AccessExtensions">
+<summary>
+ Extensions on the `Access&lt;_, _&gt;` type to use in C# context.
+</summary>
+</member>
+<member name="P:FPrimitive.AccessResult`1.Value">
+<summary>
+ Gets the result of the access-controlled function if the function evaluated successfully, 
+ otherwise an `AccessFailureException` is thrown.
+</summary>
+</member>
+<member name="P:FPrimitive.AccessResult`1.Successful">
+<summary>
+ Gets a value indicating whether or not the access-controlled function was evaluated successfully.
+</summary>
+</member>
+<member name="P:FPrimitive.AccessResult`1.Errors">
+<summary>
+ Gets the series of errors that occured during the evaluation of the access-controlled function.
+</summary>
+</member>
+<member name="M:FPrimitive.AccessResult`1.TryGetValue(Microsoft.FSharp.Core.byref{`0,Microsoft.FSharp.Core.ByRefKinds.Out})">
+<summary>
+ Tries to get the result of the access-controlled function based on whether the function evaluated successfully.
+</summary>
+</member>
+<member name="T:FPrimitive.AccessResult`1">
+<summary>
+ Result type when the access-controlled function is evaluated.
+</summary>
+</member>
+<member name="M:FPrimitive.AccessBuilder`2.Twice``2(FPrimitive.Access{``0,``1})">
+<summary>
+ Let the access-controlled function only evaluate two times.
+</summary>
+</member>
+<member name="M:FPrimitive.AccessBuilder`2.Times``2(FPrimitive.Access{``0,``1},System.Int32)">
+<summary>
+ Let the access-controlled function only evaluate a certain amount of times.
+</summary>
+</member>
+<member name="M:FPrimitive.AccessBuilder`2.Satisfy``2(FPrimitive.Access{``0,``1},FPrimitive.Spec{``0})">
+<summary>
+ Adds input-validation to the access-controlled function.
+</summary>
+</member>
+<member name="M:FPrimitive.AccessBuilder`2.RevokedWhen``3(FPrimitive.Access{``0,``1},System.IObservable{``2})">
+<summary>
+ Automatically revoke the access-controlled function when the specified observable emits a value.
+</summary>
+</member>
+<member name="M:FPrimitive.AccessBuilder`2.RevokedAfter``2(FPrimitive.Access{``0,``1},System.TimeSpan)">
+<summary>
+ Automatically revoke the access-controlled after a specified delay.
+</summary>
+</member>
+<member name="M:FPrimitive.AccessBuilder`2.Revokable``2(FPrimitive.Access{``0,``1})">
+<summary>
+ Make the access-controlled function revokable.
+</summary>
+</member>
+<member name="M:FPrimitive.AccessBuilder`2.OnlyUriFrombase``1(``0,System.Uri)">
+<summary>
+ Creates an access-controlled function to only allow `Uri` values with a certain base `Uri`.
+</summary>
+</member>
+<member name="M:FPrimitive.AccessBuilder`2.OnlyFilesFromDirs``1(``0,System.Collections.Generic.IEnumerable{System.IO.DirectoryInfo})">
+<summary>
+ Creates an access-controlled function that only retrieves files from certain directories.
+</summary>
+</member>
+<member name="M:FPrimitive.AccessBuilder`2.OnlyFilesFrom``1(``0,System.IO.DirectoryInfo)">
+<summary>
+ Creates an access-controlled function that only retrieves files from a certain directory.
+</summary>
+</member>
+<member name="M:FPrimitive.AccessBuilder`2.Once``2(FPrimitive.Access{``0,``1})">
+<summary>
+ Let the access-controlled function only evaluate once.
+</summary>
+</member>
+<member name="M:FPrimitive.AccessBuilder`2.FuncResult``3(``0,Microsoft.FSharp.Core.FSharpFunc{``1,Microsoft.FSharp.Core.FSharpResult{``2,Microsoft.FSharp.Collections.FSharpList{System.String}}})">
+<summary>
+ Creates an access-controlled function from a function, directly using the returned `Result`.
+</summary>
+</member>
+<member name="M:FPrimitive.AccessBuilder`2.FuncOption``3(``0,Microsoft.FSharp.Core.FSharpFunc{``1,Microsoft.FSharp.Core.FSharpOption{``2}},System.String)">
+<summary>
+ Creates an access controlled function from a function, directly using the returned `Option`.
+</summary>
+</member>
+<member name="M:FPrimitive.AccessBuilder`2.Func``3(``0,Microsoft.FSharp.Core.FSharpFunc{``1,``2})">
+<summary>
+ Creates an access controlled function from a custom function.
+</summary>
+</member>
+<member name="M:FPrimitive.AccessBuilder`2.Extensions(FPrimitive.Access{System.IO.FileInfo,System.IO.FileInfo},Microsoft.FSharp.Collections.FSharpList{System.String})">
+<summary>
+ Adds a requirement to the access-controlled function to only allow files with certain extensions.
+</summary>
+</member>
+<member name="M:FPrimitive.AccessBuilder`2.Extension(FPrimitive.Access{System.IO.FileInfo,System.IO.FileInfo},System.String)">
+<summary>
+ Adds a requirement to the access-controlled function to only allow files with a certain extension.
+</summary>
+</member>
+<member name="M:FPrimitive.AccessBuilder`2.DuringHours``2(FPrimitive.Access{``0,``1},System.Int32,System.Int32)">
+<summary>
+ Make the access-controlled function only available during certain hours.
+</summary>
+</member>
+<member name="M:FPrimitive.AccessBuilder`2.DuringDates``2(FPrimitive.Access{``0,``1},System.DateTimeOffset,System.DateTimeOffset)">
+<summary>
+ Make the access-controlled function only available during certain dates.
+</summary>
+</member>
+<member name="T:FPrimitive.AccessBuilder`2">
+<summary>
+ Computation expression to control the access of functions.
+</summary>
+</member>
 <member name="P:FPrimitive.Access`2.Revokable">
 <summary>
  Gets the function that revokes the access-controlled function from being further used.
@@ -676,6 +1005,11 @@
  Exception thrown when the validation of a value against a domain specification failed.
 </summary>
 </member>
+<member name="T:FPrimitive.AccessFailureException">
+<summary>
+ Thrown when the access to the result of an access-controlled function is not available.
+</summary>
+</member>
 <member name="M:FPrimitive.Untrust.getWithResult``2(Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.FSharpResult{``1,Microsoft.FSharp.Collections.FSharpList{System.String}}},FPrimitive.Untrust{``0})">
 <summary>
  Tries to get the wrapped value out of the untrusted boundary by validating the value.
@@ -691,17 +1025,32 @@
  Tries to get the wrapped value out of the untrusted boundary by validating the value.
 </summary>
 </member>
-<member name="M:FPrimitive.Untrust.Create``1(``0)">
-<summary>
- Wraps an untrusted value into a representation that only exposes untrusted values after validation.
-</summary>
-</member>
 <member name="T:FPrimitive.Untrust">
 <summary>
  Representation of an untrusted value that should be validated first before it can be used. 
 </summary>
 </member>
-<member name="M:FPrimitive.ReadOnce.tryGetValueError``2(FPrimitive.ReadOnce{``0},``1)">
+<member name="M:FPrimitive.Disposable.tryGetValueResult``2(FPrimitive.Disposable{``0},``1)">
+<summary>
+ Tries to read the possible disposed value.
+</summary>
+</member>
+<member name="M:FPrimitive.Disposable.tryGetValue``1(FPrimitive.Disposable{``0})">
+<summary>
+ Tries to read the possible disposed value.
+</summary>
+</member>
+<member name="M:FPrimitive.Disposable.create``1(``0)">
+<summary>
+ Creates a disposable resource from any value.
+</summary>
+</member>
+<member name="T:FPrimitive.Disposable">
+<summary>
+ Operations on the `Disposable&lt;_&gt;` type.
+</summary>
+</member>
+<member name="M:FPrimitive.ReadOnce.tryGetValueResult``2(FPrimitive.ReadOnce{``0},``1)">
 <summary>
  Tries to read the read-once value.
 </summary>
@@ -709,11 +1058,6 @@
 <member name="M:FPrimitive.ReadOnce.tryGetValue``1(FPrimitive.ReadOnce{``0})">
 <summary>
  Tries to read the read-once value.
-</summary>
-</member>
-<member name="M:FPrimitive.ReadOnce.value``1(``0)">
-<summary>
- Wraps a value into a value that can only be read once.
 </summary>
 </member>
 <member name="T:FPrimitive.ReadOnce">
@@ -1027,12 +1371,127 @@
  Operations on the `Spec&lt;_&gt;` type. 
 </summary>
 </member>
-<member name="M:FPrimitive.Access.funcOption``2(System.String,Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.FSharpOption{``1}})">
+<member name="T:FPrimitive.AccessExposure">
+<summary>
+ Exposure values for the `Access&lt;_, _&gt;` type.
+</summary>
+</member>
+<member name="M:FPrimitive.Access.satisfy``2(FPrimitive.Spec{``0},FPrimitive.Access{``0,``1})">
+<summary>
+ Adds input-validation to the access-controlled function.
+</summary>
+</member>
+<member name="M:FPrimitive.Access.duringHours``2(System.Int32,System.Int32,FPrimitive.Access{``0,``1})">
+<summary>
+ Make the access-controlled function only available during certain hours.
+</summary>
+</member>
+<member name="M:FPrimitive.Access.duringDates``2(System.DateTimeOffset,System.DateTimeOffset,FPrimitive.Access{``0,``1})">
+<summary>
+ Make the access-controlled function only available during certain dates.
+</summary>
+</member>
+<member name="M:FPrimitive.Access.revokedWhen``3(System.IObservable{``0},FPrimitive.Access{``1,``2})">
+<summary>
+ Automatically revoke the access-controlled function when the specified observable emits a value.
+</summary>
+</member>
+<member name="M:FPrimitive.Access.revokedAfter``2(System.TimeSpan,FPrimitive.Access{``0,``1})">
+<summary>
+ Automatically revoke the access-controlled after a specified delay.
+</summary>
+</member>
+<member name="M:FPrimitive.Access.revokable``2(FPrimitive.Access{``0,``1})">
+<summary>
+ Make the access-controlled function revokable.
+</summary>
+</member>
+<member name="M:FPrimitive.Access.twice``2(FPrimitive.Access{``0,``1})">
+<summary>
+ Let the access-controlled function only evaluate two times.
+</summary>
+</member>
+<member name="M:FPrimitive.Access.times``2(System.Int32,FPrimitive.Access{``0,``1})">
+<summary>
+ Let the access-controlled function only evaluate a certain amount of times.
+</summary>
+</member>
+<member name="M:FPrimitive.Access.once``2(FPrimitive.Access{``0,``1})">
+<summary>
+ Let the access-controlled function only evaluate once.
+</summary>
+</member>
+<member name="M:FPrimitive.Access.OnlyUriFromBase(System.Uri)">
+<summary>
+ Creates an access-controlled function to only allow `Uri` values with a certain base `Uri`.
+</summary>
+</member>
+<member name="M:FPrimitive.Access.fileExtension(System.String,FPrimitive.Access{System.IO.FileInfo,System.IO.FileInfo})">
+<summary>
+ Adds a requirement to the access-controlled function to only allow files with a certain extension.
+</summary>
+</member>
+<member name="M:FPrimitive.Access.fileExtensions(Microsoft.FSharp.Collections.FSharpList{System.String},FPrimitive.Access{System.IO.FileInfo,System.IO.FileInfo})">
+<summary>
+ Adds a requirement to the access-controlled function to only allow files with certain extensions.
+</summary>
+</member>
+<member name="M:FPrimitive.Access.OnlyFilesFromDirectory(System.IO.DirectoryInfo)">
+<summary>
+ Creates an access-controlled function that only retrieves files from a certain directory.
+</summary>
+</member>
+<member name="M:FPrimitive.Access.OnlyFilesFromDirectories(System.IO.DirectoryInfo[])">
+<summary>
+ Creates an access-controlled function that only retrieves files from certain directories.
+</summary>
+</member>
+<member name="M:FPrimitive.Access.onlyFilesFromDirs(System.Collections.Generic.IEnumerable{System.IO.DirectoryInfo})">
+<summary>
+ Creates an access-controlled function that only retrieves files from certain directories.
+</summary>
+</member>
+<member name="M:FPrimitive.Access.revoke``2(FPrimitive.Access{``0,``1})">
+<summary>
+ Revokes the access-controlled function.
+</summary>
+</member>
+<member name="M:FPrimitive.Access.evalUnit``1(FPrimitive.Access{Microsoft.FSharp.Core.Unit,``0})">
+<summary>
+ Evaluate the access-controlled function with unit `()`.
+</summary>
+</member>
+<member name="M:FPrimitive.Access.eval``2(``0,FPrimitive.Access{``0,``1})">
+<summary>
+ Evaluate the access-controlled function.
+</summary>
+</member>
+<member name="M:FPrimitive.Access.filter``2(Microsoft.FSharp.Core.FSharpFunc{``0,System.Boolean},System.String,FPrimitive.Access{``0,``1})">
+<summary>
+ Adds a custom requirement that the access-controlled function.
+</summary>
+</member>
+<member name="M:FPrimitive.Access.Function``1(System.Action{``0})">
+<summary>
+ Creates an access controlled function from a custom function.
+</summary>
+</member>
+<member name="M:FPrimitive.Access.Function``1(System.Func{``0})">
+<summary>
+ Creates an access-controlled function from a custom function.
+</summary>
+</member>
+<member name="M:FPrimitive.Access.Function``2(System.Func{``0,``1})">
+<summary>
+ Creates an access-controlled function from a custom function.
+</summary>
+</member>
+<member name="M:FPrimitive.Access.funcOption``2(Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.FSharpOption{``1}},System.String)">
 <summary>
  Creates an access controlled function from a function, directly using the returned `Option`.
 </summary>
 </member>
-<member name="M:FPrimitive.Access.funcResult``2(Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.FSharpResult{``1,System.String}})">
+<member name="M:FPrimitive.Access.funcResult``2(Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.FSharpResult{``1,Microsoft.FSharp.Collections.FSharpList{System.String}}})">
 <summary>
  Creates an access-controlled function from a function, directly using the returned `Result`.
 </summary>

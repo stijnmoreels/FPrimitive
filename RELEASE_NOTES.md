@@ -1,2 +1,6 @@
-#### 0.0.1
+#### 1.0.0-alpha
 * Initial release
+  * Specification composition with builder functions and composition expression: `Spec.notEmpty`, `Spec.inclusiveBetween`, `spec { greaterThan }`, ...
+  * Access controllers with builder functions and composition express: `Access.onlyUriFromBase`, `Access.once`, `access { revokable }`, ...
+  * Access controller types: `ReadOnce` and `Disposable`
+  * Untrusted representation with `Untrust<_>`

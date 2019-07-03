@@ -37,7 +37,7 @@
 
 <h1>ResultExposure</h1>
 <p>
-  <span>Namespace: FPrimitive</span><br />
+  <span>Namespace: Microsoft.FSharp.Core</span><br />
         <span>
           Attributes:<br />
 [&lt;AutoOpen&gt;]<br />
@@ -45,6 +45,8 @@
       </span>
 </p>
 <div class="xmldoc">
+<p>Result auto exposed values.</p>
+
 </div>
 
 <!-- Render nested types and modules, if there are any -->
@@ -58,15 +60,15 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '23', 23)" onmouseover="showTip(event, '23', 23)">
-            ( &lt;!&gt; ) 
+          <code onmouseout="hideTip(event, '133', 133)" onmouseover="showTip(event, '133', 133)">
+            ( &lt;!&gt; ) m f
           </code>
-          <div class="tip" id="23">
-            <strong>Signature:</strong> (&#39;?8984 -&gt; &#39;?8985) -&gt; Result&lt;&#39;?8984,&#39;?8986&gt; -&gt; Result&lt;&#39;?8985,&#39;?8986&gt;<br />
-                          <strong>Type parameters:</strong> '?8984, '?8985, '?8986                      </div>
+          <div class="tip" id="133">
+            <strong>Signature:</strong> m:Result&lt;&#39;?8077,&#39;?8078&gt; -&gt; f:(&#39;?8077 -&gt; &#39;?8079) -&gt; Result&lt;&#39;?8079,&#39;?8078&gt;<br />
+                          <strong>Type parameters:</strong> '?8077, '?8078, '?8079                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Result.fs#L106-106" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L245-245" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -77,15 +79,15 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '24', 24)" onmouseover="showTip(event, '24', 24)">
+          <code onmouseout="hideTip(event, '134', 134)" onmouseover="showTip(event, '134', 134)">
             ( &lt;*&gt; ) 
           </code>
-          <div class="tip" id="24">
-            <strong>Signature:</strong> Result&lt;(&#39;?8988 -&gt; &#39;?8989),&#39;?8990 list&gt; -&gt; Result&lt;&#39;?8988,&#39;?8990 list&gt; -&gt; Result&lt;&#39;?8989,&#39;?8990 list&gt;<br />
-                          <strong>Type parameters:</strong> '?8988, '?8989, '?8990                      </div>
+          <div class="tip" id="134">
+            <strong>Signature:</strong> Result&lt;(&#39;?8081 -&gt; &#39;?8082),&#39;?8083 list&gt; -&gt; Result&lt;&#39;?8081,&#39;?8083 list&gt; -&gt; Result&lt;&#39;?8082,&#39;?8083 list&gt;<br />
+                          <strong>Type parameters:</strong> '?8081, '?8082, '?8083                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Result.fs#L107-107" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L246-246" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -96,19 +98,59 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '25', 25)" onmouseover="showTip(event, '25', 25)">
-            result 
+          <code onmouseout="hideTip(event, '135', 135)" onmouseover="showTip(event, '135', 135)">
+            ( &gt;=&gt; ) f g
           </code>
-          <div class="tip" id="25">
-            <strong>Signature:</strong> ResultBuilder<br />
-                                  </div>
+          <div class="tip" id="135">
+            <strong>Signature:</strong> f:(&#39;?8072 -&gt; Result&lt;&#39;?8073,&#39;?8074&gt;) -&gt; g:(&#39;?8073 -&gt; Result&lt;&#39;?8075,&#39;?8074&gt;) -&gt; &#39;?8072 -&gt; Result&lt;&#39;?8075,&#39;?8074&gt;<br />
+                          <strong>Type parameters:</strong> '?8072, '?8073, '?8074, '?8075                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Result.fs#L109-109" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L244-244" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
           
+              <p>CompiledName: <code>op_GreaterEqualsGreater</code></p>
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '136', 136)" onmouseover="showTip(event, '136', 136)">
+            ( &gt;&gt;= ) m f
+          </code>
+          <div class="tip" id="136">
+            <strong>Signature:</strong> m:Result&lt;&#39;?8068,&#39;?8069&gt; -&gt; f:(&#39;?8068 -&gt; Result&lt;&#39;?8070,&#39;?8069&gt;) -&gt; Result&lt;&#39;?8070,&#39;?8069&gt;<br />
+                          <strong>Type parameters:</strong> '?8068, '?8069, '?8070                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L243-243" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          
+              <p>CompiledName: <code>op_GreaterGreaterEquals</code></p>
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '137', 137)" onmouseover="showTip(event, '137', 137)">
+            result 
+          </code>
+          <div class="tip" id="137">
+            <strong>Signature:</strong> ResultBuilder<br />
+                                  </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L249-249" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Result computation expression</p>
+
+
         </td>
       </tr>
     </tbody>

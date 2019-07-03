@@ -138,7 +138,7 @@ module Spec =
   /// Adds a requirement for the resulting sequence of the specified mapping, 
   /// which defines that the sequence should have a length within the specified range (min, max).
   let lengthBetweenOf selector min max message spec =
-    add (fun x -> let l = selector x |> Seq.length in min < l && l > max, message) spec
+    add (fun x -> let l = selector x |> Seq.length in min <= l && l <= max, message) spec
   
   /// Adds a requirement for the sequence to check if the length matches the specified length.
   let length l message spec =
@@ -195,7 +195,7 @@ module Spec =
   /// Adds a requirement for the result of the specified mapping, 
   /// which defines that the result should be inclusive between (`min <= value && value >= max`) the specified range.
   let inclusiveBetweenOf selector min max message spec =
-    add (fun x -> let x = selector x in min <= x && x >= max, message) spec
+    add (fun x -> let x = selector x in min <= x && x <= max, message) spec
 
   /// Adds a requirement to check if the value is inclusive between (`min <= value && value >= max`) the specified range.
   let inclusiveBetween min max message spec =
@@ -204,7 +204,7 @@ module Spec =
   /// Adds a requirement for the result of the specified mapping, 
   /// which defines that the result should be exclusive between (`min < value && value > max`) the specified range.
   let exclusiveBetweenOf selector min max message spec =
-    add (fun x -> let x = selector x in min < x && x > max, message) spec
+    add (fun x -> let x = selector x in min < x && x < max, message) spec
 
   /// Adds a requirement to check if the value is exclusive between (`min < value && value > max`) the specified range.
   let exclusiveBetween min max message spec =
@@ -413,13 +413,6 @@ type SpecBuilder<'a, 'b> internal (validate : Spec<'a> -> 'b) =
   /// Adds a requirement to check if the value is a match to the specified regular expression pattern.
   [<CustomOperation("regex")>]
   member __.Regex (state, pattern, message) = Spec.regex pattern message state
-  /// Adds a requirement for the result of the specified mapping, 
-  /// which defines that the result should an instance of the specified type `T`.
-  [<CustomOperation("isTypeOf")>]
-  member __.IsTypeOf<'T> (state, selector, message) = Spec.isTypeOf<'T> selector message state
-  /// Adds a requirement to check if the value is an instance of the specified type `T`.
-  [<CustomOperation("isType")>]
-  member __.IsType<'T> (state, message) = Spec.isType<'T> message state
   member __.Yield (_) = Spec.def<'a>
   member __.Run (spec) = validate spec
 
@@ -439,14 +432,49 @@ module SpecExposure =
 
 /// Result type when a value is validated against a domain specification `Spec<_>`.
 type ValidationResult<'a> internal (result) =
+  /// Initializes a new instance of the `ValidationResult` class.
+  new (value : 'a) = ValidationResult<'a> (Ok value)
+  /// Initializes a new instance of the `ValidationResult` class.
+  new ([<ParamArray>] errors : string [] []) = ValidationResult<'a> (Error (Array.concat errors |> List.ofArray))
   /// Gets the value that was validated (possible `null` when the validation failed).
   member __.Value : 'a = Result.getOrValue Unchecked.defaultof<'a> result
   /// Gets a value indicating whether the validation succeeded.
   member __.IsValid = Result.isOk result
   /// Gets the series of validation errors that describe to what domain requirements the validated value doesn't satisfy.
   member __.Errors : string array = Result.either (fun _ -> Array.empty) Array.ofList result
-  static member op_Implicit (validationResult : ValidationResult<'a>) = 
-    validationResult.Value
+  /// Tries to get the value that was validated.
+  member __.TryGetValue (output : outref<'a>) =
+    match result with
+    | Ok x -> output <- x; true
+    | _ -> output <- Unchecked.defaultof<'a>; false
+  /// Combines validation results into a new validation result.
+  static member Combine<'TFirst, 'TSecond, 'TResult> 
+    ( (validation1 : ValidationResult<'TFirst>), 
+      (validation2 : ValidationResult<'TSecond>), 
+      (resultSelector : Func<_, _, 'TResult>) ) =
+    if validation1.IsValid && validation2.IsValid
+    then ValidationResult (value=resultSelector.Invoke (validation1.Value, validation2.Value))
+    else ValidationResult (validation1.Errors, validation2.Errors)
+  /// Combines validation results into a new validation result.
+  static member Combine<'TFirst, 'TSecond, 'TThird, 'TResult>
+    ( (validation1 : ValidationResult<'TFirst>),
+      (validation2 : ValidationResult<'TSecond>),
+      (validation3 : ValidationResult<'TThird>),
+      (resultSelector : Func<'TFirst, 'TSecond, 'TThird, 'TResult>) ) =
+    if validation1.IsValid && validation2.IsValid && validation3.IsValid
+    then ValidationResult (value=resultSelector.Invoke (validation1.Value, validation2.Value, validation3.Value))
+    else ValidationResult (validation1.Errors, validation2.Errors, validation3.Errors)
+  /// Combines validation results into a new validation result.
+  static member Combine<'TFirst, 'TSecond, 'TThird, 'TFourth, 'TResult>
+    ( (validation1 : ValidationResult<'TFirst>),
+      (validation2 : ValidationResult<'TSecond>),
+      (validation3 : ValidationResult<'TThird>),
+      (validation4 : ValidationResult<'TFourth>),
+      (resultSelector : Func<'TFirst, 'TSecond, 'TThird, 'TFourth, 'TResult>) ) =
+    if validation1.IsValid && validation2.IsValid && validation3.IsValid && validation4.IsValid
+    then ValidationResult (value=resultSelector.Invoke (validation1.Value, validation2.Value, validation3.Value, validation4.Value))
+    else ValidationResult (validation1.Errors, validation2.Errors, validation3.Errors, validation4.Errors)
+
 
 /// Exception thrown when the validation of a value against a domain specification failed.
 exception ValidationFailureException of string
@@ -717,13 +745,13 @@ type SpecExtensions =
 
   /// Adds a requirement for the sequence to check if the sequence has a maximum length.
   [<Extension>]
-  static member LengthMax ((spec : Spec<IEnumerable<_>), max, message) =
+  static member LengthMax ((spec : Spec<IEnumerable<_>>), max, message) =
     if message = null then nullArg "message"
     Spec.lengthMax max message spec
 
   /// Adds a requirement for the sequence to check if the sequence has a maximum length.
   [<Extension>]
-  static member LengthMax ((spec : Spec<IList<_>), max, message) =
+  static member LengthMax ((spec : Spec<IList<_>>), max, message) =
     if message = null then nullArg "message"
     Spec.lengthMax max message spec
 
@@ -773,13 +801,13 @@ type SpecExtensions =
 
   /// Adds a requirement for the sequence to check if the sequence has a length within the specified range (min, max).
   [<Extension>]
-  static member LengthBetween ((spec : Spec<IEnumerable<_>), min, max, message) =
+  static member LengthBetween ((spec : Spec<IEnumerable<_>>), min, max, message) =
     if message = null then nullArg "message"
     Spec.lengthBetween min max message spec
 
   /// Adds a requirement for the sequence to check if the sequence has a length within the specified range (min, max).
   [<Extension>]
-  static member LengthBetween ((spec : Spec<ICollection<_>), min, max, message) =
+  static member LengthBetween ((spec : Spec<ICollection<_>>), min, max, message) =
     if message = null then nullArg "message"
     Spec.lengthBetween min max message spec
 
@@ -853,7 +881,7 @@ type SpecExtensions =
   [<Extension>]
   static member InclusiveBetween (spec, min, max, message) =
     if message = null then nullArg "message"
-    Spec.inclusiveBetween message min max spec
+    Spec.inclusiveBetween min max message spec
   
   /// Adds a requirement for the result of the specified mapping, 
   /// which defines that the result should be inclusive between (`min <= value && value >= max`) the specified range.
@@ -918,7 +946,7 @@ type SpecExtensions =
   /// Validate the specified value to the domain specification.
   [<Extension>]
   static member Validate (spec, value) =
-    Spec.validate value spec |> ValidationResult
+    ValidationResult (result=Spec.validate value spec)
 
   /// Validate the specified value to the domain specification.
   [<Extension>]
@@ -932,7 +960,7 @@ type SpecExtensions =
   [<Extension>]
   static member CreateModel (spec, value, (creator : Func<_, _>)) =
     if creator = null then nullArg "creator"
-    Spec.createModel creator.Invoke value spec |> ValidationResult
+    ValidationResult (result=Spec.createModel creator.Invoke value spec)
 
   /// Create a domain model after the validate of the specifed value to the domain specification succeeds.
   [<Extension>]

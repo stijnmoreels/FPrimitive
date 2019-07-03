@@ -431,8 +431,9 @@ NUGET
       System.Runtime (>= 4.3) - restriction: || (&& (< monoandroid) (< monotouch) (< net451) (>= netstandard1.2) (< win81) (< wpa81) (< xamarinios) (< xamarinmac) (< xamarintvos) (< xamarinwatchos)) (< portable-net451+win81+wpa81)
 GITHUB
   remote: stijnmoreels/System
-    Result.fs (e8cf054c36b4b43eb030f30f29de7eb0324d577c)
-    Time.fs (e8cf054c36b4b43eb030f30f29de7eb0324d577c)
+    Prelude.fs (960e6c655b5e2cedfc18b3c7282e8e675f2b26c7)
+    Result.fs (960e6c655b5e2cedfc18b3c7282e8e675f2b26c7)
+    Time.fs (960e6c655b5e2cedfc18b3c7282e8e675f2b26c7)
 GROUP FakeBuild
 STORAGE: NONE
 NUGET

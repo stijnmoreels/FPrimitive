@@ -1,127 +1,161 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Net.Mail;
-using System.Text;
-using Microsoft.FSharp.Core;
-using FPrimitive;
+// using System;
+// using System.Collections;
+// using System.Collections.Generic;
+// using System.IO;
+// using System.Net.Mail;
+// using System.Text;
+// using System.Xml;
+// using Microsoft.FSharp.Core;
+// using FPrimitive;
+// using Microsoft.FSharp.Control;
 
-namespace FPrimitive.CSharp.Tests
-{
-    public class ProductName
-    {
-        private ProductName(string value)
-        {
-            Value = Spec.Of<string>()
-                        .NotNull("Product name should not be 'null'")
-                        .NotEmpty("Product name should not be empty")
-                        .NotWhiteSpace("Product name should not contain only white-space characters")
-                        .Regex("^[a-zA-Z ]+$", "Product name should only contain characters from a-z")
-                        .ValidateThrow<string, ArgumentException>(value, "");
-        }
+// namespace FPrimitive.CSharp.Tests
+// {
+//     public class UnitTest1
+//     {
+//         public void Test1<T>()
+//         {
+//             // Specification before the actual check of the base-uri.
+//             Spec<Uri> spec = 
+//                 Spec.Of<Uri>()
+//                     .Add(uri => uri.Scheme == Uri.UriSchemeHttps, "should be 'https' scheme");
 
-        public string Value { get; }
+//             // Demonstration purposes, generic type could be anything.
+//             IObservable<T> obs = null;
 
-        public static ValidationResult<ProductName> Create(string untrusted)
-        {
-            return Spec.Of<string>()
-                       .NotNull("Product name should not be 'null'")
-                       .NotEmpty("Product name should not be empty")
-                       .NotWhiteSpace("Product name should not contain only white-space characters")
-                       .Regex("^[a-zA-Z ]+$", "Product name should only contain characters from a-z")
-                       .Add(input => input.Length == 20, "Product name should only have a length of 20")
-                       .Cascade(CascadeMode.FirstFailure)
-                       .CreateModel(untrusted, validated => new ProductName(validated));
-        }
-    }
+//             // Access controlled function with validation, revocation, limited amount of evaluations and time-based availability.
+//             Access<Uri, Uri> access =
+//                 Access.OnlyUriFromBase(new Uri("https://localhost:9090/"))
+//                       .Matching(spec)
+//                       .Once()
+//                       .DuringHours(9, 17)
+//                       .RevokedWhen(obs);
 
 
-    public class UnitTest1
-    {
-        public void Test1()
-        {
-            Access<Unit, int> access = 
-                Access.Function(() => 1)
-                      .Once()
-                      .DuringHours(12, 13)
-                      .Revokable();
+//             // Somewhere else...
+//             AccessResult<Uri> result = access.Eval(new Uri("http://localhost:9090/path"));
+//             if (result.TryGetValue(out Uri output))
+//             {
+//                 // use the now correct 'output'
+//             }
 
-            access.Revoke();
-            AccessResult<int> result = access.Eval();
+            
+//         }
+//     }
 
-            Untrust<int> five = 5;
+//     public class ReadableText
+//     {
+//         private readonly string _value;
+//         private ReadableText(string name)
+//         {
+//             _value = name;
+//         }
 
-            Access<FileInfo, FileInfo> revokable =
-                Access.OnlyFilesFromDirectory(new DirectoryInfo(""))
-                      .Extension(".txt")
-                      .Times(3)
-                      .DuringHours(2, 10)
-                      .Revokable();
+//         public static ValidationResult<ReadableText> Create(string untrusted)
+//         {
+//             return Spec.Of<string>()
+//                        .NotNull("Product name should not be 'null'")
+//                        .NotEmpty("Product name should not be empty")
+//                        .NotWhiteSpace("Product name should not contain only white-space characters")
+//                        .Regex("^[a-zA-Z ]+$", "Product name should only contain characters from a-z")
+//                        .Add(input => input.Length == 20, "Product name should only have a length of 20")
+//                        .Cascade(CascadeMode.FirstFailure)
+//                        .CreateModel(untrusted, validated => new ReadableText(validated));
+//         }
+//     }
 
-            AccessResult<FileInfo> accessResult = revokable.Eval(new FileInfo("txt"));
-            if (accessResult.TryGetValue(out FileInfo output))
-            {
-                
-            }
-        }
-    }
+//     public class Int1To20
+//     {
+//         private readonly int _value;
+//         private Int1To20(int value)
+//         {
+//             _value = value;
+//         }
 
-    public class Name
-    {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Name"/> class.
-        /// </summary>
-        private Name(string value)
-        {
-            Value = value;
-        }
+//         public static ValidationResult<Int1To20> Create(int untrusted)
+//         {
+//             return Spec.Of<int>()
+//                        .InclusiveBetween(1, 20, "Integer should be between 1-20")
+//                        .Cascade(CascadeMode.Continue)
+//                        .CreateModel(untrusted, validated => new Int1To20(validated));
+//         }
+//     }
 
-        public string Value { get; }
+//     public class Record
+//     {
+//         private Record(ReadableText name, Int1To20 amount)
+//         {
+//             ProductName = name;
+//             Amount = amount;
+//         }
 
-        // public ValidationResult<Name> Create(string value)
-        // {
-        //     return Spec.Of<string>()
-        //         .NotNull("Name should not be 'null'")
-        //         .NotEmpty("Name should not be empty")
-        //         .CreateModel(value, x => new Name(x));
-        // }
+//         public ReadableText ProductName { get; }
+//         public Int1To20 Amount { get; }
 
-        // public static Name CreateOrThrow(string value)
-        // {
-        //     return Spec.Of<string>()
-        //         .NotNull("Name should not be 'null'")
-        //         .NotEmpty("Name should not be empty")
-        //         .Cascade(CascadeMode.Continue)
-        //         .CreateModelOrThrow(value, x => new Name(x), "Cannot create a Name instance");
-        // }
+//         public static ValidationResult<Record> Create(string productName, int amount)
+//         {
+//             return ValidationResult<Record>.Combine(
+//                 ReadableText.Create(productName),
+//                 Int1To20.Create(amount),
+//                 (txt, integer) => new Record(txt, integer));
+//         }
+//     }
 
-        // public static bool TryCreate(string value, out Name output)
-        // {
-        //     return Spec.Of<string>()
-        //         .NotNull("Name should not be 'null'")
-        //         .NotEmpty("Name should not be empty")
-        //         .TryCreateModel(value, x => new Name(x), out output);
-        // }
-    }
+//     public class Name
+//     {
+//         /// <summary>
+//         /// Initializes a new instance of the <see cref="Name"/> class.
+//         /// </summary>
+//         private Name(string value)
+//         {
+//             Value = value;
+//         }
 
-    public class Point
-    {
-        private Point(int min, int max)
-        {
-            Min = min;
-            Max = max;
-        }
+//         public string Value { get; }
 
-        public int Min { get; }
-        public int Max { get; }
+//         // public ValidationResult<Name> Create(string value)
+//         // {
+//         //     return Spec.Of<string>()
+//         //         .NotNull("Name should not be 'null'")
+//         //         .NotEmpty("Name should not be empty")
+//         //         .CreateModel(value, x => new Name(x));
+//         // }
 
-        // public static Point Create(int min, int max)
-        // {
-        //     return Spec.Of<(int min, int max)>()
-        //         .InclusiveBetween(x => x.min, 0, 10, "Minimum should be between 1-10")
-        //         .InclusiveBetween(x => x.max, 11, 20, "Maximum should be between 11-20")
-        //         .CreateModelOrThrow((min: min, max: max), x => new Point(x.min, x.max), "Could not create Point instance");
-        // }
-    }
-}
+//         // public static Name CreateOrThrow(string value)
+//         // {
+//         //     return Spec.Of<string>()
+//         //         .NotNull("Name should not be 'null'")
+//         //         .NotEmpty("Name should not be empty")
+//         //         .Cascade(CascadeMode.Continue)
+//         //         .CreateModelOrThrow(value, x => new Name(x), "Cannot create a Name instance");
+//         // }
+
+//         // public static bool TryCreate(string value, out Name output)
+//         // {
+//         //     return Spec.Of<string>()
+//         //         .NotNull("Name should not be 'null'")
+//         //         .NotEmpty("Name should not be empty")
+//         //         .TryCreateModel(value, x => new Name(x), out output);
+//         // }
+//     }
+
+//     public class Point
+//     {
+//         private Point(int min, int max)
+//         {
+//             Min = min;
+//             Max = max;
+//         }
+
+//         public int Min { get; }
+//         public int Max { get; }
+
+//         // public static Point Create(int min, int max)
+//         // {
+//         //     return Spec.Of<(int min, int max)>()
+//         //         .InclusiveBetween(x => x.min, 0, 10, "Minimum should be between 1-10")
+//         //         .InclusiveBetween(x => x.max, 11, 20, "Maximum should be between 11-20")
+//         //         .CreateModelOrThrow((min: min, max: max), x => new Point(x.min, x.max), "Could not create Point instance");
+//         // }
+//     }
+// }

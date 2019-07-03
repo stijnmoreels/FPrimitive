@@ -48,7 +48,9 @@
             <a href="fprimitive-access-2.html">Access<'a, 'b></a>
           </td>
           <td class="xmldoc">
-          
+          <p>Represents an access-controlled function.</p>
+
+
           </td>
         </tr>
         <tr>
@@ -56,7 +58,9 @@
             <a href="fprimitive-accessfailureexception.html">AccessFailureException</a>
           </td>
           <td class="xmldoc">
-          
+          <p>Thrown when the access to the result of an access-controlled function is not available.</p>
+
+
           </td>
         </tr>
         <tr>
@@ -81,40 +85,12 @@
         </tr>
         <tr>
           <td class="type-name">
-            <a href="fprimitive-disposable-1.html">Disposable<'a></a>
-          </td>
-          <td class="xmldoc">
-          <p>Representation of a value that can be disposed/removed any time.</p>
-
-
-          </td>
-        </tr>
-        <tr>
-          <td class="type-name">
-            <a href="fprimitive-readonce-1.html">ReadOnce<'a></a>
-          </td>
-          <td class="xmldoc">
-          <p>Representation of a value that can only be read once.</p>
-
-
-          </td>
-        </tr>
-        <tr>
-          <td class="type-name">
             <a href="fprimitive-requirement-1.html">Requirement<'a></a>
           </td>
           <td class="xmldoc">
           <p>Type alias for the validation requirement.</p>
 
 
-          </td>
-        </tr>
-        <tr>
-          <td class="type-name">
-            <a href="fprimitive-resultbuilder.html">ResultBuilder</a>
-          </td>
-          <td class="xmldoc">
-          
           </td>
         </tr>
         <tr>
@@ -139,30 +115,10 @@
         </tr>
         <tr>
           <td class="type-name">
-            <a href="fprimitive-untrust-1.html">Untrust<'a></a>
-          </td>
-          <td class="xmldoc">
-          <p>Representation of an untrusted value that should be validated first before it can be used.</p>
-
-
-          </td>
-        </tr>
-        <tr>
-          <td class="type-name">
             <a href="fprimitive-validationfailureexception.html">ValidationFailureException</a>
           </td>
           <td class="xmldoc">
           <p>Exception thrown when the validation of a value against a domain specification failed.</p>
-
-
-          </td>
-        </tr>
-        <tr>
-          <td class="type-name">
-            <a href="fprimitive-validationresult-1.html">ValidationResult<'a></a>
-          </td>
-          <td class="xmldoc">
-          <p>Result type when a value is validated against a domain specification <code>Spec&lt;_&gt;</code>.</p>
 
 
           </td>
@@ -176,18 +132,32 @@
     <tbody>
         <tr>
           <td class="module-name">
-            <a href="fprimitive-accessexposure.html">AccessExposure</a>
+            <a href="fprimitive-access.html">Access</a>
           </td>
           <td class="xmldoc">
-          
+          <p>Provides operations on the <code>Access&lt;_, _&gt;</code> type.</p>
+
+
           </td>
         </tr>
         <tr>
           <td class="module-name">
-            <a href="fprimitive-dir.html">Dir</a>
+            <a href="fprimitive-accessexposure.html">AccessExposure</a>
           </td>
           <td class="xmldoc">
-          
+          <p>Exposure values for the <code>Access&lt;_, _&gt;</code> type.</p>
+
+
+          </td>
+        </tr>
+        <tr>
+          <td class="module-name">
+            <a href="fprimitive-disposable.html">Disposable</a>
+          </td>
+          <td class="xmldoc">
+          <p>Operations on the <code>Disposable&lt;_&gt;</code> type.</p>
+
+
           </td>
         </tr>
         <tr>
@@ -196,32 +166,6 @@
           </td>
           <td class="xmldoc">
           <p>Representation of a value that can only be read once.</p>
-
-
-          </td>
-        </tr>
-        <tr>
-          <td class="module-name">
-            <a href="fprimitive-resultmodule.html">Result</a>
-          </td>
-          <td class="xmldoc">
-          
-          </td>
-        </tr>
-        <tr>
-          <td class="module-name">
-            <a href="fprimitive-resultexposure.html">ResultExposure</a>
-          </td>
-          <td class="xmldoc">
-          
-          </td>
-        </tr>
-        <tr>
-          <td class="module-name">
-            <a href="fprimitive-sec.html">Sec</a>
-          </td>
-          <td class="xmldoc">
-          <p>Prelude domain security functionality collected in a generic security module.</p>
 
 
           </td>
@@ -269,12 +213,74 @@
     <tbody>
         <tr>
           <td class="type-name">
-            <a href="microsoft-fsharp-core-option.html">Option</a>
+            <a href="microsoft-fsharp-core-resultbuilder.html">ResultBuilder</a>
           </td>
           <td class="xmldoc">
-          <p>Type alias for C# related operations.</p>
+          <p>Result computation expression.</p>
 
 
+          </td>
+        </tr>
+    </tbody>
+  </table>
+  <table class="table table-bordered module-list">
+    <thead>
+      <tr><td>Module</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td class="module-name">
+            <a href="microsoft-fsharp-core-result.html">Result</a>
+          </td>
+          <td class="xmldoc">
+          <p>Additional operations on the <code>Result&lt;_, _&gt;</code> type.</p>
+
+
+          </td>
+        </tr>
+        <tr>
+          <td class="module-name">
+            <a href="microsoft-fsharp-core-resultexposure.html">ResultExposure</a>
+          </td>
+          <td class="xmldoc">
+          <p>Result auto exposed values.</p>
+
+
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+    </div>
+  <h2>System Namespace</h2>
+    <div>
+      <table class="table table-bordered module-list">
+    <thead>
+      <tr><td>Module</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td class="module-name">
+            <a href="system-prelude.html">Prelude</a>
+          </td>
+          <td class="xmldoc">
+          
+          </td>
+        </tr>
+        <tr>
+          <td class="module-name">
+            <a href="system-timeint.html">TimeInt</a>
+          </td>
+          <td class="xmldoc">
+          
+          </td>
+        </tr>
+        <tr>
+          <td class="module-name">
+            <a href="system-timestring.html">TimeString</a>
+          </td>
+          <td class="xmldoc">
+          
           </td>
         </tr>
     </tbody>

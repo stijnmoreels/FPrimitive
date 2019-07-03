@@ -29,18 +29,16 @@ type ReadOnce<'a> (value : 'a) =
 
 /// Representation of a value that can only be read once.
 module ReadOnce =
-    /// Wraps a value into a value that can only be read once.
-    let value x = ReadOnce x
     /// Tries to read the read-once value.
     let tryGetValue (x : ReadOnce<_>) = x.tryGetValue ()
     /// Tries to read the read-once value.
-    let tryGetValueError x error = tryGetValue x |> Result.ofOption error
+    let tryGetValueResult x error = tryGetValue x |> Result.ofOption error
 
 /// Representation of a value that can be disposed/removed any time.
 type Disposable<'a> (value : 'a) =
     member val private RefValue = ref (value :> obj)
     /// Tries to read the possible disposed value.
-    member this.tryGetValue () =
+    member internal this.tryGetValue () =
         if this.RefValue = ref null then None
         else Some (this.RefValue.contents :?> 'a)
     /// Reads the possible disposed value, throws an `ObjectDisposedException` otherwise.
@@ -55,8 +53,18 @@ type Disposable<'a> (value : 'a) =
         | None -> output <- Unchecked.defaultof<'a>; false
 
     interface IDisposable with
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         member this.Dispose () = 
             Interlocked.Exchange (this.RefValue, null) |> ignore
+
+/// Operations on the `Disposable<_>` type.
+module Disposable =
+  /// Creates a disposable resource from any value.
+  let create (x : 'a) = new Disposable<'a> (x)
+  /// Tries to read the possible disposed value.
+  let tryGetValue (x : Disposable<_>) = x.tryGetValue ()
+  /// Tries to read the possible disposed value.
+  let tryGetValueResult x error = tryGetValue x |> Result.ofOption error
 
 /// Representation of an untrusted value that should be validated first before it can be used. 
 type Untrust<'a> (value : 'a) = 
@@ -81,9 +89,6 @@ type Untrust<'a> (value : 'a) =
 
 /// Representation of an untrusted value that should be validated first before it can be used. 
 module Untrust = 
-    /// Wraps an untrusted value into a representation that only exposes untrusted values after validation.
-    [<CompiledName("Create")>]
-    let set x = Untrust x
     /// Tries to get the wrapped value out of the untrusted boundary by validating the value.
     let getWith (validator : 'a -> bool) (x : Untrust<'a>) = x.tryGetValue validator
     /// Tries to get the wrapped value out of the untrusted boundary by validating the value.

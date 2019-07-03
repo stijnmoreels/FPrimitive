@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
@@ -7,13 +7,17 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include="paket.references" />
+    <Compile Include="..\..\paket-files\stijnmoreels\System\Prelude.fs">
+      <Paket>True</Paket>
+      <Link>paket-files/Prelude.fs</Link>
+    </Compile>
     <Compile Include="..\..\paket-files\stijnmoreels\System\Time.fs">
       <Paket>True</Paket>
-      <Link>Time.fs</Link>
+      <Link>paket-files/Time.fs</Link>
     </Compile>
     <Compile Include="..\..\paket-files\stijnmoreels\System\Result.fs">
       <Paket>True</Paket>
-      <Link>Result.fs</Link>
+      <Link>paket-files/Result.fs</Link>
     </Compile>
     <Compile Include="Types.fs" />
     <Compile Include="Spec.fs" />

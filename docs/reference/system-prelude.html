@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8"/>
-    <title>Sec - FPrimitive</title>
+    <title>Prelude - FPrimitive</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="description" content=""/>
     <meta name="author" content="Stijn Moreels"/>
@@ -35,13 +35,16 @@
 
 
 
-<h1>Sec</h1>
+<h1>Prelude</h1>
 <p>
-  <span>Namespace: FPrimitive</span><br />
-  </p>
+  <span>Namespace: System</span><br />
+        <span>
+          Attributes:<br />
+[&lt;AutoOpen&gt;]<br />
+          
+      </span>
+</p>
 <div class="xmldoc">
-<p>Prelude domain security functionality collected in a generic security module.</p>
-
 </div>
 
 <!-- Render nested types and modules, if there are any -->
@@ -55,61 +58,19 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '26', 26)" onmouseover="showTip(event, '26', 26)">
-            evalOnce f
+          <code onmouseout="hideTip(event, '138', 138)" onmouseover="showTip(event, '138', 138)">
+            using f x
           </code>
-          <div class="tip" id="26">
-            <strong>Signature:</strong> f:(&#39;?8597 -&gt; &#39;?8598) -&gt; &#39;?8597 -&gt; &#39;?8598 option<br />
-                          <strong>Type parameters:</strong> '?8597, '?8598                      </div>
+          <div class="tip" id="138">
+            <strong>Signature:</strong> f:(^a -&gt; &#39;?9440) -&gt; x:^a -&gt; &#39;?9440<br />
+                          <strong>Type parameters:</strong> ^a, '?9440                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Sec.fs#L64-64" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Prelude.fs#L8-8" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          <p>Make a function into a function that only can be evaluated once.</p>
-
-
-        </td>
-      </tr>
-      <tr>
-        <td class="member-name">
-
-          <code onmouseout="hideTip(event, '27', 27)" onmouseover="showTip(event, '27', 27)">
-            revokable f
-          </code>
-          <div class="tip" id="27">
-            <strong>Signature:</strong> f:(&#39;?8600 -&gt; &#39;?8601) -&gt; (&#39;?8600 -&gt; &#39;?8601 option) * (unit -&gt; unit)<br />
-                          <strong>Type parameters:</strong> '?8600, '?8601                      </div>
-        </td>
-        <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Sec.fs#L71-71" class="github-link">
-              <img src="../content/img/github.png" class="normal" />
-              <img src="../content/img/github-blue.png" class="hover" />
-            </a>
-          <p>Make a function into a function that can be revoked to be evaluated.</p>
-
-
-        </td>
-      </tr>
-      <tr>
-        <td class="member-name">
-
-          <code onmouseout="hideTip(event, '28', 28)" onmouseover="showTip(event, '28', 28)">
-            revokeAfter delay f
-          </code>
-          <div class="tip" id="28">
-            <strong>Signature:</strong> delay:(type) -&gt; f:(&#39;?8603 -&gt; &#39;?8604) -&gt; &#39;?8603 -&gt; &#39;?8604 option<br />
-                          <strong>Type parameters:</strong> '?8603, '?8604                      </div>
-        </td>
-        <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Sec.fs#L81-81" class="github-link">
-              <img src="../content/img/github.png" class="normal" />
-              <img src="../content/img/github-blue.png" class="hover" />
-            </a>
-          <p>Make a function revoked after a period of time.</p>
-
-
+          
         </td>
       </tr>
     </tbody>

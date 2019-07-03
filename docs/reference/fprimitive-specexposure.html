@@ -60,15 +60,15 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '78', 78)" onmouseover="showTip(event, '78', 78)">
+          <code onmouseout="hideTip(event, '81', 81)" onmouseover="showTip(event, '81', 81)">
             spec 
           </code>
-          <div class="tip" id="78">
+          <div class="tip" id="81">
             <strong>Signature:</strong> SpecBuilder&lt;&#39;a,Spec&lt;&#39;a&gt;&gt;<br />
                           <strong>Type parameters:</strong> 'a                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L330-330" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L423-423" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -80,15 +80,15 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '79', 79)" onmouseover="showTip(event, '79', 79)">
+          <code onmouseout="hideTip(event, '82', 82)" onmouseover="showTip(event, '82', 82)">
             specModel createModel value
           </code>
-          <div class="tip" id="79">
+          <div class="tip" id="82">
             <strong>Signature:</strong> createModel:(&#39;a -&gt; &#39;b) -&gt; value:&#39;a -&gt; SpecBuilder&lt;&#39;a,Result&lt;&#39;b,string list&gt;&gt;<br />
                           <strong>Type parameters:</strong> 'a, 'b                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L336-336" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L431-431" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -100,15 +100,15 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '80', 80)" onmouseover="showTip(event, '80', 80)">
+          <code onmouseout="hideTip(event, '83', 83)" onmouseover="showTip(event, '83', 83)">
             specOption value
           </code>
-          <div class="tip" id="80">
+          <div class="tip" id="83">
             <strong>Signature:</strong> value:&#39;a -&gt; SpecBuilder&lt;&#39;a,&#39;a option&gt;<br />
                           <strong>Type parameters:</strong> 'a                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L334-334" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L427-427" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -120,19 +120,39 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '81', 81)" onmouseover="showTip(event, '81', 81)">
+          <code onmouseout="hideTip(event, '84', 84)" onmouseover="showTip(event, '84', 84)">
             specResult value
           </code>
-          <div class="tip" id="81">
+          <div class="tip" id="84">
             <strong>Signature:</strong> value:&#39;a -&gt; SpecBuilder&lt;&#39;a,Result&lt;&#39;a,string list&gt;&gt;<br />
                           <strong>Type parameters:</strong> 'a                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L332-332" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L425-425" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
           <p>Computation builder to build an <code>Spec&lt;_&gt;</code> instance that gets validated to a <code>Result&lt;_, string list&gt;</code> when runned.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '85', 85)" onmouseover="showTip(event, '85', 85)">
+            specUntrust untrusted
+          </code>
+          <div class="tip" id="85">
+            <strong>Signature:</strong> untrusted:Untrust&lt;&#39;a&gt; -&gt; SpecBuilder&lt;&#39;a,Result&lt;&#39;a,string list&gt;&gt;<br />
+                          <strong>Type parameters:</strong> 'a                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L429-429" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Computation builder to build an <code>Spec,_&gt;</code> instance that gets validated from an <code>Untrust&lt;_&gt;</code> to a <code>Result&lt;_, string list&gt;</code> when runned.</p>
 
 
         </td>

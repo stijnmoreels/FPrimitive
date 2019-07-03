@@ -7,7 +7,6 @@ open Fake.IO.FileSystemOperators
 open Fake.IO.Globbing.Operators
 open Fake.Core.TargetOperators
 open Fake.DotNet.PaketTemplate
-open Fake.DotNet.FSFormatting
 
 type Projet =
     { Name : string
@@ -73,7 +72,7 @@ Target.create "Paket" <| fun _ ->
     PaketTemplate.create (fun defaults ->
         { defaults with 
             TemplateFilePath = Some templateFile
-            TemplateType = PaketTemplate.PaketTemplateType.File
+            TemplateType = File
             Id = Some project.Name
             Version = Some releaseNotes.NugetVersion
             Description = project.Description
@@ -88,14 +87,12 @@ Target.create "Paket" <| fun _ ->
             Copyright = Some "Copyright 2019"
             Tags = [ "domain"; "model"; "secure"; "trust"; "boundaries"; "blocks"; "reusable"; "fsharp" ]
             Files = 
-                [ PaketFileInfo.Include ("bin/Release/netstandard2.0/*.dll", "lib/netstandard2.0")
-                  PaketFileInfo.Include ("bin/Release/netstandard2.0/*.xml", "lib/netstandard2.0") ]
+                [ Include ("bin/Release/netstandard2.0/*.dll", "lib/netstandard2.0")
+                  Include ("bin/Release/netstandard2.0/*.xml", "lib/netstandard2.0") ]
             Dependencies = 
                 Paket.getDependenciesForReferencesFile referencesFile
                 |> Array.map (fun (package, version) -> PaketDependency (package, GreaterOrEqual (Version version)))
-                |> List.ofArray
-                // Apperently the FSharp.Core >= 4.5.4 package isn't added this way (`Paket.getDependenciesForReferencesFile`).
-                |> fun xs -> PaketDependency ("FSharp.Core", GreaterOrEqual (Version "4.5.4")) :: xs })
+                |> List.ofArray })
 
     Paket.pack (fun defaults ->
         { defaults with

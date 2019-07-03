@@ -7,19 +7,46 @@
 FPrimitive
 ======================
 
-
 *)
 open FPrimitive
 
-printfn "hello = %i" <| Library.hello 0
+/// Composible specifications for your domain types:
+type NonEmptyString =
+  private NonEmptyString of string with
+    static member create x =
+      Spec.def<string>
+      |> Spec.notNull "should not be null"
+      |> Spec.notEmpty "should not be empty"
+      |> Spec.createModel NonEmptyString x
+
+/// ...also available as computation expression.
+type NonEmptyList<'a> =
+  private NonEmptyList of 'a list with
+    static member create xs =
+      specModel NonEmptyList xs {
+        nonEmpty "list should not be empty"
+        lengthBetween 1 10 "list length should be between 1-10" }
+
+
+/// Access controllers for your critical application resources:
+let uncontrolled_critical = ignore
+let critical =
+  Access.func uncontrolled_critical
+  |> Access.once
+  |> Access.duringHours 9 17
+  |> Access.revokable
+
+/// Try to evaluate
+Access.eval () critical
+/// Revoke when neccessary
+Access.revoke critical
 
 (**
 
 The library comes with comprehensible documentation about the major parts of the project and the complete API reference of the project:
 
  * [API Reference](reference/index.html) contains automatically generated documentation for all types, modules
-   and functions in the library. This includes additional brief samples on using most of the
-   functions.
+   and functions in the library.
  
 Contributing and copyright
 --------------------------
@@ -41,5 +68,4 @@ Icons made by [Vectors Market][vectorsmarket] from [www.flaticon.com][flaticon] 
   [vectorsmarket]: https://www.flaticon.com/authors/vectors-market
   [flaticon]: https://www.flaticon.com/
   [cc]: http://creativecommons.org/licenses/by/3.0/
-*)
 *)
