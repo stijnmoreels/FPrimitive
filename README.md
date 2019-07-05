@@ -1,5 +1,7 @@
 # FPrimitive
 
+FPrimitive is a .NET project to help developers build a correct and more secure domain model by providing building blocks, standard types and trust boundaries.
+
 <img src="/docsrc/files/img/logo.png" width=100 height=100 alt="logo" />
 
 ## NuGet
@@ -11,3 +13,41 @@
 | Mono                                                                                                                              | .NET                                                                                                                                                   |
 | --------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | [![Build Status](https://travis-ci.org/stijnmoreels/FPrimitive.svg?branch=master)](https://travis-ci.org/stijnmoreels/FPrimitive) | [![.NET Build status](https://ci.appveyor.com/api/projects/status/2ijw1am46pyhqnur?svg=true)](https://ci.appveyor.com/project/stijnmoreels/fprimitive) |
+
+## Examples
+The project contains several reusable building blocks to make your domain model more correct and therefore more secure.
+
+
+```fsharp
+open FPrimitive
+
+/// Composible specifications for your domain types:
+type NonEmptyString =
+  private NonEmptyString of string with
+    static member create x =
+      Spec.def<string>
+      |> Spec.notNull "should not be null"
+      |> Spec.notEmpty "should not be empty"
+      |> Spec.createModel NonEmptyString x
+
+/// ...also available as computation expression.
+type NonEmptyList<'a> =
+  private NonEmptyList of 'a list with
+    static member create xs =
+      specModel NonEmptyList xs {
+        nonEmpty "list should not be empty"
+        lengthBetween 1 10 "list length should be between 1-10" }
+
+/// Access controllers for your critical application resources:
+let uncontrolled_critical = ignore
+let critical =
+  Access.func uncontrolled_critical
+  |> Access.once
+  |> Access.duringHours 9 17
+  |> Access.revokable
+
+/// Try to evaluate
+Access.eval () critical
+/// Revoke when neccessary
+Access.revoke critical
+```

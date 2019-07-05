@@ -1,4 +1,5 @@
 FSharp.Core
 File:Time.fs .
+File:Option.fs
 File:Result.fs .
 File:Prelude.fs

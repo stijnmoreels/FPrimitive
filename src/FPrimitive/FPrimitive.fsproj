@@ -7,17 +7,21 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include="paket.references" />
+    <Compile Include="..\..\paket-files\stijnmoreels\System\Option.fs">
+      <Paket>True</Paket>
+      <Link>paket-files/Option.fs</Link>
+    </Compile>
     <Compile Include="..\..\paket-files\stijnmoreels\System\Prelude.fs">
       <Paket>True</Paket>
       <Link>paket-files/Prelude.fs</Link>
     </Compile>
     <Compile Include="..\..\paket-files\stijnmoreels\System\Time.fs">
       <Paket>True</Paket>
-      <Link>paket-files/Time.fs</Link>
+      <Link>Time.fs</Link>
     </Compile>
     <Compile Include="..\..\paket-files\stijnmoreels\System\Result.fs">
       <Paket>True</Paket>
-      <Link>paket-files/Result.fs</Link>
+      <Link>Result.fs</Link>
     </Compile>
     <Compile Include="Types.fs" />
     <Compile Include="Spec.fs" />
