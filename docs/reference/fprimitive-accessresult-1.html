@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8"/>
-    <title>ResultExposure - FPrimitive</title>
+    <title>AccessResult<'a> - FPrimitive</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="description" content=""/>
     <meta name="author" content="Stijn Moreels"/>
@@ -35,122 +35,103 @@
 
 
 
-<h1>ResultExposure</h1>
+<h1>AccessResult<'a></h1>
 <p>
-  <span>Namespace: Microsoft.FSharp.Core</span><br />
-        <span>
-          Attributes:<br />
-[&lt;AutoOpen&gt;]<br />
-          
-      </span>
-</p>
+
+    <span>Namespace: FPrimitive</span><br />
+    </p>
 <div class="xmldoc">
-<p>Result auto exposed values.</p>
+<p>Result type when the access-controlled function is evaluated.</p>
 
 </div>
-
-<!-- Render nested types and modules, if there are any -->
-
-  <h3>Functions and values</h3>
+  <h3>Instance members</h3>
   <table class="table table-bordered member-list">
     <thead>
-      <tr><td>Function or value</td><td>Description</td></tr>
+      <tr><td>Instance member</td><td>Description</td></tr>
     </thead>
     <tbody>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '134', 134)" onmouseover="showTip(event, '134', 134)">
-            ( &lt;!&gt; ) m f
+          <code onmouseout="hideTip(event, '169', 169)" onmouseover="showTip(event, '169', 169)">
+            x.Errors
           </code>
-          <div class="tip" id="134">
-            <strong>Signature:</strong> m:Result&lt;&#39;?8407,&#39;?8408&gt; -&gt; f:(&#39;?8407 -&gt; &#39;?8409) -&gt; Result&lt;&#39;?8409,&#39;?8408&gt;<br />
-                          <strong>Type parameters:</strong> '?8407, '?8408, '?8409                      </div>
-        </td>
-        <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L268-268" class="github-link">
-              <img src="../content/img/github.png" class="normal" />
-              <img src="../content/img/github-blue.png" class="hover" />
-            </a>
-          
-              <p>CompiledName: <code>op_LessBangGreater</code></p>
-        </td>
-      </tr>
-      <tr>
-        <td class="member-name">
-
-          <code onmouseout="hideTip(event, '135', 135)" onmouseover="showTip(event, '135', 135)">
-            ( &lt;*&gt; )
-          </code>
-          <div class="tip" id="135">
-            <strong>Signature:</strong> Result&lt;(&#39;?8411 -&gt; &#39;?8412),&#39;?8413 list&gt; -&gt; Result&lt;&#39;?8411,&#39;?8413 list&gt; -&gt; Result&lt;&#39;?8412,&#39;?8413 list&gt;<br />
-                          <strong>Type parameters:</strong> '?8411, '?8412, '?8413                      </div>
-        </td>
-        <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L269-269" class="github-link">
-              <img src="../content/img/github.png" class="normal" />
-              <img src="../content/img/github-blue.png" class="hover" />
-            </a>
-          
-              <p>CompiledName: <code>op_LessMultiplyGreater</code></p>
-        </td>
-      </tr>
-      <tr>
-        <td class="member-name">
-
-          <code onmouseout="hideTip(event, '136', 136)" onmouseover="showTip(event, '136', 136)">
-            ( &gt;=&gt; ) f g
-          </code>
-          <div class="tip" id="136">
-            <strong>Signature:</strong> f:(&#39;?8402 -&gt; Result&lt;&#39;?8403,&#39;?8404&gt;) -&gt; g:(&#39;?8403 -&gt; Result&lt;&#39;?8405,&#39;?8404&gt;) -&gt; &#39;?8402 -&gt; Result&lt;&#39;?8405,&#39;?8404&gt;<br />
-                          <strong>Type parameters:</strong> '?8402, '?8403, '?8404, '?8405                      </div>
-        </td>
-        <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L267-267" class="github-link">
-              <img src="../content/img/github.png" class="normal" />
-              <img src="../content/img/github-blue.png" class="hover" />
-            </a>
-          
-              <p>CompiledName: <code>op_GreaterEqualsGreater</code></p>
-        </td>
-      </tr>
-      <tr>
-        <td class="member-name">
-
-          <code onmouseout="hideTip(event, '137', 137)" onmouseover="showTip(event, '137', 137)">
-            ( &gt;&gt;= ) m f
-          </code>
-          <div class="tip" id="137">
-            <strong>Signature:</strong> m:Result&lt;&#39;?8398,&#39;?8399&gt; -&gt; f:(&#39;?8398 -&gt; Result&lt;&#39;?8400,&#39;?8399&gt;) -&gt; Result&lt;&#39;?8400,&#39;?8399&gt;<br />
-                          <strong>Type parameters:</strong> '?8398, '?8399, '?8400                      </div>
-        </td>
-        <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L266-266" class="github-link">
-              <img src="../content/img/github.png" class="normal" />
-              <img src="../content/img/github-blue.png" class="hover" />
-            </a>
-          
-              <p>CompiledName: <code>op_GreaterGreaterEquals</code></p>
-        </td>
-      </tr>
-      <tr>
-        <td class="member-name">
-
-          <code onmouseout="hideTip(event, '138', 138)" onmouseover="showTip(event, '138', 138)">
-            result
-          </code>
-          <div class="tip" id="138">
-            <strong>Signature:</strong> ResultBuilder<br />
+          <div class="tip" id="169">
+            <strong>Signature:</strong> string []<br />
                                   </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L272-272" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Access.fs#L258-258" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          <p>Result computation expression</p>
+          <p>Gets the series of errors that occured during the evaluation of the access-controlled function.</p>
 
 
+              <p>CompiledName: <code>get_Errors</code></p>
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '170', 170)" onmouseover="showTip(event, '170', 170)">
+            x.Successful
+          </code>
+          <div class="tip" id="170">
+            <strong>Signature:</strong> bool<br />
+                                  </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Access.fs#L256-256" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Gets a value indicating whether or not the access-controlled function was evaluated successfully.</p>
+
+
+              <p>CompiledName: <code>get_Successful</code></p>
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '171', 171)" onmouseover="showTip(event, '171', 171)">
+            x.TryGetValue(output)
+          </code>
+          <div class="tip" id="171">
+            <strong>Signature:</strong> output:outref&lt;&#39;a&gt; -&gt; bool<br />
+                                  </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Access.fs#L271-271" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Tries to get the result of the access-controlled function based on whether the function evaluated successfully.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '172', 172)" onmouseover="showTip(event, '172', 172)">
+            x.Value
+          </code>
+          <div class="tip" id="172">
+            <strong>Signature:</strong> &#39;a<br />
+                                  </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Access.fs#L264-264" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Gets the result of the access-controlled function if the function evaluated successfully,
+otherwise an <a href="fprimitive-accessfailureexception.html" title="AccessFailureException"><code>AccessFailureException</code></a> is thrown.</p>
+
+
+              <p>CompiledName: <code>get_Value</code></p>
         </td>
       </tr>
     </tbody>
