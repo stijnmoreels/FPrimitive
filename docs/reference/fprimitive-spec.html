@@ -59,8 +59,8 @@
             add req spec
           </code>
           <div class="tip" id="31">
-            <strong>Signature:</strong> req:(&#39;?8898 -&gt; bool * string) -&gt; spec:Spec&lt;&#39;?8898&gt; -&gt; Spec&lt;&#39;?8898&gt;<br />
-                          <strong>Type parameters:</strong> '?8898                      </div>
+            <strong>Signature:</strong> req:(&#39;?8971 -&gt; bool * string) -&gt; spec:Spec&lt;&#39;?8971&gt; -&gt; Spec&lt;&#39;?8971&gt;<br />
+                          <strong>Type parameters:</strong> '?8971                      </div>
         </td>
         <td class="xmldoc">
                       <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L38-38" class="github-link">
@@ -79,8 +79,8 @@
             cascade mode spec
           </code>
           <div class="tip" id="32">
-            <strong>Signature:</strong> mode:CascadeMode -&gt; spec:Spec&lt;&#39;?9006&gt; -&gt; Spec&lt;&#39;?9006&gt;<br />
-                          <strong>Type parameters:</strong> '?9006                      </div>
+            <strong>Signature:</strong> mode:CascadeMode -&gt; spec:Spec&lt;&#39;?9080&gt; -&gt; Spec&lt;&#39;?9080&gt;<br />
+                          <strong>Type parameters:</strong> '?9080                      </div>
         </td>
         <td class="xmldoc">
                       <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L233-233" class="github-link">
@@ -99,8 +99,8 @@
             createModel f value spec
           </code>
           <div class="tip" id="33">
-            <strong>Signature:</strong> f:(&#39;?9014 -&gt; &#39;?9015) -&gt; value:&#39;?9014 -&gt; spec:Spec&lt;&#39;?9014&gt; -&gt; Result&lt;&#39;?9015,string list&gt;<br />
-                          <strong>Type parameters:</strong> '?9014, '?9015                      </div>
+            <strong>Signature:</strong> f:(&#39;?9088 -&gt; &#39;?9089) -&gt; value:&#39;?9088 -&gt; spec:Spec&lt;&#39;?9088&gt; -&gt; Result&lt;&#39;?9089,string list&gt;<br />
+                          <strong>Type parameters:</strong> '?9088, '?9089                      </div>
         </td>
         <td class="xmldoc">
                       <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L263-263" class="github-link">
@@ -144,8 +144,8 @@
             equal value message spec
           </code>
           <div class="tip" id="35">
-            <strong>Signature:</strong> value:&#39;?8903 -&gt; message:string -&gt; spec:Spec&lt;&#39;?8903&gt; -&gt; Spec&lt;&#39;?8903&gt;<br />
-                          <strong>Type parameters:</strong> '?8903                      </div>
+            <strong>Signature:</strong> value:&#39;?8976 -&gt; message:string -&gt; spec:Spec&lt;&#39;?8976&gt; -&gt; Spec&lt;&#39;?8976&gt;<br />
+                          <strong>Type parameters:</strong> '?8976                      </div>
         </td>
         <td class="xmldoc">
                       <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L47-47" class="github-link">
@@ -164,8 +164,8 @@
             equalOf selector value message spec
           </code>
           <div class="tip" id="36">
-            <strong>Signature:</strong> selector:(&#39;?8900 -&gt; &#39;?8901) -&gt; value:&#39;?8901 -&gt; message:string -&gt; spec:Spec&lt;&#39;?8900&gt; -&gt; Spec&lt;&#39;?8900&gt;<br />
-                          <strong>Type parameters:</strong> '?8900, '?8901                      </div>
+            <strong>Signature:</strong> selector:(&#39;?8973 -&gt; &#39;?8974) -&gt; value:&#39;?8974 -&gt; message:string -&gt; spec:Spec&lt;&#39;?8973&gt; -&gt; Spec&lt;&#39;?8973&gt;<br />
+                          <strong>Type parameters:</strong> '?8973, '?8974                      </div>
         </td>
         <td class="xmldoc">
                       <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L43-43" class="github-link">
@@ -185,15 +185,15 @@ which defines that the result should be equal to the specified value.</p>
             exclusiveBetween min max message spec
           </code>
           <div class="tip" id="37">
-            <strong>Signature:</strong> min:&#39;?8997 -&gt; max:&#39;?8997 -&gt; message:string -&gt; spec:Spec&lt;&#39;?8997&gt; -&gt; Spec&lt;&#39;?8997&gt;<br />
-                          <strong>Type parameters:</strong> '?8997                      </div>
+            <strong>Signature:</strong> min:&#39;?9070 -&gt; max:&#39;?9070 -&gt; message:string -&gt; spec:Spec&lt;&#39;?9070&gt; -&gt; Spec&lt;&#39;?9070&gt;<br />
+                          <strong>Type parameters:</strong> '?9070                      </div>
         </td>
         <td class="xmldoc">
                       <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L210-210" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          <p>Adds a requirement to check if the value is exclusive between (<code>min &lt; value &amp;&amp; value &gt; max</code>) the specified range.</p>
+          <p>Adds a requirement to check if the value is exclusive between (<code>min &lt; value &amp;&amp; value &lt; max</code>) the specified range.</p>
 
 
         </td>
@@ -205,8 +205,8 @@ which defines that the result should be equal to the specified value.</p>
             exclusiveBetweenOf (...)
           </code>
           <div class="tip" id="38">
-            <strong>Signature:</strong> selector:(&#39;?8994 -&gt; &#39;?8995) -&gt; min:&#39;?8995 -&gt; max:&#39;?8995 -&gt; message:string -&gt; spec:Spec&lt;&#39;?8994&gt; -&gt; Spec&lt;&#39;?8994&gt;<br />
-                          <strong>Type parameters:</strong> '?8994, '?8995                      </div>
+            <strong>Signature:</strong> selector:(&#39;?9067 -&gt; &#39;?9068) -&gt; min:&#39;?9068 -&gt; max:&#39;?9068 -&gt; message:string -&gt; spec:Spec&lt;&#39;?9067&gt; -&gt; Spec&lt;&#39;?9067&gt;<br />
+                          <strong>Type parameters:</strong> '?9067, '?9068                      </div>
         </td>
         <td class="xmldoc">
                       <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L206-206" class="github-link">
@@ -214,7 +214,7 @@ which defines that the result should be equal to the specified value.</p>
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
           <p>Adds a requirement for the result of the specified mapping,
-which defines that the result should be exclusive between (<code>min &lt; value &amp;&amp; value &gt; max</code>) the specified range.</p>
+which defines that the result should be exclusive between (<code>min &lt; value &amp;&amp; value &lt; max</code>) the specified range.</p>
 
 
         </td>
@@ -226,8 +226,8 @@ which defines that the result should be exclusive between (<code>min &lt; value 
             forall predicate message spec
           </code>
           <div class="tip" id="39">
-            <strong>Signature:</strong> predicate:(&#39;?8938 -&gt; bool) -&gt; message:string -&gt; spec:Spec&lt;&#39;?8939&gt; -&gt; Spec&lt;&#39;?8939&gt;<br />
-                          <strong>Type parameters:</strong> '?8938, '?8939                      </div>
+            <strong>Signature:</strong> predicate:(&#39;?9011 -&gt; bool) -&gt; message:string -&gt; spec:Spec&lt;&#39;?9012&gt; -&gt; Spec&lt;&#39;?9012&gt;<br />
+                          <strong>Type parameters:</strong> '?9011, '?9012                      </div>
         </td>
         <td class="xmldoc">
                       <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L120-120" class="github-link">
@@ -246,8 +246,8 @@ which defines that the result should be exclusive between (<code>min &lt; value 
             forallOf selector predicate message spec
           </code>
           <div class="tip" id="40">
-            <strong>Signature:</strong> selector:(&#39;?8934 -&gt; &#39;?8935) -&gt; predicate:(&#39;?8936 -&gt; bool) -&gt; message:string -&gt; spec:Spec&lt;&#39;?8934&gt; -&gt; Spec&lt;&#39;?8934&gt;<br />
-                          <strong>Type parameters:</strong> '?8934, '?8935, '?8936                      </div>
+            <strong>Signature:</strong> selector:(&#39;?9007 -&gt; &#39;?9008) -&gt; predicate:(&#39;?9009 -&gt; bool) -&gt; message:string -&gt; spec:Spec&lt;&#39;?9007&gt; -&gt; Spec&lt;&#39;?9007&gt;<br />
+                          <strong>Type parameters:</strong> '?9007, '?9008, '?9009                      </div>
         </td>
         <td class="xmldoc">
                       <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L116-116" class="github-link">
@@ -267,8 +267,8 @@ which defines that all elements of the sequence should satisfy the specified pre
             greaterThan limit message spec
           </code>
           <div class="tip" id="41">
-            <strong>Signature:</strong> limit:&#39;?8982 -&gt; message:string -&gt; spec:Spec&lt;&#39;?8982&gt; -&gt; Spec&lt;&#39;?8982&gt;<br />
-                          <strong>Type parameters:</strong> '?8982                      </div>
+            <strong>Signature:</strong> limit:&#39;?9055 -&gt; message:string -&gt; spec:Spec&lt;&#39;?9055&gt; -&gt; Spec&lt;&#39;?9055&gt;<br />
+                          <strong>Type parameters:</strong> '?9055                      </div>
         </td>
         <td class="xmldoc">
                       <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L183-183" class="github-link">
@@ -287,8 +287,8 @@ which defines that all elements of the sequence should satisfy the specified pre
             greaterThanOf (...)
           </code>
           <div class="tip" id="42">
-            <strong>Signature:</strong> selector:(&#39;?8979 -&gt; &#39;?8980) -&gt; limit:&#39;?8980 -&gt; message:string -&gt; spec:Spec&lt;&#39;?8979&gt; -&gt; Spec&lt;&#39;?8979&gt;<br />
-                          <strong>Type parameters:</strong> '?8979, '?8980                      </div>
+            <strong>Signature:</strong> selector:(&#39;?9052 -&gt; &#39;?9053) -&gt; limit:&#39;?9053 -&gt; message:string -&gt; spec:Spec&lt;&#39;?9052&gt; -&gt; Spec&lt;&#39;?9052&gt;<br />
+                          <strong>Type parameters:</strong> '?9052, '?9053                      </div>
         </td>
         <td class="xmldoc">
                       <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L179-179" class="github-link">
@@ -308,8 +308,8 @@ which defines that the result should be greater than (<code>limit &lt; value</co
             greaterThanOrEqual limit message spec
           </code>
           <div class="tip" id="43">
-            <strong>Signature:</strong> limit:&#39;?8987 -&gt; message:string -&gt; spec:Spec&lt;&#39;?8987&gt; -&gt; Spec&lt;&#39;?8987&gt;<br />
-                          <strong>Type parameters:</strong> '?8987                      </div>
+            <strong>Signature:</strong> limit:&#39;?9060 -&gt; message:string -&gt; spec:Spec&lt;&#39;?9060&gt; -&gt; Spec&lt;&#39;?9060&gt;<br />
+                          <strong>Type parameters:</strong> '?9060                      </div>
         </td>
         <td class="xmldoc">
                       <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L192-192" class="github-link">
@@ -328,8 +328,8 @@ which defines that the result should be greater than (<code>limit &lt; value</co
             greaterThanOrEqualOf (...)
           </code>
           <div class="tip" id="44">
-            <strong>Signature:</strong> selector:(&#39;?8984 -&gt; &#39;?8985) -&gt; limit:&#39;?8985 -&gt; message:string -&gt; spec:Spec&lt;&#39;?8984&gt; -&gt; Spec&lt;&#39;?8984&gt;<br />
-                          <strong>Type parameters:</strong> '?8984, '?8985                      </div>
+            <strong>Signature:</strong> selector:(&#39;?9057 -&gt; &#39;?9058) -&gt; limit:&#39;?9058 -&gt; message:string -&gt; spec:Spec&lt;&#39;?9057&gt; -&gt; Spec&lt;&#39;?9057&gt;<br />
+                          <strong>Type parameters:</strong> '?9057, '?9058                      </div>
         </td>
         <td class="xmldoc">
                       <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L188-188" class="github-link">
@@ -349,15 +349,15 @@ which defines that the result should be greater than or equal to (<code>limit &l
             inclusiveBetween min max message spec
           </code>
           <div class="tip" id="45">
-            <strong>Signature:</strong> min:&#39;?8992 -&gt; max:&#39;?8992 -&gt; message:string -&gt; spec:Spec&lt;&#39;?8992&gt; -&gt; Spec&lt;&#39;?8992&gt;<br />
-                          <strong>Type parameters:</strong> '?8992                      </div>
+            <strong>Signature:</strong> min:&#39;?9065 -&gt; max:&#39;?9065 -&gt; message:string -&gt; spec:Spec&lt;&#39;?9065&gt; -&gt; Spec&lt;&#39;?9065&gt;<br />
+                          <strong>Type parameters:</strong> '?9065                      </div>
         </td>
         <td class="xmldoc">
                       <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L201-201" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          <p>Adds a requirement to check if the value is inclusive between (<code>min &lt;= value &amp;&amp; value &gt;= max</code>) the specified range.</p>
+          <p>Adds a requirement to check if the value is inclusive between (<code>min &lt;= value &amp;&amp; value &lt;= max</code>) the specified range.</p>
 
 
         </td>
@@ -369,8 +369,8 @@ which defines that the result should be greater than or equal to (<code>limit &l
             inclusiveBetweenOf (...)
           </code>
           <div class="tip" id="46">
-            <strong>Signature:</strong> selector:(&#39;?8989 -&gt; &#39;?8990) -&gt; min:&#39;?8990 -&gt; max:&#39;?8990 -&gt; message:string -&gt; spec:Spec&lt;&#39;?8989&gt; -&gt; Spec&lt;&#39;?8989&gt;<br />
-                          <strong>Type parameters:</strong> '?8989, '?8990                      </div>
+            <strong>Signature:</strong> selector:(&#39;?9062 -&gt; &#39;?9063) -&gt; min:&#39;?9063 -&gt; max:&#39;?9063 -&gt; message:string -&gt; spec:Spec&lt;&#39;?9062&gt; -&gt; Spec&lt;&#39;?9062&gt;<br />
+                          <strong>Type parameters:</strong> '?9062, '?9063                      </div>
         </td>
         <td class="xmldoc">
                       <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L197-197" class="github-link">
@@ -378,7 +378,7 @@ which defines that the result should be greater than or equal to (<code>limit &l
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
           <p>Adds a requirement for the result of the specified mapping,
-which defines that the result should be inclusive between (<code>min &lt;= value &amp;&amp; value &gt;= max</code>) the specified range.</p>
+which defines that the result should be inclusive between (<code>min &lt;= value &amp;&amp; value &lt;= max</code>) the specified range.</p>
 
 
         </td>
@@ -390,8 +390,8 @@ which defines that the result should be inclusive between (<code>min &lt;= value
             isSatisfiedBy value spec
           </code>
           <div class="tip" id="47">
-            <strong>Signature:</strong> value:&#39;?9017 -&gt; spec:Spec&lt;&#39;?9017&gt; -&gt; bool<br />
-                          <strong>Type parameters:</strong> '?9017                      </div>
+            <strong>Signature:</strong> value:&#39;?9091 -&gt; spec:Spec&lt;&#39;?9091&gt; -&gt; bool<br />
+                          <strong>Type parameters:</strong> '?9091                      </div>
         </td>
         <td class="xmldoc">
                       <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L268-268" class="github-link">
@@ -410,8 +410,8 @@ which defines that the result should be inclusive between (<code>min &lt;= value
             isType message spec
           </code>
           <div class="tip" id="48">
-            <strong>Signature:</strong> message:string -&gt; spec:Spec&lt;obj&gt; -&gt; Spec&lt;obj&gt;<br />
-                          <strong>Type parameters:</strong> 'T                      </div>
+            <strong>Signature:</strong> message:string -&gt; spec:Spec&lt;&#39;?9078&gt; -&gt; Spec&lt;&#39;?9078&gt;<br />
+                          <strong>Type parameters:</strong> '?9078                      </div>
         </td>
         <td class="xmldoc">
                       <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L229-229" class="github-link">
@@ -430,8 +430,8 @@ which defines that the result should be inclusive between (<code>min &lt;= value
             isTypeOf selector message spec
           </code>
           <div class="tip" id="49">
-            <strong>Signature:</strong> selector:(obj -&gt; obj) -&gt; message:string -&gt; spec:Spec&lt;obj&gt; -&gt; Spec&lt;obj&gt;<br />
-                          <strong>Type parameters:</strong> 'T                      </div>
+            <strong>Signature:</strong> selector:(&#39;?9075 -&gt; &#39;?9076) -&gt; message:string -&gt; spec:Spec&lt;&#39;?9075&gt; -&gt; Spec&lt;&#39;?9075&gt;<br />
+                          <strong>Type parameters:</strong> '?9075, '?9076                      </div>
         </td>
         <td class="xmldoc">
                       <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L225-225" class="github-link">
@@ -451,8 +451,8 @@ which defines that the result should an instance of the specified type <code>T</
             length l message spec
           </code>
           <div class="tip" id="50">
-            <strong>Signature:</strong> l:int -&gt; message:string -&gt; spec:Spec&lt;&#39;?8957&gt; -&gt; Spec&lt;&#39;?8957&gt;<br />
-                          <strong>Type parameters:</strong> '?8957, '?8958                      </div>
+            <strong>Signature:</strong> l:int -&gt; message:string -&gt; spec:Spec&lt;&#39;?9030&gt; -&gt; Spec&lt;&#39;?9030&gt;<br />
+                          <strong>Type parameters:</strong> '?9030, '?9031                      </div>
         </td>
         <td class="xmldoc">
                       <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L144-144" class="github-link">
@@ -471,8 +471,8 @@ which defines that the result should an instance of the specified type <code>T</
             lengthBetween min max message spec
           </code>
           <div class="tip" id="51">
-            <strong>Signature:</strong> min:int -&gt; max:int -&gt; message:string -&gt; spec:Spec&lt;&#39;?8966&gt; -&gt; Spec&lt;&#39;?8966&gt;<br />
-                          <strong>Type parameters:</strong> '?8966, '?8967                      </div>
+            <strong>Signature:</strong> min:int -&gt; max:int -&gt; message:string -&gt; spec:Spec&lt;&#39;?9039&gt; -&gt; Spec&lt;&#39;?9039&gt;<br />
+                          <strong>Type parameters:</strong> '?9039, '?9040                      </div>
         </td>
         <td class="xmldoc">
                       <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L156-156" class="github-link">
@@ -491,8 +491,8 @@ which defines that the result should an instance of the specified type <code>T</
             lengthBetweenOf (...)
           </code>
           <div class="tip" id="52">
-            <strong>Signature:</strong> selector:(&#39;?8953 -&gt; &#39;?8954) -&gt; min:int -&gt; max:int -&gt; message:string -&gt; spec:Spec&lt;&#39;?8953&gt; -&gt; Spec&lt;&#39;?8953&gt;<br />
-                          <strong>Type parameters:</strong> '?8953, '?8954, '?8955                      </div>
+            <strong>Signature:</strong> selector:(&#39;?9026 -&gt; &#39;?9027) -&gt; min:int -&gt; max:int -&gt; message:string -&gt; spec:Spec&lt;&#39;?9026&gt; -&gt; Spec&lt;&#39;?9026&gt;<br />
+                          <strong>Type parameters:</strong> '?9026, '?9027, '?9028                      </div>
         </td>
         <td class="xmldoc">
                       <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L140-140" class="github-link">
@@ -512,8 +512,8 @@ which defines that the sequence should have a length within the specified range 
             lengthMax max message spec
           </code>
           <div class="tip" id="53">
-            <strong>Signature:</strong> max:int -&gt; message:string -&gt; spec:Spec&lt;&#39;?8963&gt; -&gt; Spec&lt;&#39;?8963&gt;<br />
-                          <strong>Type parameters:</strong> '?8963, '?8964                      </div>
+            <strong>Signature:</strong> max:int -&gt; message:string -&gt; spec:Spec&lt;&#39;?9036&gt; -&gt; Spec&lt;&#39;?9036&gt;<br />
+                          <strong>Type parameters:</strong> '?9036, '?9037                      </div>
         </td>
         <td class="xmldoc">
                       <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L152-152" class="github-link">
@@ -532,8 +532,8 @@ which defines that the sequence should have a length within the specified range 
             lengthMaxOf selector max message spec
           </code>
           <div class="tip" id="54">
-            <strong>Signature:</strong> selector:(&#39;?8949 -&gt; &#39;?8950) -&gt; max:int -&gt; message:string -&gt; spec:Spec&lt;&#39;?8949&gt; -&gt; Spec&lt;&#39;?8949&gt;<br />
-                          <strong>Type parameters:</strong> '?8949, '?8950, '?8951                      </div>
+            <strong>Signature:</strong> selector:(&#39;?9022 -&gt; &#39;?9023) -&gt; max:int -&gt; message:string -&gt; spec:Spec&lt;&#39;?9022&gt; -&gt; Spec&lt;&#39;?9022&gt;<br />
+                          <strong>Type parameters:</strong> '?9022, '?9023, '?9024                      </div>
         </td>
         <td class="xmldoc">
                       <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L135-135" class="github-link">
@@ -553,8 +553,8 @@ which defines that the sequence should have a maximum length.</p>
             lengthMin min message spec
           </code>
           <div class="tip" id="55">
-            <strong>Signature:</strong> min:int -&gt; message:string -&gt; spec:Spec&lt;&#39;?8960&gt; -&gt; Spec&lt;&#39;?8960&gt;<br />
-                          <strong>Type parameters:</strong> '?8960, '?8961                      </div>
+            <strong>Signature:</strong> min:int -&gt; message:string -&gt; spec:Spec&lt;&#39;?9033&gt; -&gt; Spec&lt;&#39;?9033&gt;<br />
+                          <strong>Type parameters:</strong> '?9033, '?9034                      </div>
         </td>
         <td class="xmldoc">
                       <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L148-148" class="github-link">
@@ -573,8 +573,8 @@ which defines that the sequence should have a maximum length.</p>
             lengthMinOf selector min message spec
           </code>
           <div class="tip" id="56">
-            <strong>Signature:</strong> selector:(&#39;?8945 -&gt; &#39;?8946) -&gt; min:int -&gt; message:string -&gt; spec:Spec&lt;&#39;?8945&gt; -&gt; Spec&lt;&#39;?8945&gt;<br />
-                          <strong>Type parameters:</strong> '?8945, '?8946, '?8947                      </div>
+            <strong>Signature:</strong> selector:(&#39;?9018 -&gt; &#39;?9019) -&gt; min:int -&gt; message:string -&gt; spec:Spec&lt;&#39;?9018&gt; -&gt; Spec&lt;&#39;?9018&gt;<br />
+                          <strong>Type parameters:</strong> '?9018, '?9019, '?9020                      </div>
         </td>
         <td class="xmldoc">
                       <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L130-130" class="github-link">
@@ -594,8 +594,8 @@ which defines that the sequence should have a minimum length.</p>
             lengthOf selector l message spec
           </code>
           <div class="tip" id="57">
-            <strong>Signature:</strong> selector:(&#39;?8941 -&gt; &#39;?8942) -&gt; l:int -&gt; message:string -&gt; spec:Spec&lt;&#39;?8941&gt; -&gt; Spec&lt;&#39;?8941&gt;<br />
-                          <strong>Type parameters:</strong> '?8941, '?8942, '?8943                      </div>
+            <strong>Signature:</strong> selector:(&#39;?9014 -&gt; &#39;?9015) -&gt; l:int -&gt; message:string -&gt; spec:Spec&lt;&#39;?9014&gt; -&gt; Spec&lt;&#39;?9014&gt;<br />
+                          <strong>Type parameters:</strong> '?9014, '?9015, '?9016                      </div>
         </td>
         <td class="xmldoc">
                       <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L125-125" class="github-link">
@@ -615,8 +615,8 @@ which defines that the sequence should have a length of the specified length.</p
             lessThan limit message spec
           </code>
           <div class="tip" id="58">
-            <strong>Signature:</strong> limit:&#39;?8972 -&gt; message:string -&gt; spec:Spec&lt;&#39;?8972&gt; -&gt; Spec&lt;&#39;?8972&gt;<br />
-                          <strong>Type parameters:</strong> '?8972                      </div>
+            <strong>Signature:</strong> limit:&#39;?9045 -&gt; message:string -&gt; spec:Spec&lt;&#39;?9045&gt; -&gt; Spec&lt;&#39;?9045&gt;<br />
+                          <strong>Type parameters:</strong> '?9045                      </div>
         </td>
         <td class="xmldoc">
                       <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L165-165" class="github-link">
@@ -635,8 +635,8 @@ which defines that the sequence should have a length of the specified length.</p
             lessThanOf selector limit message spec
           </code>
           <div class="tip" id="59">
-            <strong>Signature:</strong> selector:(&#39;?8969 -&gt; &#39;?8970) -&gt; limit:&#39;?8970 -&gt; message:string -&gt; spec:Spec&lt;&#39;?8969&gt; -&gt; Spec&lt;&#39;?8969&gt;<br />
-                          <strong>Type parameters:</strong> '?8969, '?8970                      </div>
+            <strong>Signature:</strong> selector:(&#39;?9042 -&gt; &#39;?9043) -&gt; limit:&#39;?9043 -&gt; message:string -&gt; spec:Spec&lt;&#39;?9042&gt; -&gt; Spec&lt;&#39;?9042&gt;<br />
+                          <strong>Type parameters:</strong> '?9042, '?9043                      </div>
         </td>
         <td class="xmldoc">
                       <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L161-161" class="github-link">
@@ -656,8 +656,8 @@ which defines that the result should be less than (<code>limit &gt; value</code>
             lessThanOrEqual limit message spec
           </code>
           <div class="tip" id="60">
-            <strong>Signature:</strong> limit:&#39;?8977 -&gt; message:string -&gt; spec:Spec&lt;&#39;?8977&gt; -&gt; Spec&lt;&#39;?8977&gt;<br />
-                          <strong>Type parameters:</strong> '?8977                      </div>
+            <strong>Signature:</strong> limit:&#39;?9050 -&gt; message:string -&gt; spec:Spec&lt;&#39;?9050&gt; -&gt; Spec&lt;&#39;?9050&gt;<br />
+                          <strong>Type parameters:</strong> '?9050                      </div>
         </td>
         <td class="xmldoc">
                       <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L174-174" class="github-link">
@@ -676,8 +676,8 @@ which defines that the result should be less than (<code>limit &gt; value</code>
             lessThanOrEqualOf (...)
           </code>
           <div class="tip" id="61">
-            <strong>Signature:</strong> selector:(&#39;?8974 -&gt; &#39;?8975) -&gt; limit:&#39;?8975 -&gt; message:string -&gt; spec:Spec&lt;&#39;?8974&gt; -&gt; Spec&lt;&#39;?8974&gt;<br />
-                          <strong>Type parameters:</strong> '?8974, '?8975                      </div>
+            <strong>Signature:</strong> selector:(&#39;?9047 -&gt; &#39;?9048) -&gt; limit:&#39;?9048 -&gt; message:string -&gt; spec:Spec&lt;&#39;?9047&gt; -&gt; Spec&lt;&#39;?9047&gt;<br />
+                          <strong>Type parameters:</strong> '?9047, '?9048                      </div>
         </td>
         <td class="xmldoc">
                       <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L170-170" class="github-link">
@@ -697,8 +697,8 @@ which defines that the result should be less than or equal to (<code>limit &gt;=
             nonEmpty message spec
           </code>
           <div class="tip" id="62">
-            <strong>Signature:</strong> message:string -&gt; spec:Spec&lt;&#39;?8931&gt; -&gt; Spec&lt;&#39;?8931&gt;<br />
-                          <strong>Type parameters:</strong> '?8931, '?8932                      </div>
+            <strong>Signature:</strong> message:string -&gt; spec:Spec&lt;&#39;?9004&gt; -&gt; Spec&lt;&#39;?9004&gt;<br />
+                          <strong>Type parameters:</strong> '?9004, '?9005                      </div>
         </td>
         <td class="xmldoc">
                       <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L111-111" class="github-link">
@@ -717,8 +717,8 @@ which defines that the result should be less than or equal to (<code>limit &gt;=
             nonEmptyOf selector message spec
           </code>
           <div class="tip" id="63">
-            <strong>Signature:</strong> selector:(&#39;?8927 -&gt; &#39;?8928) -&gt; message:string -&gt; spec:Spec&lt;&#39;?8927&gt; -&gt; Spec&lt;&#39;?8927&gt;<br />
-                          <strong>Type parameters:</strong> '?8927, '?8928, '?8929                      </div>
+            <strong>Signature:</strong> selector:(&#39;?9000 -&gt; &#39;?9001) -&gt; message:string -&gt; spec:Spec&lt;&#39;?9000&gt; -&gt; Spec&lt;&#39;?9000&gt;<br />
+                          <strong>Type parameters:</strong> '?9000, '?9001, '?9002                      </div>
         </td>
         <td class="xmldoc">
                       <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L107-107" class="github-link">
@@ -758,8 +758,8 @@ which defines that the result should be a non-empty sequence.</p>
             notEmptyOf selector message spec
           </code>
           <div class="tip" id="65">
-            <strong>Signature:</strong> selector:(&#39;?8915 -&gt; string) -&gt; message:string -&gt; spec:Spec&lt;&#39;?8915&gt; -&gt; Spec&lt;&#39;?8915&gt;<br />
-                          <strong>Type parameters:</strong> '?8915                      </div>
+            <strong>Signature:</strong> selector:(&#39;?8988 -&gt; string) -&gt; message:string -&gt; spec:Spec&lt;&#39;?8988&gt; -&gt; Spec&lt;&#39;?8988&gt;<br />
+                          <strong>Type parameters:</strong> '?8988                      </div>
         </td>
         <td class="xmldoc">
                       <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L70-70" class="github-link">
@@ -779,8 +779,8 @@ which defines that the result should be a non-empty string.</p>
             notEqual value message spec
           </code>
           <div class="tip" id="66">
-            <strong>Signature:</strong> value:&#39;?8908 -&gt; message:string -&gt; spec:Spec&lt;&#39;?8908&gt; -&gt; Spec&lt;&#39;?8908&gt;<br />
-                          <strong>Type parameters:</strong> '?8908                      </div>
+            <strong>Signature:</strong> value:&#39;?8981 -&gt; message:string -&gt; spec:Spec&lt;&#39;?8981&gt; -&gt; Spec&lt;&#39;?8981&gt;<br />
+                          <strong>Type parameters:</strong> '?8981                      </div>
         </td>
         <td class="xmldoc">
                       <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L56-56" class="github-link">
@@ -799,8 +799,8 @@ which defines that the result should be a non-empty string.</p>
             notEqualOf selector value message spec
           </code>
           <div class="tip" id="67">
-            <strong>Signature:</strong> selector:(&#39;?8905 -&gt; &#39;?8906) -&gt; value:&#39;?8906 -&gt; message:string -&gt; spec:Spec&lt;&#39;?8905&gt; -&gt; Spec&lt;&#39;?8905&gt;<br />
-                          <strong>Type parameters:</strong> '?8905, '?8906                      </div>
+            <strong>Signature:</strong> selector:(&#39;?8978 -&gt; &#39;?8979) -&gt; value:&#39;?8979 -&gt; message:string -&gt; spec:Spec&lt;&#39;?8978&gt; -&gt; Spec&lt;&#39;?8978&gt;<br />
+                          <strong>Type parameters:</strong> '?8978, '?8979                      </div>
         </td>
         <td class="xmldoc">
                       <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L52-52" class="github-link">
@@ -820,8 +820,8 @@ which defines that the result should not be equal to the specified value.</p>
             notNull message spec
           </code>
           <div class="tip" id="68">
-            <strong>Signature:</strong> message:string -&gt; spec:Spec&lt;&#39;?8913&gt; -&gt; Spec&lt;&#39;?8913&gt;<br />
-                          <strong>Type parameters:</strong> '?8913                      </div>
+            <strong>Signature:</strong> message:string -&gt; spec:Spec&lt;&#39;?8986&gt; -&gt; Spec&lt;&#39;?8986&gt;<br />
+                          <strong>Type parameters:</strong> '?8986                      </div>
         </td>
         <td class="xmldoc">
                       <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L65-65" class="github-link">
@@ -840,8 +840,8 @@ which defines that the result should not be equal to the specified value.</p>
             notNullOf selector message spec
           </code>
           <div class="tip" id="69">
-            <strong>Signature:</strong> selector:(&#39;?8910 -&gt; &#39;?8911) -&gt; message:string -&gt; spec:Spec&lt;&#39;?8910&gt; -&gt; Spec&lt;&#39;?8910&gt;<br />
-                          <strong>Type parameters:</strong> '?8910, '?8911                      </div>
+            <strong>Signature:</strong> selector:(&#39;?8983 -&gt; &#39;?8984) -&gt; message:string -&gt; spec:Spec&lt;&#39;?8983&gt; -&gt; Spec&lt;&#39;?8983&gt;<br />
+                          <strong>Type parameters:</strong> '?8983, '?8984                      </div>
         </td>
         <td class="xmldoc">
                       <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L61-61" class="github-link">
@@ -881,8 +881,8 @@ which defines that the result should not be <code>null</code>.</p>
             notNullOrEmptyOf selector message spec
           </code>
           <div class="tip" id="71">
-            <strong>Signature:</strong> selector:(&#39;?8921 -&gt; string) -&gt; message:string -&gt; spec:Spec&lt;&#39;?8921&gt; -&gt; Spec&lt;&#39;?8921&gt;<br />
-                          <strong>Type parameters:</strong> '?8921                      </div>
+            <strong>Signature:</strong> selector:(&#39;?8994 -&gt; string) -&gt; message:string -&gt; spec:Spec&lt;&#39;?8994&gt; -&gt; Spec&lt;&#39;?8994&gt;<br />
+                          <strong>Type parameters:</strong> '?8994                      </div>
         </td>
         <td class="xmldoc">
                       <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L89-89" class="github-link">
@@ -922,8 +922,8 @@ which defines that the result should be a not-null, not-empty string.</p>
             notNullOrWhiteSpaceOf (...)
           </code>
           <div class="tip" id="73">
-            <strong>Signature:</strong> selector:(&#39;?8924 -&gt; string) -&gt; message:string -&gt; spec:Spec&lt;&#39;?8924&gt; -&gt; Spec&lt;&#39;?8924&gt;<br />
-                          <strong>Type parameters:</strong> '?8924                      </div>
+            <strong>Signature:</strong> selector:(&#39;?8997 -&gt; string) -&gt; message:string -&gt; spec:Spec&lt;&#39;?8997&gt; -&gt; Spec&lt;&#39;?8997&gt;<br />
+                          <strong>Type parameters:</strong> '?8997                      </div>
         </td>
         <td class="xmldoc">
                       <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L98-98" class="github-link">
@@ -963,8 +963,8 @@ which defines that the result should be a not-null, not-empty, not-whitespace st
             notWhiteSpaceOf selector message spec
           </code>
           <div class="tip" id="75">
-            <strong>Signature:</strong> selector:(&#39;?8918 -&gt; string) -&gt; message:string -&gt; spec:Spec&lt;&#39;?8918&gt; -&gt; Spec&lt;&#39;?8918&gt;<br />
-                          <strong>Type parameters:</strong> '?8918                      </div>
+            <strong>Signature:</strong> selector:(&#39;?8991 -&gt; string) -&gt; message:string -&gt; spec:Spec&lt;&#39;?8991&gt; -&gt; Spec&lt;&#39;?8991&gt;<br />
+                          <strong>Type parameters:</strong> '?8991                      </div>
         </td>
         <td class="xmldoc">
                       <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L79-79" class="github-link">
@@ -1004,8 +1004,8 @@ which defines that the result should not be a not-whitespace string.</p>
             regexOf selector pattern message spec
           </code>
           <div class="tip" id="77">
-            <strong>Signature:</strong> selector:(&#39;?8999 -&gt; string) -&gt; pattern:string -&gt; message:string -&gt; spec:Spec&lt;&#39;?8999&gt; -&gt; Spec&lt;&#39;?8999&gt;<br />
-                          <strong>Type parameters:</strong> '?8999                      </div>
+            <strong>Signature:</strong> selector:(&#39;?9072 -&gt; string) -&gt; pattern:string -&gt; message:string -&gt; spec:Spec&lt;&#39;?9072&gt; -&gt; Spec&lt;&#39;?9072&gt;<br />
+                          <strong>Type parameters:</strong> '?9072                      </div>
         </td>
         <td class="xmldoc">
                       <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L215-215" class="github-link">
@@ -1045,8 +1045,8 @@ which defines that the result should be a match to the specified regular express
             validateOption value spec
           </code>
           <div class="tip" id="79">
-            <strong>Signature:</strong> value:&#39;?9012 -&gt; spec:Spec&lt;&#39;?9012&gt; -&gt; &#39;?9012 option<br />
-                          <strong>Type parameters:</strong> '?9012                      </div>
+            <strong>Signature:</strong> value:&#39;?9086 -&gt; spec:Spec&lt;&#39;?9086&gt; -&gt; &#39;?9086 option<br />
+                          <strong>Type parameters:</strong> '?9086                      </div>
         </td>
         <td class="xmldoc">
                       <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L257-257" class="github-link">

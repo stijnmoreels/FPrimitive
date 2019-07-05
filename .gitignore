@@ -166,6 +166,9 @@ $RECYCLE.BIN/
 # Exclude F# project specific directories and files
 # ===================================================
 
+# Ionide
+.ionide/*
+
 # NuGet Packages Directory
 packages/
 
