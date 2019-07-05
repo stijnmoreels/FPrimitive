@@ -193,20 +193,20 @@ module Spec =
     greaterThanOrEqualOf id limit message spec
 
   /// Adds a requirement for the result of the specified mapping, 
-  /// which defines that the result should be inclusive between (`min <= value && value >= max`) the specified range.
+  /// which defines that the result should be inclusive between (`min <= value && value <= max`) the specified range.
   let inclusiveBetweenOf selector min max message spec =
     add (fun x -> let x = selector x in min <= x && x <= max, message) spec
 
-  /// Adds a requirement to check if the value is inclusive between (`min <= value && value >= max`) the specified range.
+  /// Adds a requirement to check if the value is inclusive between (`min <= value && value <= max`) the specified range.
   let inclusiveBetween min max message spec =
     inclusiveBetweenOf id min max message spec
 
   /// Adds a requirement for the result of the specified mapping, 
-  /// which defines that the result should be exclusive between (`min < value && value > max`) the specified range.
+  /// which defines that the result should be exclusive between (`min < value && value < max`) the specified range.
   let exclusiveBetweenOf selector min max message spec =
     add (fun x -> let x = selector x in min < x && x < max, message) spec
 
-  /// Adds a requirement to check if the value is exclusive between (`min < value && value > max`) the specified range.
+  /// Adds a requirement to check if the value is exclusive between (`min < value && value < max`) the specified range.
   let exclusiveBetween min max message spec =
     exclusiveBetweenOf id min max message spec
 
@@ -222,12 +222,12 @@ module Spec =
 
   /// Adds a requirement for the result of the specified mapping, 
   /// which defines that the result should an instance of the specified type `T`.
-  let isTypeOf<'T> selector message spec =
+  let isTypeOf selector message spec =
     add (fun x -> match selector x |> box with | :? 'T -> true, message | _ -> false, message) spec
 
   /// Adds a requirement to check if the value is an instance of the specified type `T`.
-  let isType<'T> message spec =
-    isTypeOf<'T> id message spec
+  let isType message spec =
+    isTypeOf id message spec
   
   /// Change the way the validation of requirements should happen.
   let cascade mode spec = { spec with Cascade = mode }
@@ -393,17 +393,17 @@ type SpecBuilder<'a, 'b> internal (validate : Spec<'a> -> 'b) =
   [<CustomOperation("greaterThanOrEqual")>]
   member __.GreaterThanOrEqual (state, limit, message) = Spec.greaterThanOrEqual limit message state
   /// Adds a requirement for the result of the specified mapping, 
-  /// which defines that the result should be inclusive between (`min <= value && value >= max`) the specified range.
+  /// which defines that the result should be inclusive between (`min <= value && value <= max`) the specified range.
   [<CustomOperation("inclusiveBetweenOf")>]
   member __.InclusiveBetweenOf (state, selector, min, max, message) = Spec.inclusiveBetweenOf selector min max message state
-  /// Adds a requirement to check if the value is inclusive between (`min <= value && value >= max`) the specified range.
+  /// Adds a requirement to check if the value is inclusive between (`min <= value && value <= max`) the specified range.
   [<CustomOperation("inclusiveBetween")>]
   member __.InclusiveBetween (state, min, max, message) = Spec.inclusiveBetween min max message state
   /// Adds a requirement for the result of the specified mapping, 
-  /// which defines that the result should be exclusive between (`min < value && value > max`) the specified range.
+  /// which defines that the result should be exclusive between (`min < value && value < max`) the specified range.
   [<CustomOperation("exclusiveBetweenOf")>]
   member __.ExclusiveBetweenOf (state, selector, min, max, message) = Spec.exclusiveBetweenOf selector min max message state
-  /// Adds a requirement to check if the value is exclusive between (`min < value && value > max`) the specified range.
+  /// Adds a requirement to check if the value is exclusive between (`min < value && value < max`) the specified range.
   [<CustomOperation("exclusiveBetween")>]
   member __.ExclusiveBetween (state, min, max, message) = Spec.exclusiveBetween min max message state
   /// Adds a requirement for the result of the specified mapping, 
@@ -486,68 +486,68 @@ type SpecExtensions =
 
   /// Adds a custom requirement to the specification.
   [<Extension>]
-  static member Add (spec, (requirement : Func<_, ValueTuple<_, _>>)) =
+  static member Add ((spec : Spec<'T>), (requirement : Func<'T, ValueTuple<bool, string>>)) =
     if requirement = null then nullArg "requirement"
     Spec.add (requirement.Invoke >> fun t -> t.ToTuple()) spec
 
   /// Adds a custom requirement to the specification.
   [<Extension>]
-  static member Add (spec, (requirement : Func<_, _>), message) =
+  static member Add ((spec : Spec<'T>), (requirement : Func<'T, bool>), message) =
     if requirement = null then nullArg "requirement"
     Spec.add (fun x -> requirement.Invoke (x), message) spec
 
   /// Adds a requirement for the result of the specified mapping, 
   /// which defines that the result should be equal to the specified value.
   [<Extension>]
-  static member Equal (spec, (selector : Func<_, _>), value, message) =
+  static member Equal<'T, 'TResult when 'TResult : equality> ((spec : Spec<'T>), (selector : Func<'T, 'TResult>), value, message) =
     if selector = null then nullArg "selector"
     if message = null then nullArg "message"
     Spec.equalOf selector.Invoke value message spec
   
   /// Adds a requirement to check equality to a specified value.
   [<Extension>]
-  static member Equal (spec, value, message) =
+  static member Equal<'T when 'T : equality> ((spec : Spec<'T>), value, message) =
     if message = null then nullArg "message"
     Spec.equal value message spec
 
   /// Adds a requirement for the result of the specified mapping, 
   /// which defines that the result should not be equal to the specified value.
   [<Extension>]
-  static member NotEqual (spec, (selector : Func<_, _>), value, message) =  
+  static member NotEqual<'T, 'TResult when 'TResult : equality> ((spec : Spec<'T>), (selector : Func<'T, 'TResult>), value, message) =  
     if selector = null then nullArg "selector"
     if message = null then nullArg "message"
     Spec.notEqualOf selector.Invoke value message spec
 
   /// Adds a requirement to check no equality to a specified value.
   [<Extension>]
-  static member NotEqual (spec, value, message) = 
+  static member NotEqual<'T when 'T : equality> ((spec : Spec<'T>), value, message) = 
     if message = null then nullArg "message"
     Spec.notEqual value message spec
 
   /// Adds a requirement for the result of the specified mapping, 
   /// which defines that the result should not be `null`.
   [<Extension>]
-  static member NotNull (spec, (selector : Func<_, _>), message) =
+  static member NotNull ((spec : Spec<'T>), (selector : Func<'T, 'TResult>), message) =
     if selector = null then nullArg "selector"
     if message = null then nullArg "message"
     Spec.notNullOf selector.Invoke message spec
 
   /// Adds a requirement to check for not `null`.
   [<Extension>]
-  static member NotNull (spec, message) =
+  static member NotNull<'T when 'T : null and 'T : equality> ((spec : Spec<'T>), message) =
     if message = null then nullArg "message"
     Spec.notNull message spec
 
   /// Adds a requirement to check for non-empty string.
   [<Extension>]
-  static member NotEmpty (spec, message) =
+  static member NotEmpty ((spec : Spec<string>), message) =
     if message = null then nullArg "message"
     Spec.notEmpty message spec
 
   /// Adds a requirement for the result of the specified mapping, 
   /// which defines that the result should be a non-empty string.
   [<Extension>]
-  static member NotEmpty (spec, (selector : Func<_, _>), message) =
+  static member NotEmpty ((spec : Spec<'T>), (selector : Func<'T, string>), message) =
     if selector = null then nullArg "selector"
     if message = null then nullArg "message"
     Spec.notEmptyOf selector.Invoke message spec
@@ -555,50 +555,186 @@ type SpecExtensions =
   /// Adds a requirement for the result of the specified mapping, 
   /// which defines that the result should not be a not-whitespace string.
   [<Extension>]
-  static member NotWhiteSpace (spec, (selector : Func<_, _>), message) =
+  static member NotWhiteSpace ((spec : Spec<'T>), (selector : Func<'T, string>), message) =
     if selector = null then nullArg "selector"
     if message = null then nullArg "message"
     Spec.notWhiteSpaceOf selector.Invoke message spec
 
   /// Adds a requirement to check if the string is a not-whitespace string.
   [<Extension>]
-  static member NotWhiteSpace (spec, message) =
+  static member NotWhiteSpace ((spec : Spec<string>), message) =
     if message = null then nullArg "message"
     Spec.notWhiteSpace message spec
 
   /// Adds a requirement for the result of the specified mapping, 
   /// which defines that the result should be a not-null, not-empty string.
   [<Extension>]
-  static member NotNullOrEmpty (spec, (selector : Func<_, _>), message) =
+  static member NotNullOrEmpty ((spec : Spec<'T>), (selector : Func<'T, string>), message) =
     if selector = null then nullArg "selector"
     if message = null then nullArg "message"
     Spec.notNullOrEmptyOf selector.Invoke message spec
 
+  /// Adds a requirement to check if the string is a not-null, not-empty string.
+  [<Extension>]
+  static member NotNullOrEmpty ((spec : Spec<string>), message) =
+    if message = null then nullArg "message"
+    Spec.notNullOrEmpty message spec
+
+  /// Adds a requirement for the result of the specified mapping, 
+  /// which defines that the result should be a not-null, not-empty, not-whitespace string.
+  [<Extension>]
+  static member NotNullOrWhiteSpace ((spec : Spec<'T>), (selector : Func<'T, string>), message) =
+    if selector = null then nullArg "selector"
+    if message = null then nullArg "message"
+    Spec.notNullOrWhiteSpaceOf selector.Invoke message spec
+
+  /// Adds a requirement to check if the string is a not-null, not-empty, not-whitespace string.
+  [<Extension>]
+  static member NotNullOrWhiteSpace (spec, message) =
+    if message = null then nullArg "message"
+    Spec.notNullOrWhiteSpace message spec
+
   /// Adds a requirement for the result of the specified mapping, 
   /// which defines that the result should be a non-empty sequence.
   [<Extension>]
-  static member NonEmpty (spec, (selector : Func<_, _>), message) =
+  static member NonEmpty ((spec : Spec<'T>), (selector : Func<'T, IEnumerable<'TResult>>), message) =
+    if selector = null then nullArg "selector"
+    if message = null then nullArg "message"
+    Spec.nonEmptyOf selector.Invoke message spec
+
+  /// Adds a requirement for the result of the specified mapping, 
+  /// which defines that the result should be a non-empty sequence.
+  [<Extension>]
+  static member NonEmpty ((spec : Spec<'T>), (selector : Func<'T, ICollection<'TResult>>), message) =
+    if selector = null then nullArg "selector"
+    if message = null then nullArg "message"
+    Spec.nonEmptyOf selector.Invoke message spec
+
+  /// Adds a requirement for the result of the specified mapping, 
+  /// which defines that the result should be a non-empty sequence.
+  [<Extension>]
+  static member NonEmpty ((spec : Spec<'T>), (selector : Func<'T, IList<'TResult>>), message) =
+    if selector = null then nullArg "selector"
+    if message = null then nullArg "message"
+    Spec.nonEmptyOf selector.Invoke message spec
+
+  /// Adds a requirement for the result of the specified mapping, 
+  /// which defines that the result should be a non-empty sequence.
+  [<Extension>]
+  static member NonEmpty ((spec : Spec<'T>), (selector : Func<'T, 'TResult[]>), message) =
+    if selector = null then nullArg "selector"
+    if message = null then nullArg "message"
+    Spec.nonEmptyOf selector.Invoke message spec
+
+  /// Adds a requirement for the result of the specified mapping, 
+  /// which defines that the result should be a non-empty sequence.
+  [<Extension>]
+  static member NonEmpty ((spec : Spec<'T>), (selector : Func<'T, IDictionary<'TKey, 'TValue>>), message) =
     if selector = null then nullArg "selector"
     if message = null then nullArg "message"
     Spec.nonEmptyOf selector.Invoke message spec
 
   /// Adds a requirement to check for non-empty sequences.
   [<Extension>]
-  static member NonEmpty (spec, message) =
+  static member NonEmpty ((spec : Spec<IEnumerable<'T>>), message) =
+    if message = null then nullArg "message"
+    Spec.nonEmpty message spec
+
+  /// Adds a requirement to check for non-empty sequences.
+  [<Extension>]
+  static member NonEmpty ((spec : Spec<ICollection<'T>>), message) =
+    if message = null then nullArg "message"
+    Spec.nonEmpty message spec
+
+  /// Adds a requirement to check for non-empty sequences.
+  [<Extension>]
+  static member NonEmpty ((spec : Spec<IList<'T>>), message) =
+    if message = null then nullArg "message"
+    Spec.nonEmpty message spec
+
+  /// Adds a requirement to check for non-empty sequences.
+  [<Extension>]
+  static member NonEmpty ((spec : Spec<'T[]>), message) =
+    if message = null then nullArg "message"
+    Spec.nonEmpty message spec
+
+  /// Adds a requirement to check for non-empty sequences.
+  [<Extension>]
+  static member NonEmpty ((spec : Spec<IDictionary<'TKey, 'TValue>>), message) =
     if message = null then nullArg "message"
     Spec.nonEmpty message spec
 
   /// Adds a requirement for the resulting sequence of the specified mapping, 
   /// which defines that all elements of the sequence should satisfy the specified predicate.
   [<Extension>]
-  static member All (spec, (selector : Func<_, _>), (predicate : Func<_, _>), message) =
+  static member All ((spec : Spec<'T>), (selector : Func<'T, IEnumerable<'TResult>>), (predicate : Func<'TResult, bool>), message) =
+    if selector = null then nullArg "selector"
+    if predicate = null then nullArg "predicate"
+    Spec.forallOf selector.Invoke predicate.Invoke message spec
+
+  /// Adds a requirement for the resulting sequence of the specified mapping, 
+  /// which defines that all elements of the sequence should satisfy the specified predicate.
+  [<Extension>]
+  static member All ((spec : Spec<'T>), (selector : Func<'T, ICollection<'TResult>>), (predicate : Func<'TResult, bool>), message) =
+    if selector = null then nullArg "selector"
+    if predicate = null then nullArg "predicate"
+    Spec.forallOf selector.Invoke predicate.Invoke message spec
+
+  /// Adds a requirement for the resulting sequence of the specified mapping, 
+  /// which defines that all elements of the sequence should satisfy the specified predicate.
+  [<Extension>]
+  static member All ((spec : Spec<'T>), (selector : Func<'T, IList<'TResult>>), (predicate : Func<'TResult, bool>), message) =
+    if selector = null then nullArg "selector"
+    if predicate = null then nullArg "predicate"
+    Spec.forallOf selector.Invoke predicate.Invoke message spec
+  
+  /// Adds a requirement for the resulting sequence of the specified mapping, 
+  /// which defines that all elements of the sequence should satisfy the specified predicate.
+  [<Extension>]
+  static member All ((spec : Spec<'T>), (selector : Func<'T, 'TResult[]>), (predicate : Func<'TResult, bool>), message) =
+    if selector = null then nullArg "selector"
+    if predicate = null then nullArg "predicate"
+    Spec.forallOf selector.Invoke predicate.Invoke message spec
+
+  /// Adds a requirement for the resulting sequence of the specified mapping, 
+  /// which defines that all elements of the sequence should satisfy the specified predicate.
+  [<Extension>]
+  static member All ((spec : Spec<'T>), (selector : Func<'T, IDictionary<'TKey, 'TValue>>), (predicate : Func<KeyValuePair<'TKey, 'TValue>, bool>), message) =
     if selector = null then nullArg "selector"
     if predicate = null then nullArg "predicate"
     Spec.forallOf selector.Invoke predicate.Invoke message spec
 
   /// Adds a requirement for the sequence to check that all the elements of the sequence satisfy the specified predicate.
   [<Extension>]
-  static member All (spec, (predicate : Func<_, _>), message) =
+  static member All ((spec : Spec<IEnumerable<'T>>), (predicate : Func<'T, bool>), message) =
+    if predicate = null then nullArg "predicate"
+    if message = null then nullArg "message"
+    Spec.forall predicate.Invoke message spec
+
+  /// Adds a requirement for the sequence to check that all the elements of the sequence satisfy the specified predicate.
+  [<Extension>]
+  static member All ((spec : Spec<ICollection<'T>>), (predicate : Func<'T, bool>), message) =
+    if predicate = null then nullArg "predicate"
+    if message = null then nullArg "message"
+    Spec.forall predicate.Invoke message spec
+
+  /// Adds a requirement for the sequence to check that all the elements of the sequence satisfy the specified predicate.
+  [<Extension>]
+  static member All ((spec : Spec<IList<'T>>), (predicate : Func<'T, bool>), message) =
+    if predicate = null then nullArg "predicate"
+    if message = null then nullArg "message"
+    Spec.forall predicate.Invoke message spec
+
+  /// Adds a requirement for the sequence to check that all the elements of the sequence satisfy the specified predicate.
+  [<Extension>]
+  static member All ((spec : Spec<'T[]>), (predicate : Func<'T, bool>), message) =
+    if predicate = null then nullArg "predicate"
+    if message = null then nullArg "message"
+    Spec.forall predicate.Invoke message spec
+
+  /// Adds a requirement for the sequence to check that all the elements of the sequence satisfy the specified predicate.
+  [<Extension>]
+  static member All ((spec : Spec<IDictionary<'TKey, 'TValue>>), (predicate : Func<KeyValuePair<'TKey, 'TValue>, bool>), message) =
     if predicate = null then nullArg "predicate"
     if message = null then nullArg "message"
     Spec.forall predicate.Invoke message spec
@@ -606,7 +742,7 @@ type SpecExtensions =
   /// Adds a requirement for the resulting sequence of the specified mapping, 
   /// which defines that the sequence should have a length of the specified length.
   [<Extension>]
-  static member Length (spec, (selector : Func<_, IEnumerable<_>>), length, message) = 
+  static member Length ((spec : Spec<'T>), (selector : Func<'T, IEnumerable<'TResult>>), length, message) = 
     if selector = null then nullArg "selector"
     if message = null then nullArg "message"
     Spec.lengthOf selector.Invoke length message spec
@@ -614,7 +750,7 @@ type SpecExtensions =
   /// Adds a requirement for the resulting sequence of the specified mapping, 
   /// which defines that the sequence should have a length of the specified length.
   [<Extension>]
-  static member Length (spec, (selector : Func<_, IList<_>>), length, message) = 
+  static member Length ((spec : Spec<'T>), (selector : Func<'T, IList<'TResult>>), length, message) = 
     if selector = null then nullArg "selector"
     if message = null then nullArg "message"
     Spec.lengthOf selector.Invoke length message spec
@@ -622,7 +758,7 @@ type SpecExtensions =
   /// Adds a requirement for the resulting sequence of the specified mapping, 
   /// which defines that the sequence should have a length of the specified length.
   [<Extension>]
-  static member Length (spec, (selector : Func<_, _[]>), length, message) = 
+  static member Length ((spec : Spec<'T>), (selector : Func<'T, 'TResult[]>), length, message) = 
     if selector = null then nullArg "selector"
     if message = null then nullArg "message"
     Spec.lengthOf selector.Invoke length message spec
@@ -630,91 +766,118 @@ type SpecExtensions =
   /// Adds a requirement for the resulting sequence of the specified mapping, 
   /// which defines that the sequence should have a length of the specified length.
   [<Extension>]
-  static member Length (spec, (selector : Func<_, ICollection<_>>), length, message) = 
+  static member Length ((spec : Spec<'T>), (selector : Func<'T, ICollection<'TResult>>), length, message) = 
+    if selector = null then nullArg "selector"
+    if message = null then nullArg "message"
+    Spec.lengthOf selector.Invoke length message spec
+
+  /// Adds a requirement for the resulting sequence of the specified mapping, 
+  /// which defines that the sequence should have a length of the specified length.
+  [<Extension>]
+  static member Length ((spec : Spec<'T>), (selector : Func<'T, IDictionary<'TKey, 'TValue>>), length, message) = 
     if selector = null then nullArg "selector"
     if message = null then nullArg "message"
     Spec.lengthOf selector.Invoke length message spec
 
   /// Adds a requirement for the sequence to check if the length matches the specified length.
   [<Extension>]
-  static member Length ((spec : Spec<IEnumerable<'a>>), length, message) = 
+  static member Length ((spec : Spec<IEnumerable<'T>>), length, message) = 
     if message = null then nullArg "message"
     Spec.length length message spec
 
   /// Adds a requirement for the sequence to check if the length matches the specified length.
   [<Extension>]
-  static member Length ((spec : Spec<IList<'a>>), length, message) = 
+  static member Length ((spec : Spec<IList<'T>>), length, message) = 
     if message = null then nullArg "message"
     Spec.length length message spec
   
   /// Adds a requirement for the sequence to check if the length matches the specified length.
   [<Extension>]
-  static member Length ((spec : Spec<ICollection<'a>>), length, message) = 
+  static member Length ((spec : Spec<ICollection<'T>>), length, message) = 
     if message = null then nullArg "message"
     Spec.length length message spec
 
   /// Adds a requirement for the sequence to check if the length matches the specified length.
   [<Extension>]
-  static member Length ((spec : Spec<'a[]>), length, message) = 
+  static member Length ((spec : Spec<'T[]>), length, message) = 
     if message = null then nullArg "message"
     Spec.length length message spec
   
+  /// Adds a requirement for the sequence to check if the length matches the specified length.
+  [<Extension>]
+  static member Length ((spec : Spec<IDictionary<'TKey, 'TValue>>), length, message) = 
+    if message = null then nullArg "message"
+    Spec.length length message spec
+
   /// Adds a requirement for the resulting sequence of the specified mapping, 
   /// which defines that the sequence should have a minimum length.
   [<Extension>]
-  static member LengthMin (spec, (selector : Func<_, IEnumerable<_>>), min, message) =
+  static member LengthMin ((spec : Spec<'T>), (selector : Func<'T, IEnumerable<'TResult>>), min, message) =
     if selector = null then nullArg "selector"
     Spec.lengthMinOf selector.Invoke min message spec
 
   /// Adds a requirement for the resulting sequence of the specified mapping, 
   /// which defines that the sequence should have a minimum length.
   [<Extension>]
-  static member LengthMin (spec, (selector : Func<_, IList<_>>), min, message) =
+  static member LengthMin ((spec : Spec<'T>), (selector : Func<'T, IList<'TResult>>), min, message) =
     if selector = null then nullArg "selector"
     Spec.lengthMinOf selector.Invoke min message spec
 
   /// Adds a requirement for the resulting sequence of the specified mapping, 
   /// which defines that the sequence should have a minimum length.
   [<Extension>]
-  static member LengthMin (spec, (selector : Func<_, ICollection<_>>), min, message) =
+  static member LengthMin ((spec : Spec<'T>), (selector : Func<'T, ICollection<'TResult>>), min, message) =
     if selector = null then nullArg "selector"
     Spec.lengthMinOf selector.Invoke min message spec
 
   /// Adds a requirement for the resulting sequence of the specified mapping, 
   /// which defines that the sequence should have a minimum length.
   [<Extension>]
-  static member LengthMin (spec, (selector : Func<_, _[]>), min, message) =
+  static member LengthMin ((spec : Spec<'T>), (selector : Func<'T, 'TResult[]>), min, message) =
+    if selector = null then nullArg "selector"
+    Spec.lengthMinOf selector.Invoke min message spec
+
+  /// Adds a requirement for the resulting sequence of the specified mapping, 
+  /// which defines that the sequence should have a minimum length.
+  [<Extension>]
+  static member LengthMin ((spec : Spec<'T>), (selector : Func<'T, IDictionary<'TKey, 'TValue>>), min, message) =
     if selector = null then nullArg "selector"
     Spec.lengthMinOf selector.Invoke min message spec
 
   /// Adds a requirement for the sequence to check if the sequence has a minimum length.
   [<Extension>]
-  static member LengthMin ((spec : Spec<IEnumerable<_>>), min, message) =
+  static member LengthMin ((spec : Spec<IEnumerable<'T>>), min, message) =
     if message = null then nullArg "message"
     Spec.lengthMin min message spec
 
   /// Adds a requirement for the sequence to check if the sequence has a minimum length.
   [<Extension>]
-  static member LengthMin ((spec : Spec<ICollection<_>>), min, message) =
+  static member LengthMin ((spec : Spec<ICollection<'T>>), min, message) =
     if message = null then nullArg "message"
     Spec.lengthMin min message spec
 
   /// Adds a requirement for the sequence to check if the sequence has a minimum length.
   [<Extension>]
-  static member LengthMin ((spec : Spec<IList<_>>), min, message) =
+  static member LengthMin ((spec : Spec<IList<'T>>), min, message) =
     if message = null then nullArg "message"
     Spec.lengthMin min message spec
 
   /// Adds a requirement for the sequence to check if the sequence has a minimum length.
   [<Extension>]
-  static member LengthMin ((spec : Spec<_[]>), min, message) =
+  static member LengthMin ((spec : Spec<'T[]>), min, message) =
+    if message = null then nullArg "message"
+    Spec.lengthMin min message spec
+
+  /// Adds a requirement for the sequence to check if the sequence has a minimum length.
+  [<Extension>]
+  static member LengthMin ((spec : Spec<IDictionary<'TKey, 'TValue>>), min, message) =
     if message = null then nullArg "message"
     Spec.lengthMin min message spec
 
   /// Adds a requirement for the resulting sequence of the specified mapping, 
   /// which defines that the sequence should have a maximum length.
   [<Extension>]
-  static member LengthMax (spec, (selector : Func<_, IEnumerable<_>>), max, message) =
+  static member LengthMax ((spec : Spec<'T>), (selector : Func<'T, IEnumerable<'TResult>>), max, message) =
     if selector = null then nullArg "selector"
     if message = null then nullArg "message"
     Spec.lengthMaxOf selector.Invoke max message spec
@@ -722,55 +885,69 @@ type SpecExtensions =
   /// Adds a requirement for the resulting sequence of the specified mapping, 
   /// which defines that the sequence should have a maximum length.
   [<Extension>]
-  static member LengthMax (spec, (selector : Func<_, IList<_>>), max, message) =
+  static member LengthMax ((spec : Spec<'T>), (selector : Func<'T, IList<'TResult>>), max, message) =
     if selector = null then nullArg "selector"
     if message = null then nullArg "message"
     Spec.lengthMaxOf selector.Invoke max message spec
 
-     /// Adds a requirement for the resulting sequence of the specified mapping, 
+  /// Adds a requirement for the resulting sequence of the specified mapping, 
   /// which defines that the sequence should have a maximum length.
   [<Extension>]
-  static member LengthMax (spec, (selector : Func<_, ICollection<_>>), max, message) =
+  static member LengthMax ((spec : Spec<'T>), (selector : Func<'T, ICollection<'TResult>>), max, message) =
     if selector = null then nullArg "selector"
     if message = null then nullArg "message"
     Spec.lengthMaxOf selector.Invoke max message spec
 
-     /// Adds a requirement for the resulting sequence of the specified mapping, 
+  /// Adds a requirement for the resulting sequence of the specified mapping, 
   /// which defines that the sequence should have a maximum length.
   [<Extension>]
-  static member LengthMax (spec, (selector : Func<_, _[]>), max, message) =
+  static member LengthMax ((spec : Spec<'T>), (selector : Func<'T, 'TResult[]>), max, message) =
+    if selector = null then nullArg "selector"
+    if message = null then nullArg "message"
+    Spec.lengthMaxOf selector.Invoke max message spec
+
+  /// Adds a requirement for the resulting sequence of the specified mapping, 
+  /// which defines that the sequence should have a maximum length.
+  [<Extension>]
+  static member LengthMax ((spec : Spec<'T>), (selector : Func<'T, IDictionary<'TKey, 'TValue>>), max, message) =
     if selector = null then nullArg "selector"
     if message = null then nullArg "message"
     Spec.lengthMaxOf selector.Invoke max message spec
 
   /// Adds a requirement for the sequence to check if the sequence has a maximum length.
   [<Extension>]
-  static member LengthMax ((spec : Spec<IEnumerable<_>>), max, message) =
+  static member LengthMax ((spec : Spec<IEnumerable<'T>>), max, message) =
     if message = null then nullArg "message"
     Spec.lengthMax max message spec
 
   /// Adds a requirement for the sequence to check if the sequence has a maximum length.
   [<Extension>]
-  static member LengthMax ((spec : Spec<IList<_>>), max, message) =
+  static member LengthMax ((spec : Spec<IList<'T>>), max, message) =
     if message = null then nullArg "message"
     Spec.lengthMax max message spec
 
   /// Adds a requirement for the sequence to check if the sequence has a maximum length.
   [<Extension>]
-  static member LengthMax ((spec : Spec<ICollection<_>>), max, message) =
+  static member LengthMax ((spec : Spec<ICollection<'T>>), max, message) =
     if message = null then nullArg "message"
     Spec.lengthMax max message spec
 
   /// Adds a requirement for the sequence to check if the sequence has a maximum length.
   [<Extension>]
-  static member LengthMax ((spec : Spec<_[]>), max, message) =
+  static member LengthMax ((spec : Spec<'T[]>), max, message) =
+    if message = null then nullArg "message"
+    Spec.lengthMax max message spec
+
+  /// Adds a requirement for the sequence to check if the sequence has a maximum length.
+  [<Extension>]
+  static member LengthMax ((spec : Spec<IDictionary<'TKey, 'TValue>>), max, message) =
     if message = null then nullArg "message"
     Spec.lengthMax max message spec
 
   /// Adds a requirement for the resulting sequence of the specified mapping, 
   /// which defines that the sequence should have a length within the specified range (min, max).
   [<Extension>]
-  static member LengthBetween (spec, (selector : Func<_, IEnumerable<_>>), min, max, message) =
+  static member LengthBetween ((spec : Spec<'T>), (selector : Func<'T, IEnumerable<'TResult>>), min, max, message) =
     if selector = null then nullArg "selector"
     if message = null then nullArg "message"
     Spec.lengthBetweenOf selector.Invoke min max message spec
@@ -778,129 +955,143 @@ type SpecExtensions =
   /// Adds a requirement for the resulting sequence of the specified mapping, 
   /// which defines that the sequence should have a length within the specified range (min, max).
   [<Extension>]
-  static member LengthBetween (spec, (selector : Func<_, IList<_>>), min, max, message) =
+  static member LengthBetween ((spec : Spec<'T>), (selector : Func<'T, IList<'TResult>>), min, max, message) =
     if selector = null then nullArg "selector"
     if message = null then nullArg "message"
     Spec.lengthBetweenOf selector.Invoke min max message spec
 
-    /// Adds a requirement for the resulting sequence of the specified mapping, 
+  /// Adds a requirement for the resulting sequence of the specified mapping, 
   /// which defines that the sequence should have a length within the specified range (min, max).
   [<Extension>]
-  static member LengthBetween (spec, (selector : Func<_, ICollection<_>>), min, max, message) =
+  static member LengthBetween ((spec : Spec<'T>), (selector : Func<'T, ICollection<'TResult>>), min, max, message) =
     if selector = null then nullArg "selector"
     if message = null then nullArg "message"
     Spec.lengthBetweenOf selector.Invoke min max message spec
 
-    /// Adds a requirement for the resulting sequence of the specified mapping, 
+  /// Adds a requirement for the resulting sequence of the specified mapping, 
   /// which defines that the sequence should have a length within the specified range (min, max).
   [<Extension>]
-  static member LengthBetween (spec, (selector : Func<_, _[]>), min, max, message) =
+  static member LengthBetween ((spec : Spec<'T>), (selector : Func<'T, 'TResult[]>), min, max, message) =
+    if selector = null then nullArg "selector"
+    if message = null then nullArg "message"
+    Spec.lengthBetweenOf selector.Invoke min max message spec
+
+  /// Adds a requirement for the resulting sequence of the specified mapping, 
+  /// which defines that the sequence should have a length within the specified range (min, max).
+  [<Extension>]
+  static member LengthBetween ((spec : Spec<'T>), (selector : Func<'T, IDictionary<'TKey, 'TValue>>), min, max, message) =
     if selector = null then nullArg "selector"
     if message = null then nullArg "message"
     Spec.lengthBetweenOf selector.Invoke min max message spec
 
   /// Adds a requirement for the sequence to check if the sequence has a length within the specified range (min, max).
   [<Extension>]
-  static member LengthBetween ((spec : Spec<IEnumerable<_>>), min, max, message) =
+  static member LengthBetween ((spec : Spec<IEnumerable<'T>>), min, max, message) =
     if message = null then nullArg "message"
     Spec.lengthBetween min max message spec
 
   /// Adds a requirement for the sequence to check if the sequence has a length within the specified range (min, max).
   [<Extension>]
-  static member LengthBetween ((spec : Spec<ICollection<_>>), min, max, message) =
+  static member LengthBetween ((spec : Spec<ICollection<'T>>), min, max, message) =
     if message = null then nullArg "message"
     Spec.lengthBetween min max message spec
 
-    /// Adds a requirement for the sequence to check if the sequence has a length within the specified range (min, max).
+  /// Adds a requirement for the sequence to check if the sequence has a length within the specified range (min, max).
   [<Extension>]
-  static member LengthBetween ((spec : Spec<IList<_>>), min, max, message) =
+  static member LengthBetween ((spec : Spec<IList<'T>>), min, max, message) =
     if message = null then nullArg "message"
     Spec.lengthBetween min max message spec
 
-    /// Adds a requirement for the sequence to check if the sequence has a length within the specified range (min, max).
+  /// Adds a requirement for the sequence to check if the sequence has a length within the specified range (min, max).
   [<Extension>]
-  static member LengthBetween ((spec : Spec<_[]>), min, max, message) =
+  static member LengthBetween ((spec : Spec<'T[]>), min, max, message) =
+    if message = null then nullArg "message"
+    Spec.lengthBetween min max message spec
+
+  /// Adds a requirement for the sequence to check if the sequence has a length within the specified range (min, max).
+  [<Extension>]
+  static member LengthBetween ((spec : Spec<IDictionary<'TKey, 'TValue>>), min, max, message) =
     if message = null then nullArg "message"
     Spec.lengthBetween min max message spec
 
   /// Adds a requirement for the result of the specified mapping, 
   /// which defines that the result should be less than (`limit > value`) the specified limit.
   [<Extension>]
-  static member LessThan (spec, (selector : Func<_, _>), limit, message) =
+  static member LessThan ((spec : Spec<'T>), (selector : Func<'T, 'TResult>), limit, message) =
     if selector = null then nullArg "selector"
     if message = null then nullArg "message"
     Spec.lessThanOf selector.Invoke limit message spec
 
   /// Adds a requirement to check if the value is less than (`limit > value`) the specified limit.
   [<Extension>]
-  static member LessThan (spec, limit, message) =
+  static member LessThan ((spec : Spec<'T>), limit, message) =
     if message = null then nullArg "message"
     Spec.lessThan limit message spec
 
   /// Adds a requirement for the result of the specified mapping, 
   /// which defines that the result should be greater than (`limit < value`) the specified limit.
   [<Extension>]
-  static member GreaterThan (spec, (selector : Func<_, _>), limit, message) =
+  static member GreaterThan ((spec : Spec<'T>), (selector : Func<'T, 'TResult>), limit, message) =
     if message = null then nullArg "message"
     Spec.greaterThanOf selector.Invoke limit message spec
   
   /// Adds a requirement to check if the value is greater than (`limit < value`) the specified limit.
   [<Extension>]
-  static member GreaterThan (spec, limit, message) =
+  static member GreaterThan ((spec : Spec<'T>), limit, message) =
     if message = null then nullArg "message"
     Spec.greaterThan limit message spec
 
   /// Adds a requirement for the result of the specified mapping, 
   /// which defines that the result should be less than or equal to (`limit >= value`) the specified limit.
   [<Extension>]
-  static member LessThanOrEqual (spec, (selector : Func<_, _>), limit, message) =
+  static member LessThanOrEqual ((spec : Spec<'T>), (selector : Func<'T, 'TResult>), limit, message) =
     if selector = null then nullArg "selector"
     if message = null then nullArg "message"
     Spec.lessThanOrEqualOf selector.Invoke limit message spec
 
   /// Adds a requirement to check if the value is less than or equal to (`limit >= value`) to the specified limit.
   [<Extension>]
-  static member LessThanOrEqual (spec, limit, message) =
+  static member LessThanOrEqual ((spec : Spec<'T>), limit, message) =
     if message = null then nullArg "message"
     Spec.lessThanOrEqual limit message spec
 
   /// Adds a requirement for the result of the specified mapping, 
   /// which defines that the result should be greater than or equal to (`limit <= value`) the specified limit.
   [<Extension>]
-  static member GreaterThanOrEqual (spec, (selector : Func<_, _>), limit, message) =
+  static member GreaterThanOrEqual ((spec : Spec<'T>), (selector : Func<'T, 'TResult>), limit, message) =
     if message = null then nullArg "message"
     Spec.greaterThanOrEqualOf selector.Invoke limit message spec
 
   /// Adds a requirement to check if the value is greater than or equal to (`limit <= value`) the specified limit.
   [<Extension>]
-  static member GreaterThanOrEqual (spec, limit, message) =
+  static member GreaterThanOrEqual ((spec : Spec<'T>), limit, message) =
     if message = null then nullArg "message"
     Spec.greaterThanOrEqual limit message spec
   
-  /// Adds a requirement to check if the value is inclusive between (`min <= value && value >= max`) the specified range.
+  /// Adds a requirement to check if the value is inclusive between (`min <= value && value <= max`) the specified range.
   [<Extension>]
-  static member InclusiveBetween (spec, min, max, message) =
+  static member InclusiveBetween ((spec : Spec<'T>), min, max, message) =
     if message = null then nullArg "message"
     Spec.inclusiveBetween min max message spec
   
   /// Adds a requirement for the result of the specified mapping, 
-  /// which defines that the result should be inclusive between (`min <= value && value >= max`) the specified range.
+  /// which defines that the result should be inclusive between (`min <= value && value <= max`) the specified range.
   [<Extension>]
-  static member InclusiveBetween (spec, (selector : Func<_, _>), min, max, message) =
+  static member InclusiveBetween ((spec : Spec<'T>), (selector : Func<'T, 'TResult>), min, max, message) =
     if selector = null then nullArg "selector"
     if message = null then nullArg "message"
     Spec.inclusiveBetweenOf selector.Invoke min max message spec
 
-  /// Adds a requirement to check if the value is exclusive between (`min < value && value > max`) the specified range.
+  /// Adds a requirement to check if the value is exclusive between (`min < value && value < max`) the specified range.
   [<Extension>]
-  static member ExclusiveBetween (spec, min, max, message) =
+  static member ExclusiveBetween ((spec : Spec<'T>), min, max, message) =
     if message = null then nullArg "message"
     Spec.exclusiveBetween min max message spec
   
   /// Adds a requirement for the result of the specified mapping, 
-  /// which defines that the result should be exclusive between (`min < value && value > max`) the specified range.
+  /// which defines that the result should be exclusive between (`min < value && value < max`) the specified range.
   [<Extension>]
-  static member ExclusiveBetween (spec, (selector : Func<_, _>), min, max, message) =
+  static member ExclusiveBetween ((spec : Spec<'T>), (selector : Func<'T, 'TResult>), min, max, message) =
     if selector = null then nullArg "selector"
     if message = null then nullArg "message"
     Spec.exclusiveBetweenOf selector.Invoke min max message spec
@@ -908,49 +1099,49 @@ type SpecExtensions =
   /// Adds a requirement for the result of the specified mapping, 
   /// which defines that the result should be a match to the specified regular expression pattern.
   [<Extension>]
-  static member Regex (spec, (selector : Func<_, _>), pattern, message) =
+  static member Regex ((spec : Spec<'T>), (selector : Func<'T, string>), pattern, message) =
     if selector = null then nullArg "selector"
     if message = null then nullArg "message"
     Spec.regexOf selector.Invoke pattern message spec
 
   /// Adds a requirement to check if the value is a match to the specified regular expression pattern.
   [<Extension>]
-  static member Regex (spec, pattern, message) =
+  static member Regex ((spec : Spec<string>), pattern, message) =
     if message = null then nullArg "message"
     Spec.regex pattern message spec
 
   /// Adds a requirement for the result of the specified mapping, 
   /// which defines that the result should an instance of the specified type `T`.
   [<Extension>]
-  static member IsType<'T> (spec, (selector : Func<_, _>), message) =
+  static member IsType ((spec : Spec<'T>), (selector : Func<'T, 'TResult>), message) =
     if selector = null then nullArg "selector"
     if message = null then nullArg "message"
-    Spec.isTypeOf<'T> selector.Invoke message spec
+    Spec.isTypeOf selector.Invoke message spec
 
   /// Adds a requirement to check if the value is an instance of the specified type `T`.
   [<Extension>]
-  static member IsType<'T> (spec, message) =
+  static member IsType ((spec : Spec<'T>), message) =
     if message = null then nullArg "message"
-    Spec.isType<'T> message spec
+    Spec.isType message spec
 
   /// Change the way the validation of requirements should happen.
   [<Extension>]
-  static member Cascade (spec, mode) = 
+  static member Cascade ((spec : Spec<'T>), mode) = 
     Spec.cascade mode spec
 
   /// Determine whether the specified value satisfies the domain specification.
   [<Extension>]
-  static member IsSatisfiedBy (spec, value) =
+  static member IsSatisfiedBy ((spec : Spec<'T>), value) =
     Spec.isSatisfiedBy value spec
 
   /// Validate the specified value to the domain specification.
   [<Extension>]
-  static member Validate (spec, value) =
+  static member Validate ((spec : Spec<'T>), value) =
     ValidationResult (result=Spec.validate value spec)
 
   /// Validate the specified value to the domain specification.
   [<Extension>]
-  static member ValidateThrow<'T, 'TException when 'TException :> exn> (spec, value, message : string) : 'T =
+  static member ValidateThrow<'T, 'TException when 'TException :> exn> ((spec : Spec<'T>), value, message : string) : 'T =
     if message = null then nullArg "message" 
     Spec.validate value spec
     |> Result.getOrElse (fun _ -> 
@@ -958,20 +1149,20 @@ type SpecExtensions =
 
   /// Create a domain model after the validate of the specifed value to the domain specification succeeds.
   [<Extension>]
-  static member CreateModel (spec, value, (creator : Func<_, _>)) =
+  static member CreateModel ((spec : Spec<'T>), value, (creator : Func<_, _>)) =
     if creator = null then nullArg "creator"
     ValidationResult (result=Spec.createModel creator.Invoke value spec)
 
   /// Create a domain model after the validate of the specifed value to the domain specification succeeds.
   [<Extension>]
-  static member TryCreateModel<'T, 'TResult> ((spec : Spec<'T>), value, (creator : Func<'T, 'TResult>), result : outref<'TResult>) =
+  static member TryCreateModel ((spec : Spec<'T>), value, (creator : Func<'T, 'TResult>), result : outref<'TResult>) =
     match Spec.createModel creator.Invoke value spec with
     | Ok x -> result <- x; true
     | _ -> result <- Unchecked.defaultof<'TResult>; false
 
   /// Create a domain model after the validate of the specifed value to the domain specification succeeds.
   [<Extension>]
-  static member CreateModelOrThrow<'T, 'TResult, 'TException when 'TException :> exn> (spec, value, (creator : Func<'T, 'TResult>), message) =
+  static member CreateModelOrThrow<'T, 'TResult, 'TException when 'TException :> exn> ((spec : Spec<'T>), value, (creator : Func<'T, 'TResult>), message) =
     if creator = null then nullArg "creator"
     Spec.createModel creator.Invoke value spec
     |> Result.getOrElse (fun errs ->
@@ -981,7 +1172,7 @@ type SpecExtensions =
   
   /// Create a domain model after the validate of the specifed value to the domain specification succeeds.
   [<Extension>]
-  static member CreateModelOrThrow<'T, 'TResult> (spec, value, (creator : Func<_, _>), message) =
+  static member CreateModelOrThrow ((spec : Spec<'T>), value, (creator : Func<_, _>), message) =
     if creator = null then nullArg "creator"
     Spec.createModel creator.Invoke value spec
     |> Result.getOrElse (fun errs ->
