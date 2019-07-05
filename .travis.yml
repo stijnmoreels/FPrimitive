@@ -7,7 +7,7 @@ before_install:
 
 matrix:
   include:
-    dotnet: 2.1.300
+    dotnet: 2.2.107
 
 script:
   - ./build.sh All
