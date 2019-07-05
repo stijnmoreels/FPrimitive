@@ -1,7 +1,7 @@
 version 5.203.2
 source https://www.nuget.org/api/v2
 
-nuget FSharp.Core = 4.5.2
+nuget FSharp.Core = 4.5.4
 
 github stijnmoreels/System Time.fs
 github stijnmoreels/System Result.fs
