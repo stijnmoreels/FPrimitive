@@ -1156,6 +1156,7 @@ type SpecExtensions =
   /// Create a domain model after the validate of the specifed value to the domain specification succeeds.
   [<Extension>]
   static member TryCreateModel ((spec : Spec<'T>), value, (creator : Func<'T, 'TResult>), result : outref<'TResult>) =
+    if creator = null then nullArg "creator"
     match Spec.createModel creator.Invoke value spec with
     | Ok x -> result <- x; true
     | _ -> result <- Unchecked.defaultof<'TResult>; false
@@ -1172,10 +1173,44 @@ type SpecExtensions =
   
   /// Create a domain model after the validate of the specifed value to the domain specification succeeds.
   [<Extension>]
-  static member CreateModelOrThrow ((spec : Spec<'T>), value, (creator : Func<_, _>), message) =
+  static member CreateModelOrThrow ((spec : Spec<'T>), value, (creator : Func<'T, 'TResult>), message) =
     if creator = null then nullArg "creator"
     Spec.createModel creator.Invoke value spec
     |> Result.getOrElse (fun errs ->
       let errors = Environment.NewLine + String.Join (Environment.NewLine + " -> ", errs)
       let message = sprintf "%s: %s" message errors
       raise (ValidationFailureException message))
+
+  /// Tries to get the wrapped value out of the untrusted boundary by validating the value.
+  [<Extension>]
+  static member CreateModel (untrusted, (creator : Func<'T, 'TResult>), specification) =
+    if creator = null then nullArg "creator"
+    ValidationResult (result=Untrust.getWithResult (fun x -> Spec.createModel creator.Invoke x specification) untrusted)
+
+  /// Tries to get the wrapped value out of the untrusted boundary by validating the value.
+  [<Extension>]
+  static member TryCreateModel (untrusted, (creator : Func<'T, 'TResult>), specification, result : outref<'TResult>) =
+    if creator = null then nullArg "creator"
+    match Untrust.getWithResult (fun x -> Spec.createModel creator.Invoke x specification) untrusted with
+    | Ok x -> result <- x; true
+    | _ -> result <- Unchecked.defaultof<'TResult>; false
+
+  /// Tries to get the wrapped value out of the untrusted boundary by validating the value.
+  [<Extension>]
+  static member CreateModelOrThrow (untrusted, (creator : Func<'T, 'TResult>), specification, message) =
+    if creator = null then nullArg "creator"
+    Untrust.getWithResult (fun x -> Spec.createModel creator.Invoke x specification) untrusted
+    |> Result.getOrElse (fun errs ->
+      let errors = Environment.NewLine + String.Join (Environment.NewLine + " -> ", errs)
+      let message = sprintf "%s: %s" message errors
+      raise (ValidationFailureException message))
+
+  /// Tries to get the wrapped value out of the untrusted boundary by validating the value.
+  [<Extension>]
+  static member CreateModelOrThrow<'T, 'TResult, 'TException when 'TException :> exn> (untrusted, (creator : Func<'T, 'TResult>), specification, message) =
+    if creator = null then nullArg "creator"
+    Untrust.getWithResult (fun x -> Spec.createModel creator.Invoke x specification) untrusted
+    |> Result.getOrElse (fun errs ->
+      let errors = Environment.NewLine + String.Join (Environment.NewLine + " -> ", errs)
+      let message = sprintf "%s: %s" message errors
+      raise (Activator.CreateInstance (typeof<'TException> , [| message :> obj |]) :?> 'TException))
