@@ -3,10 +3,10 @@ NUGET
     FSharp.Core (4.7)
 GITHUB
   remote: stijnmoreels/System
-    Option.fs (58ed32f8d28289376c2c8d3f3c4fa2ab7d8345f9)
-    Prelude.fs (58ed32f8d28289376c2c8d3f3c4fa2ab7d8345f9)
-    Result.fs (58ed32f8d28289376c2c8d3f3c4fa2ab7d8345f9)
-    Time.fs (58ed32f8d28289376c2c8d3f3c4fa2ab7d8345f9)
+    Option.fs (86d5bb5175b176b22bf40e4ae2103181ec614a55)
+    Prelude.fs (86d5bb5175b176b22bf40e4ae2103181ec614a55)
+    Result.fs (86d5bb5175b176b22bf40e4ae2103181ec614a55)
+    Time.fs (86d5bb5175b176b22bf40e4ae2103181ec614a55)
 GROUP FakeBuild
 STORAGE: NONE
 NUGET
