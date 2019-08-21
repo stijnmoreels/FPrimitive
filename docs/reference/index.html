@@ -45,7 +45,7 @@
     <tbody>
         <tr>
           <td class="type-name">
-            <a href="fprimitive-access-2.html">Access<'a, 'b></a>
+            <a href="fprimitive-access-2.html">Access<'T, 'TResult></a>
           </td>
           <td class="xmldoc">
           <p>Represents an access-controlled function.</p>
@@ -65,20 +65,20 @@
         </tr>
         <tr>
           <td class="type-name">
-            <a href="fprimitive-accessresult-1.html">AccessResult<'a></a>
+            <a href="fprimitive-alreadyreadexception.html">AlreadyReadException</a>
           </td>
           <td class="xmldoc">
-          <p>Result type when the access-controlled function is evaluated.</p>
+          <p>Exception that gets thrown when a <code>ReadOnce&lt;_&gt;</code> instance was being read more than once.</p>
 
 
           </td>
         </tr>
         <tr>
           <td class="type-name">
-            <a href="fprimitive-alreadyreadexception.html">AlreadyReadException</a>
+            <a href="fprimitive-boundedint.html">BoundedInt</a>
           </td>
           <td class="xmldoc">
-          <p>Exception that gets thrown when a <code>ReadOnce&lt;_&gt;</code> instance was being read more than once.</p>
+          <p>Model representation of an integer bounded by a minimum and maximum threshold.</p>
 
 
           </td>
@@ -105,7 +105,17 @@
         </tr>
         <tr>
           <td class="type-name">
-            <a href="fprimitive-readonce-1.html">ReadOnce<'a></a>
+            <a href="fprimitive-invalidvalidationresultexception.html">InvalidValidationResultException</a>
+          </td>
+          <td class="xmldoc">
+          <p>Thrown when the value of a validation result is called on an invalid validation result.</p>
+
+
+          </td>
+        </tr>
+        <tr>
+          <td class="type-name">
+            <a href="fprimitive-readonce-1.html">ReadOnce<'T></a>
           </td>
           <td class="xmldoc">
           <p>Representation of a value that can only be read once.</p>
@@ -115,7 +125,7 @@
         </tr>
         <tr>
           <td class="type-name">
-            <a href="fprimitive-requirement-1.html">Requirement<'a></a>
+            <a href="fprimitive-requirement-1.html">Requirement<'T></a>
           </td>
           <td class="xmldoc">
           <p>Type alias for the validation requirement.</p>
@@ -125,7 +135,17 @@
         </tr>
         <tr>
           <td class="type-name">
-            <a href="fprimitive-spec-1.html">Spec<'a></a>
+            <a href="fprimitive-spec-1.html">Spec<'T></a>
+          </td>
+          <td class="xmldoc">
+          <p>Representation of a domain specification that contains the validation for the model.</p>
+
+
+          </td>
+        </tr>
+        <tr>
+          <td class="type-name">
+            <a href="fprimitive-spec.html">Spec</a>
           </td>
           <td class="xmldoc">
           <p>Representation of a domain specification that contains the validation for the model.</p>
@@ -149,6 +169,18 @@
           </td>
           <td class="xmldoc">
           <p>Exception thrown when the validation of a value against a domain specification failed.</p>
+
+
+          </td>
+        </tr>
+        <tr>
+          <td class="type-name">
+            <a href="fprimitive-xmlencodedstring.html">XmlEncodedString</a>
+          </td>
+          <td class="xmldoc">
+          <p>Representation of a XML text string that can be serialized to XML.
+Not necessary an XML document, but an input text that contains valid XML characters.
+Can be used instead of string in a domain model type.</p>
 
 
           </td>
@@ -202,7 +234,17 @@
         </tr>
         <tr>
           <td class="module-name">
-            <a href="fprimitive-spec.html">Spec</a>
+            <a href="fprimitive-seq.html">Seq</a>
+          </td>
+          <td class="xmldoc">
+          <p>Operations on sequence domain types.</p>
+
+
+          </td>
+        </tr>
+        <tr>
+          <td class="module-name">
+            <a href="fprimitive-specmodule.html">Spec</a>
           </td>
           <td class="xmldoc">
           <p>Operations on the <code>Spec&lt;_&gt;</code> type.</p>
@@ -243,7 +285,17 @@
     <tbody>
         <tr>
           <td class="module-name">
-            <a href="microsoft-fsharp-core-optionexposure.html">OptionExposure</a>
+            <a href="microsoft-fsharp-core-option.html">Option</a>
+          </td>
+          <td class="xmldoc">
+          <p>Additional operations on the <code>Option&lt;_&gt;</code> type.</p>
+
+
+          </td>
+        </tr>
+        <tr>
+          <td class="module-name">
+            <a href="microsoft-fsharp-core-optionbuildermodule.html">OptionBuilder</a>
           </td>
           <td class="xmldoc">
           <p>Automatic exposed values for the <code>Option&lt;_&gt;</code> type.</p>
@@ -263,7 +315,7 @@
         </tr>
         <tr>
           <td class="module-name">
-            <a href="microsoft-fsharp-core-resultexposure.html">ResultExposure</a>
+            <a href="microsoft-fsharp-core-resultbuildermodule.html">ResultBuilder</a>
           </td>
           <td class="xmldoc">
           <p>Result auto exposed values.</p>

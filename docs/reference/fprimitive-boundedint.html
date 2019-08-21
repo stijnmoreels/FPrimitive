@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8"/>
-    <title>Disposable<'a> - FPrimitive</title>
+    <title>BoundedInt - FPrimitive</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="description" content=""/>
     <meta name="author" content="Stijn Moreels"/>
@@ -35,13 +35,13 @@
 
 
 
-<h1>Disposable<'a></h1>
+<h1>BoundedInt</h1>
 <p>
 
     <span>Namespace: FPrimitive</span><br />
     </p>
 <div class="xmldoc">
-<p>Representation of a value that can be disposed/removed any time.</p>
+<p>Model representation of an integer bounded by a minimum and maximum threshold.</p>
 
 </div>
   <h3>Constructors</h3>
@@ -53,15 +53,15 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '212', 212)" onmouseover="showTip(event, '212', 212)">
-            new(value)
+          <code onmouseout="hideTip(event, '205', 205)" onmouseover="showTip(event, '205', 205)">
+            new(min, max, value)
           </code>
-          <div class="tip" id="212">
-            <strong>Signature:</strong> value:&#39;a -&gt; Disposable&lt;&#39;a&gt;<br />
+          <div class="tip" id="205">
+            <strong>Signature:</strong> (min:int * max:int * value:int) -&gt; BoundedInt<br />
                                   </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Types.fs#L276-276" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Types.fs#L14-14" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -80,19 +80,48 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '213', 213)" onmouseover="showTip(event, '213', 213)">
-            x.GetValue()
+          <code onmouseout="hideTip(event, '206', 206)" onmouseover="showTip(event, '206', 206)">
+            x.Value
           </code>
-          <div class="tip" id="213">
-            <strong>Signature:</strong> unit -&gt; &#39;a<br />
+          <div class="tip" id="206">
+            <strong>Signature:</strong> int<br />
                                   </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Types.fs#L283-283" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Types.fs#L18-18" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          <p>Reads the possible disposed value, throws an <code>ObjectDisposedException</code> otherwise.</p>
+          <p>Gets the bounded integer value.</p>
+
+
+              <p>CompiledName: <code>get_Value</code></p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <h3>Static members</h3>
+  <table class="table table-bordered member-list">
+    <thead>
+      <tr><td>Static member</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '207', 207)" onmouseover="showTip(event, '207', 207)">
+            BoundedInt.create(min, max) value
+          </code>
+          <div class="tip" id="207">
+            <strong>Signature:</strong> (min:int * max:int) -&gt; value:int -&gt; Result&lt;BoundedInt,string list&gt;<br />
+                                  </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Types.fs#L20-20" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Try to create a bounded integer value within the given minimum and maximum boundaries.</p>
 
 
         </td>
@@ -100,21 +129,39 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '214', 214)" onmouseover="showTip(event, '214', 214)">
-            x.TryGetValue(output)
+          <code onmouseout="hideTip(event, '208', 208)" onmouseover="showTip(event, '208', 208)">
+            BoundedInt.Create(min, max, value)
           </code>
-          <div class="tip" id="214">
-            <strong>Signature:</strong> output:outref&lt;&#39;a&gt; -&gt; bool<br />
+          <div class="tip" id="208">
+            <strong>Signature:</strong> (min:int * max:int * value:int) -&gt; ValidationResult&lt;BoundedInt&gt;<br />
                                   </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Types.fs#L288-288" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Types.fs#L26-26" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          <p>Tries to read the possible disposed value.</p>
+          <p>Try to create a bounded integer value within the given minimum and maximum boundaries.</p>
 
 
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '209', 209)" onmouseover="showTip(event, '209', 209)">
+            BoundedInt.op_Implicit(x)
+          </code>
+          <div class="tip" id="209">
+            <strong>Signature:</strong> x:BoundedInt -&gt; int<br />
+                                  </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Types.fs#L28-28" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          
         </td>
       </tr>
     </tbody>

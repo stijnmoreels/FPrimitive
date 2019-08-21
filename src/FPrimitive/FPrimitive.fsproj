@@ -7,10 +7,6 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include="paket.references" />
-    <Compile Include="..\..\paket-files\stijnmoreels\System\Option.fs">
-      <Paket>True</Paket>
-      <Link>Option.fs</Link>
-    </Compile>
     <Compile Include="..\..\paket-files\stijnmoreels\System\Prelude.fs">
       <Paket>True</Paket>
       <Link>Prelude.fs</Link>
@@ -19,12 +15,17 @@
       <Paket>True</Paket>
       <Link>Time.fs</Link>
     </Compile>
+    <Compile Include="..\..\paket-files\stijnmoreels\System\Option.fs">
+      <Paket>True</Paket>
+      <Link>Option.fs</Link>
+    </Compile>
     <Compile Include="..\..\paket-files\stijnmoreels\System\Result.fs">
       <Paket>True</Paket>
       <Link>Result.fs</Link>
     </Compile>
-    <Compile Include="Types.fs" />
+    <Compile Include="Untrust.fs" />
     <Compile Include="Spec.fs" />
+    <Compile Include="Types.fs" />
     <Compile Include="Access.fs" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />

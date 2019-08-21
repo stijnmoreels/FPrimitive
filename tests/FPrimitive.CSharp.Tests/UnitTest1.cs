@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.IO;
 using System.Net.Mail;
 using System.Text;
@@ -38,15 +39,14 @@ namespace FPrimitive.CSharp.Tests
                 // use the now correct 'output'
             }
 
-
             int unknown = 5;
             Untrust<int> untrusted = unknown;
 
             ValidationResult<NonZeroInt> nonZeroIntValidationResult = 
-                untrusted.CreateModel(
-                    i => new NonZeroInt(i), 
+                untrusted.CreateModel( 
                     Spec.Of<int>()
-                        .GreaterThan(0, "should not be zero"));
+                        .GreaterThan(0, "should not be zero"),
+                    i => new NonZeroInt(i));
         }
     }
 
@@ -116,10 +116,9 @@ namespace FPrimitive.CSharp.Tests
 
         public static ValidationResult<Record> Create(string productName, int amount)
         {
-            return ValidationResult<Record>.Combine(
-                ReadableText.Create(productName),
-                Int1To20.Create(amount),
-                (txt, integer) => new Record(txt, integer));
+            return ReadableText.Create(productName)
+                .Zip(Int1To20.Create(amount),
+                     (txt, integer) => new Record(txt, integer));
         }
     }
 
@@ -179,5 +178,47 @@ namespace FPrimitive.CSharp.Tests
         //         .InclusiveBetween(x => x.max, 11, 20, "Maximum should be between 11-20")
         //         .CreateModelOrThrow((min: min, max: max), x => new Point(x.min, x.max), "Could not create Point instance");
         // }
+    }
+
+    public class NonWhiteSpaceString
+    {
+        private readonly string _value;
+
+        public NonWhiteSpaceString(string value)
+        {
+            if (String.IsNullOrWhiteSpace(value))
+            {
+                throw new ArgumentException("Value cannot be null or blank", nameof(value));
+            }
+
+            _value = value;
+        }
+
+        public static ValidationResult<NonWhiteSpaceString> Create(string value)
+        {
+            return Spec.Of<string>()
+                       .NotNullOrWhiteSpace("value cannot be null or blank")
+                       .CreateModel(value, x => new NonWhiteSpaceString(x));
+        }
+    }
+
+    public class Party
+    {
+        public Party(UniqueSeq<NonWhiteSpaceString> ids)
+        {
+            Ids = ids;
+        }
+
+        public UniqueSeq<NonWhiteSpaceString> Ids { get; }
+
+        public static ValidationResult<Party> Create(IEnumerable<string> ids)
+        {
+            return Spec.Of<IEnumerable<string>>()
+                       .NotNull("unique ID sequence cannot be null")
+                       .All(x => !(x is null), "individual ID's cannot be null")
+                       .CreateModel(ids, xs => xs.Traverse(NonWhiteSpaceString.Create))
+                       .Then(xs => UniqueSeq<NonWhiteSpaceString>.Create(xs))
+                       .Select(xs => new Party(xs));
+        }
     }
 }

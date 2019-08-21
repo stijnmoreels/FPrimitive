@@ -1,6 +1,6 @@
 type file
 id FPrimitive
-version 1.0.0-alpha
+version 1.0.0
 title FPrimitive
 summary .NET project to help developers build a correct and more secure domain model.
 description .NET project to help developers build a correct and more secure domain model by providing building blocks, standard types and trust boundaries.

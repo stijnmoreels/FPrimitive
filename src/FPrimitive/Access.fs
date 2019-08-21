@@ -8,10 +8,10 @@ open System.Threading
 open Microsoft.FSharp.Core
 
 /// Represents an access-controlled function.
-type Access<'a, 'b> = 
+type Access<'T, 'TResult> = 
   internal
       /// Gets the function that is decorated with access-controlled functionality.
-    { Capability : 'a -> Result<'b, string list>
+    { Capability : 'T -> Result<'TResult, string list>
       /// Gets the function that revokes the access-controlled function from being further used.
       Revokable : (unit -> unit) option }
 
@@ -251,6 +251,7 @@ module AccessExposure =
 exception AccessFailureException of string
 
 /// Result type when the access-controlled function is evaluated.
+[<Struct; NoEquality; NoComparison>]
 type AccessResult<'a> internal (result : Result<'a, string list>) =
     /// Gets a value indicating whether or not the access-controlled function was evaluated successfully.
     member __.Successful = Result.isOk result 
@@ -288,37 +289,37 @@ type AccessExtensions () =
         Access.fileExtensions (List.ofArray fileExtensions) access
     /// Let the access-controlled function only evaluate once.
     [<Extension>]
-    static member Once (acc) = Access.once acc
+    static member Once (acc : Access<'T, 'TResult>) = Access.once acc
     /// Let the access-controlled function only evaluate two times.
     [<Extension>]
-    static member Twice (acc) = Access.twice acc
+    static member Twice (acc : Access<'T, 'TResult>) = Access.twice acc
     /// Let the access-controlled function only evaluate a certain amount of times.
     [<Extension>]
-    static member Times (acc, count) = Access.times count acc
+    static member Times (acc : Access<'T, 'TResult>, count) = Access.times count acc
     /// Make the access-controlled function revokable.
     [<Extension>]
-    static member Revokable (acc) = Access.revokable acc
+    static member Revokable (acc : Access<'T, 'TResult>) = Access.revokable acc
     /// Automatically revoke the access-controlled after a specified delay.
     [<Extension>]
-    static member RevokedAfter (acc, delay) = Access.revokedAfter delay acc
+    static member RevokedAfter (acc : Access<'T, 'TResult>, delay) = Access.revokedAfter delay acc
     /// Automatically revoke the access-controlled function when the specified observable emits a value.
     [<Extension>]
-    static member RevokedWhen (acc, observable) = Access.revokedWhen observable acc
+    static member RevokedWhen (acc : Access<'T, 'TResult>, observable) = Access.revokedWhen observable acc
     /// Make the access-controlled function only available during certain dates.
     [<Extension>]
-    static member During (acc, min, max) = Access.duringDates min max acc
+    static member During (acc : Access<'T, 'TResult>, min, max) = Access.duringDates min max acc
     /// Make the access-controlled function only available during certain hours.
     [<Extension>]
-    static member DuringHours (acc, min, max) = Access.duringHours min max acc
+    static member DuringHours (acc : Access<'T, 'TResult>, min, max) = Access.duringHours min max acc
     /// Adds input-validation to the access-controlled function.
     [<Extension>]
-    static member Satisfy (acc, spec) = Access.satisfy spec acc
+    static member Satisfy (acc : Access<'T, 'TResult>, spec) = Access.satisfy spec acc
     /// Revokes the access-controlled function.
     [<Extension>]
-    static member Revoke (acc : Access<_, _>) = Option.iter (fun f -> f ()) acc.Revokable
+    static member Revoke (acc : Access<'T, 'TResult>) = Option.iter (fun f -> f ()) acc.Revokable
     /// Evaluate the access-controlled function.
     [<Extension>]
-    static member Eval (acc : Access<unit, 'b>) = Access.eval () acc |> AccessResult<'b>
+    static member Eval (acc : Access<unit, 'TResult>) = Access.eval () acc |> AccessResult<'TResult>
     /// Evaluate the access-controlled function.
     [<Extension>]
-    static member Eval ((acc : Access<'a, 'b>), (input : 'a)) : AccessResult<'b> = Access.eval input acc |> AccessResult<'b>
+    static member Eval (acc : Access<'T, 'TResult>, input : 'T) : AccessResult<'TResult> = Access.eval input acc |> AccessResult<'TResult>

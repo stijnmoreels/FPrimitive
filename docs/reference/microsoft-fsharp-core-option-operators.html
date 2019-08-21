@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8"/>
-    <title>Disposable<'a> - FPrimitive</title>
+    <title>Operators - FPrimitive</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="description" content=""/>
     <meta name="author" content="Stijn Moreels"/>
@@ -35,86 +35,98 @@
 
 
 
-<h1>Disposable<'a></h1>
+<h1>Operators</h1>
 <p>
-
-    <span>Namespace: FPrimitive</span><br />
-    </p>
+  <span>Namespace: Microsoft.FSharp.Core</span><br />
+  <span>Parent Module: <a href="microsoft-fsharp-core-option.html">Option</a></span>
+  </p>
 <div class="xmldoc">
-<p>Representation of a value that can be disposed/removed any time.</p>
+<p>Option operators on the option type.</p>
 
 </div>
-  <h3>Constructors</h3>
+
+<!-- Render nested types and modules, if there are any -->
+
+  <h3>Functions and values</h3>
   <table class="table table-bordered member-list">
     <thead>
-      <tr><td>Constructor</td><td>Description</td></tr>
+      <tr><td>Function or value</td><td>Description</td></tr>
     </thead>
     <tbody>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '212', 212)" onmouseover="showTip(event, '212', 212)">
-            new(value)
+          <code onmouseout="hideTip(event, '119', 119)" onmouseover="showTip(event, '119', 119)">
+            ( &lt;!&gt; ) m f
           </code>
-          <div class="tip" id="212">
-            <strong>Signature:</strong> value:&#39;a -&gt; Disposable&lt;&#39;a&gt;<br />
-                                  </div>
+          <div class="tip" id="119">
+            <strong>Signature:</strong> m:&#39;?10274 option -&gt; f:(&#39;?10274 -&gt; &#39;?10275) -&gt; &#39;?10275 option<br />
+                          <strong>Type parameters:</strong> '?10274, '?10275                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Types.fs#L276-276" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Option.fs#L92-92" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
           
-              <p>CompiledName: <code>.ctor</code></p>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  <h3>Instance members</h3>
-  <table class="table table-bordered member-list">
-    <thead>
-      <tr><td>Instance member</td><td>Description</td></tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td class="member-name">
-
-          <code onmouseout="hideTip(event, '213', 213)" onmouseover="showTip(event, '213', 213)">
-            x.GetValue()
-          </code>
-          <div class="tip" id="213">
-            <strong>Signature:</strong> unit -&gt; &#39;a<br />
-                                  </div>
-        </td>
-        <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Types.fs#L283-283" class="github-link">
-              <img src="../content/img/github.png" class="normal" />
-              <img src="../content/img/github-blue.png" class="hover" />
-            </a>
-          <p>Reads the possible disposed value, throws an <code>ObjectDisposedException</code> otherwise.</p>
-
-
+              <p>CompiledName: <code>op_LessBangGreater</code></p>
         </td>
       </tr>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '214', 214)" onmouseover="showTip(event, '214', 214)">
-            x.TryGetValue(output)
+          <code onmouseout="hideTip(event, '120', 120)" onmouseover="showTip(event, '120', 120)">
+            ( &lt;*&gt; )
           </code>
-          <div class="tip" id="214">
-            <strong>Signature:</strong> output:outref&lt;&#39;a&gt; -&gt; bool<br />
-                                  </div>
+          <div class="tip" id="120">
+            <strong>Signature:</strong> (&#39;?10277 -&gt; &#39;?10278) option -&gt; &#39;?10277 option -&gt; &#39;?10278 option<br />
+                          <strong>Type parameters:</strong> '?10277, '?10278                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Types.fs#L288-288" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Option.fs#L93-93" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          <p>Tries to read the possible disposed value.</p>
+          
+              <p>CompiledName: <code>op_LessMultiplyGreater</code></p>
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
 
+          <code onmouseout="hideTip(event, '121', 121)" onmouseover="showTip(event, '121', 121)">
+            ( &gt;=&gt; ) f g
+          </code>
+          <div class="tip" id="121">
+            <strong>Signature:</strong> f:(&#39;?10270 -&gt; &#39;?10271 option) -&gt; g:(&#39;?10271 -&gt; &#39;?10272 option) -&gt; &#39;?10270 -&gt; &#39;?10272 option<br />
+                          <strong>Type parameters:</strong> '?10270, '?10271, '?10272                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Option.fs#L91-91" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          
+              <p>CompiledName: <code>op_GreaterEqualsGreater</code></p>
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
 
+          <code onmouseout="hideTip(event, '122', 122)" onmouseover="showTip(event, '122', 122)">
+            ( &gt;&gt;= ) m f
+          </code>
+          <div class="tip" id="122">
+            <strong>Signature:</strong> m:&#39;?10267 option -&gt; f:(&#39;?10267 -&gt; &#39;?10268 option) -&gt; &#39;?10268 option<br />
+                          <strong>Type parameters:</strong> '?10267, '?10268                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Option.fs#L90-90" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          
+              <p>CompiledName: <code>op_GreaterGreaterEquals</code></p>
         </td>
       </tr>
     </tbody>

@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8"/>
-    <title>AccessResult<'a> - FPrimitive</title>
+    <title>Operators - FPrimitive</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="description" content=""/>
     <meta name="author" content="Stijn Moreels"/>
@@ -35,103 +35,98 @@
 
 
 
-<h1>AccessResult<'a></h1>
+<h1>Operators</h1>
 <p>
-
-    <span>Namespace: FPrimitive</span><br />
-    </p>
+  <span>Namespace: Microsoft.FSharp.Core</span><br />
+  <span>Parent Module: <a href="microsoft-fsharp-core-result.html">Result</a></span>
+  </p>
 <div class="xmldoc">
-<p>Result type when the access-controlled function is evaluated.</p>
+<p>Result operators on the result type.</p>
 
 </div>
-  <h3>Instance members</h3>
+
+<!-- Render nested types and modules, if there are any -->
+
+  <h3>Functions and values</h3>
   <table class="table table-bordered member-list">
     <thead>
-      <tr><td>Instance member</td><td>Description</td></tr>
+      <tr><td>Function or value</td><td>Description</td></tr>
     </thead>
     <tbody>
       <tr>
         <td class="member-name">
 
           <code onmouseout="hideTip(event, '169', 169)" onmouseover="showTip(event, '169', 169)">
-            x.Errors
+            ( &lt;!&gt; ) m f
           </code>
           <div class="tip" id="169">
-            <strong>Signature:</strong> string []<br />
-                                  </div>
+            <strong>Signature:</strong> m:Result&lt;&#39;?10163,&#39;?10164&gt; -&gt; f:(&#39;?10163 -&gt; &#39;?10165) -&gt; Result&lt;&#39;?10165,&#39;?10164&gt;<br />
+                          <strong>Type parameters:</strong> '?10163, '?10164, '?10165                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Access.fs#L258-258" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L246-246" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          <p>Gets the series of errors that occured during the evaluation of the access-controlled function.</p>
-
-
-              <p>CompiledName: <code>get_Errors</code></p>
+          
+              <p>CompiledName: <code>op_LessBangGreater</code></p>
         </td>
       </tr>
       <tr>
         <td class="member-name">
 
           <code onmouseout="hideTip(event, '170', 170)" onmouseover="showTip(event, '170', 170)">
-            x.Successful
+            ( &lt;*&gt; )
           </code>
           <div class="tip" id="170">
-            <strong>Signature:</strong> bool<br />
-                                  </div>
+            <strong>Signature:</strong> Result&lt;(&#39;?10167 -&gt; &#39;?10168),&#39;?10169 list&gt; -&gt; Result&lt;&#39;?10167,&#39;?10169 list&gt; -&gt; Result&lt;&#39;?10168,&#39;?10169 list&gt;<br />
+                          <strong>Type parameters:</strong> '?10167, '?10168, '?10169                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Access.fs#L256-256" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L247-247" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          <p>Gets a value indicating whether or not the access-controlled function was evaluated successfully.</p>
-
-
-              <p>CompiledName: <code>get_Successful</code></p>
+          
+              <p>CompiledName: <code>op_LessMultiplyGreater</code></p>
         </td>
       </tr>
       <tr>
         <td class="member-name">
 
           <code onmouseout="hideTip(event, '171', 171)" onmouseover="showTip(event, '171', 171)">
-            x.TryGetValue(output)
+            ( &gt;=&gt; ) f g
           </code>
           <div class="tip" id="171">
-            <strong>Signature:</strong> output:outref&lt;&#39;a&gt; -&gt; bool<br />
-                                  </div>
+            <strong>Signature:</strong> f:(&#39;?10158 -&gt; Result&lt;&#39;?10159,&#39;?10160&gt;) -&gt; g:(&#39;?10159 -&gt; Result&lt;&#39;?10161,&#39;?10160&gt;) -&gt; &#39;?10158 -&gt; Result&lt;&#39;?10161,&#39;?10160&gt;<br />
+                          <strong>Type parameters:</strong> '?10158, '?10159, '?10160, '?10161                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Access.fs#L271-271" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L245-245" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          <p>Tries to get the result of the access-controlled function based on whether the function evaluated successfully.</p>
-
-
+          
+              <p>CompiledName: <code>op_GreaterEqualsGreater</code></p>
         </td>
       </tr>
       <tr>
         <td class="member-name">
 
           <code onmouseout="hideTip(event, '172', 172)" onmouseover="showTip(event, '172', 172)">
-            x.Value
+            ( &gt;&gt;= ) m f
           </code>
           <div class="tip" id="172">
-            <strong>Signature:</strong> &#39;a<br />
-                                  </div>
+            <strong>Signature:</strong> m:Result&lt;&#39;?10154,&#39;?10155&gt; -&gt; f:(&#39;?10154 -&gt; Result&lt;&#39;?10156,&#39;?10155&gt;) -&gt; Result&lt;&#39;?10156,&#39;?10155&gt;<br />
+                          <strong>Type parameters:</strong> '?10154, '?10155, '?10156                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Access.fs#L264-264" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L244-244" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          <p>Gets the result of the access-controlled function if the function evaluated successfully,
-otherwise an <a href="fprimitive-accessfailureexception.html" title="AccessFailureException"><code>AccessFailureException</code></a> is thrown.</p>
-
-
-              <p>CompiledName: <code>get_Value</code></p>
+          
+              <p>CompiledName: <code>op_GreaterGreaterEquals</code></p>
         </td>
       </tr>
     </tbody>

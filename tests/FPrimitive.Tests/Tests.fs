@@ -24,14 +24,13 @@ type Point =
 type Text = 
   private Text of string with 
     static member create (s) =
-      Spec.def<string>
+      Spec.def
       |> Spec.notNull "should not be null"
       |> Spec.notEmpty "should not be empty"
       |> Spec.notWhiteSpace "should not be blank"
       |> Spec.createModel Text s
 
-    static member creaet (s) =
-      specModel Text s { 
+    static member create2 (s) = specModel Text s { 
         notNull "should not be null"
         notEmpty "should not be empty" }
 
@@ -42,6 +41,23 @@ type Person =
         let! first = Text.create first
         let! last = Text.create last
         return { FirstName = first; LastName = last } }
+
+type PartyId = 
+    private PartyId of string with
+        static member create x = specModel PartyId x {
+            notNullOrWhiteSpace "party ID cannot be null or blank"
+            regex "^#" "party ID should start with hashtag '#'" }
+
+open Microsoft.FSharp.Core.Result.Operators
+
+type Party =
+  private { Ids : UniqueSeq<PartyId> } with
+    static member create xs = result {
+        let! uniqueIds = 
+            specResult xs { nonEmpty "party IDs cannot be empty" }
+            >>= Result.traverseSeq PartyId.create
+            >>= UniqueSeq<PartyId>.create
+        return { Ids = uniqueIds } }
 
 module Tests =
   let formatResult = function
@@ -64,7 +80,7 @@ module Tests =
         |> Spec.equal x "should be equal"
         |> Spec.validate x
 
-      testProperty "notEqual" <| fun x y ->
+      testProperty "not equal" <| fun x y ->
         x <> y ==> lazy
         Spec.def
         |> Spec.notEqual y "should not be equal"
@@ -154,7 +170,7 @@ module Tests =
 
       testSpec "isType" <| fun (NonNull x) ->
         Spec.def<obj>
-        |> Spec.isType<obj> "should be of type"
+        |> Spec.isType "should be of type"
         |> Spec.validate x
     ]
 
@@ -308,4 +324,29 @@ module Tests =
         Expect.equal actual (Ok (NonZeroInt 1)) "should get value when predicate holds"
         let actual = Untrust.getWithResult (fun x -> if x <> null then Ok (NonNull x) else Error ["should not be 'null'"]) (Untrust null)
         Expect.equal actual (Error ["should not be 'null'"]) "should not get value when predicate fails"
+
+      testProperty "non-empty sequences are the same" <| fun (objs : NonEmptyArray<obj>) ->
+        let xs = Seq.nonEmpty objs.Get
+        let ys = Seq.nonEmpty objs.Get
+        Expect.equal xs ys "should be the same non-empty seq"
+
+      testProperty "unique sequences on elements are the same" <| fun (objs : NonEmptyArray<obj>) ->
+        let objs = Seq.distinct objs.Get
+        let xs = Seq.unique objs
+        let ys = Seq.unique objs
+        Expect.equal xs ys "should be the same unique seq"
+
+      testProperty "unique sequences on element keys are the same" <| fun (objs : NonEmptyArray<obj>) ->
+        let objs = Seq.distinctBy (fun x -> x.ToString ()) objs.Get
+        let xs = Seq.uniqueBy (fun x -> x.ToString ()) objs
+        let ys = Seq.uniqueBy (fun x -> x.ToString ()) objs
+        Expect.equal xs ys "should be the same unique seq"
+
+      testProperty "xml string is converted" <| fun (s : NonEmptyString) ->
+        let doc = Xml.XmlDocument ()
+        let result = 
+            XmlEncodedString.convert s.Get
+            |> Result.map (fun xml -> doc.LoadXml (sprintf "<Root>%A</Root>" xml))
+        
+        Result.isOk result = doc.OuterXml.StartsWith "<Root>"
     ]
