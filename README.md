@@ -64,8 +64,8 @@ public class PositiveInt
 	public static ValidationResult<PositiveInt> Create(int value)
 	{
 		return Spec.Of<int>()
-				   .GreaterThan(0, "Positive integer should be greater than zero")
-				   .CreateModel(value, validated => new PositiveInt(validated));
+			   .GreaterThan(0, "Positive integer should be greater than zero")
+			   .CreateModel(value, validated => new PositiveInt(validated));
 	}
 }
 ```
