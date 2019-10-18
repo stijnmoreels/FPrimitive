@@ -43,10 +43,11 @@ type Person =
         return { FirstName = first; LastName = last } }
 
 type PartyId = 
-    private PartyId of string with
-        static member create x = specModel PartyId x {
-            notNullOrWhiteSpace "party ID cannot be null or blank"
-            regex "^#" "party ID should start with hashtag '#'" }
+  private PartyId of string with
+    static member create x = specModel PartyId x {
+      notNullOrWhiteSpace "party ID cannot be null or blank"
+      regex "^#" "party ID should start with hashtag '#'"
+      cascade FirstFailure }
 
 open Microsoft.FSharp.Core.Result.Operators
 
@@ -168,10 +169,74 @@ module Tests =
       testSpec "regex" <| fun (PositiveInt x) ->
         specModel id (string x) { regex "^[0-9]+$" "should match regex of positive numbers" }
 
+      testProperty "alphabetical" <| fun () ->
+        ['a'..'z'] @ ['A'..'Z']
+        |> Gen.elements
+        |> Gen.nonEmptyListOf
+        |> Arb.fromGen
+        |> Prop.forAll <| fun str ->
+            Spec.def
+            |> Spec.alphabetical "should be in alphabet"
+            |> Spec.validate (String.Join (String.Empty, str))
+            |> formatResult
+
+      testProperty "non-alphabetical" <| fun (NonNull (str : string)) ->
+        let alphabet = ['a'..'z'] @ ['A'..'Z']
+        str.ToCharArray() 
+        |> Array.exists (fun c -> List.contains c alphabet |> not) 
+        ==> lazy
+        Spec.def 
+        |> Spec.alphabetical "should be in alphabet"
+        |> (not << Spec.isSatisfiedBy str)
+        
+      testProperty "alphanum" <| fun (PositiveInt x) ->
+        List.map string ['a'..'z'] 
+        @ List.map string  ['A'..'Z'] 
+        @ List.map string [ x ]
+        |> Gen.shuffle
+        |> Arb.fromGen
+        |> Prop.forAll <| fun str -> 
+            Spec.def 
+            |> Spec.alphanum "should be alphanumerical"
+            |> Spec.validate (String.Join (String.Empty, str))
+            |> formatResult
+
+      testProperty "alphanumExtra" <| fun (PositiveInt x) ->
+          List.map string ['a'..'z'] 
+          @ List.map string  ['A'..'Z'] 
+          @ List.map string [ x ]
+          @ [ "@"; "%"; "(" ]
+          |> Gen.shuffle
+          |> Arb.fromGen
+          |> Prop.forAll <| fun str -> 
+              Spec.def 
+              |> Spec.alphanumSpecial "should be alphanumerical"
+              |> Spec.validate (String.Join (String.Empty, str))
+              |> formatResult
+
+      testProperty "alphanumExtra sentence" <| fun () ->
+        Spec.def 
+        |> Spec.alphanumSpecial "sentece should work"
+        |> Spec.validate "This is a s@mple of an alpha-numerical test string which can also contain 1235 and *//*^{}[/# "
+        |> formatResult
+
       testSpec "isType" <| fun (NonNull x) ->
         Spec.def<obj>
         |> Spec.isType "should be of type"
         |> Spec.validate x
+
+      testSpec "dependsOn" <| fun (PositiveInt x) -> specModel id x {
+        greaterThan 0 "should be greater than zero"
+        dependsOn (spec { 
+          notEqual 0 "should not be equal to zero"
+          dependsOn (spec {
+            greaterThanOrEqual 1 "should be greater than or equal to 1" }) }) }
+
+      testProperty "dependsOn comes first and fails first" <| fun (NegativeInt x) -> 
+        specResult x {
+          greaterThan 0 "should be greater than zero"
+          dependsOn (spec { equal 0 "should be equal to zero" }) }
+        |> (=) (Error ["should be equal to zero"])
     ]
 
 
@@ -300,6 +365,19 @@ module Tests =
         Expect.equal (cri.Config.GetValue ()) "connection string" "read once type should evaluate once"
         Expect.throwsT<AlreadyReadException> (cri.Config.GetValue >> ignore) "read once type should throw after single read"
 
+      testCase "write once" <| fun _ ->
+        let printOnce = WriteOnce.create <| fun name -> printfn "hello %s!" name
+        let value = WriteOnce.trySetValue "Elsa" printOnce
+        Expect.isTrue value "write once should evaluate once"
+        let value = WriteOnce.trySetValue "Hanna" printOnce
+        Expect.isFalse value "write once should not evaluate twice"
+
+      testCase "write once throw" <| fun _ ->
+        let printOnce = WriteOnce.create <| fun name -> printfn "hello %s!" name
+        let value = WriteOnce.trySetValue "Elsa" printOnce
+        Expect.isTrue value "write once should evaluate once"
+        Expect.throwsT<AlreadyWrittenException> (fun () -> printOnce.SetValue "Hanna") "write once type should throw after single write"
+
       testCase "disposable" <| fun _ ->
         let temp = { Value = Disposable.create "something to remove" }
         using temp.Value (fun v ->
@@ -349,4 +427,9 @@ module Tests =
             |> Result.map (fun xml -> doc.LoadXml (sprintf "<Root>%A</Root>" xml))
         
         Result.isOk result = doc.OuterXml.StartsWith "<Root>"
+
+      testCase "alphabetical types are structual equal" <| fun () ->
+        let x = Alphabetical.create "test"
+        let y = Alphabetical.create "test"
+        Expect.equal x y "should be structual equal"
     ]

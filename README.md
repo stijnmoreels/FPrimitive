@@ -24,7 +24,7 @@ open FPrimitive
 /// Composible specifications for your domain types:
 type NonEmptyString =
   private NonEmptyString of string with
-    static member create x =
+    static member create x : Result<NonEmptyString, string list> =
       Spec.def<string>
       |> Spec.notNull "should not be null"
       |> Spec.notEmpty "should not be empty"
@@ -33,7 +33,7 @@ type NonEmptyString =
 /// ...also available as computation expression.
 type NonEmptyList<'a> =
   private NonEmptyList of 'a list with
-    static member create xs =
+    static member create xs : Result<NonEmptyList<'a>, string list> =
       specModel NonEmptyList xs {
         nonEmpty "list should not be empty"
         lengthBetween 1 10 "list length should be between 1-10" }
@@ -50,4 +50,22 @@ let critical =
 Access.eval () critical
 /// Revoke when neccessary
 Access.revoke critical
+```
+
+With full C# support!
+
+```csharp
+public class PositiveInt
+{
+    private PrositiveInt(int value) { Value = int; }
+
+	public int value { get; }
+
+	public static ValidationResult<PositiveInt> Create(int value)
+	{
+		return Spec.Of<int>()
+				   .GreaterThan(0, "Positive integer should be greater than zero")
+				   .CreateModel(value, validated => new PositiveInt(validated));
+	}
+}
 ```

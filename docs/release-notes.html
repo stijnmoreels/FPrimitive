@@ -44,6 +44,30 @@ Initial release
 </ul>
 </li>
 </ul>
+<h4><a name="1-5-0" class="anchor" href="#1-5-0">1.5.0</a></h4>
+<ul>
+<li>
+Spec additions
+<ul>
+<li><code>startWith(Of)</code> to verify the header of a <code>string</code></li>
+<li><code>unique(Of)</code> to verify if a sequence has unique values</li>
+<li><code>createModelWith</code> to run directly a "cross-world" function (<code>a -&gt; Result&lt;'b, 'error&gt;</code>) on the validated value</li>
+<li>
+C# basic LINQ function (<code>Select</code>, <code>SelectMany/Then</code>, <code>Where</code>, <code>Aggregate</code>, <code>Zip</code>, ...) on the <code>ValidationResult&lt;'T&gt;</code> type
+together with a <code>Traverse/Sequence</code> pair to run directly a series of validation functions on a sequence
+</li>
+</ul>
+</li>
+<li>
+Type additions
+<ul>
+<li><code>BoundedInt</code>, an integer that is bound by a min/max threshold</li>
+<li><code>NonEmptySeq&lt;'T&gt;</code>, a sequence that contains at least one element</li>
+<li><code>UniqueSeq&lt;'T&gt;</code>, a sequence that only contains unique elements</li>
+<li><code>XmlEncodedString</code>, a <code>string</code> that can be considered a valid XML text (not neccessary a XML element)</li>
+</ul>
+</li>
+</ul>
 
 
         </div>

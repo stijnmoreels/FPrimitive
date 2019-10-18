@@ -43,10 +43,9 @@ namespace FPrimitive.CSharp.Tests
             Untrust<int> untrusted = unknown;
 
             ValidationResult<NonZeroInt> nonZeroIntValidationResult = 
-                untrusted.CreateModel( 
-                    Spec.Of<int>()
-                        .GreaterThan(0, "should not be zero"),
-                    i => new NonZeroInt(i));
+                Spec.Of<int>()
+                    .GreaterThan(0, "should not be zero")
+                    .CreateModel(untrusted, i => new NonZeroInt(i));
         }
     }
 
@@ -217,8 +216,79 @@ namespace FPrimitive.CSharp.Tests
                        .NotNull("unique ID sequence cannot be null")
                        .All(x => !(x is null), "individual ID's cannot be null")
                        .CreateModel(ids, xs => xs.Traverse(NonWhiteSpaceString.Create))
-                       .Then(xs => UniqueSeq<NonWhiteSpaceString>.Create(xs))
+                       .Then(UniqueSeq<NonWhiteSpaceString>.Create)
                        .Select(xs => new Party(xs));
+        }
+    }
+
+    public class ZipCode : IEquatable<ZipCode>
+    {
+        private readonly int _number;
+
+        private ZipCode(int number)
+        {
+            _number = number;
+        }
+
+        public static ValidationResult<ZipCode> Create(int number)
+        {
+            return Spec.Of<int>()
+                       .InclusiveBetween(0, 9999, "should be greater than or equal to zero but less than or equal to 9999")
+                       .CreateModel(number, n => new ZipCode(n));
+        }
+
+        /// <summary>Returns a string that represents the current object.</summary>
+        /// <returns>A string that represents the current object.</returns>
+        public override string ToString()
+        {
+            return _number.ToString("D4");
+        }
+
+        /// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+        /// <param name="other">An object to compare with this object.</param>
+        /// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        public bool Equals(ZipCode other)
+        {
+            if (other is null) return false;
+            if (ReferenceEquals(this, other)) return true;
+
+            return _number == other._number;
+        }
+
+        /// <summary>Determines whether the specified object is equal to the current object.</summary>
+        /// <param name="obj">The object to compare with the current object.</param>
+        /// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        public override bool Equals(object obj)
+        {
+            if (obj is null) return false;
+            if (ReferenceEquals(this, obj)) return true;
+
+            return obj is ZipCode code && Equals(code);
+        }
+
+        /// <summary>Serves as the default hash function.</summary>
+        /// <returns>A hash code for the current object.</returns>
+        public override int GetHashCode()
+        {
+            return _number.GetHashCode();
+        }
+
+        /// <summary>Returns a value that indicates whether the values of two <see cref="T:FPrimitive.CSharp.Tests.ZipCode" /> objects are equal.</summary>
+        /// <param name="left">The first value to compare.</param>
+        /// <param name="right">The second value to compare.</param>
+        /// <returns>true if the <paramref name="left" /> and <paramref name="right" /> parameters have the same value; otherwise, false.</returns>
+        public static bool operator ==(ZipCode left, ZipCode right)
+        {
+            return Equals(left, right);
+        }
+
+        /// <summary>Returns a value that indicates whether two <see cref="T:FPrimitive.CSharp.Tests.ZipCode" /> objects have different values.</summary>
+        /// <param name="left">The first value to compare.</param>
+        /// <param name="right">The second value to compare.</param>
+        /// <returns>true if <paramref name="left" /> and <paramref name="right" /> are not equal; otherwise, false.</returns>
+        public static bool operator !=(ZipCode left, ZipCode right)
+        {
+            return !Equals(left, right);
         }
     }
 }

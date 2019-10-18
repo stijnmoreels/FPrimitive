@@ -24,6 +24,9 @@ type Untrust<'a> (value : 'a) =
     static member op_Implicit (x : string) = Untrust x
 
 /// Representation of an untrusted value that should be validated first before it can be used. 
+type 'T untrust = Untrust<'T>
+
+/// Representation of an untrusted value that should be validated first before it can be used. 
 module Untrust = 
     /// Tries to get the wrapped value out of the untrusted boundary by validating the value.
     let getWith (validator : 'a -> bool) (x : Untrust<'a>) = x.tryGetValue validator

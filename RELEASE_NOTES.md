@@ -17,3 +17,8 @@
    * `NonEmptySeq<'T>`, a sequence that contains at least one element
    * `UniqueSeq<'T>`, a sequence that only contains unique elements
    * `XmlEncodedString`, a `string` that can be considered a valid XML text (not neccessary a XML element)
+
+#### 1.6.0
+* Spec additions
+  * `dependsOn` introduces dependent specifications to re-use and split complex specs into more maintainable building blocks
+  * `alphabetical`, `alphanum`, ... introduces a way to check a string for charaters only in the alphabeth

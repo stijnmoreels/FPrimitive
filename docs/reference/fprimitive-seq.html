@@ -55,15 +55,15 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '31', 31)" onmouseover="showTip(event, '31', 31)">
+          <code onmouseout="hideTip(event, '36', 36)" onmouseover="showTip(event, '36', 36)">
             filter f xs
           </code>
-          <div class="tip" id="31">
-            <strong>Signature:</strong> f:(&#39;?9271 -&gt; bool) -&gt; xs:UniqueSeq&lt;&#39;?9271,&#39;?9272&gt; -&gt; UniqueSeq&lt;&#39;?9271,&#39;?9272&gt;<br />
-                          <strong>Type parameters:</strong> '?9271, '?9272                      </div>
+          <div class="tip" id="36">
+            <strong>Signature:</strong> f:(&#39;?9415 -&gt; bool) -&gt; xs:UniqueSeq&lt;&#39;?9415,&#39;?9416&gt; -&gt; UniqueSeq&lt;&#39;?9415,&#39;?9416&gt;<br />
+                          <strong>Type parameters:</strong> '?9415, '?9416                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Types.fs#L199-199" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Types.fs#L245-245" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -75,15 +75,15 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '32', 32)" onmouseover="showTip(event, '32', 32)">
+          <code onmouseout="hideTip(event, '37', 37)" onmouseover="showTip(event, '37', 37)">
             map f xs
           </code>
-          <div class="tip" id="32">
-            <strong>Signature:</strong> f:(&#39;?9257 -&gt; &#39;?9258) -&gt; xs:NonEmptySeq&lt;&#39;?9257&gt; -&gt; NonEmptySeq&lt;&#39;?9258&gt;<br />
-                          <strong>Type parameters:</strong> '?9257, '?9258                      </div>
+          <div class="tip" id="37">
+            <strong>Signature:</strong> f:(&#39;?9401 -&gt; &#39;?9402) -&gt; xs:NonEmptySeq&lt;&#39;?9401&gt; -&gt; NonEmptySeq&lt;&#39;?9402&gt;<br />
+                          <strong>Type parameters:</strong> '?9401, '?9402                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Types.fs#L182-182" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Types.fs#L228-228" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -95,15 +95,15 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '33', 33)" onmouseover="showTip(event, '33', 33)">
-            nonEmpty(xs)
+          <code onmouseout="hideTip(event, '38', 38)" onmouseover="showTip(event, '38', 38)">
+            toNonEmpty(xs)
           </code>
-          <div class="tip" id="33">
-            <strong>Signature:</strong> xs:seq&lt;&#39;?9250&gt; -&gt; Result&lt;NonEmptySeq&lt;&#39;?9250&gt;,string list&gt;<br />
-                          <strong>Type parameters:</strong> '?9250                      </div>
+          <div class="tip" id="38">
+            <strong>Signature:</strong> xs:seq&lt;&#39;?9383&gt; -&gt; Result&lt;NonEmptySeq&lt;&#39;?9383&gt;,string list&gt;<br />
+                          <strong>Type parameters:</strong> '?9383                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Types.fs#L172-172" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Types.fs#L208-208" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -115,15 +115,56 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '34', 34)" onmouseover="showTip(event, '34', 34)">
-            tryCollect f xs
+          <code onmouseout="hideTip(event, '39', 39)" onmouseover="showTip(event, '39', 39)">
+            toUnique(xs)
           </code>
-          <div class="tip" id="34">
-            <strong>Signature:</strong> f:(&#39;?9268 -&gt; NonEmptySeq&lt;&#39;?9269&gt;) -&gt; xs:NonEmptySeq&lt;&#39;?9268&gt; -&gt; Result&lt;NonEmptySeq&lt;&#39;?9269&gt;,string list&gt;<br />
-                          <strong>Type parameters:</strong> '?9268, '?9269                      </div>
+          <div class="tip" id="39">
+            <strong>Signature:</strong> xs:&#39;?9387 -&gt; Result&lt;UniqueSeq&lt;&#39;?9388&gt;,string list&gt;<br />
+                          <strong>Type parameters:</strong> '?9387, '?9388                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Types.fs#L195-195" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Types.fs#L214-214" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Tries to create a unique sequence model of the given sequence by comparing the elements itself.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '40', 40)" onmouseover="showTip(event, '40', 40)">
+            toUniqueBy selectKey xs
+          </code>
+          <div class="tip" id="40">
+            <strong>Signature:</strong> selectKey:(&#39;?9393 -&gt; &#39;?9394) -&gt; xs:&#39;?9395 -&gt; Result&lt;UniqueSeq&lt;&#39;?9393,&#39;?9394&gt;,string list&gt;<br />
+                          <strong>Type parameters:</strong> '?9393, '?9394, '?9395                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Types.fs#L221-221" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Tries to create a unique sequence model of the given sequence,
+using the given selector to select the key to compare the elements in the sequence.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '41', 41)" onmouseover="showTip(event, '41', 41)">
+            tryCollect f xs
+          </code>
+          <div class="tip" id="41">
+            <strong>Signature:</strong> f:(&#39;?9412 -&gt; NonEmptySeq&lt;&#39;?9413&gt;) -&gt; xs:NonEmptySeq&lt;&#39;?9412&gt; -&gt; Result&lt;NonEmptySeq&lt;&#39;?9413&gt;,string list&gt;<br />
+                          <strong>Type parameters:</strong> '?9412, '?9413                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Types.fs#L241-241" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -135,15 +176,15 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '35', 35)" onmouseover="showTip(event, '35', 35)">
+          <code onmouseout="hideTip(event, '42', 42)" onmouseover="showTip(event, '42', 42)">
             tryFilter f xs
           </code>
-          <div class="tip" id="35">
-            <strong>Signature:</strong> f:(&#39;?9274 -&gt; bool) -&gt; xs:NonEmptySeq&lt;&#39;?9274&gt; -&gt; Result&lt;NonEmptySeq&lt;&#39;?9274&gt;,string list&gt;<br />
-                          <strong>Type parameters:</strong> '?9274                      </div>
+          <div class="tip" id="42">
+            <strong>Signature:</strong> f:(&#39;?9418 -&gt; bool) -&gt; xs:NonEmptySeq&lt;&#39;?9418&gt; -&gt; Result&lt;NonEmptySeq&lt;&#39;?9418&gt;,string list&gt;<br />
+                          <strong>Type parameters:</strong> '?9418                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Types.fs#L203-203" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Types.fs#L249-249" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -155,15 +196,15 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '36', 36)" onmouseover="showTip(event, '36', 36)">
+          <code onmouseout="hideTip(event, '43', 43)" onmouseover="showTip(event, '43', 43)">
             tryMap f xs
           </code>
-          <div class="tip" id="36">
+          <div class="tip" id="43">
             <strong>Signature:</strong> f:(&#39;T -&gt; &#39;TResult) -&gt; xs:UniqueSeq&lt;&#39;T&gt; -&gt; Result&lt;UniqueSeq&lt;&#39;TResult&gt;,string list&gt;<br />
                           <strong>Type parameters:</strong> 'T, 'TResult                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Types.fs#L191-191" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Types.fs#L237-237" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -176,61 +217,20 @@ ands tries to create a unique sequence of the projected elements.</p>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '37', 37)" onmouseover="showTip(event, '37', 37)">
+          <code onmouseout="hideTip(event, '44', 44)" onmouseover="showTip(event, '44', 44)">
             tryMapWith selectKey f xs
           </code>
-          <div class="tip" id="37">
+          <div class="tip" id="44">
             <strong>Signature:</strong> selectKey:(&#39;TResult -&gt; &#39;TKey) -&gt; f:(&#39;T -&gt; &#39;TResult) -&gt; xs:UniqueSeq&lt;&#39;T,&#39;TOld&gt; -&gt; Result&lt;UniqueSeq&lt;&#39;TResult,&#39;TKey&gt;,string list&gt;<br />
                           <strong>Type parameters:</strong> 'TResult, 'TKey, 'T, 'TOld                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Types.fs#L186-186" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Types.fs#L232-232" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
           <p>Projects each element of the unique sequence to a new form,
 and tries to create a unique sequence of the projected elements using the given selector to get the key to compare the projected elements.</p>
-
-
-        </td>
-      </tr>
-      <tr>
-        <td class="member-name">
-
-          <code onmouseout="hideTip(event, '38', 38)" onmouseover="showTip(event, '38', 38)">
-            unique(xs)
-          </code>
-          <div class="tip" id="38">
-            <strong>Signature:</strong> xs:seq&lt;&#39;?9252&gt; -&gt; Result&lt;UniqueSeq&lt;&#39;?9252&gt;,string list&gt;<br />
-                          <strong>Type parameters:</strong> '?9252                      </div>
-        </td>
-        <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Types.fs#L175-175" class="github-link">
-              <img src="../content/img/github.png" class="normal" />
-              <img src="../content/img/github-blue.png" class="hover" />
-            </a>
-          <p>Tries to create a unique sequence model of the given sequence by comparing the elements itself.</p>
-
-
-        </td>
-      </tr>
-      <tr>
-        <td class="member-name">
-
-          <code onmouseout="hideTip(event, '39', 39)" onmouseover="showTip(event, '39', 39)">
-            uniqueBy selectKey xs
-          </code>
-          <div class="tip" id="39">
-            <strong>Signature:</strong> selectKey:(&#39;?9254 -&gt; &#39;?9255) -&gt; xs:seq&lt;&#39;?9254&gt; -&gt; Result&lt;UniqueSeq&lt;&#39;?9254,&#39;?9255&gt;,string list&gt;<br />
-                          <strong>Type parameters:</strong> '?9254, '?9255                      </div>
-        </td>
-        <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Types.fs#L179-179" class="github-link">
-              <img src="../content/img/github.png" class="normal" />
-              <img src="../content/img/github-blue.png" class="hover" />
-            </a>
-          <p>Tries to create a unique sequence model of the given sequence,
-using the given selector to select the key to compare the elements in the sequence.</p>
 
 
         </td>

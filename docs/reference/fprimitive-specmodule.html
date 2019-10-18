@@ -60,15 +60,15 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '40', 40)" onmouseover="showTip(event, '40', 40)">
+          <code onmouseout="hideTip(event, '45', 45)" onmouseover="showTip(event, '45', 45)">
             add req spec
           </code>
-          <div class="tip" id="40">
-            <strong>Signature:</strong> req:(&#39;a -&gt; bool * string) -&gt; spec:Spec&lt;&#39;a&gt; -&gt; Spec&lt;&#39;a&gt;<br />
-                          <strong>Type parameters:</strong> 'a                      </div>
+          <div class="tip" id="45">
+            <strong>Signature:</strong> req:(&#39;?9484 -&gt; bool * string) -&gt; spec:Spec&lt;&#39;?9484&gt; -&gt; Spec&lt;&#39;?9484&gt;<br />
+                          <strong>Type parameters:</strong> '?9484                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L45-45" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L49-49" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -80,15 +80,138 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '41', 41)" onmouseover="showTip(event, '41', 41)">
-            cascade mode spec
+          <code onmouseout="hideTip(event, '46', 46)" onmouseover="showTip(event, '46', 46)">
+            alphabetical message spec
           </code>
-          <div class="tip" id="41">
-            <strong>Signature:</strong> mode:CascadeMode -&gt; spec:Spec&lt;&#39;?9442&gt; -&gt; Spec&lt;&#39;?9442&gt;<br />
-                          <strong>Type parameters:</strong> '?9442                      </div>
+          <div class="tip" id="46">
+            <strong>Signature:</strong> message:string -&gt; spec:Spec&lt;string&gt; -&gt; Spec&lt;string&gt;<br />
+                                  </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L258-258" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L260-260" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Adds a requirement to check for strings containing only charaters in the alphabet.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '47', 47)" onmouseover="showTip(event, '47', 47)">
+            alphabeticalOf selector message spec
+          </code>
+          <div class="tip" id="47">
+            <strong>Signature:</strong> selector:(&#39;?9601 -&gt; string) -&gt; message:string -&gt; spec:Spec&lt;&#39;?9601&gt; -&gt; Spec&lt;&#39;?9601&gt;<br />
+                          <strong>Type parameters:</strong> '?9601                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L256-256" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Adds a requirement for the result of the specified mapping,
+which defines that the result should be a string containing only charaters in the alphabet.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '48', 48)" onmouseover="showTip(event, '48', 48)">
+            alphanum message spec
+          </code>
+          <div class="tip" id="48">
+            <strong>Signature:</strong> message:string -&gt; spec:Spec&lt;string&gt; -&gt; Spec&lt;string&gt;<br />
+                                  </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L271-271" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Adds a requirement to check for alphanumerical values.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '49', 49)" onmouseover="showTip(event, '49', 49)">
+            alphanumOf selector message spec
+          </code>
+          <div class="tip" id="49">
+            <strong>Signature:</strong> selector:(&#39;?9605 -&gt; string) -&gt; message:string -&gt; spec:Spec&lt;&#39;?9605&gt; -&gt; Spec&lt;&#39;?9605&gt;<br />
+                          <strong>Type parameters:</strong> '?9605                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L267-267" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Adds a requirement for the result of the specified mapping,
+which defines that the result should be an alphanumerical value.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '50', 50)" onmouseover="showTip(event, '50', 50)">
+            alphanumSpecial message spec
+          </code>
+          <div class="tip" id="50">
+            <strong>Signature:</strong> message:string -&gt; spec:Spec&lt;string&gt; -&gt; Spec&lt;string&gt;<br />
+                                  </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L284-284" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Adds a requirement to check for alphanumerical values or special charaters.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '51', 51)" onmouseover="showTip(event, '51', 51)">
+            alphanumSpecialOf selector message spec
+          </code>
+          <div class="tip" id="51">
+            <strong>Signature:</strong> selector:(&#39;?9609 -&gt; string) -&gt; message:string -&gt; spec:Spec&lt;&#39;?9609&gt; -&gt; Spec&lt;&#39;?9609&gt;<br />
+                          <strong>Type parameters:</strong> '?9609                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L280-280" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Adds a requirement for the result of the specified mapping,
+which defines that the result should be an alphanumerical value or special charater.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '52', 52)" onmouseover="showTip(event, '52', 52)">
+            cascade mode spec
+          </code>
+          <div class="tip" id="52">
+            <strong>Signature:</strong> mode:CascadeMode -&gt; spec:Spec&lt;&#39;?9619&gt; -&gt; Spec&lt;&#39;?9619&gt;<br />
+                          <strong>Type parameters:</strong> '?9619                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L297-297" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -100,15 +223,15 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '42', 42)" onmouseover="showTip(event, '42', 42)">
+          <code onmouseout="hideTip(event, '53', 53)" onmouseover="showTip(event, '53', 53)">
             createModel f value spec
           </code>
-          <div class="tip" id="42">
-            <strong>Signature:</strong> f:(&#39;a -&gt; &#39;b) -&gt; value:&#39;a -&gt; spec:Spec&lt;&#39;a&gt; -&gt; Result&lt;&#39;b,string list&gt;<br />
-                          <strong>Type parameters:</strong> 'a, 'b                      </div>
+          <div class="tip" id="53">
+            <strong>Signature:</strong> f:(&#39;?9627 -&gt; &#39;?9628) -&gt; value:&#39;?9627 -&gt; spec:Spec&lt;&#39;?9627&gt; -&gt; Result&lt;&#39;?9628,string list&gt;<br />
+                          <strong>Type parameters:</strong> '?9627, '?9628                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L288-288" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L334-334" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -120,15 +243,15 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '43', 43)" onmouseover="showTip(event, '43', 43)">
+          <code onmouseout="hideTip(event, '54', 54)" onmouseover="showTip(event, '54', 54)">
             createModelWith f value spec
           </code>
-          <div class="tip" id="43">
-            <strong>Signature:</strong> f:(&#39;?9453 -&gt; Result&lt;&#39;?9454,string list&gt;) -&gt; value:&#39;?9453 -&gt; spec:Spec&lt;&#39;?9453&gt; -&gt; Result&lt;&#39;?9454,string list&gt;<br />
-                          <strong>Type parameters:</strong> '?9453, '?9454                      </div>
+          <div class="tip" id="54">
+            <strong>Signature:</strong> f:(&#39;?9630 -&gt; Result&lt;&#39;?9631,string list&gt;) -&gt; value:&#39;?9630 -&gt; spec:Spec&lt;&#39;?9630&gt; -&gt; Result&lt;&#39;?9631,string list&gt;<br />
+                          <strong>Type parameters:</strong> '?9630, '?9631                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L293-293" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L339-339" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -140,15 +263,15 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '44', 44)" onmouseover="showTip(event, '44', 44)">
+          <code onmouseout="hideTip(event, '55', 55)" onmouseover="showTip(event, '55', 55)">
             def
           </code>
-          <div class="tip" id="44">
+          <div class="tip" id="55">
             <strong>Signature:</strong> Spec&lt;&#39;a&gt;<br />
                           <strong>Type parameters:</strong> 'a                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L40-40" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L43-43" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -160,15 +283,36 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '45', 45)" onmouseover="showTip(event, '45', 45)">
-            equal value message spec
+          <code onmouseout="hideTip(event, '56', 56)" onmouseover="showTip(event, '56', 56)">
+            dependsOn dependent spec
           </code>
-          <div class="tip" id="45">
-            <strong>Signature:</strong> value:&#39;?9324 -&gt; message:string -&gt; spec:Spec&lt;&#39;?9324&gt; -&gt; Spec&lt;&#39;?9324&gt;<br />
-                          <strong>Type parameters:</strong> '?9324                      </div>
+          <div class="tip" id="56">
+            <strong>Signature:</strong> dependent:Spec&lt;&#39;?9635&gt; -&gt; spec:Spec&lt;&#39;?9635&gt; -&gt; Spec&lt;&#39;?9635&gt;<br />
+                          <strong>Type parameters:</strong> '?9635                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L54-54" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L349-349" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Adds another specification on which the current specification depends on.
+This dependent specification will run before the current specification and contain only the errors of the dependents in case of a validation failure.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '57', 57)" onmouseover="showTip(event, '57', 57)">
+            equal value message spec
+          </code>
+          <div class="tip" id="57">
+            <strong>Signature:</strong> value:&#39;?9489 -&gt; message:string -&gt; spec:Spec&lt;&#39;?9489&gt; -&gt; Spec&lt;&#39;?9489&gt;<br />
+                          <strong>Type parameters:</strong> '?9489                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L58-58" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -180,15 +324,15 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '46', 46)" onmouseover="showTip(event, '46', 46)">
+          <code onmouseout="hideTip(event, '58', 58)" onmouseover="showTip(event, '58', 58)">
             equalOf selector value message spec
           </code>
-          <div class="tip" id="46">
-            <strong>Signature:</strong> selector:(&#39;?9321 -&gt; &#39;?9322) -&gt; value:&#39;?9322 -&gt; message:string -&gt; spec:Spec&lt;&#39;?9321&gt; -&gt; Spec&lt;&#39;?9321&gt;<br />
-                          <strong>Type parameters:</strong> '?9321, '?9322                      </div>
+          <div class="tip" id="58">
+            <strong>Signature:</strong> selector:(&#39;?9486 -&gt; &#39;?9487) -&gt; value:&#39;?9487 -&gt; message:string -&gt; spec:Spec&lt;&#39;?9486&gt; -&gt; Spec&lt;&#39;?9486&gt;<br />
+                          <strong>Type parameters:</strong> '?9486, '?9487                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L50-50" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L54-54" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -201,15 +345,15 @@ which defines that the result should be equal to the specified value.</p>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '47', 47)" onmouseover="showTip(event, '47', 47)">
+          <code onmouseout="hideTip(event, '59', 59)" onmouseover="showTip(event, '59', 59)">
             exclusiveBetween min max message spec
           </code>
-          <div class="tip" id="47">
-            <strong>Signature:</strong> min:&#39;?9430 -&gt; max:&#39;?9430 -&gt; message:string -&gt; spec:Spec&lt;&#39;?9430&gt; -&gt; Spec&lt;&#39;?9430&gt;<br />
-                          <strong>Type parameters:</strong> '?9430                      </div>
+          <div class="tip" id="59">
+            <strong>Signature:</strong> min:&#39;?9595 -&gt; max:&#39;?9595 -&gt; message:string -&gt; spec:Spec&lt;&#39;?9595&gt; -&gt; Spec&lt;&#39;?9595&gt;<br />
+                          <strong>Type parameters:</strong> '?9595                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L235-235" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L239-239" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -221,15 +365,15 @@ which defines that the result should be equal to the specified value.</p>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '48', 48)" onmouseover="showTip(event, '48', 48)">
+          <code onmouseout="hideTip(event, '60', 60)" onmouseover="showTip(event, '60', 60)">
             exclusiveBetweenOf(...)
           </code>
-          <div class="tip" id="48">
-            <strong>Signature:</strong> selector:(&#39;?9427 -&gt; &#39;?9428) -&gt; min:&#39;?9428 -&gt; max:&#39;?9428 -&gt; message:string -&gt; spec:Spec&lt;&#39;?9427&gt; -&gt; Spec&lt;&#39;?9427&gt;<br />
-                          <strong>Type parameters:</strong> '?9427, '?9428                      </div>
+          <div class="tip" id="60">
+            <strong>Signature:</strong> selector:(&#39;?9592 -&gt; &#39;?9593) -&gt; min:&#39;?9593 -&gt; max:&#39;?9593 -&gt; message:string -&gt; spec:Spec&lt;&#39;?9592&gt; -&gt; Spec&lt;&#39;?9592&gt;<br />
+                          <strong>Type parameters:</strong> '?9592, '?9593                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L231-231" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L235-235" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -242,15 +386,15 @@ which defines that the result should be exclusive between (<code>min &lt; value 
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '49', 49)" onmouseover="showTip(event, '49', 49)">
+          <code onmouseout="hideTip(event, '61', 61)" onmouseover="showTip(event, '61', 61)">
             forall predicate message spec
           </code>
-          <div class="tip" id="49">
-            <strong>Signature:</strong> predicate:(&#39;?9362 -&gt; bool) -&gt; message:string -&gt; spec:Spec&lt;&#39;?9363&gt; -&gt; Spec&lt;&#39;?9363&gt;<br />
-                          <strong>Type parameters:</strong> '?9362, '?9363                      </div>
+          <div class="tip" id="61">
+            <strong>Signature:</strong> predicate:(&#39;?9527 -&gt; bool) -&gt; message:string -&gt; spec:Spec&lt;&#39;?9528&gt; -&gt; Spec&lt;&#39;?9528&gt;<br />
+                          <strong>Type parameters:</strong> '?9527, '?9528                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L136-136" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L140-140" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -262,15 +406,15 @@ which defines that the result should be exclusive between (<code>min &lt; value 
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '50', 50)" onmouseover="showTip(event, '50', 50)">
+          <code onmouseout="hideTip(event, '62', 62)" onmouseover="showTip(event, '62', 62)">
             forallOf selector predicate message spec
           </code>
-          <div class="tip" id="50">
-            <strong>Signature:</strong> selector:(&#39;a -&gt; &#39;b) -&gt; predicate:(&#39;c -&gt; bool) -&gt; message:string -&gt; spec:Spec&lt;&#39;a&gt; -&gt; Spec&lt;&#39;a&gt;<br />
-                          <strong>Type parameters:</strong> 'a, 'b, 'c                      </div>
+          <div class="tip" id="62">
+            <strong>Signature:</strong> selector:(&#39;?9523 -&gt; &#39;?9524) -&gt; predicate:(&#39;?9525 -&gt; bool) -&gt; message:string -&gt; spec:Spec&lt;&#39;?9523&gt; -&gt; Spec&lt;&#39;?9523&gt;<br />
+                          <strong>Type parameters:</strong> '?9523, '?9524, '?9525                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L132-132" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L136-136" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -283,15 +427,15 @@ which defines that all elements of the sequence should satisfy the specified pre
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '51', 51)" onmouseover="showTip(event, '51', 51)">
+          <code onmouseout="hideTip(event, '63', 63)" onmouseover="showTip(event, '63', 63)">
             greaterThan limit message spec
           </code>
-          <div class="tip" id="51">
-            <strong>Signature:</strong> limit:&#39;?9415 -&gt; message:string -&gt; spec:Spec&lt;&#39;?9415&gt; -&gt; Spec&lt;&#39;?9415&gt;<br />
-                          <strong>Type parameters:</strong> '?9415                      </div>
+          <div class="tip" id="63">
+            <strong>Signature:</strong> limit:&#39;?9580 -&gt; message:string -&gt; spec:Spec&lt;&#39;?9580&gt; -&gt; Spec&lt;&#39;?9580&gt;<br />
+                          <strong>Type parameters:</strong> '?9580                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L208-208" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L212-212" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -303,15 +447,15 @@ which defines that all elements of the sequence should satisfy the specified pre
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '52', 52)" onmouseover="showTip(event, '52', 52)">
+          <code onmouseout="hideTip(event, '64', 64)" onmouseover="showTip(event, '64', 64)">
             greaterThanOf(...)
           </code>
-          <div class="tip" id="52">
-            <strong>Signature:</strong> selector:(&#39;?9412 -&gt; &#39;?9413) -&gt; limit:&#39;?9413 -&gt; message:string -&gt; spec:Spec&lt;&#39;?9412&gt; -&gt; Spec&lt;&#39;?9412&gt;<br />
-                          <strong>Type parameters:</strong> '?9412, '?9413                      </div>
+          <div class="tip" id="64">
+            <strong>Signature:</strong> selector:(&#39;?9577 -&gt; &#39;?9578) -&gt; limit:&#39;?9578 -&gt; message:string -&gt; spec:Spec&lt;&#39;?9577&gt; -&gt; Spec&lt;&#39;?9577&gt;<br />
+                          <strong>Type parameters:</strong> '?9577, '?9578                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L204-204" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L208-208" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -324,15 +468,15 @@ which defines that the result should be greater than (<code>limit &lt; value</co
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '53', 53)" onmouseover="showTip(event, '53', 53)">
+          <code onmouseout="hideTip(event, '65', 65)" onmouseover="showTip(event, '65', 65)">
             greaterThanOrEqual limit message spec
           </code>
-          <div class="tip" id="53">
-            <strong>Signature:</strong> limit:&#39;?9420 -&gt; message:string -&gt; spec:Spec&lt;&#39;?9420&gt; -&gt; Spec&lt;&#39;?9420&gt;<br />
-                          <strong>Type parameters:</strong> '?9420                      </div>
+          <div class="tip" id="65">
+            <strong>Signature:</strong> limit:&#39;?9585 -&gt; message:string -&gt; spec:Spec&lt;&#39;?9585&gt; -&gt; Spec&lt;&#39;?9585&gt;<br />
+                          <strong>Type parameters:</strong> '?9585                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L217-217" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L221-221" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -344,15 +488,15 @@ which defines that the result should be greater than (<code>limit &lt; value</co
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '54', 54)" onmouseover="showTip(event, '54', 54)">
+          <code onmouseout="hideTip(event, '66', 66)" onmouseover="showTip(event, '66', 66)">
             greaterThanOrEqualOf(...)
           </code>
-          <div class="tip" id="54">
-            <strong>Signature:</strong> selector:(&#39;?9417 -&gt; &#39;?9418) -&gt; limit:&#39;?9418 -&gt; message:string -&gt; spec:Spec&lt;&#39;?9417&gt; -&gt; Spec&lt;&#39;?9417&gt;<br />
-                          <strong>Type parameters:</strong> '?9417, '?9418                      </div>
+          <div class="tip" id="66">
+            <strong>Signature:</strong> selector:(&#39;?9582 -&gt; &#39;?9583) -&gt; limit:&#39;?9583 -&gt; message:string -&gt; spec:Spec&lt;&#39;?9582&gt; -&gt; Spec&lt;&#39;?9582&gt;<br />
+                          <strong>Type parameters:</strong> '?9582, '?9583                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L213-213" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L217-217" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -365,15 +509,15 @@ which defines that the result should be greater than or equal to (<code>limit &l
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '55', 55)" onmouseover="showTip(event, '55', 55)">
+          <code onmouseout="hideTip(event, '67', 67)" onmouseover="showTip(event, '67', 67)">
             inclusiveBetween min max message spec
           </code>
-          <div class="tip" id="55">
-            <strong>Signature:</strong> min:&#39;?9425 -&gt; max:&#39;?9425 -&gt; message:string -&gt; spec:Spec&lt;&#39;?9425&gt; -&gt; Spec&lt;&#39;?9425&gt;<br />
-                          <strong>Type parameters:</strong> '?9425                      </div>
+          <div class="tip" id="67">
+            <strong>Signature:</strong> min:&#39;?9590 -&gt; max:&#39;?9590 -&gt; message:string -&gt; spec:Spec&lt;&#39;?9590&gt; -&gt; Spec&lt;&#39;?9590&gt;<br />
+                          <strong>Type parameters:</strong> '?9590                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L226-226" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L230-230" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -385,15 +529,15 @@ which defines that the result should be greater than or equal to (<code>limit &l
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '56', 56)" onmouseover="showTip(event, '56', 56)">
+          <code onmouseout="hideTip(event, '68', 68)" onmouseover="showTip(event, '68', 68)">
             inclusiveBetweenOf(...)
           </code>
-          <div class="tip" id="56">
-            <strong>Signature:</strong> selector:(&#39;?9422 -&gt; &#39;?9423) -&gt; min:&#39;?9423 -&gt; max:&#39;?9423 -&gt; message:string -&gt; spec:Spec&lt;&#39;?9422&gt; -&gt; Spec&lt;&#39;?9422&gt;<br />
-                          <strong>Type parameters:</strong> '?9422, '?9423                      </div>
+          <div class="tip" id="68">
+            <strong>Signature:</strong> selector:(&#39;?9587 -&gt; &#39;?9588) -&gt; min:&#39;?9588 -&gt; max:&#39;?9588 -&gt; message:string -&gt; spec:Spec&lt;&#39;?9587&gt; -&gt; Spec&lt;&#39;?9587&gt;<br />
+                          <strong>Type parameters:</strong> '?9587, '?9588                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L222-222" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L226-226" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -406,15 +550,15 @@ which defines that the result should be inclusive between (<code>min &lt;= value
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '57', 57)" onmouseover="showTip(event, '57', 57)">
+          <code onmouseout="hideTip(event, '69', 69)" onmouseover="showTip(event, '69', 69)">
             isSatisfiedBy value spec
           </code>
-          <div class="tip" id="57">
-            <strong>Signature:</strong> value:&#39;?9456 -&gt; spec:Spec&lt;&#39;?9456&gt; -&gt; bool<br />
-                          <strong>Type parameters:</strong> '?9456                      </div>
+          <div class="tip" id="69">
+            <strong>Signature:</strong> value:&#39;?9633 -&gt; spec:Spec&lt;&#39;?9633&gt; -&gt; bool<br />
+                          <strong>Type parameters:</strong> '?9633                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L298-298" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L344-344" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -426,15 +570,15 @@ which defines that the result should be inclusive between (<code>min &lt;= value
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '58', 58)" onmouseover="showTip(event, '58', 58)">
+          <code onmouseout="hideTip(event, '70', 70)" onmouseover="showTip(event, '70', 70)">
             isType message spec
           </code>
-          <div class="tip" id="58">
+          <div class="tip" id="70">
             <strong>Signature:</strong> message:string -&gt; spec:Spec&lt;&#39;T&gt; -&gt; Spec&lt;&#39;T&gt;<br />
                           <strong>Type parameters:</strong> 'T, 'TExpected                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L254-254" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L293-293" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -446,15 +590,15 @@ which defines that the result should be inclusive between (<code>min &lt;= value
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '59', 59)" onmouseover="showTip(event, '59', 59)">
+          <code onmouseout="hideTip(event, '71', 71)" onmouseover="showTip(event, '71', 71)">
             isTypeOf selector message spec
           </code>
-          <div class="tip" id="59">
+          <div class="tip" id="71">
             <strong>Signature:</strong> selector:(&#39;T -&gt; &#39;TResult) -&gt; message:string -&gt; spec:Spec&lt;&#39;T&gt; -&gt; Spec&lt;&#39;T&gt;<br />
                           <strong>Type parameters:</strong> 'T, 'TResult, 'TExpected                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L250-250" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L289-289" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -467,15 +611,15 @@ which defines that the result should an instance of the specified type <code>T</
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '60', 60)" onmouseover="showTip(event, '60', 60)">
+          <code onmouseout="hideTip(event, '72', 72)" onmouseover="showTip(event, '72', 72)">
             length l message spec
           </code>
-          <div class="tip" id="60">
-            <strong>Signature:</strong> l:int -&gt; message:string -&gt; spec:Spec&lt;&#39;?9390&gt; -&gt; Spec&lt;&#39;?9390&gt;<br />
-                          <strong>Type parameters:</strong> '?9390, '?9391                      </div>
+          <div class="tip" id="72">
+            <strong>Signature:</strong> l:int -&gt; message:string -&gt; spec:Spec&lt;&#39;?9555&gt; -&gt; Spec&lt;&#39;?9555&gt;<br />
+                          <strong>Type parameters:</strong> '?9555, '?9556                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L169-169" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L173-173" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -487,15 +631,15 @@ which defines that the result should an instance of the specified type <code>T</
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '61', 61)" onmouseover="showTip(event, '61', 61)">
+          <code onmouseout="hideTip(event, '73', 73)" onmouseover="showTip(event, '73', 73)">
             lengthBetween min max message spec
           </code>
-          <div class="tip" id="61">
-            <strong>Signature:</strong> min:int -&gt; max:int -&gt; message:string -&gt; spec:Spec&lt;&#39;?9399&gt; -&gt; Spec&lt;&#39;?9399&gt;<br />
-                          <strong>Type parameters:</strong> '?9399, '?9400                      </div>
+          <div class="tip" id="73">
+            <strong>Signature:</strong> min:int -&gt; max:int -&gt; message:string -&gt; spec:Spec&lt;&#39;?9564&gt; -&gt; Spec&lt;&#39;?9564&gt;<br />
+                          <strong>Type parameters:</strong> '?9564, '?9565                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L181-181" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L185-185" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -507,15 +651,15 @@ which defines that the result should an instance of the specified type <code>T</
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '62', 62)" onmouseover="showTip(event, '62', 62)">
+          <code onmouseout="hideTip(event, '74', 74)" onmouseover="showTip(event, '74', 74)">
             lengthBetweenOf(...)
           </code>
-          <div class="tip" id="62">
-            <strong>Signature:</strong> selector:(&#39;?9386 -&gt; &#39;?9387) -&gt; min:int -&gt; max:int -&gt; message:string -&gt; spec:Spec&lt;&#39;?9386&gt; -&gt; Spec&lt;&#39;?9386&gt;<br />
-                          <strong>Type parameters:</strong> '?9386, '?9387, '?9388                      </div>
+          <div class="tip" id="74">
+            <strong>Signature:</strong> selector:(&#39;?9551 -&gt; &#39;?9552) -&gt; min:int -&gt; max:int -&gt; message:string -&gt; spec:Spec&lt;&#39;?9551&gt; -&gt; Spec&lt;&#39;?9551&gt;<br />
+                          <strong>Type parameters:</strong> '?9551, '?9552, '?9553                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L165-165" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L169-169" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -528,15 +672,15 @@ which defines that the sequence should have a length within the specified range 
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '63', 63)" onmouseover="showTip(event, '63', 63)">
+          <code onmouseout="hideTip(event, '75', 75)" onmouseover="showTip(event, '75', 75)">
             lengthMax max message spec
           </code>
-          <div class="tip" id="63">
-            <strong>Signature:</strong> max:int -&gt; message:string -&gt; spec:Spec&lt;&#39;?9396&gt; -&gt; Spec&lt;&#39;?9396&gt;<br />
-                          <strong>Type parameters:</strong> '?9396, '?9397                      </div>
+          <div class="tip" id="75">
+            <strong>Signature:</strong> max:int -&gt; message:string -&gt; spec:Spec&lt;&#39;?9561&gt; -&gt; Spec&lt;&#39;?9561&gt;<br />
+                          <strong>Type parameters:</strong> '?9561, '?9562                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L177-177" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L181-181" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -548,15 +692,15 @@ which defines that the sequence should have a length within the specified range 
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '64', 64)" onmouseover="showTip(event, '64', 64)">
+          <code onmouseout="hideTip(event, '76', 76)" onmouseover="showTip(event, '76', 76)">
             lengthMaxOf selector max message spec
           </code>
-          <div class="tip" id="64">
-            <strong>Signature:</strong> selector:(&#39;?9382 -&gt; &#39;?9383) -&gt; max:int -&gt; message:string -&gt; spec:Spec&lt;&#39;?9382&gt; -&gt; Spec&lt;&#39;?9382&gt;<br />
-                          <strong>Type parameters:</strong> '?9382, '?9383, '?9384                      </div>
+          <div class="tip" id="76">
+            <strong>Signature:</strong> selector:(&#39;?9547 -&gt; &#39;?9548) -&gt; max:int -&gt; message:string -&gt; spec:Spec&lt;&#39;?9547&gt; -&gt; Spec&lt;&#39;?9547&gt;<br />
+                          <strong>Type parameters:</strong> '?9547, '?9548, '?9549                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L160-160" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L164-164" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -569,15 +713,15 @@ which defines that the sequence should have a maximum length.</p>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '65', 65)" onmouseover="showTip(event, '65', 65)">
+          <code onmouseout="hideTip(event, '77', 77)" onmouseover="showTip(event, '77', 77)">
             lengthMin min message spec
           </code>
-          <div class="tip" id="65">
-            <strong>Signature:</strong> min:int -&gt; message:string -&gt; spec:Spec&lt;&#39;?9393&gt; -&gt; Spec&lt;&#39;?9393&gt;<br />
-                          <strong>Type parameters:</strong> '?9393, '?9394                      </div>
+          <div class="tip" id="77">
+            <strong>Signature:</strong> min:int -&gt; message:string -&gt; spec:Spec&lt;&#39;?9558&gt; -&gt; Spec&lt;&#39;?9558&gt;<br />
+                          <strong>Type parameters:</strong> '?9558, '?9559                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L173-173" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L177-177" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -589,15 +733,15 @@ which defines that the sequence should have a maximum length.</p>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '66', 66)" onmouseover="showTip(event, '66', 66)">
+          <code onmouseout="hideTip(event, '78', 78)" onmouseover="showTip(event, '78', 78)">
             lengthMinOf selector min message spec
           </code>
-          <div class="tip" id="66">
-            <strong>Signature:</strong> selector:(&#39;?9378 -&gt; &#39;?9379) -&gt; min:int -&gt; message:string -&gt; spec:Spec&lt;&#39;?9378&gt; -&gt; Spec&lt;&#39;?9378&gt;<br />
-                          <strong>Type parameters:</strong> '?9378, '?9379, '?9380                      </div>
+          <div class="tip" id="78">
+            <strong>Signature:</strong> selector:(&#39;?9543 -&gt; &#39;?9544) -&gt; min:int -&gt; message:string -&gt; spec:Spec&lt;&#39;?9543&gt; -&gt; Spec&lt;&#39;?9543&gt;<br />
+                          <strong>Type parameters:</strong> '?9543, '?9544, '?9545                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L155-155" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L159-159" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -610,15 +754,15 @@ which defines that the sequence should have a minimum length.</p>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '67', 67)" onmouseover="showTip(event, '67', 67)">
+          <code onmouseout="hideTip(event, '79', 79)" onmouseover="showTip(event, '79', 79)">
             lengthOf selector l message spec
           </code>
-          <div class="tip" id="67">
-            <strong>Signature:</strong> selector:(&#39;?9374 -&gt; &#39;?9375) -&gt; l:int -&gt; message:string -&gt; spec:Spec&lt;&#39;?9374&gt; -&gt; Spec&lt;&#39;?9374&gt;<br />
-                          <strong>Type parameters:</strong> '?9374, '?9375, '?9376                      </div>
+          <div class="tip" id="79">
+            <strong>Signature:</strong> selector:(&#39;?9539 -&gt; &#39;?9540) -&gt; l:int -&gt; message:string -&gt; spec:Spec&lt;&#39;?9539&gt; -&gt; Spec&lt;&#39;?9539&gt;<br />
+                          <strong>Type parameters:</strong> '?9539, '?9540, '?9541                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L150-150" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L154-154" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -631,15 +775,15 @@ which defines that the sequence should have a length of the specified length.</p
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '68', 68)" onmouseover="showTip(event, '68', 68)">
+          <code onmouseout="hideTip(event, '80', 80)" onmouseover="showTip(event, '80', 80)">
             lessThan limit message spec
           </code>
-          <div class="tip" id="68">
-            <strong>Signature:</strong> limit:&#39;?9405 -&gt; message:string -&gt; spec:Spec&lt;&#39;?9405&gt; -&gt; Spec&lt;&#39;?9405&gt;<br />
-                          <strong>Type parameters:</strong> '?9405                      </div>
+          <div class="tip" id="80">
+            <strong>Signature:</strong> limit:&#39;?9570 -&gt; message:string -&gt; spec:Spec&lt;&#39;?9570&gt; -&gt; Spec&lt;&#39;?9570&gt;<br />
+                          <strong>Type parameters:</strong> '?9570                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L190-190" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L194-194" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -651,15 +795,15 @@ which defines that the sequence should have a length of the specified length.</p
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '69', 69)" onmouseover="showTip(event, '69', 69)">
+          <code onmouseout="hideTip(event, '81', 81)" onmouseover="showTip(event, '81', 81)">
             lessThanOf selector limit message spec
           </code>
-          <div class="tip" id="69">
-            <strong>Signature:</strong> selector:(&#39;?9402 -&gt; &#39;?9403) -&gt; limit:&#39;?9403 -&gt; message:string -&gt; spec:Spec&lt;&#39;?9402&gt; -&gt; Spec&lt;&#39;?9402&gt;<br />
-                          <strong>Type parameters:</strong> '?9402, '?9403                      </div>
+          <div class="tip" id="81">
+            <strong>Signature:</strong> selector:(&#39;?9567 -&gt; &#39;?9568) -&gt; limit:&#39;?9568 -&gt; message:string -&gt; spec:Spec&lt;&#39;?9567&gt; -&gt; Spec&lt;&#39;?9567&gt;<br />
+                          <strong>Type parameters:</strong> '?9567, '?9568                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L186-186" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L190-190" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -672,15 +816,15 @@ which defines that the result should be less than (<code>limit &gt; value</code>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '70', 70)" onmouseover="showTip(event, '70', 70)">
+          <code onmouseout="hideTip(event, '82', 82)" onmouseover="showTip(event, '82', 82)">
             lessThanOrEqual limit message spec
           </code>
-          <div class="tip" id="70">
-            <strong>Signature:</strong> limit:&#39;?9410 -&gt; message:string -&gt; spec:Spec&lt;&#39;?9410&gt; -&gt; Spec&lt;&#39;?9410&gt;<br />
-                          <strong>Type parameters:</strong> '?9410                      </div>
+          <div class="tip" id="82">
+            <strong>Signature:</strong> limit:&#39;?9575 -&gt; message:string -&gt; spec:Spec&lt;&#39;?9575&gt; -&gt; Spec&lt;&#39;?9575&gt;<br />
+                          <strong>Type parameters:</strong> '?9575                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L199-199" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L203-203" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -692,15 +836,15 @@ which defines that the result should be less than (<code>limit &gt; value</code>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '71', 71)" onmouseover="showTip(event, '71', 71)">
+          <code onmouseout="hideTip(event, '83', 83)" onmouseover="showTip(event, '83', 83)">
             lessThanOrEqualOf(...)
           </code>
-          <div class="tip" id="71">
-            <strong>Signature:</strong> selector:(&#39;?9407 -&gt; &#39;?9408) -&gt; limit:&#39;?9408 -&gt; message:string -&gt; spec:Spec&lt;&#39;?9407&gt; -&gt; Spec&lt;&#39;?9407&gt;<br />
-                          <strong>Type parameters:</strong> '?9407, '?9408                      </div>
+          <div class="tip" id="83">
+            <strong>Signature:</strong> selector:(&#39;?9572 -&gt; &#39;?9573) -&gt; limit:&#39;?9573 -&gt; message:string -&gt; spec:Spec&lt;&#39;?9572&gt; -&gt; Spec&lt;&#39;?9572&gt;<br />
+                          <strong>Type parameters:</strong> '?9572, '?9573                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L195-195" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L199-199" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -713,15 +857,35 @@ which defines that the result should be less than or equal to (<code>limit &gt;=
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '72', 72)" onmouseover="showTip(event, '72', 72)">
-            nonEmpty message spec
+          <code onmouseout="hideTip(event, '84', 84)" onmouseover="showTip(event, '84', 84)">
+            merge spec1 spec2
           </code>
-          <div class="tip" id="72">
-            <strong>Signature:</strong> message:string -&gt; spec:Spec&lt;&#39;a&gt; -&gt; Spec&lt;&#39;a&gt;<br />
-                          <strong>Type parameters:</strong> 'a, 'b                      </div>
+          <div class="tip" id="84">
+            <strong>Signature:</strong> spec1:Spec&lt;&#39;?9637&gt; -&gt; spec2:Spec&lt;&#39;?9637&gt; -&gt; Spec&lt;&#39;?9637&gt;<br />
+                          <strong>Type parameters:</strong> '?9637                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L127-127" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L353-353" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Combines two specifications as dependents of a new specification which will run before any extra requirements that's been added after this point.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '85', 85)" onmouseover="showTip(event, '85', 85)">
+            nonEmpty message spec
+          </code>
+          <div class="tip" id="85">
+            <strong>Signature:</strong> message:string -&gt; spec:Spec&lt;&#39;?9520&gt; -&gt; Spec&lt;&#39;?9520&gt;<br />
+                          <strong>Type parameters:</strong> '?9520, '?9521                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L131-131" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -733,15 +897,15 @@ which defines that the result should be less than or equal to (<code>limit &gt;=
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '73', 73)" onmouseover="showTip(event, '73', 73)">
+          <code onmouseout="hideTip(event, '86', 86)" onmouseover="showTip(event, '86', 86)">
             nonEmptyOf selector message spec
           </code>
-          <div class="tip" id="73">
-            <strong>Signature:</strong> selector:(&#39;?9351 -&gt; &#39;?9352) -&gt; message:string -&gt; spec:Spec&lt;&#39;?9351&gt; -&gt; Spec&lt;&#39;?9351&gt;<br />
-                          <strong>Type parameters:</strong> '?9351, '?9352, '?9353                      </div>
+          <div class="tip" id="86">
+            <strong>Signature:</strong> selector:(&#39;?9516 -&gt; &#39;?9517) -&gt; message:string -&gt; spec:Spec&lt;&#39;?9516&gt; -&gt; Spec&lt;&#39;?9516&gt;<br />
+                          <strong>Type parameters:</strong> '?9516, '?9517, '?9518                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L123-123" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L127-127" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -754,15 +918,15 @@ which defines that the result should be a non-empty sequence.</p>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '74', 74)" onmouseover="showTip(event, '74', 74)">
+          <code onmouseout="hideTip(event, '87', 87)" onmouseover="showTip(event, '87', 87)">
             notEmpty message spec
           </code>
-          <div class="tip" id="74">
+          <div class="tip" id="87">
             <strong>Signature:</strong> message:string -&gt; spec:Spec&lt;string&gt; -&gt; Spec&lt;string&gt;<br />
                                   </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L81-81" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L85-85" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -774,15 +938,15 @@ which defines that the result should be a non-empty sequence.</p>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '75', 75)" onmouseover="showTip(event, '75', 75)">
+          <code onmouseout="hideTip(event, '88', 88)" onmouseover="showTip(event, '88', 88)">
             notEmptyOf selector message spec
           </code>
-          <div class="tip" id="75">
-            <strong>Signature:</strong> selector:(&#39;?9336 -&gt; string) -&gt; message:string -&gt; spec:Spec&lt;&#39;?9336&gt; -&gt; Spec&lt;&#39;?9336&gt;<br />
-                          <strong>Type parameters:</strong> '?9336                      </div>
+          <div class="tip" id="88">
+            <strong>Signature:</strong> selector:(&#39;?9501 -&gt; string) -&gt; message:string -&gt; spec:Spec&lt;&#39;?9501&gt; -&gt; Spec&lt;&#39;?9501&gt;<br />
+                          <strong>Type parameters:</strong> '?9501                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L77-77" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L81-81" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -795,15 +959,15 @@ which defines that the result should be a non-empty string.</p>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '76', 76)" onmouseover="showTip(event, '76', 76)">
+          <code onmouseout="hideTip(event, '89', 89)" onmouseover="showTip(event, '89', 89)">
             notEqual value message spec
           </code>
-          <div class="tip" id="76">
-            <strong>Signature:</strong> value:&#39;?9329 -&gt; message:string -&gt; spec:Spec&lt;&#39;?9329&gt; -&gt; Spec&lt;&#39;?9329&gt;<br />
-                          <strong>Type parameters:</strong> '?9329                      </div>
+          <div class="tip" id="89">
+            <strong>Signature:</strong> value:&#39;?9494 -&gt; message:string -&gt; spec:Spec&lt;&#39;?9494&gt; -&gt; Spec&lt;&#39;?9494&gt;<br />
+                          <strong>Type parameters:</strong> '?9494                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L63-63" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L67-67" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -815,15 +979,15 @@ which defines that the result should be a non-empty string.</p>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '77', 77)" onmouseover="showTip(event, '77', 77)">
+          <code onmouseout="hideTip(event, '90', 90)" onmouseover="showTip(event, '90', 90)">
             notEqualOf selector value message spec
           </code>
-          <div class="tip" id="77">
-            <strong>Signature:</strong> selector:(&#39;?9326 -&gt; &#39;?9327) -&gt; value:&#39;?9327 -&gt; message:string -&gt; spec:Spec&lt;&#39;?9326&gt; -&gt; Spec&lt;&#39;?9326&gt;<br />
-                          <strong>Type parameters:</strong> '?9326, '?9327                      </div>
+          <div class="tip" id="90">
+            <strong>Signature:</strong> selector:(&#39;?9491 -&gt; &#39;?9492) -&gt; value:&#39;?9492 -&gt; message:string -&gt; spec:Spec&lt;&#39;?9491&gt; -&gt; Spec&lt;&#39;?9491&gt;<br />
+                          <strong>Type parameters:</strong> '?9491, '?9492                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L59-59" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L63-63" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -836,15 +1000,15 @@ which defines that the result should not be equal to the specified value.</p>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '78', 78)" onmouseover="showTip(event, '78', 78)">
+          <code onmouseout="hideTip(event, '91', 91)" onmouseover="showTip(event, '91', 91)">
             notNull message spec
           </code>
-          <div class="tip" id="78">
-            <strong>Signature:</strong> message:string -&gt; spec:Spec&lt;&#39;a&gt; -&gt; Spec&lt;&#39;a&gt;<br />
-                          <strong>Type parameters:</strong> 'a                      </div>
+          <div class="tip" id="91">
+            <strong>Signature:</strong> message:string -&gt; spec:Spec&lt;&#39;?9499&gt; -&gt; Spec&lt;&#39;?9499&gt;<br />
+                          <strong>Type parameters:</strong> '?9499                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L72-72" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L76-76" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -856,15 +1020,15 @@ which defines that the result should not be equal to the specified value.</p>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '79', 79)" onmouseover="showTip(event, '79', 79)">
+          <code onmouseout="hideTip(event, '92', 92)" onmouseover="showTip(event, '92', 92)">
             notNullOf selector message spec
           </code>
-          <div class="tip" id="79">
-            <strong>Signature:</strong> selector:(&#39;?9331 -&gt; &#39;?9332) -&gt; message:string -&gt; spec:Spec&lt;&#39;?9331&gt; -&gt; Spec&lt;&#39;?9331&gt;<br />
-                          <strong>Type parameters:</strong> '?9331, '?9332                      </div>
+          <div class="tip" id="92">
+            <strong>Signature:</strong> selector:(&#39;?9496 -&gt; &#39;?9497) -&gt; message:string -&gt; spec:Spec&lt;&#39;?9496&gt; -&gt; Spec&lt;&#39;?9496&gt;<br />
+                          <strong>Type parameters:</strong> '?9496, '?9497                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L68-68" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L72-72" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -877,15 +1041,15 @@ which defines that the result should not be <code>null</code>.</p>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '80', 80)" onmouseover="showTip(event, '80', 80)">
+          <code onmouseout="hideTip(event, '93', 93)" onmouseover="showTip(event, '93', 93)">
             notNullOrEmpty message spec
           </code>
-          <div class="tip" id="80">
+          <div class="tip" id="93">
             <strong>Signature:</strong> message:string -&gt; spec:Spec&lt;string&gt; -&gt; Spec&lt;string&gt;<br />
                                   </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L100-100" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L104-104" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -897,15 +1061,15 @@ which defines that the result should not be <code>null</code>.</p>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '81', 81)" onmouseover="showTip(event, '81', 81)">
+          <code onmouseout="hideTip(event, '94', 94)" onmouseover="showTip(event, '94', 94)">
             notNullOrEmptyOf selector message spec
           </code>
-          <div class="tip" id="81">
-            <strong>Signature:</strong> selector:(&#39;?9342 -&gt; string) -&gt; message:string -&gt; spec:Spec&lt;&#39;?9342&gt; -&gt; Spec&lt;&#39;?9342&gt;<br />
-                          <strong>Type parameters:</strong> '?9342                      </div>
+          <div class="tip" id="94">
+            <strong>Signature:</strong> selector:(&#39;?9507 -&gt; string) -&gt; message:string -&gt; spec:Spec&lt;&#39;?9507&gt; -&gt; Spec&lt;&#39;?9507&gt;<br />
+                          <strong>Type parameters:</strong> '?9507                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L96-96" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L100-100" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -918,15 +1082,15 @@ which defines that the result should be a not-null, not-empty string.</p>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '82', 82)" onmouseover="showTip(event, '82', 82)">
+          <code onmouseout="hideTip(event, '95', 95)" onmouseover="showTip(event, '95', 95)">
             notNullOrWhiteSpace message spec
           </code>
-          <div class="tip" id="82">
+          <div class="tip" id="95">
             <strong>Signature:</strong> message:string -&gt; spec:Spec&lt;string&gt; -&gt; Spec&lt;string&gt;<br />
                                   </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L109-109" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L113-113" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -938,15 +1102,15 @@ which defines that the result should be a not-null, not-empty string.</p>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '83', 83)" onmouseover="showTip(event, '83', 83)">
+          <code onmouseout="hideTip(event, '96', 96)" onmouseover="showTip(event, '96', 96)">
             notNullOrWhiteSpaceOf(...)
           </code>
-          <div class="tip" id="83">
-            <strong>Signature:</strong> selector:(&#39;?9345 -&gt; string) -&gt; message:string -&gt; spec:Spec&lt;&#39;?9345&gt; -&gt; Spec&lt;&#39;?9345&gt;<br />
-                          <strong>Type parameters:</strong> '?9345                      </div>
+          <div class="tip" id="96">
+            <strong>Signature:</strong> selector:(&#39;?9510 -&gt; string) -&gt; message:string -&gt; spec:Spec&lt;&#39;?9510&gt; -&gt; Spec&lt;&#39;?9510&gt;<br />
+                          <strong>Type parameters:</strong> '?9510                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L105-105" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L109-109" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -959,15 +1123,15 @@ which defines that the result should be a not-null, not-empty, not-whitespace st
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '84', 84)" onmouseover="showTip(event, '84', 84)">
+          <code onmouseout="hideTip(event, '97', 97)" onmouseover="showTip(event, '97', 97)">
             notWhiteSpace message spec
           </code>
-          <div class="tip" id="84">
+          <div class="tip" id="97">
             <strong>Signature:</strong> message:string -&gt; spec:Spec&lt;string&gt; -&gt; Spec&lt;string&gt;<br />
                                   </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L91-91" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L95-95" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -979,15 +1143,15 @@ which defines that the result should be a not-null, not-empty, not-whitespace st
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '85', 85)" onmouseover="showTip(event, '85', 85)">
+          <code onmouseout="hideTip(event, '98', 98)" onmouseover="showTip(event, '98', 98)">
             notWhiteSpaceOf selector message spec
           </code>
-          <div class="tip" id="85">
-            <strong>Signature:</strong> selector:(&#39;?9339 -&gt; string) -&gt; message:string -&gt; spec:Spec&lt;&#39;?9339&gt; -&gt; Spec&lt;&#39;?9339&gt;<br />
-                          <strong>Type parameters:</strong> '?9339                      </div>
+          <div class="tip" id="98">
+            <strong>Signature:</strong> selector:(&#39;?9504 -&gt; string) -&gt; message:string -&gt; spec:Spec&lt;&#39;?9504&gt; -&gt; Spec&lt;&#39;?9504&gt;<br />
+                          <strong>Type parameters:</strong> '?9504                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L86-86" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L90-90" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -1000,15 +1164,15 @@ which defines that the result should not be a not-whitespace string.</p>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '86', 86)" onmouseover="showTip(event, '86', 86)">
+          <code onmouseout="hideTip(event, '99', 99)" onmouseover="showTip(event, '99', 99)">
             regex pattern message spec
           </code>
-          <div class="tip" id="86">
+          <div class="tip" id="99">
             <strong>Signature:</strong> pattern:string -&gt; message:string -&gt; spec:Spec&lt;string&gt; -&gt; Spec&lt;string&gt;<br />
                                   </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L245-245" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L249-249" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -1020,15 +1184,15 @@ which defines that the result should not be a not-whitespace string.</p>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '87', 87)" onmouseover="showTip(event, '87', 87)">
+          <code onmouseout="hideTip(event, '100', 100)" onmouseover="showTip(event, '100', 100)">
             regexOf selector pattern message spec
           </code>
-          <div class="tip" id="87">
-            <strong>Signature:</strong> selector:(&#39;?9432 -&gt; string) -&gt; pattern:string -&gt; message:string -&gt; spec:Spec&lt;&#39;?9432&gt; -&gt; Spec&lt;&#39;?9432&gt;<br />
-                          <strong>Type parameters:</strong> '?9432                      </div>
+          <div class="tip" id="100">
+            <strong>Signature:</strong> selector:(&#39;?9597 -&gt; string) -&gt; pattern:string -&gt; message:string -&gt; spec:Spec&lt;&#39;?9597&gt; -&gt; Spec&lt;&#39;?9597&gt;<br />
+                          <strong>Type parameters:</strong> '?9597                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L240-240" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L244-244" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -1041,15 +1205,15 @@ which defines that the result should be a match to the specified regular express
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '88', 88)" onmouseover="showTip(event, '88', 88)">
+          <code onmouseout="hideTip(event, '101', 101)" onmouseover="showTip(event, '101', 101)">
             startsWith header message spec
           </code>
-          <div class="tip" id="88">
+          <div class="tip" id="101">
             <strong>Signature:</strong> header:string -&gt; message:string -&gt; spec:Spec&lt;string&gt; -&gt; Spec&lt;string&gt;<br />
                                   </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L118-118" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L122-122" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -1061,15 +1225,15 @@ which defines that the result should be a match to the specified regular express
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '89', 89)" onmouseover="showTip(event, '89', 89)">
+          <code onmouseout="hideTip(event, '102', 102)" onmouseover="showTip(event, '102', 102)">
             startsWithOf(...)
           </code>
-          <div class="tip" id="89">
-            <strong>Signature:</strong> selector:(&#39;?9348 -&gt; string) -&gt; header:string -&gt; message:string -&gt; spec:Spec&lt;&#39;?9348&gt; -&gt; Spec&lt;&#39;?9348&gt;<br />
-                          <strong>Type parameters:</strong> '?9348                      </div>
+          <div class="tip" id="102">
+            <strong>Signature:</strong> selector:(&#39;?9513 -&gt; string) -&gt; header:string -&gt; message:string -&gt; spec:Spec&lt;&#39;?9513&gt; -&gt; Spec&lt;&#39;?9513&gt;<br />
+                          <strong>Type parameters:</strong> '?9513                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L114-114" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L118-118" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -1082,15 +1246,15 @@ whcih defines that the result should be a string starting with the specified hea
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '90', 90)" onmouseover="showTip(event, '90', 90)">
+          <code onmouseout="hideTip(event, '103', 103)" onmouseover="showTip(event, '103', 103)">
             unique selectKey message spec
           </code>
-          <div class="tip" id="90">
-            <strong>Signature:</strong> selectKey:(&#39;a -&gt; &#39;b) -&gt; message:string -&gt; spec:Spec&lt;&#39;c&gt; -&gt; Spec&lt;&#39;c&gt;<br />
-                          <strong>Type parameters:</strong> 'a, 'b, 'c                      </div>
+          <div class="tip" id="103">
+            <strong>Signature:</strong> selectKey:(&#39;?9535 -&gt; &#39;?9536) -&gt; message:string -&gt; spec:Spec&lt;&#39;?9537&gt; -&gt; Spec&lt;&#39;?9537&gt;<br />
+                          <strong>Type parameters:</strong> '?9535, '?9536, '?9537                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L145-145" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L149-149" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -1102,15 +1266,15 @@ whcih defines that the result should be a string starting with the specified hea
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '91', 91)" onmouseover="showTip(event, '91', 91)">
+          <code onmouseout="hideTip(event, '104', 104)" onmouseover="showTip(event, '104', 104)">
             uniqueOf(...)
           </code>
-          <div class="tip" id="91">
-            <strong>Signature:</strong> selectSeq:(&#39;?9365 -&gt; &#39;?9366) -&gt; selectKey:(&#39;?9367 -&gt; &#39;?9368) -&gt; message:string -&gt; spec:Spec&lt;&#39;?9365&gt; -&gt; Spec&lt;&#39;?9365&gt;<br />
-                          <strong>Type parameters:</strong> '?9365, '?9366, '?9367, '?9368                      </div>
+          <div class="tip" id="104">
+            <strong>Signature:</strong> selectSeq:(&#39;?9530 -&gt; &#39;?9531) -&gt; selectKey:(&#39;?9532 -&gt; &#39;?9533) -&gt; message:string -&gt; spec:Spec&lt;&#39;?9530&gt; -&gt; Spec&lt;&#39;?9530&gt;<br />
+                          <strong>Type parameters:</strong> '?9530, '?9531, '?9532, '?9533                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L141-141" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L145-145" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -1123,15 +1287,15 @@ which defines that all elements of the sequence should be unique.</p>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '92', 92)" onmouseover="showTip(event, '92', 92)">
+          <code onmouseout="hideTip(event, '105', 105)" onmouseover="showTip(event, '105', 105)">
             validate value arg2
           </code>
-          <div class="tip" id="92">
+          <div class="tip" id="105">
             <strong>Signature:</strong> value:&#39;c -&gt; Spec&lt;&#39;c&gt; -&gt; Result&lt;&#39;c,string list&gt;<br />
                           <strong>Type parameters:</strong> 'c                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L261-261" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L300-300" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -1143,15 +1307,15 @@ which defines that all elements of the sequence should be unique.</p>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '93', 93)" onmouseover="showTip(event, '93', 93)">
+          <code onmouseout="hideTip(event, '106', 106)" onmouseover="showTip(event, '106', 106)">
             validateOption value spec
           </code>
-          <div class="tip" id="93">
-            <strong>Signature:</strong> value:&#39;?9448 -&gt; spec:Spec&lt;&#39;?9448&gt; -&gt; &#39;?9448 option<br />
-                          <strong>Type parameters:</strong> '?9448                      </div>
+          <div class="tip" id="106">
+            <strong>Signature:</strong> value:&#39;?9625 -&gt; spec:Spec&lt;&#39;?9625&gt; -&gt; &#39;?9625 option<br />
+                          <strong>Type parameters:</strong> '?9625                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L282-282" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L328-328" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -1163,15 +1327,15 @@ which defines that all elements of the sequence should be unique.</p>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '94', 94)" onmouseover="showTip(event, '94', 94)">
+          <code onmouseout="hideTip(event, '107', 107)" onmouseover="showTip(event, '107', 107)">
             validateUntrust untrusted spec
           </code>
-          <div class="tip" id="94">
+          <div class="tip" id="107">
             <strong>Signature:</strong> untrusted:Untrust&lt;&#39;a&gt; -&gt; spec:Spec&lt;&#39;a&gt; -&gt; Result&lt;&#39;a,string list&gt;<br />
                           <strong>Type parameters:</strong> 'a                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L278-278" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L324-324" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>

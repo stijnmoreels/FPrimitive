@@ -7,8 +7,8 @@ open System.Runtime.InteropServices
 [<assembly: AssemblyDescriptionAttribute(".NET project to help developers build a correct and more secure domain model.")>]
 [<assembly: GuidAttribute("771121cs-r6e3-38c5-98b1-6cec4c286948")>]
 [<assembly: AssemblyProductAttribute("FPrimitive")>]
-[<assembly: AssemblyVersionAttribute("1.0.0")>]
-[<assembly: AssemblyFileVersionAttribute("1.0.0")>]
+[<assembly: AssemblyVersionAttribute("1.5.0")>]
+[<assembly: AssemblyFileVersionAttribute("1.5.0")>]
 do ()
 
 module internal AssemblyVersionInformation =
@@ -16,5 +16,5 @@ module internal AssemblyVersionInformation =
     let [<Literal>] AssemblyDescription = ".NET project to help developers build a correct and more secure domain model."
     let [<Literal>] Guid = "771121cs-r6e3-38c5-98b1-6cec4c286948"
     let [<Literal>] AssemblyProduct = "FPrimitive"
-    let [<Literal>] AssemblyVersion = "1.0.0"
-    let [<Literal>] AssemblyFileVersion = "1.0.0"
+    let [<Literal>] AssemblyVersion = "1.5.0"
+    let [<Literal>] AssemblyFileVersion = "1.5.0"

@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8"/>
-    <title>BoundedInt - FPrimitive</title>
+    <title>AlphanumSpecial - FPrimitive</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="description" content=""/>
     <meta name="author" content="Stijn Moreels"/>
@@ -35,13 +35,13 @@
 
 
 
-<h1>BoundedInt</h1>
+<h1>AlphanumSpecial</h1>
 <p>
 
     <span>Namespace: FPrimitive</span><br />
     </p>
 <div class="xmldoc">
-<p>Model representation of an integer bounded by a minimum and maximum threshold.</p>
+<p>Model representation of an alphanumerical value or special charaters.</p>
 
 </div>
   <h3>Instance members</h3>
@@ -53,19 +53,19 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '232', 232)" onmouseover="showTip(event, '232', 232)">
+          <code onmouseout="hideTip(event, '226', 226)" onmouseover="showTip(event, '226', 226)">
             x.Value
           </code>
-          <div class="tip" id="232">
-            <strong>Signature:</strong> int<br />
+          <div class="tip" id="226">
+            <strong>Signature:</strong> string<br />
                                   </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Types.fs#L59-59" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Types.fs#L45-45" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          <p>Gets the bounded integer value.</p>
+          <p>Gets the original string representation of the alphanumerical value or special charaters.</p>
 
 
               <p>CompiledName: <code>get_Value</code></p>
@@ -82,19 +82,19 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '233', 233)" onmouseover="showTip(event, '233', 233)">
-            BoundedInt.create(min, max) value
+          <code onmouseout="hideTip(event, '227', 227)" onmouseover="showTip(event, '227', 227)">
+            AlphanumSpecial.create(txt)
           </code>
-          <div class="tip" id="233">
-            <strong>Signature:</strong> (min:int * max:int) -&gt; value:int -&gt; Result&lt;BoundedInt,string list&gt;<br />
+          <div class="tip" id="227">
+            <strong>Signature:</strong> txt:string -&gt; Result&lt;AlphanumSpecial,string list&gt;<br />
                                   </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Types.fs#L61-61" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Types.fs#L47-47" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          <p>Try to create a bounded integer value within the given minimum and maximum boundaries.</p>
+          <p>Try to create an alphanumerical value from a given raw text.</p>
 
 
         </td>
@@ -102,19 +102,19 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '234', 234)" onmouseover="showTip(event, '234', 234)">
-            BoundedInt.Create(min, max, value)
+          <code onmouseout="hideTip(event, '228', 228)" onmouseover="showTip(event, '228', 228)">
+            AlphanumSpecial.Create(txt)
           </code>
-          <div class="tip" id="234">
-            <strong>Signature:</strong> (min:int * max:int * value:int) -&gt; ValidationResult&lt;BoundedInt&gt;<br />
+          <div class="tip" id="228">
+            <strong>Signature:</strong> txt:string -&gt; ValidationResult&lt;AlphanumSpecial&gt;<br />
                                   </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Types.fs#L65-65" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Types.fs#L52-52" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          <p>Try to create a bounded integer value within the given minimum and maximum boundaries.</p>
+          <p>Try to create an alphanumerical value or special charaters from a given raw text.</p>
 
 
         </td>
@@ -122,15 +122,15 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '235', 235)" onmouseover="showTip(event, '235', 235)">
-            BoundedInt.op_Implicit(x)
+          <code onmouseout="hideTip(event, '229', 229)" onmouseover="showTip(event, '229', 229)">
+            AlphanumSpecial.op_Implicit(x)
           </code>
-          <div class="tip" id="235">
-            <strong>Signature:</strong> x:BoundedInt -&gt; int<br />
+          <div class="tip" id="229">
+            <strong>Signature:</strong> x:AlphanumSpecial -&gt; string<br />
                                   </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Types.fs#L67-67" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Types.fs#L53-53" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>

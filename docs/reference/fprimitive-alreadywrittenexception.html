@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8"/>
-    <title>Untrust - FPrimitive</title>
+    <title>AlreadyWrittenException - FPrimitive</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="description" content=""/>
     <meta name="author" content="Stijn Moreels"/>
@@ -35,81 +35,37 @@
 
 
 
-<h1>Untrust</h1>
+<h1>AlreadyWrittenException</h1>
 <p>
-  <span>Namespace: FPrimitive</span><br />
-  </p>
+
+    <span>Namespace: FPrimitive</span><br />
+    </p>
 <div class="xmldoc">
-<p>Representation of an untrusted value that should be validated first before it can be used.</p>
+<p>Exception that gets thrown when a <code>Write&lt;_&gt;</code> instance was being written more than once.</p>
 
 </div>
-
-<!-- Render nested types and modules, if there are any -->
-
-  <h3>Functions and values</h3>
+  <h3>Record Fields</h3>
   <table class="table table-bordered member-list">
     <thead>
-      <tr><td>Function or value</td><td>Description</td></tr>
+      <tr><td>Record Field</td><td>Description</td></tr>
     </thead>
     <tbody>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '114', 114)" onmouseover="showTip(event, '114', 114)">
-            getWith validator x
+          <code onmouseout="hideTip(event, '231', 231)" onmouseover="showTip(event, '231', 231)">
+            Data0
           </code>
-          <div class="tip" id="114">
-            <strong>Signature:</strong> validator:(&#39;a -&gt; bool) -&gt; x:Untrust&lt;&#39;a&gt; -&gt; &#39;a option<br />
-                          <strong>Type parameters:</strong> 'a                      </div>
+          <div class="tip" id="231">
+            <strong>Signature:</strong> string<br />
+                                  </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Untrust.fs#L32-32" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Types.fs#L334-334" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          <p>Tries to get the wrapped value out of the untrusted boundary by validating the value.</p>
-
-
-        </td>
-      </tr>
-      <tr>
-        <td class="member-name">
-
-          <code onmouseout="hideTip(event, '115', 115)" onmouseover="showTip(event, '115', 115)">
-            getWithOption validator x
-          </code>
-          <div class="tip" id="115">
-            <strong>Signature:</strong> validator:(&#39;a -&gt; &#39;b option) -&gt; x:Untrust&lt;&#39;a&gt; -&gt; &#39;b option<br />
-                          <strong>Type parameters:</strong> 'a, 'b                      </div>
-        </td>
-        <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Untrust.fs#L34-34" class="github-link">
-              <img src="../content/img/github.png" class="normal" />
-              <img src="../content/img/github-blue.png" class="hover" />
-            </a>
-          <p>Tries to get the wrapped value out of the untrusted boundary by validating the value.</p>
-
-
-        </td>
-      </tr>
-      <tr>
-        <td class="member-name">
-
-          <code onmouseout="hideTip(event, '116', 116)" onmouseover="showTip(event, '116', 116)">
-            getWithResult validator x
-          </code>
-          <div class="tip" id="116">
-            <strong>Signature:</strong> validator:(&#39;a -&gt; Result&lt;&#39;b,string list&gt;) -&gt; x:Untrust&lt;&#39;a&gt; -&gt; Result&lt;&#39;b,string list&gt;<br />
-                          <strong>Type parameters:</strong> 'a, 'b                      </div>
-        </td>
-        <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Untrust.fs#L36-36" class="github-link">
-              <img src="../content/img/github.png" class="normal" />
-              <img src="../content/img/github-blue.png" class="hover" />
-            </a>
-          <p>Tries to get the wrapped value out of the untrusted boundary by validating the value.</p>
-
-
+          
         </td>
       </tr>
     </tbody>

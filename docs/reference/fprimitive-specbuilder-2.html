@@ -53,11 +53,11 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '223', 223)" onmouseover="showTip(event, '223', 223)">
+          <code onmouseout="hideTip(event, '250', 250)" onmouseover="showTip(event, '250', 250)">
             x.Add(state, req)
           </code>
-          <div class="tip" id="223">
-            <strong>Signature:</strong> (state:Spec&lt;&#39;?8438&gt; * req:(&#39;?8438 -&gt; bool * string)) -&gt; Spec&lt;&#39;?8438&gt;<br />
+          <div class="tip" id="250">
+            <strong>Signature:</strong> (state:Spec&lt;&#39;a&gt; * req:(&#39;a -&gt; bool * string)) -&gt; Spec&lt;&#39;a&gt;<br />
                                     <span>
             <strong>Attributes:</strong><br />
 [&lt;CustomOperation(&quot;add&quot;)&gt;]<br />
@@ -65,7 +65,7 @@
           </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L305-305" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L360-360" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -77,11 +77,207 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '224', 224)" onmouseover="showTip(event, '224', 224)">
+          <code onmouseout="hideTip(event, '251', 251)" onmouseover="showTip(event, '251', 251)">
+            x.Alphabetical(state, message)
+          </code>
+          <div class="tip" id="251">
+            <strong>Signature:</strong> (state:Spec&lt;string&gt; * message:string) -&gt; Spec&lt;string&gt;<br />
+                                    <span>
+            <strong>Attributes:</strong><br />
+[&lt;CustomOperation(&quot;alphabetical&quot;)&gt;]<br />
+          </span>
+          </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L528-528" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Adds a requirement to check for strings containing only charaters in the alphabet.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '252', 252)" onmouseover="showTip(event, '252', 252)">
+            x.AlphabeticalOf(...)
+          </code>
+          <div class="tip" id="252">
+            <strong>Signature:</strong> (state:Spec&lt;&#39;?8723&gt; * selector:(&#39;?8723 -&gt; string) * message:string) -&gt; Spec&lt;&#39;?8723&gt;<br />
+                                    <span>
+            <strong>Attributes:</strong><br />
+[&lt;CustomOperation(&quot;alphabeticalOf&quot;)&gt;]<br />
+          </span>
+          </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L525-525" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Adds a requirement for the result of the specified mapping,
+which defines that the result should be a string containing only charaters in the alphabet.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '253', 253)" onmouseover="showTip(event, '253', 253)">
+            x.Alphanum(state, message)
+          </code>
+          <div class="tip" id="253">
+            <strong>Signature:</strong> (state:Spec&lt;string&gt; * message:string) -&gt; Spec&lt;string&gt;<br />
+                                    <span>
+            <strong>Attributes:</strong><br />
+[&lt;CustomOperation(&quot;alphanum&quot;)&gt;]<br />
+          </span>
+          </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L535-535" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Adds a requirement to check for an alphanumerical value.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '254', 254)" onmouseover="showTip(event, '254', 254)">
+            x.AlphanumOf(state, selector, message)
+          </code>
+          <div class="tip" id="254">
+            <strong>Signature:</strong> (state:Spec&lt;&#39;?8730&gt; * selector:(&#39;?8730 -&gt; string) * message:string) -&gt; Spec&lt;&#39;?8730&gt;<br />
+                                    <span>
+            <strong>Attributes:</strong><br />
+[&lt;CustomOperation(&quot;alphanumOf&quot;)&gt;]<br />
+          </span>
+          </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L532-532" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Adds a requirement for the result of the specified mapping,
+which defines that the result should be an alphanumerical value.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '255', 255)" onmouseover="showTip(event, '255', 255)">
+            x.AlphanumSpecial(state, message)
+          </code>
+          <div class="tip" id="255">
+            <strong>Signature:</strong> (state:Spec&lt;string&gt; * message:string) -&gt; Spec&lt;string&gt;<br />
+                                    <span>
+            <strong>Attributes:</strong><br />
+[&lt;CustomOperation(&quot;alphanumSpecial&quot;)&gt;]<br />
+          </span>
+          </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L542-542" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Adds a requirement to check for alphanumerical values or special charaters</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '256', 256)" onmouseover="showTip(event, '256', 256)">
+            x.AlphanumSpecialOf(...)
+          </code>
+          <div class="tip" id="256">
+            <strong>Signature:</strong> (state:Spec&lt;&#39;?8737&gt; * selector:(&#39;?8737 -&gt; string) * message:string) -&gt; Spec&lt;&#39;?8737&gt;<br />
+                                    <span>
+            <strong>Attributes:</strong><br />
+[&lt;CustomOperation(&quot;alphanumSpecialOf&quot;)&gt;]<br />
+          </span>
+          </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L539-539" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Adds a requirement to the result of the specified mapping,
+which defines that the result should be an alphanumerical value or special charater.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '257', 257)" onmouseover="showTip(event, '257', 257)">
+            x.Cascade(state, mode)
+          </code>
+          <div class="tip" id="257">
+            <strong>Signature:</strong> (state:Spec&lt;&#39;a&gt; * mode:CascadeMode) -&gt; Spec&lt;&#39;a&gt;<br />
+                                    <span>
+            <strong>Attributes:</strong><br />
+[&lt;CustomOperation(&quot;cascade&quot;)&gt;]<br />
+          </span>
+          </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L363-363" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Change the way the validation of requirements should happen.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '258', 258)" onmouseover="showTip(event, '258', 258)">
+            x.DependsOn(state, dependent)
+          </code>
+          <div class="tip" id="258">
+            <strong>Signature:</strong> (state:Spec&lt;&#39;?8517&gt; * dependent:Spec&lt;&#39;?8517&gt;) -&gt; Spec&lt;&#39;?8517&gt;<br />
+                                    <span>
+            <strong>Attributes:</strong><br />
+[&lt;CustomOperation(&quot;dependsOn&quot;)&gt;]<br />
+          </span>
+          </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L367-367" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Adds another specification on which the current specification depends on.
+This dependent specification will run before the current specification and contain only the errors of the dependents in case of a validation failure.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '259', 259)" onmouseover="showTip(event, '259', 259)">
             x.Equal(state, value, message)
           </code>
-          <div class="tip" id="224">
-            <strong>Signature:</strong> (state:Spec&lt;&#39;?8447&gt; * value:&#39;?8447 * message:string) -&gt; Spec&lt;&#39;?8447&gt;<br />
+          <div class="tip" id="259">
+            <strong>Signature:</strong> (state:Spec&lt;&#39;?8526&gt; * value:&#39;?8526 * message:string) -&gt; Spec&lt;&#39;?8526&gt;<br />
                                     <span>
             <strong>Attributes:</strong><br />
 [&lt;CustomOperation(&quot;equal&quot;)&gt;]<br />
@@ -89,7 +285,7 @@
           </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L312-312" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L374-374" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -101,11 +297,11 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '225', 225)" onmouseover="showTip(event, '225', 225)">
+          <code onmouseout="hideTip(event, '260', 260)" onmouseover="showTip(event, '260', 260)">
             x.EqualOf(...)
           </code>
-          <div class="tip" id="225">
-            <strong>Signature:</strong> (state:Spec&lt;&#39;?8442&gt; * selector:(&#39;?8442 -&gt; &#39;?8443) * value:&#39;?8443 * message:string) -&gt; Spec&lt;&#39;?8442&gt;<br />
+          <div class="tip" id="260">
+            <strong>Signature:</strong> (state:Spec&lt;&#39;?8521&gt; * selector:(&#39;?8521 -&gt; &#39;?8522) * value:&#39;?8522 * message:string) -&gt; Spec&lt;&#39;?8521&gt;<br />
                                     <span>
             <strong>Attributes:</strong><br />
 [&lt;CustomOperation(&quot;equalOf&quot;)&gt;]<br />
@@ -113,7 +309,7 @@
           </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L309-309" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L371-371" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -126,11 +322,11 @@ which defines that the result should be equal to the specified value.</p>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '226', 226)" onmouseover="showTip(event, '226', 226)">
+          <code onmouseout="hideTip(event, '261', 261)" onmouseover="showTip(event, '261', 261)">
             x.ExclusiveBetween(...)
           </code>
-          <div class="tip" id="226">
-            <strong>Signature:</strong> (state:Spec&lt;&#39;?8633&gt; * min:&#39;?8633 * max:&#39;?8633 * message:string) -&gt; Spec&lt;&#39;?8633&gt;<br />
+          <div class="tip" id="261">
+            <strong>Signature:</strong> (state:Spec&lt;&#39;?8712&gt; * min:&#39;?8712 * max:&#39;?8712 * message:string) -&gt; Spec&lt;&#39;?8712&gt;<br />
                                     <span>
             <strong>Attributes:</strong><br />
 [&lt;CustomOperation(&quot;exclusiveBetween&quot;)&gt;]<br />
@@ -138,7 +334,7 @@ which defines that the result should be equal to the specified value.</p>
           </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L452-452" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L514-514" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -150,11 +346,11 @@ which defines that the result should be equal to the specified value.</p>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '227', 227)" onmouseover="showTip(event, '227', 227)">
+          <code onmouseout="hideTip(event, '262', 262)" onmouseover="showTip(event, '262', 262)">
             x.ExclusiveBetweenOf(...)
           </code>
-          <div class="tip" id="227">
-            <strong>Signature:</strong> (state:Spec&lt;&#39;?8628&gt; * selector:(&#39;?8628 -&gt; &#39;?8629) * min:&#39;?8629 * max:&#39;?8629 * message:string) -&gt; Spec&lt;&#39;?8628&gt;<br />
+          <div class="tip" id="262">
+            <strong>Signature:</strong> (state:Spec&lt;&#39;?8707&gt; * selector:(&#39;?8707 -&gt; &#39;?8708) * min:&#39;?8708 * max:&#39;?8708 * message:string) -&gt; Spec&lt;&#39;?8707&gt;<br />
                                     <span>
             <strong>Attributes:</strong><br />
 [&lt;CustomOperation(&quot;exclusiveBetweenOf&quot;)&gt;]<br />
@@ -162,7 +358,7 @@ which defines that the result should be equal to the specified value.</p>
           </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L449-449" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L511-511" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -175,11 +371,11 @@ which defines that the result should be exclusive between (<code>min &lt; value 
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '228', 228)" onmouseover="showTip(event, '228', 228)">
+          <code onmouseout="hideTip(event, '263', 263)" onmouseover="showTip(event, '263', 263)">
             x.ForAll(state, predicate, message)
           </code>
-          <div class="tip" id="228">
-            <strong>Signature:</strong> (state:Spec&lt;&#39;?8521&gt; * predicate:(&#39;?8522 -&gt; bool) * message:string) -&gt; Spec&lt;&#39;?8521&gt;<br />
+          <div class="tip" id="263">
+            <strong>Signature:</strong> (state:Spec&lt;&#39;?8600&gt; * predicate:(&#39;?8601 -&gt; bool) * message:string) -&gt; Spec&lt;&#39;?8600&gt;<br />
                                     <span>
             <strong>Attributes:</strong><br />
 [&lt;CustomOperation(&quot;forall&quot;)&gt;]<br />
@@ -187,7 +383,7 @@ which defines that the result should be exclusive between (<code>min &lt; value 
           </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L375-375" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L437-437" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -199,19 +395,19 @@ which defines that the result should be exclusive between (<code>min &lt; value 
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '229', 229)" onmouseover="showTip(event, '229', 229)">
+          <code onmouseout="hideTip(event, '264', 264)" onmouseover="showTip(event, '264', 264)">
             x.ForallOf(...)
           </code>
-          <div class="tip" id="229">
-            <strong>Signature:</strong> (state:Spec&lt;&#39;?8515&gt; * selector:(&#39;?8515 -&gt; &#39;?8516) * predicate:(&#39;?8517 -&gt; bool) * message:string) -&gt; Spec&lt;&#39;?8515&gt;<br />
-                          <strong>Type parameters:</strong> '?8517                        <span>
+          <div class="tip" id="264">
+            <strong>Signature:</strong> (state:Spec&lt;&#39;a&gt; * selector:(&#39;a -&gt; &#39;b) * predicate:(&#39;c -&gt; bool) * message:string) -&gt; Spec&lt;&#39;a&gt;<br />
+                          <strong>Type parameters:</strong> 'c                        <span>
             <strong>Attributes:</strong><br />
 [&lt;CustomOperation(&quot;forallOf&quot;)&gt;]<br />
           </span>
           </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L372-372" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L434-434" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -224,11 +420,11 @@ which defines that all elements of the sequence should satisfy the specified pre
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '230', 230)" onmouseover="showTip(event, '230', 230)">
+          <code onmouseout="hideTip(event, '265', 265)" onmouseover="showTip(event, '265', 265)">
             x.GreaterThan(state, limit, message)
           </code>
-          <div class="tip" id="230">
-            <strong>Signature:</strong> (state:Spec&lt;&#39;?8606&gt; * limit:&#39;?8606 * message:string) -&gt; Spec&lt;&#39;?8606&gt;<br />
+          <div class="tip" id="265">
+            <strong>Signature:</strong> (state:Spec&lt;&#39;?8685&gt; * limit:&#39;?8685 * message:string) -&gt; Spec&lt;&#39;?8685&gt;<br />
                                     <span>
             <strong>Attributes:</strong><br />
 [&lt;CustomOperation(&quot;greaterThan&quot;)&gt;]<br />
@@ -236,7 +432,7 @@ which defines that all elements of the sequence should satisfy the specified pre
           </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L431-431" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L493-493" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -248,11 +444,11 @@ which defines that all elements of the sequence should satisfy the specified pre
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '231', 231)" onmouseover="showTip(event, '231', 231)">
+          <code onmouseout="hideTip(event, '266', 266)" onmouseover="showTip(event, '266', 266)">
             x.GreaterThanOf(...)
           </code>
-          <div class="tip" id="231">
-            <strong>Signature:</strong> (state:Spec&lt;&#39;?8601&gt; * selector:(&#39;?8601 -&gt; &#39;?8602) * limit:&#39;?8602 * message:string) -&gt; Spec&lt;&#39;?8601&gt;<br />
+          <div class="tip" id="266">
+            <strong>Signature:</strong> (state:Spec&lt;&#39;?8680&gt; * selector:(&#39;?8680 -&gt; &#39;?8681) * limit:&#39;?8681 * message:string) -&gt; Spec&lt;&#39;?8680&gt;<br />
                                     <span>
             <strong>Attributes:</strong><br />
 [&lt;CustomOperation(&quot;greaterThanOf&quot;)&gt;]<br />
@@ -260,7 +456,7 @@ which defines that all elements of the sequence should satisfy the specified pre
           </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L428-428" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L490-490" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -273,11 +469,11 @@ which defines that the result should be greater than (<code>limit &lt; value</co
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '232', 232)" onmouseover="showTip(event, '232', 232)">
+          <code onmouseout="hideTip(event, '267', 267)" onmouseover="showTip(event, '267', 267)">
             x.GreaterThanOrEqual(...)
           </code>
-          <div class="tip" id="232">
-            <strong>Signature:</strong> (state:Spec&lt;&#39;?8615&gt; * limit:&#39;?8615 * message:string) -&gt; Spec&lt;&#39;?8615&gt;<br />
+          <div class="tip" id="267">
+            <strong>Signature:</strong> (state:Spec&lt;&#39;?8694&gt; * limit:&#39;?8694 * message:string) -&gt; Spec&lt;&#39;?8694&gt;<br />
                                     <span>
             <strong>Attributes:</strong><br />
 [&lt;CustomOperation(&quot;greaterThanOrEqual&quot;)&gt;]<br />
@@ -285,7 +481,7 @@ which defines that the result should be greater than (<code>limit &lt; value</co
           </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L438-438" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L500-500" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -297,11 +493,11 @@ which defines that the result should be greater than (<code>limit &lt; value</co
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '233', 233)" onmouseover="showTip(event, '233', 233)">
+          <code onmouseout="hideTip(event, '268', 268)" onmouseover="showTip(event, '268', 268)">
             x.GreaterThanOrEqualOf(...)
           </code>
-          <div class="tip" id="233">
-            <strong>Signature:</strong> (state:Spec&lt;&#39;?8610&gt; * selector:(&#39;?8610 -&gt; &#39;?8611) * limit:&#39;?8611 * message:string) -&gt; Spec&lt;&#39;?8610&gt;<br />
+          <div class="tip" id="268">
+            <strong>Signature:</strong> (state:Spec&lt;&#39;?8689&gt; * selector:(&#39;?8689 -&gt; &#39;?8690) * limit:&#39;?8690 * message:string) -&gt; Spec&lt;&#39;?8689&gt;<br />
                                     <span>
             <strong>Attributes:</strong><br />
 [&lt;CustomOperation(&quot;greaterThanOrEqualOf&quot;)&gt;]<br />
@@ -309,7 +505,7 @@ which defines that the result should be greater than (<code>limit &lt; value</co
           </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L435-435" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L497-497" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -322,11 +518,11 @@ which defines that the result should be greater than or equal to (<code>limit &l
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '234', 234)" onmouseover="showTip(event, '234', 234)">
+          <code onmouseout="hideTip(event, '269', 269)" onmouseover="showTip(event, '269', 269)">
             x.InclusiveBetween(...)
           </code>
-          <div class="tip" id="234">
-            <strong>Signature:</strong> (state:Spec&lt;&#39;?8624&gt; * min:&#39;?8624 * max:&#39;?8624 * message:string) -&gt; Spec&lt;&#39;?8624&gt;<br />
+          <div class="tip" id="269">
+            <strong>Signature:</strong> (state:Spec&lt;&#39;?8703&gt; * min:&#39;?8703 * max:&#39;?8703 * message:string) -&gt; Spec&lt;&#39;?8703&gt;<br />
                                     <span>
             <strong>Attributes:</strong><br />
 [&lt;CustomOperation(&quot;inclusiveBetween&quot;)&gt;]<br />
@@ -334,7 +530,7 @@ which defines that the result should be greater than or equal to (<code>limit &l
           </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L445-445" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L507-507" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -346,11 +542,11 @@ which defines that the result should be greater than or equal to (<code>limit &l
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '235', 235)" onmouseover="showTip(event, '235', 235)">
+          <code onmouseout="hideTip(event, '270', 270)" onmouseover="showTip(event, '270', 270)">
             x.InclusiveBetweenOf(...)
           </code>
-          <div class="tip" id="235">
-            <strong>Signature:</strong> (state:Spec&lt;&#39;?8619&gt; * selector:(&#39;?8619 -&gt; &#39;?8620) * min:&#39;?8620 * max:&#39;?8620 * message:string) -&gt; Spec&lt;&#39;?8619&gt;<br />
+          <div class="tip" id="270">
+            <strong>Signature:</strong> (state:Spec&lt;&#39;?8698&gt; * selector:(&#39;?8698 -&gt; &#39;?8699) * min:&#39;?8699 * max:&#39;?8699 * message:string) -&gt; Spec&lt;&#39;?8698&gt;<br />
                                     <span>
             <strong>Attributes:</strong><br />
 [&lt;CustomOperation(&quot;inclusiveBetweenOf&quot;)&gt;]<br />
@@ -358,7 +554,7 @@ which defines that the result should be greater than or equal to (<code>limit &l
           </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L442-442" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L504-504" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -371,11 +567,11 @@ which defines that the result should be inclusive between (<code>min &lt;= value
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '236', 236)" onmouseover="showTip(event, '236', 236)">
+          <code onmouseout="hideTip(event, '271', 271)" onmouseover="showTip(event, '271', 271)">
             x.Length(state, length, message)
           </code>
-          <div class="tip" id="236">
-            <strong>Signature:</strong> (state:Spec&lt;&#39;?8563&gt; * length:int * message:string) -&gt; Spec&lt;&#39;?8563&gt;<br />
+          <div class="tip" id="271">
+            <strong>Signature:</strong> (state:Spec&lt;&#39;?8642&gt; * length:int * message:string) -&gt; Spec&lt;&#39;?8642&gt;<br />
                                     <span>
             <strong>Attributes:</strong><br />
 [&lt;CustomOperation(&quot;length&quot;)&gt;]<br />
@@ -383,7 +579,7 @@ which defines that the result should be inclusive between (<code>min &lt;= value
           </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L401-401" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L463-463" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -395,11 +591,11 @@ which defines that the result should be inclusive between (<code>min &lt;= value
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '237', 237)" onmouseover="showTip(event, '237', 237)">
+          <code onmouseout="hideTip(event, '272', 272)" onmouseover="showTip(event, '272', 272)">
             x.LengthBetween(...)
           </code>
-          <div class="tip" id="237">
-            <strong>Signature:</strong> (state:Spec&lt;&#39;?8578&gt; * min:int * max:int * message:string) -&gt; Spec&lt;&#39;?8578&gt;<br />
+          <div class="tip" id="272">
+            <strong>Signature:</strong> (state:Spec&lt;&#39;?8657&gt; * min:int * max:int * message:string) -&gt; Spec&lt;&#39;?8657&gt;<br />
                                     <span>
             <strong>Attributes:</strong><br />
 [&lt;CustomOperation(&quot;lengthBetween&quot;)&gt;]<br />
@@ -407,7 +603,7 @@ which defines that the result should be inclusive between (<code>min &lt;= value
           </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L410-410" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L472-472" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -419,19 +615,19 @@ which defines that the result should be inclusive between (<code>min &lt;= value
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '238', 238)" onmouseover="showTip(event, '238', 238)">
+          <code onmouseout="hideTip(event, '273', 273)" onmouseover="showTip(event, '273', 273)">
             x.LengthBetweenOf(...)
           </code>
-          <div class="tip" id="238">
-            <strong>Signature:</strong> (state:Spec&lt;&#39;?8557&gt; * selector:(&#39;?8557 -&gt; &#39;?8558) * min:int * max:int * message:string) -&gt; Spec&lt;&#39;?8557&gt;<br />
-                          <strong>Type parameters:</strong> '?8559                        <span>
+          <div class="tip" id="273">
+            <strong>Signature:</strong> (state:Spec&lt;&#39;?8636&gt; * selector:(&#39;?8636 -&gt; &#39;?8637) * min:int * max:int * message:string) -&gt; Spec&lt;&#39;?8636&gt;<br />
+                          <strong>Type parameters:</strong> '?8638                        <span>
             <strong>Attributes:</strong><br />
 [&lt;CustomOperation(&quot;lengthBetweenOf&quot;)&gt;]<br />
           </span>
           </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L398-398" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L460-460" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -444,11 +640,11 @@ which defines that the sequence should have a length within the specified range 
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '239', 239)" onmouseover="showTip(event, '239', 239)">
+          <code onmouseout="hideTip(event, '274', 274)" onmouseover="showTip(event, '274', 274)">
             x.LengthMax(state, max, message)
           </code>
-          <div class="tip" id="239">
-            <strong>Signature:</strong> (state:Spec&lt;&#39;?8573&gt; * max:int * message:string) -&gt; Spec&lt;&#39;?8573&gt;<br />
+          <div class="tip" id="274">
+            <strong>Signature:</strong> (state:Spec&lt;&#39;?8652&gt; * max:int * message:string) -&gt; Spec&lt;&#39;?8652&gt;<br />
                                     <span>
             <strong>Attributes:</strong><br />
 [&lt;CustomOperation(&quot;lengthMax&quot;)&gt;]<br />
@@ -456,7 +652,7 @@ which defines that the sequence should have a length within the specified range 
           </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L407-407" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L469-469" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -468,19 +664,19 @@ which defines that the sequence should have a length within the specified range 
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '240', 240)" onmouseover="showTip(event, '240', 240)">
+          <code onmouseout="hideTip(event, '275', 275)" onmouseover="showTip(event, '275', 275)">
             x.LengthMaxOf(...)
           </code>
-          <div class="tip" id="240">
-            <strong>Signature:</strong> (state:Spec&lt;&#39;?8551&gt; * selector:(&#39;?8551 -&gt; &#39;?8552) * max:int * message:string) -&gt; Spec&lt;&#39;?8551&gt;<br />
-                          <strong>Type parameters:</strong> '?8553                        <span>
+          <div class="tip" id="275">
+            <strong>Signature:</strong> (state:Spec&lt;&#39;?8630&gt; * selector:(&#39;?8630 -&gt; &#39;?8631) * max:int * message:string) -&gt; Spec&lt;&#39;?8630&gt;<br />
+                          <strong>Type parameters:</strong> '?8632                        <span>
             <strong>Attributes:</strong><br />
 [&lt;CustomOperation(&quot;lengthMaxOf&quot;)&gt;]<br />
           </span>
           </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L394-394" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L456-456" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -493,11 +689,11 @@ which defines that the sequence should have a maximum length.</p>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '241', 241)" onmouseover="showTip(event, '241', 241)">
+          <code onmouseout="hideTip(event, '276', 276)" onmouseover="showTip(event, '276', 276)">
             x.LengthMin(state, min, message)
           </code>
-          <div class="tip" id="241">
-            <strong>Signature:</strong> (state:Spec&lt;&#39;?8568&gt; * min:int * message:string) -&gt; Spec&lt;&#39;?8568&gt;<br />
+          <div class="tip" id="276">
+            <strong>Signature:</strong> (state:Spec&lt;&#39;?8647&gt; * min:int * message:string) -&gt; Spec&lt;&#39;?8647&gt;<br />
                                     <span>
             <strong>Attributes:</strong><br />
 [&lt;CustomOperation(&quot;lengthMin&quot;)&gt;]<br />
@@ -505,7 +701,7 @@ which defines that the sequence should have a maximum length.</p>
           </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L404-404" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L466-466" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -517,19 +713,19 @@ which defines that the sequence should have a maximum length.</p>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '242', 242)" onmouseover="showTip(event, '242', 242)">
+          <code onmouseout="hideTip(event, '277', 277)" onmouseover="showTip(event, '277', 277)">
             x.LengthMinOf(...)
           </code>
-          <div class="tip" id="242">
-            <strong>Signature:</strong> (state:Spec&lt;&#39;?8545&gt; * selector:(&#39;?8545 -&gt; &#39;?8546) * min:int * message:string) -&gt; Spec&lt;&#39;?8545&gt;<br />
-                          <strong>Type parameters:</strong> '?8547                        <span>
+          <div class="tip" id="277">
+            <strong>Signature:</strong> (state:Spec&lt;&#39;?8624&gt; * selector:(&#39;?8624 -&gt; &#39;?8625) * min:int * message:string) -&gt; Spec&lt;&#39;?8624&gt;<br />
+                          <strong>Type parameters:</strong> '?8626                        <span>
             <strong>Attributes:</strong><br />
 [&lt;CustomOperation(&quot;lengthMinOf&quot;)&gt;]<br />
           </span>
           </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L390-390" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L452-452" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -542,19 +738,19 @@ which defines that the sequence should have a minimum length.</p>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '243', 243)" onmouseover="showTip(event, '243', 243)">
+          <code onmouseout="hideTip(event, '278', 278)" onmouseover="showTip(event, '278', 278)">
             x.LengthOf(...)
           </code>
-          <div class="tip" id="243">
-            <strong>Signature:</strong> (state:Spec&lt;&#39;?8539&gt; * selector:(&#39;?8539 -&gt; &#39;?8540) * length:int * message:string) -&gt; Spec&lt;&#39;?8539&gt;<br />
-                          <strong>Type parameters:</strong> '?8541                        <span>
+          <div class="tip" id="278">
+            <strong>Signature:</strong> (state:Spec&lt;&#39;?8618&gt; * selector:(&#39;?8618 -&gt; &#39;?8619) * length:int * message:string) -&gt; Spec&lt;&#39;?8618&gt;<br />
+                          <strong>Type parameters:</strong> '?8620                        <span>
             <strong>Attributes:</strong><br />
 [&lt;CustomOperation(&quot;lengthOf&quot;)&gt;]<br />
           </span>
           </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L386-386" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L448-448" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -567,11 +763,11 @@ which defines that the sequence should have a length of the specified length.</p
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '244', 244)" onmouseover="showTip(event, '244', 244)">
+          <code onmouseout="hideTip(event, '279', 279)" onmouseover="showTip(event, '279', 279)">
             x.LessThan(state, limit, message)
           </code>
-          <div class="tip" id="244">
-            <strong>Signature:</strong> (state:Spec&lt;&#39;?8588&gt; * limit:&#39;?8588 * message:string) -&gt; Spec&lt;&#39;?8588&gt;<br />
+          <div class="tip" id="279">
+            <strong>Signature:</strong> (state:Spec&lt;&#39;?8667&gt; * limit:&#39;?8667 * message:string) -&gt; Spec&lt;&#39;?8667&gt;<br />
                                     <span>
             <strong>Attributes:</strong><br />
 [&lt;CustomOperation(&quot;lessThan&quot;)&gt;]<br />
@@ -579,7 +775,7 @@ which defines that the sequence should have a length of the specified length.</p
           </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L417-417" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L479-479" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -591,11 +787,11 @@ which defines that the sequence should have a length of the specified length.</p
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '245', 245)" onmouseover="showTip(event, '245', 245)">
+          <code onmouseout="hideTip(event, '280', 280)" onmouseover="showTip(event, '280', 280)">
             x.LessThanOf(...)
           </code>
-          <div class="tip" id="245">
-            <strong>Signature:</strong> (state:Spec&lt;&#39;?8583&gt; * selector:(&#39;?8583 -&gt; &#39;?8584) * limit:&#39;?8584 * message:string) -&gt; Spec&lt;&#39;?8583&gt;<br />
+          <div class="tip" id="280">
+            <strong>Signature:</strong> (state:Spec&lt;&#39;?8662&gt; * selector:(&#39;?8662 -&gt; &#39;?8663) * limit:&#39;?8663 * message:string) -&gt; Spec&lt;&#39;?8662&gt;<br />
                                     <span>
             <strong>Attributes:</strong><br />
 [&lt;CustomOperation(&quot;lessThanOf&quot;)&gt;]<br />
@@ -603,7 +799,7 @@ which defines that the sequence should have a length of the specified length.</p
           </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L414-414" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L476-476" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -616,11 +812,11 @@ which defines that the result should be less than (<code>limit &gt; value</code>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '246', 246)" onmouseover="showTip(event, '246', 246)">
+          <code onmouseout="hideTip(event, '281', 281)" onmouseover="showTip(event, '281', 281)">
             x.LessThanOrEqual(state, limit, message)
           </code>
-          <div class="tip" id="246">
-            <strong>Signature:</strong> (state:Spec&lt;&#39;?8597&gt; * limit:&#39;?8597 * message:string) -&gt; Spec&lt;&#39;?8597&gt;<br />
+          <div class="tip" id="281">
+            <strong>Signature:</strong> (state:Spec&lt;&#39;?8676&gt; * limit:&#39;?8676 * message:string) -&gt; Spec&lt;&#39;?8676&gt;<br />
                                     <span>
             <strong>Attributes:</strong><br />
 [&lt;CustomOperation(&quot;lessThanOrEqual&quot;)&gt;]<br />
@@ -628,7 +824,7 @@ which defines that the result should be less than (<code>limit &gt; value</code>
           </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L424-424" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L486-486" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -640,11 +836,11 @@ which defines that the result should be less than (<code>limit &gt; value</code>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '247', 247)" onmouseover="showTip(event, '247', 247)">
+          <code onmouseout="hideTip(event, '282', 282)" onmouseover="showTip(event, '282', 282)">
             x.LessThanOrEqualOf(...)
           </code>
-          <div class="tip" id="247">
-            <strong>Signature:</strong> (state:Spec&lt;&#39;?8592&gt; * selector:(&#39;?8592 -&gt; &#39;?8593) * limit:&#39;?8593 * message:string) -&gt; Spec&lt;&#39;?8592&gt;<br />
+          <div class="tip" id="282">
+            <strong>Signature:</strong> (state:Spec&lt;&#39;?8671&gt; * selector:(&#39;?8671 -&gt; &#39;?8672) * limit:&#39;?8672 * message:string) -&gt; Spec&lt;&#39;?8671&gt;<br />
                                     <span>
             <strong>Attributes:</strong><br />
 [&lt;CustomOperation(&quot;lessThanOrEqualOf&quot;)&gt;]<br />
@@ -652,7 +848,7 @@ which defines that the result should be less than (<code>limit &gt; value</code>
           </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L421-421" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L483-483" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -665,11 +861,11 @@ which defines that the result should be less than or equal to (<code>limit &gt;=
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '248', 248)" onmouseover="showTip(event, '248', 248)">
+          <code onmouseout="hideTip(event, '283', 283)" onmouseover="showTip(event, '283', 283)">
             x.NonEmpty(state, message)
           </code>
-          <div class="tip" id="248">
-            <strong>Signature:</strong> (state:Spec&lt;&#39;?8510&gt; * message:string) -&gt; Spec&lt;&#39;?8510&gt;<br />
+          <div class="tip" id="283">
+            <strong>Signature:</strong> (state:Spec&lt;&#39;a&gt; * message:string) -&gt; Spec&lt;&#39;a&gt;<br />
                                     <span>
             <strong>Attributes:</strong><br />
 [&lt;CustomOperation(&quot;nonEmpty&quot;)&gt;]<br />
@@ -677,7 +873,7 @@ which defines that the result should be less than or equal to (<code>limit &gt;=
           </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L368-368" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L430-430" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -689,19 +885,19 @@ which defines that the result should be less than or equal to (<code>limit &gt;=
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '249', 249)" onmouseover="showTip(event, '249', 249)">
+          <code onmouseout="hideTip(event, '284', 284)" onmouseover="showTip(event, '284', 284)">
             x.NonEmptyOf(state, selector, message)
           </code>
-          <div class="tip" id="249">
-            <strong>Signature:</strong> (state:Spec&lt;&#39;?8504&gt; * selector:(&#39;?8504 -&gt; &#39;?8505) * message:string) -&gt; Spec&lt;&#39;?8504&gt;<br />
-                          <strong>Type parameters:</strong> '?8506                        <span>
+          <div class="tip" id="284">
+            <strong>Signature:</strong> (state:Spec&lt;&#39;?8583&gt; * selector:(&#39;?8583 -&gt; &#39;?8584) * message:string) -&gt; Spec&lt;&#39;?8583&gt;<br />
+                          <strong>Type parameters:</strong> '?8585                        <span>
             <strong>Attributes:</strong><br />
 [&lt;CustomOperation(&quot;nonEmptyOf&quot;)&gt;]<br />
           </span>
           </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L365-365" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L427-427" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -714,10 +910,10 @@ which defines that the result should be a non-empty sequence.</p>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '250', 250)" onmouseover="showTip(event, '250', 250)">
+          <code onmouseout="hideTip(event, '285', 285)" onmouseover="showTip(event, '285', 285)">
             x.NotEmpty(state, message)
           </code>
-          <div class="tip" id="250">
+          <div class="tip" id="285">
             <strong>Signature:</strong> (state:Spec&lt;string&gt; * message:string) -&gt; Spec&lt;string&gt;<br />
                                     <span>
             <strong>Attributes:</strong><br />
@@ -726,7 +922,7 @@ which defines that the result should be a non-empty sequence.</p>
           </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L333-333" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L395-395" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -738,11 +934,11 @@ which defines that the result should be a non-empty sequence.</p>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '251', 251)" onmouseover="showTip(event, '251', 251)">
+          <code onmouseout="hideTip(event, '286', 286)" onmouseover="showTip(event, '286', 286)">
             x.NotEmptyOf(state, selector, message)
           </code>
-          <div class="tip" id="251">
-            <strong>Signature:</strong> (state:Spec&lt;&#39;?8469&gt; * selector:(&#39;?8469 -&gt; string) * message:string) -&gt; Spec&lt;&#39;?8469&gt;<br />
+          <div class="tip" id="286">
+            <strong>Signature:</strong> (state:Spec&lt;&#39;?8548&gt; * selector:(&#39;?8548 -&gt; string) * message:string) -&gt; Spec&lt;&#39;?8548&gt;<br />
                                     <span>
             <strong>Attributes:</strong><br />
 [&lt;CustomOperation(&quot;notEmptyOf&quot;)&gt;]<br />
@@ -750,7 +946,7 @@ which defines that the result should be a non-empty sequence.</p>
           </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L330-330" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L392-392" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -763,11 +959,11 @@ which defines that the result should be a non-empty string.</p>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '252', 252)" onmouseover="showTip(event, '252', 252)">
+          <code onmouseout="hideTip(event, '287', 287)" onmouseover="showTip(event, '287', 287)">
             x.NotEqual(state, value, message)
           </code>
-          <div class="tip" id="252">
-            <strong>Signature:</strong> (state:Spec&lt;&#39;?8456&gt; * value:&#39;?8456 * message:string) -&gt; Spec&lt;&#39;?8456&gt;<br />
+          <div class="tip" id="287">
+            <strong>Signature:</strong> (state:Spec&lt;&#39;?8535&gt; * value:&#39;?8535 * message:string) -&gt; Spec&lt;&#39;?8535&gt;<br />
                                     <span>
             <strong>Attributes:</strong><br />
 [&lt;CustomOperation(&quot;notEqual&quot;)&gt;]<br />
@@ -775,7 +971,7 @@ which defines that the result should be a non-empty string.</p>
           </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L319-319" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L381-381" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -787,11 +983,11 @@ which defines that the result should be a non-empty string.</p>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '253', 253)" onmouseover="showTip(event, '253', 253)">
+          <code onmouseout="hideTip(event, '288', 288)" onmouseover="showTip(event, '288', 288)">
             x.NotEqualOf(...)
           </code>
-          <div class="tip" id="253">
-            <strong>Signature:</strong> (state:Spec&lt;&#39;?8451&gt; * selector:(&#39;?8451 -&gt; &#39;?8452) * value:&#39;?8452 * message:string) -&gt; Spec&lt;&#39;?8451&gt;<br />
+          <div class="tip" id="288">
+            <strong>Signature:</strong> (state:Spec&lt;&#39;?8530&gt; * selector:(&#39;?8530 -&gt; &#39;?8531) * value:&#39;?8531 * message:string) -&gt; Spec&lt;&#39;?8530&gt;<br />
                                     <span>
             <strong>Attributes:</strong><br />
 [&lt;CustomOperation(&quot;notEqualOf&quot;)&gt;]<br />
@@ -799,7 +995,7 @@ which defines that the result should be a non-empty string.</p>
           </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L316-316" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L378-378" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -812,11 +1008,11 @@ which defines that the result should not be equal to the specified value.</p>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '254', 254)" onmouseover="showTip(event, '254', 254)">
+          <code onmouseout="hideTip(event, '289', 289)" onmouseover="showTip(event, '289', 289)">
             x.NotNull(state, message)
           </code>
-          <div class="tip" id="254">
-            <strong>Signature:</strong> (state:Spec&lt;&#39;?8465&gt; * message:string) -&gt; Spec&lt;&#39;?8465&gt;<br />
+          <div class="tip" id="289">
+            <strong>Signature:</strong> (state:Spec&lt;&#39;a&gt; * message:string) -&gt; Spec&lt;&#39;a&gt;<br />
                                     <span>
             <strong>Attributes:</strong><br />
 [&lt;CustomOperation(&quot;notNull&quot;)&gt;]<br />
@@ -824,7 +1020,7 @@ which defines that the result should not be equal to the specified value.</p>
           </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L326-326" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L388-388" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -836,11 +1032,11 @@ which defines that the result should not be equal to the specified value.</p>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '255', 255)" onmouseover="showTip(event, '255', 255)">
+          <code onmouseout="hideTip(event, '290', 290)" onmouseover="showTip(event, '290', 290)">
             x.NotNullOf(state, selector, message)
           </code>
-          <div class="tip" id="255">
-            <strong>Signature:</strong> (state:Spec&lt;&#39;?8460&gt; * selector:(&#39;?8460 -&gt; &#39;?8461) * message:string) -&gt; Spec&lt;&#39;?8460&gt;<br />
+          <div class="tip" id="290">
+            <strong>Signature:</strong> (state:Spec&lt;&#39;?8539&gt; * selector:(&#39;?8539 -&gt; &#39;?8540) * message:string) -&gt; Spec&lt;&#39;?8539&gt;<br />
                                     <span>
             <strong>Attributes:</strong><br />
 [&lt;CustomOperation(&quot;notNullOf&quot;)&gt;]<br />
@@ -848,7 +1044,7 @@ which defines that the result should not be equal to the specified value.</p>
           </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L323-323" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L385-385" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -861,10 +1057,10 @@ which defines that the result should not be <code>null</code>.</p>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '256', 256)" onmouseover="showTip(event, '256', 256)">
+          <code onmouseout="hideTip(event, '291', 291)" onmouseover="showTip(event, '291', 291)">
             x.NotNullOrEmpty(state, message)
           </code>
-          <div class="tip" id="256">
+          <div class="tip" id="291">
             <strong>Signature:</strong> (state:Spec&lt;string&gt; * message:string) -&gt; Spec&lt;string&gt;<br />
                                     <span>
             <strong>Attributes:</strong><br />
@@ -873,7 +1069,7 @@ which defines that the result should not be <code>null</code>.</p>
           </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L347-347" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L409-409" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -885,11 +1081,11 @@ which defines that the result should not be <code>null</code>.</p>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '257', 257)" onmouseover="showTip(event, '257', 257)">
+          <code onmouseout="hideTip(event, '292', 292)" onmouseover="showTip(event, '292', 292)">
             x.NotNullOrEmptyOf(...)
           </code>
-          <div class="tip" id="257">
-            <strong>Signature:</strong> (state:Spec&lt;&#39;?8483&gt; * selector:(&#39;?8483 -&gt; string) * message:string) -&gt; Spec&lt;&#39;?8483&gt;<br />
+          <div class="tip" id="292">
+            <strong>Signature:</strong> (state:Spec&lt;&#39;?8562&gt; * selector:(&#39;?8562 -&gt; string) * message:string) -&gt; Spec&lt;&#39;?8562&gt;<br />
                                     <span>
             <strong>Attributes:</strong><br />
 [&lt;CustomOperation(&quot;notNullOrEmptyOf&quot;)&gt;]<br />
@@ -897,7 +1093,7 @@ which defines that the result should not be <code>null</code>.</p>
           </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L344-344" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L406-406" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -910,10 +1106,10 @@ which defines that the result should be a not-null, not-empty string.</p>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '258', 258)" onmouseover="showTip(event, '258', 258)">
+          <code onmouseout="hideTip(event, '293', 293)" onmouseover="showTip(event, '293', 293)">
             x.NotNullOrWhiteSpace(state, message)
           </code>
-          <div class="tip" id="258">
+          <div class="tip" id="293">
             <strong>Signature:</strong> (state:Spec&lt;string&gt; * message:string) -&gt; Spec&lt;string&gt;<br />
                                     <span>
             <strong>Attributes:</strong><br />
@@ -922,7 +1118,7 @@ which defines that the result should be a not-null, not-empty string.</p>
           </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L354-354" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L416-416" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -934,11 +1130,11 @@ which defines that the result should be a not-null, not-empty string.</p>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '259', 259)" onmouseover="showTip(event, '259', 259)">
+          <code onmouseout="hideTip(event, '294', 294)" onmouseover="showTip(event, '294', 294)">
             x.NotNullOrWhiteSpaceOf(...)
           </code>
-          <div class="tip" id="259">
-            <strong>Signature:</strong> (state:Spec&lt;&#39;?8490&gt; * selector:(&#39;?8490 -&gt; string) * message:string) -&gt; Spec&lt;&#39;?8490&gt;<br />
+          <div class="tip" id="294">
+            <strong>Signature:</strong> (state:Spec&lt;&#39;?8569&gt; * selector:(&#39;?8569 -&gt; string) * message:string) -&gt; Spec&lt;&#39;?8569&gt;<br />
                                     <span>
             <strong>Attributes:</strong><br />
 [&lt;CustomOperation(&quot;notNullOrWhiteSpaceOf&quot;)&gt;]<br />
@@ -946,7 +1142,7 @@ which defines that the result should be a not-null, not-empty string.</p>
           </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L351-351" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L413-413" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -959,10 +1155,10 @@ which defines that the result should be a not-null, not-empty, not-whitespace st
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '260', 260)" onmouseover="showTip(event, '260', 260)">
+          <code onmouseout="hideTip(event, '295', 295)" onmouseover="showTip(event, '295', 295)">
             x.NotWhiteSpace(state, message)
           </code>
-          <div class="tip" id="260">
+          <div class="tip" id="295">
             <strong>Signature:</strong> (state:Spec&lt;string&gt; * message:string) -&gt; Spec&lt;string&gt;<br />
                                     <span>
             <strong>Attributes:</strong><br />
@@ -971,7 +1167,7 @@ which defines that the result should be a not-null, not-empty, not-whitespace st
           </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L340-340" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L402-402" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -983,11 +1179,11 @@ which defines that the result should be a not-null, not-empty, not-whitespace st
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '261', 261)" onmouseover="showTip(event, '261', 261)">
+          <code onmouseout="hideTip(event, '296', 296)" onmouseover="showTip(event, '296', 296)">
             x.NotWhiteSpaceOf(...)
           </code>
-          <div class="tip" id="261">
-            <strong>Signature:</strong> (state:Spec&lt;&#39;?8476&gt; * selector:(&#39;?8476 -&gt; string) * message:string) -&gt; Spec&lt;&#39;?8476&gt;<br />
+          <div class="tip" id="296">
+            <strong>Signature:</strong> (state:Spec&lt;&#39;?8555&gt; * selector:(&#39;?8555 -&gt; string) * message:string) -&gt; Spec&lt;&#39;?8555&gt;<br />
                                     <span>
             <strong>Attributes:</strong><br />
 [&lt;CustomOperation(&quot;notWhiteSpaceOf&quot;)&gt;]<br />
@@ -995,7 +1191,7 @@ which defines that the result should be a not-null, not-empty, not-whitespace st
           </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L337-337" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L399-399" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -1008,10 +1204,10 @@ which defines that the result should not be a not-whitespace string.</p>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '262', 262)" onmouseover="showTip(event, '262', 262)">
+          <code onmouseout="hideTip(event, '297', 297)" onmouseover="showTip(event, '297', 297)">
             x.Regex(state, pattern, message)
           </code>
-          <div class="tip" id="262">
+          <div class="tip" id="297">
             <strong>Signature:</strong> (state:Spec&lt;string&gt; * pattern:string * message:string) -&gt; Spec&lt;string&gt;<br />
                                     <span>
             <strong>Attributes:</strong><br />
@@ -1020,7 +1216,7 @@ which defines that the result should not be a not-whitespace string.</p>
           </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L459-459" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L521-521" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -1032,11 +1228,11 @@ which defines that the result should not be a not-whitespace string.</p>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '263', 263)" onmouseover="showTip(event, '263', 263)">
+          <code onmouseout="hideTip(event, '298', 298)" onmouseover="showTip(event, '298', 298)">
             x.RegexOf(...)
           </code>
-          <div class="tip" id="263">
-            <strong>Signature:</strong> (state:Spec&lt;&#39;?8637&gt; * selector:(&#39;?8637 -&gt; string) * pattern:string * message:string) -&gt; Spec&lt;&#39;?8637&gt;<br />
+          <div class="tip" id="298">
+            <strong>Signature:</strong> (state:Spec&lt;&#39;?8716&gt; * selector:(&#39;?8716 -&gt; string) * pattern:string * message:string) -&gt; Spec&lt;&#39;?8716&gt;<br />
                                     <span>
             <strong>Attributes:</strong><br />
 [&lt;CustomOperation(&quot;regexOf&quot;)&gt;]<br />
@@ -1044,7 +1240,7 @@ which defines that the result should not be a not-whitespace string.</p>
           </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L456-456" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L518-518" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -1057,15 +1253,15 @@ which defines that the result should be a match to the specified regular express
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '264', 264)" onmouseover="showTip(event, '264', 264)">
+          <code onmouseout="hideTip(event, '299', 299)" onmouseover="showTip(event, '299', 299)">
             x.Run(spec)
           </code>
-          <div class="tip" id="264">
+          <div class="tip" id="299">
             <strong>Signature:</strong> spec:Spec&lt;&#39;a&gt; -&gt; &#39;b<br />
                                   </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L461-461" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L544-544" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -1075,10 +1271,10 @@ which defines that the result should be a match to the specified regular express
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '265', 265)" onmouseover="showTip(event, '265', 265)">
+          <code onmouseout="hideTip(event, '300', 300)" onmouseover="showTip(event, '300', 300)">
             x.StartsWith(state, header, message)
           </code>
-          <div class="tip" id="265">
+          <div class="tip" id="300">
             <strong>Signature:</strong> (state:Spec&lt;string&gt; * header:string * message:string) -&gt; Spec&lt;string&gt;<br />
                                     <span>
             <strong>Attributes:</strong><br />
@@ -1087,7 +1283,7 @@ which defines that the result should be a match to the specified regular express
           </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L357-357" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L419-419" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -1099,11 +1295,11 @@ which defines that the result should be a match to the specified regular express
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '266', 266)" onmouseover="showTip(event, '266', 266)">
+          <code onmouseout="hideTip(event, '301', 301)" onmouseover="showTip(event, '301', 301)">
             x.StartsWithOf(...)
           </code>
-          <div class="tip" id="266">
-            <strong>Signature:</strong> (state:Spec&lt;&#39;?8500&gt; * selector:(&#39;?8500 -&gt; string) * header:string * message:string) -&gt; Spec&lt;&#39;?8500&gt;<br />
+          <div class="tip" id="301">
+            <strong>Signature:</strong> (state:Spec&lt;&#39;?8579&gt; * selector:(&#39;?8579 -&gt; string) * header:string * message:string) -&gt; Spec&lt;&#39;?8579&gt;<br />
                                     <span>
             <strong>Attributes:</strong><br />
 [&lt;CustomOperation(&quot;startsWithOf&quot;)&gt;]<br />
@@ -1111,7 +1307,7 @@ which defines that the result should be a match to the specified regular express
           </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L361-361" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L423-423" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -1124,19 +1320,19 @@ whcih defines that the result should be a string starting with the specified hea
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '267', 267)" onmouseover="showTip(event, '267', 267)">
+          <code onmouseout="hideTip(event, '302', 302)" onmouseover="showTip(event, '302', 302)">
             x.Unique(state, selectKey, message)
           </code>
-          <div class="tip" id="267">
-            <strong>Signature:</strong> (state:Spec&lt;&#39;?8533&gt; * selectKey:(&#39;?8534 -&gt; &#39;?8535) * message:string) -&gt; Spec&lt;&#39;?8533&gt;<br />
-                          <strong>Type parameters:</strong> '?8535                        <span>
+          <div class="tip" id="302">
+            <strong>Signature:</strong> (state:Spec&lt;&#39;b&gt; * selectKey:(&#39;c -&gt; &#39;d) * message:string) -&gt; Spec&lt;&#39;b&gt;<br />
+                          <strong>Type parameters:</strong> 'd                        <span>
             <strong>Attributes:</strong><br />
 [&lt;CustomOperation(&quot;unique&quot;)&gt;]<br />
           </span>
           </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L382-382" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L444-444" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -1148,19 +1344,19 @@ whcih defines that the result should be a string starting with the specified hea
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '268', 268)" onmouseover="showTip(event, '268', 268)">
+          <code onmouseout="hideTip(event, '303', 303)" onmouseover="showTip(event, '303', 303)">
             x.UniqueOf(...)
           </code>
-          <div class="tip" id="268">
-            <strong>Signature:</strong> (state:Spec&lt;&#39;?8526&gt; * selectSeq:(&#39;?8526 -&gt; &#39;?8527) * selectKey:(&#39;?8528 -&gt; &#39;?8529) * message:string) -&gt; Spec&lt;&#39;?8526&gt;<br />
-                          <strong>Type parameters:</strong> '?8528, '?8529                        <span>
+          <div class="tip" id="303">
+            <strong>Signature:</strong> (state:Spec&lt;&#39;?8605&gt; * selectSeq:(&#39;?8605 -&gt; &#39;?8606) * selectKey:(&#39;?8607 -&gt; &#39;?8608) * message:string) -&gt; Spec&lt;&#39;?8605&gt;<br />
+                          <strong>Type parameters:</strong> '?8607, '?8608                        <span>
             <strong>Attributes:</strong><br />
 [&lt;CustomOperation(&quot;uniqueOf&quot;)&gt;]<br />
           </span>
           </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L379-379" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L441-441" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -1173,15 +1369,15 @@ which defines that all elements of the sequence should be unique.</p>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '269', 269)" onmouseover="showTip(event, '269', 269)">
+          <code onmouseout="hideTip(event, '304', 304)" onmouseover="showTip(event, '304', 304)">
             x.Yield(arg1)
           </code>
-          <div class="tip" id="269">
-            <strong>Signature:</strong> &#39;?8644 -&gt; Spec&lt;&#39;a&gt;<br />
+          <div class="tip" id="304">
+            <strong>Signature:</strong> &#39;a -&gt; Spec&lt;&#39;a&gt;<br />
                                   </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L460-460" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L543-543" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
