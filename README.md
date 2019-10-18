@@ -55,6 +55,8 @@ Access.revoke critical
 With full C# support!
 
 ```csharp
+using FPrimitive;
+
 public class PositiveInt
 {
     private PrositiveInt(int value) { Value = int; }
