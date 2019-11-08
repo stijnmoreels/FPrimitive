@@ -13,13 +13,37 @@ open FPrimitive
 module Extensions =
   let (<=>) x y = x = y
 
+type ISBN10 =
+  private ISBN10 of int with
+    static member create x = 
+      let checksum x =
+          let xs = (string x).ToCharArray() |> Seq.map (string >> int)
+          let sumOfProd =
+            Seq.indexed xs
+            |> Seq.map (fun (i, x) -> i * x)
+            |> Seq.reduce (+)
+          sumOfProd % 11 = 0
+      
+      specModel ISBN10 x {
+        greaterThan 0 "should be greater than zero"
+        equalOf (string >> String.length) 10 "should have a length of 10 charaters"
+        verify checksum "checksum was not correct" }
+
 type Point =
   { Min : int
     Max : int } with
       static member create min max = result {
         let! min = specResult min { exclusiveBetween 0 10 "minimum should be between 0-10 exlusive" }
         let! max = specResult max { exclusiveBetween 11 20 "maximum should be between 11-20 exclusive" }
-        return { Min = min; Max = max } }
+        return! if min < max then Ok { Min = min; Max = max }
+                else Error ["minimum should be less than maximum"] }
+      
+      static member create2 min max =
+        let minS = spec { exclusiveBetween 0 10 "minimum should be between 0-10 exlusive" }
+        let maxS = spec { exclusiveBetween 11 20 "maximum should be between 11-20 exclusive" }
+        specInvariant minS maxS {
+          add (fun (min, max) -> min < max, "minimum should be less than maximum") }
+        |> Spec.createModel (fun (min, max) -> { Min = min; Max = max }) (min, max)
 
 type Text = 
   private Text of string with 
@@ -404,32 +428,19 @@ module Tests =
         Expect.equal actual (Error ["should not be 'null'"]) "should not get value when predicate fails"
 
       testProperty "non-empty sequences are the same" <| fun (objs : NonEmptyArray<obj>) ->
-        let xs = Seq.nonEmpty objs.Get
-        let ys = Seq.nonEmpty objs.Get
+        let xs = Seq.toNonEmpty objs.Get
+        let ys = Seq.toNonEmpty objs.Get
         Expect.equal xs ys "should be the same non-empty seq"
 
       testProperty "unique sequences on elements are the same" <| fun (objs : NonEmptyArray<obj>) ->
         let objs = Seq.distinct objs.Get
-        let xs = Seq.unique objs
-        let ys = Seq.unique objs
+        let xs = Seq.toUnique objs
+        let ys = Seq.toUnique objs
         Expect.equal xs ys "should be the same unique seq"
 
       testProperty "unique sequences on element keys are the same" <| fun (objs : NonEmptyArray<obj>) ->
         let objs = Seq.distinctBy (fun x -> x.ToString ()) objs.Get
-        let xs = Seq.uniqueBy (fun x -> x.ToString ()) objs
-        let ys = Seq.uniqueBy (fun x -> x.ToString ()) objs
+        let xs = Seq.toUniqueBy (fun x -> x.ToString ()) objs
+        let ys = Seq.toUniqueBy (fun x -> x.ToString ()) objs
         Expect.equal xs ys "should be the same unique seq"
-
-      testProperty "xml string is converted" <| fun (s : NonEmptyString) ->
-        let doc = Xml.XmlDocument ()
-        let result = 
-            XmlEncodedString.convert s.Get
-            |> Result.map (fun xml -> doc.LoadXml (sprintf "<Root>%A</Root>" xml))
-        
-        Result.isOk result = doc.OuterXml.StartsWith "<Root>"
-
-      testCase "alphabetical types are structual equal" <| fun () ->
-        let x = Alphabetical.create "test"
-        let y = Alphabetical.create "test"
-        Expect.equal x y "should be structual equal"
     ]

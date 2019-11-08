@@ -7,6 +7,10 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include="paket.references" />
+    <Compile Include="..\..\paket-files\stijnmoreels\System\Maybe.fs">
+      <Paket>True</Paket>
+      <Link>Maybe.fs</Link>
+    </Compile>
     <Compile Include="..\..\paket-files\stijnmoreels\System\Time.fs">
       <Paket>True</Paket>
       <Link>Time.fs</Link>
@@ -19,6 +23,7 @@
       <Paket>True</Paket>
       <Link>Result.fs</Link>
     </Compile>
+    <Compile Include="Guard.fs" />
     <Compile Include="Untrust.fs" />
     <Compile Include="Spec.fs" />
     <Compile Include="Types.fs" />

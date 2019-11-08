@@ -5,10 +5,13 @@ using System.Linq;
 using System.IO;
 using System.Net.Mail;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Xml;
+using System.Xml.Schema;
 using Microsoft.FSharp.Core;
 using FPrimitive;
 using Microsoft.FSharp.Control;
+using Newtonsoft.Json;
 
 namespace FPrimitive.CSharp.Tests
 {
@@ -46,6 +49,48 @@ namespace FPrimitive.CSharp.Tests
                 Spec.Of<int>()
                     .GreaterThan(0, "should not be zero")
                     .CreateModel(untrusted, i => new NonZeroInt(i));
+        }
+    }
+
+    public class EbmsString
+    {
+        private readonly string _value;
+
+        private EbmsString(string value)
+        {
+            _value = value;
+        }
+
+        public static ValidationResult<EbmsString> Create(string value)
+        {
+            var pattern = "^[a-z-A-Z0-9]$";
+            return Spec.Of<string>()
+                       .NotNullOrWhiteSpace("ebMS string cannot be null or blank")
+                       .Regex(pattern, $"ebMS string can only contain chars that matches {pattern}")
+                       .CreateModel(value, validated => new EbmsString(validated));
+        }
+    }
+
+    public class Agreement
+    {
+        private Agreement(EbmsString value, Maybe<EbmsString> type, Maybe<EbmsString> pmode)
+        {
+            Value = value;
+            Type = type;
+            PMode = pmode;
+        }
+
+        public EbmsString Value { get; }
+        public Maybe<EbmsString> Type { get; }
+        public Maybe<EbmsString> PMode { get; }
+
+        public static ValidationResult<Agreement> Create(string value, string type, string pmode)
+        {
+            var valueResult = EbmsString.Create(value);
+            var typeResult = EbmsString.Create(type).ToMaybe();
+            var pmodeResult = EbmsString.Create(pmode).ToMaybe();
+
+            return valueResult.Select(v => new Agreement(v, typeResult, pmodeResult));
         }
     }
 
@@ -163,6 +208,18 @@ namespace FPrimitive.CSharp.Tests
     {
         private Point(int min, int max)
         {
+            var minSpec =
+                Spec.Of<int>()
+                    .GreaterThan(0, "minimum should be greater than zero");
+
+            var maxSpec =
+                Spec.Of<int>()
+                    .LessThan(100, "maximum should be less than 100");
+
+            Spec.Invariant(minSpec, maxSpec)
+                .Add(t => t.Item1 < t.Item2, "minimum should be less than maximum")
+                .ValidateThrow<(int, int), ValidationFailureException>((min, max), "Validation failure");
+
             Min = min;
             Max = max;
         }
@@ -170,13 +227,13 @@ namespace FPrimitive.CSharp.Tests
         public int Min { get; }
         public int Max { get; }
 
-        // public static Point Create(int min, int max)
-        // {
-        //     return Spec.Of<(int min, int max)>()
-        //         .InclusiveBetween(x => x.min, 0, 10, "Minimum should be between 1-10")
-        //         .InclusiveBetween(x => x.max, 11, 20, "Maximum should be between 11-20")
-        //         .CreateModelOrThrow((min: min, max: max), x => new Point(x.min, x.max), "Could not create Point instance");
-        // }
+        public static Point Create(int min, int max)
+        {
+            return Spec.Of<(int min, int max)>()
+                .InclusiveBetween(x => x.min, 0, 10, "Minimum should be between 1-10")
+                .InclusiveBetween(x => x.max, 11, 20, "Maximum should be between 11-20")
+                .CreateModelOrThrow((min: min, max: max), x => new Point(x.min, x.max), "Could not create Point instance");
+        }
     }
 
     public class NonWhiteSpaceString
@@ -290,5 +347,149 @@ namespace FPrimitive.CSharp.Tests
         {
             return !Equals(left, right);
         }
+    }
+
+    public class Password
+    {
+        private readonly ReadOnce<string> _password;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Password"/> class.
+        /// </summary>
+        public Password(string password)
+        {
+            _password = new ReadOnce<string>(password);
+        }
+
+        public string GetValue()
+        {
+            return _password.GetValue();
+        }
+    }
+
+    public class Username
+    {
+        private readonly string _value;
+
+        private Username(string value)
+        {
+            _value = value;
+        }
+
+        public static ValidationResult<Username> Create(string value)
+        {
+            var pattern = @"^[a-z0-9_-]{3,16}$";
+            return Spec.Of<string>()
+                       .Matches(pattern, $"should match username pattern: {pattern}")
+                       .CreateModel(value, validated => new Username(validated));
+
+        }
+    }
+
+    public class Url
+    {
+        private readonly string _value;
+
+        private Url(string value)
+        {
+            _value = value;
+        }
+
+        public static ValidationResult<Url> Create(string value)
+        {
+            var regex = @"^(https?://)+\.([/\w \.-]+)+/$";
+
+            return Spec.Of<string>()
+                       .Matches(regex, $"URL should match pattern: {regex}")
+                       .CreateModel(value, validated => new Url(validated));
+        }
+    }
+
+    public class Author
+    {
+        private readonly string _name;
+
+        private Author(string name)
+        {
+            _name = name;
+        }
+
+        public static ValidationResult<Author> Create(string author)
+        {
+            const string pattern = @"^[a-zA-Z\.]+$";
+            return Spec.Of<string>()
+                       .NotNullOrWhiteSpace("author name should not be blank")
+                       .Add(s => s.Length > 1, "author name should at least be a single character")
+                       .Matches(pattern, $"author name should match regular expression: {pattern}")
+                       .CreateModel(author, validated => new Author(validated));
+        }
+    }
+
+    public class ISBN13
+    {
+        private readonly string _code;
+
+        private ISBN13(string code)
+        {
+            _code = code;
+        }
+
+        public static ValidationResult<ISBN13> Create(string code)
+        {
+            const string pattern = "^[0-9]$";
+            return Spec.Of<string>()
+                       .NotNullOrWhiteSpace("ISBN13 number should not be blank")
+                       .Add(s => s.Length == 13, "ISBN13 number should be 13 characters long")
+                       .Matches(pattern, $"ISBN13 number should match regular expression: {pattern}")
+                       .Add(Checksum, "ISBN13 checksum was invalid")
+                       .CreateModel(code, validated => new ISBN13(validated));
+        }
+
+        private static bool Checksum(string code)
+        {
+            IEnumerable<int> numbers = 
+                code.ToCharArray()
+                    .Select(c => Int32.Parse(c.ToString()));
+
+            int sumNumbers = 
+                numbers.Take(12)
+                       .Select((i, n) => i % 2 != 0 ? n * 3 : n)
+                       .Sum();
+
+            int remaining = sumNumbers % 10;
+            int checksum = remaining != 0 ? 10 - remaining : remaining;
+
+            int lastNumber = numbers.Last();
+            return checksum == lastNumber;
+        }
+    }
+
+    public class Book
+    {
+        private readonly Author _author;
+        private readonly ISBN13 _isbn13;
+
+        private Book(Author author, ISBN13 isbn13)
+        {
+            _author = author;
+            _isbn13 = isbn13;
+        }
+
+        public static ValidationResult<Book> Create(string author, string isbn13)
+        {
+            ValidationResult<Author> authorResult = Author.Create(author);
+            ValidationResult<ISBN13> isbn13Result = ISBN13.Create(isbn13);
+
+            return ValidationResult.Combine(authorResult, isbn13Result, (auth, isbn) => new Book(auth, isbn));
+        }
+    }
+
+    public class BookJson
+    {
+        [JsonProperty("author")]
+        public string Author { get; set; }
+
+        [JsonProperty("isbn13")]
+        public string ISBN13 { get; set; }
     }
 }

@@ -65,36 +65,6 @@
         </tr>
         <tr>
           <td class="type-name">
-            <a href="fprimitive-alphabetical.html">Alphabetical</a>
-          </td>
-          <td class="xmldoc">
-          <p>Model representing a string containing only charaters from the alphabet.</p>
-
-
-          </td>
-        </tr>
-        <tr>
-          <td class="type-name">
-            <a href="fprimitive-alphanum.html">Alphanum</a>
-          </td>
-          <td class="xmldoc">
-          <p>Model representation of an alphanumerical value.</p>
-
-
-          </td>
-        </tr>
-        <tr>
-          <td class="type-name">
-            <a href="fprimitive-alphanumspecial.html">AlphanumSpecial</a>
-          </td>
-          <td class="xmldoc">
-          <p>Model representation of an alphanumerical value or special charaters.</p>
-
-
-          </td>
-        </tr>
-        <tr>
-          <td class="type-name">
             <a href="fprimitive-alreadyreadexception.html">AlreadyReadException</a>
           </td>
           <td class="xmldoc">
@@ -109,16 +79,6 @@
           </td>
           <td class="xmldoc">
           <p>Exception that gets thrown when a <code>Write&lt;_&gt;</code> instance was being written more than once.</p>
-
-
-          </td>
-        </tr>
-        <tr>
-          <td class="type-name">
-            <a href="fprimitive-boundedint.html">BoundedInt</a>
-          </td>
-          <td class="xmldoc">
-          <p>Model representation of an integer bounded by a minimum and maximum threshold.</p>
 
 
           </td>
@@ -165,7 +125,7 @@
         </tr>
         <tr>
           <td class="type-name">
-            <a href="fprimitive-requirement-1.html">Requirement<'T></a>
+            <a href="fprimitive-req-1.html">Req<'T></a>
           </td>
           <td class="xmldoc">
           <p>Type alias for the validation requirement.</p>
@@ -215,18 +175,6 @@
         </tr>
         <tr>
           <td class="type-name">
-            <a href="fprimitive-xmlencodedstring.html">XmlEncodedString</a>
-          </td>
-          <td class="xmldoc">
-          <p>Representation of a XML text string that can be serialized to XML.
-Not necessary an XML document, but an input text that contains valid XML characters.
-Can be used instead of string in a domain model type.</p>
-
-
-          </td>
-        </tr>
-        <tr>
-          <td class="type-name">
             <a href="fprimitive-readonce-1-0.html">readOnce<'T></a>
           </td>
           <td class="xmldoc">
@@ -264,18 +212,20 @@ Can be used instead of string in a domain model type.</p>
         </tr>
         <tr>
           <td class="module-name">
-            <a href="fprimitive-activepatterns.html">ActivePatterns</a>
-          </td>
-          <td class="xmldoc">
-          
-          </td>
-        </tr>
-        <tr>
-          <td class="module-name">
             <a href="fprimitive-disposable.html">Disposable</a>
           </td>
           <td class="xmldoc">
           <p>Operations on the <code>Disposable&lt;_&gt;</code> type.</p>
+
+
+          </td>
+        </tr>
+        <tr>
+          <td class="module-name">
+            <a href="fprimitive-guardmodule.html">Guard</a>
+          </td>
+          <td class="xmldoc">
+          <p>Basic guard class to verify 'null' checks; but only that. Everything else should be written as specifications.</p>
 
 
           </td>
@@ -397,11 +347,48 @@ Can be used instead of string in a domain model type.</p>
     </div>
   <h2>System Namespace</h2>
     <div>
-      <table class="table table-bordered module-list">
+      <table class="table table-bordered type-list">
+    <thead>
+      <tr><td>Type</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td class="type-name">
+            <a href="system-maybe.html">Maybe</a>
+          </td>
+          <td class="xmldoc">
+          <p>Represents a optional model that can either contain a value or not.</p>
+
+
+          </td>
+        </tr>
+        <tr>
+          <td class="type-name">
+            <a href="system-valuenotpresentexception.html">ValueNotPresentException</a>
+          </td>
+          <td class="xmldoc">
+          <p>Exception thrown when the value of <code>Maybe&lt;&gt;</code> instance is requested while the <code>Maybe&lt;&gt;</code> instance doesn't contain any.</p>
+
+
+          </td>
+        </tr>
+    </tbody>
+  </table>
+  <table class="table table-bordered module-list">
     <thead>
       <tr><td>Module</td><td>Description</td></tr>
     </thead>
     <tbody>
+        <tr>
+          <td class="module-name">
+            <a href="system-maybepatterns.html">MaybePatterns</a>
+          </td>
+          <td class="xmldoc">
+          <p>Active patterns for the C# optional instance.</p>
+
+
+          </td>
+        </tr>
         <tr>
           <td class="module-name">
             <a href="system-timeint.html">TimeInt</a>

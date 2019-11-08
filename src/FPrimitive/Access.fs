@@ -17,171 +17,171 @@ type Access<'T, 'TResult> =
 
 /// Provides operations on the `Access<_, _>` type.
 module Access =
-    /// Creates an access-controlled function from a custom function.
-    let func f = { Capability = f >> Ok; Revokable = None }
+  /// Creates an access-controlled function from a custom function.
+  let func f = { Capability = f >> Ok; Revokable = None }
 
-    /// Creates an access-controlled function from a function, directly using the returned `Result`.
-    let funcResult f = { Capability = f; Revokable = None }
+  /// Creates an access-controlled function from a function, directly using the returned `Result`.
+  let funcResult f = { Capability = f; Revokable = None }
 
-    /// Creates an access controlled function from a function, directly using the returned `Option`.
-    let funcOption f error = { Capability = f >> Result.ofOption [error]; Revokable = None }
+  /// Creates an access controlled function from a function, directly using the returned `Option`.
+  let funcOption f error = { Capability = f >> Result.ofOption [error]; Revokable = None }
 
-    /// Creates an access-controlled function from a custom function.
-    [<CompiledName("Function")>]
-    let Function2 (f : Func<_, _>) = 
-        if f = null then nullArg "f"
-        func f.Invoke
+  /// Creates an access-controlled function from a custom function.
+  [<CompiledName("Function")>]
+  let Function2 (f : Func<'T, 'TResult>) = 
+    if f = null then nullArg "f"
+    func f.Invoke
 
-    /// Creates an access-controlled function from a custom function.
-    [<CompiledName("Function")>]
-    let Function1 (f : Func<_>) =
-        if f = null then nullArg "f"
-        func f.Invoke
+  /// Creates an access-controlled function from a custom function.
+  [<CompiledName("Function")>]
+  let Function1 (f : Func<'TResult>) =
+    if f = null then nullArg "f"
+    func f.Invoke
 
-    /// Creates an access controlled function from a custom function.
-    [<CompiledName("Function")>]
-    let Action (f : Action<_>) =
-        if f = null then nullArg "f"
-        func f.Invoke
+  /// Creates an access controlled function from a custom function.
+  [<CompiledName("Function")>]
+  let Action (f : Action<'T>) =
+    if f = null then nullArg "f"
+    func f.Invoke
 
-    /// Adds a custom requirement that the access-controlled function.
-    let filter predicate error acc = 
-        { acc with 
-            Capability = fun x -> 
-              if predicate x then acc.Capability x 
-              else Error [ "access failure:" + error ] }
-    
-    /// Evaluate the access-controlled function.
-    let eval x { Capability = f } = f x
+  /// Adds a custom requirement that the access-controlled function.
+  let filter predicate error acc = 
+    { acc with 
+        Capability = fun x -> 
+          if predicate x then acc.Capability x 
+          else Error [ "access failure:" + error ] }
+  
+  /// Evaluate the access-controlled function.
+  let eval x { Capability = f } = f x
  
-    /// Evaluate the access-controlled function with unit `()`.
-    let evalUnit acc = acc.Capability ()
+  /// Evaluate the access-controlled function with unit `()`.
+  let evalUnit acc = acc.Capability ()
 
-    /// Revokes the access-controlled function.
-    let revoke acc = Option.iter (fun f -> f ()) acc.Revokable
+  /// Revokes the access-controlled function.
+  let revoke acc = Option.iter (fun f -> f ()) acc.Revokable
 
-    /// Creates an access-controlled function that only retrieves files from certain directories.
-    let onlyFilesFromDirs (expected : DirectoryInfo seq) =
-        let expected = List.ofSeq expected |> List.map (fun (x : DirectoryInfo) -> Path.GetFullPath x.FullName)
-        { Revokable = None
-          Capability = fun (actual : FileInfo) -> 
-            let actualPath = Path.GetDirectoryName (Path.GetFullPath actual.FullName)
-            if List.exists (fun expectedPath -> String.Compare (expectedPath, actualPath, ignoreCase=true) = 0) expected
-            then Ok actual
-            else let dirs = String.Join (", ", Array.ofList expected)
-                 Error [ sprintf "access failure: only files from directories: '%s' are allowed, but came from '%s'" dirs actualPath ] }
+  /// Creates an access-controlled function that only retrieves files from certain directories.
+  let onlyFilesFromDirs (expected : DirectoryInfo seq) =
+    let expected = List.ofSeq expected |> List.map (fun (x : DirectoryInfo) -> Path.GetFullPath x.FullName)
+    { Revokable = None
+      Capability = fun (actual : FileInfo) -> 
+        let actualPath = Path.GetDirectoryName (Path.GetFullPath actual.FullName)
+        if List.exists (fun expectedPath -> String.Compare (expectedPath, actualPath, ignoreCase=true) = 0) expected
+        then Ok actual
+        else let dirs = String.Join (", ", Array.ofList expected)
+             Error [ sprintf "access failure: only files from directories: '%s' are allowed, but came from '%s'" dirs actualPath ] }
 
-    /// Creates an access-controlled function that only retrieves files from certain directories.
-    let OnlyFilesFromDirectories ([<ParamArray>] expected : DirectoryInfo []) =
-      onlyFilesFromDirs (Seq.ofArray expected)
+  /// Creates an access-controlled function that only retrieves files from certain directories.
+  let OnlyFilesFromDirectories ([<ParamArray>] expected : DirectoryInfo []) =
+    onlyFilesFromDirs (Seq.ofArray expected)
 
-    /// Creates an access-controlled function that only retrieves files from a certain directory.
-    [<CompiledName("OnlyFilesFromDirectory")>]
-    let onlyFilesFrom expected = onlyFilesFromDirs [expected]
+  /// Creates an access-controlled function that only retrieves files from a certain directory.
+  [<CompiledName("OnlyFilesFromDirectory")>]
+  let onlyFilesFrom expected = onlyFilesFromDirs [expected]
 
-    /// Adds a requirement to the access-controlled function to only allow files with certain extensions.
-    let fileExtensions exts acc =
-        { acc with
-            Capability = fun (actual : FileInfo) ->
-                if List.contains actual.Extension exts
-                then Ok actual
-                else let exts = String.Join (", ", Array.ofList exts)
-                     Error [ sprintf "access failure: only files with extension: '%s' are allowed" exts ] }
+  /// Adds a requirement to the access-controlled function to only allow files with certain extensions.
+  let fileExtensions exts acc =
+    { acc with
+        Capability = fun (actual : FileInfo) ->
+          if List.contains actual.Extension exts
+          then Ok actual
+          else let exts = String.Join (", ", Array.ofList exts)
+               Error [ sprintf "access failure: only files with extension: '%s' are allowed" exts ] }
 
-    /// Adds a requirement to the access-controlled function to only allow files with a certain extension.
-    let fileExtension ext acc = fileExtensions [ext] acc
+  /// Adds a requirement to the access-controlled function to only allow files with a certain extension.
+  let fileExtension ext acc = fileExtensions [ext] acc
 
-    /// Creates an access-controlled function to only allow `Uri` values with a certain base `Uri`.
-    [<CompiledName("OnlyUriFromBase")>]
-    let onlyUriFromBase baseUri =
-        { Revokable = None
-          Capability = fun (actual : Uri) -> 
-            if (baseUri : Uri).IsBaseOf actual
-            then Ok actual
-            else Error [ sprintf "access failure: only URI's with the base of '%s' are allowed, but got: '%s'" baseUri.OriginalString actual.OriginalString ] }
+  /// Creates an access-controlled function to only allow `Uri` values with a certain base `Uri`.
+  [<CompiledName("OnlyUriFromBase")>]
+  let onlyUriFromBase baseUri =
+    { Revokable = None
+      Capability = fun (actual : Uri) -> 
+        if (baseUri : Uri).IsBaseOf actual
+        then Ok actual
+        else Error [ sprintf "access failure: only URI's with the base of '%s' are allowed, but got: '%s'" baseUri.OriginalString actual.OriginalString ] }
 
-    /// Let the access-controlled function only evaluate once.
-    let once acc =
-        let func = ref (Func<_, _> acc.Capability)
-        { acc with 
-            Capability = fun x -> 
-                let func = Interlocked.Exchange (func, null)
-                if func = null then Error [ "access failure: function is already evaluated" ]
-                else func.Invoke x }
+  /// Let the access-controlled function only evaluate once.
+  let once acc =
+    let func = ref (Func<_, _> acc.Capability)
+    { acc with 
+        Capability = fun x -> 
+          let func = Interlocked.Exchange (func, null)
+          if func = null then Error [ "access failure: function is already evaluated" ]
+          else func.Invoke x }
 
-    /// Let the access-controlled function only evaluate a certain amount of times.
-    let times count acc =
-        if count < 0 then invalidArg "count" "amount of times to access resource must be greater than zero"
-        let count = ref count
-        let func = ref (Func<_, _> acc.Capability)
-        { acc with
-            Capability = fun x ->
-                let cnt = Interlocked.Exchange (count, !count - 1)
-                if cnt <= 1 then 
-                  let func = Interlocked.Exchange (func, null)
-                  if func = null then Error [ "access failure: function is already evaluated twice" ]
-                  else func.Invoke x
-                else (!func).Invoke x }
+  /// Let the access-controlled function only evaluate a certain amount of times.
+  let times count acc =
+    if count < 0 then invalidArg "count" "amount of times to access resource must be greater than zero"
+    let count = ref count
+    let func = ref (Func<_, _> acc.Capability)
+    { acc with
+        Capability = fun x ->
+          let cnt = Interlocked.Exchange (count, !count - 1)
+          if cnt <= 1 then 
+            let func = Interlocked.Exchange (func, null)
+            if func = null then Error [ "access failure: function is already evaluated twice" ]
+            else func.Invoke x
+          else (!func).Invoke x }
 
-    /// Let the access-controlled function only evaluate two times.
-    let twice acc = times 2 acc
+  /// Let the access-controlled function only evaluate two times.
+  let twice acc = times 2 acc
 
-    /// Make the access-controlled function revokable.
-    let revokable acc =
-        let allow = ref (true :> obj)
-        let capability x =
-            if !allow :?> bool then (acc.Capability x)
-            else Error [ "access failure: cannot access function because it was revoked" ]
-        { Capability = capability
-          Revokable = Some (fun () -> Interlocked.Exchange (allow, false) |> ignore) }
+  /// Make the access-controlled function revokable.
+  let revokable acc =
+      let allow = ref (true :> obj)
+      let capability x =
+          if !allow :?> bool then (acc.Capability x)
+          else Error [ "access failure: cannot access function because it was revoked" ]
+      { Capability = capability
+        Revokable = Some (fun () -> Interlocked.Exchange (allow, false) |> ignore) }
 
-    /// Automatically revoke the access-controlled after a specified delay.
-    let revokedAfter delay acc =
-        let acc = revokable acc
-        let timer = new Timers.Timer ()
-        timer.Interval <- (delay : TimeSpan).TotalMilliseconds
-        timer.Elapsed.Add (fun _ -> 
-            revoke acc
-            timer.Stop ()
-            try timer.Dispose () 
-            with _ -> ())
-        timer.Start ()
-        acc
+  /// Automatically revoke the access-controlled after a specified delay.
+  let revokedAfter delay acc =
+    let acc = revokable acc
+    let timer = new Timers.Timer ()
+    timer.Interval <- (delay : TimeSpan).TotalMilliseconds
+    timer.Elapsed.Add (fun _ -> 
+      revoke acc
+      timer.Stop ()
+      try timer.Dispose () 
+      with _ -> ())
+    timer.Start ()
+    acc
 
-    /// Automatically revoke the access-controlled function when the specified observable emits a value.
-    let revokedWhen observable acc =
-      let acc = revokable acc
-      Observable.add (fun _ -> revoke acc) observable
-      acc
+  /// Automatically revoke the access-controlled function when the specified observable emits a value.
+  let revokedWhen observable acc =
+    let acc = revokable acc
+    Observable.add (fun _ -> revoke acc) observable
+    acc
 
-    /// Make the access-controlled function only available during certain dates.
-    let duringDates min max acc =
-        { acc with
-            Capability = fun x ->
-                let now = DateTimeOffset.Now
-                if min < now && now > max
-                then acc.Capability x
-                else Error [ sprintf "access failure: can only access resource between '%A' and '%A', but now it's '%A'" min max now ] }
+  /// Make the access-controlled function only available during certain dates.
+  let duringDates min max acc =
+    { acc with
+        Capability = fun x ->
+          let now = DateTimeOffset.Now
+          if min < now && now > max
+          then acc.Capability x
+          else Error [ sprintf "access failure: can only access resource between '%A' and '%A', but now it's '%A'" min max now ] }
 
-    /// Make the access-controlled function only available during certain hours.
-    let duringHours min max acc =
-        if min < 0 || min > 23 then invalidArg "min" "minimum hour should be in the range of 0-23"
-        if max < 0 || max > 23 then invalidArg "max" "maximum hour should be in the range of 0-23"
-        if min > max then invalidArg "min" "minimum hour cannot be greater than maximum hour" 
-        { acc with
-            Capability = fun x ->
-                let now = DateTimeOffset.Now
-                if min < now.Hour && now.Hour < max
-                then acc.Capability x
-                else Error [ sprintf "access failure: can only access resource between '%i:00' and '%i:00', but now it's '%i:%i'" min max now.Hour now.Minute ] }
-    
-    /// Adds input-validation to the access-controlled function.
-    let satisfy spec acc =
-      { acc with
-          Capability = fun x -> 
-            match Spec.validate x spec with
-            | Ok x -> acc.Capability x
-            | Error errs -> Error errs }
+  /// Make the access-controlled function only available during certain hours.
+  let duringHours min max acc =
+    if min < 0 || min > 23 then invalidArg "min" "minimum hour should be in the range of 0-23"
+    if max < 0 || max > 23 then invalidArg "max" "maximum hour should be in the range of 0-23"
+    if min > max then invalidArg "min" "minimum hour cannot be greater than maximum hour" 
+    { acc with
+        Capability = fun x ->
+          let now = DateTimeOffset.Now
+          if min < now.Hour && now.Hour < max
+          then acc.Capability x
+          else Error [ sprintf "access failure: can only access resource between '%i:00' and '%i:00', but now it's '%i:%i'" min max now.Hour now.Minute ] }
+  
+  /// Adds input-validation to the access-controlled function.
+  let satisfy spec acc =
+    { acc with
+        Capability = fun x -> 
+          match Spec.validate x spec with
+          | Ok x -> acc.Capability x
+          | Error errs -> Error errs }
 
 /// Computation expression to control the access of functions.
 type AccessBuilder<'a, 'b> () =
@@ -257,9 +257,9 @@ type AccessResult<'a> internal (result : Result<'a, string list>) =
     member __.Successful = Result.isOk result 
     /// Gets the series of errors that occured during the evaluation of the access-controlled function.
     member __.Errors =
-        match result with
-        | Ok _ -> [||]
-        | Error errs -> Array.ofList errs
+      match result with
+      | Ok _ -> [||]
+      | Error errs -> Array.ofList errs
     /// Gets the result of the access-controlled function if the function evaluated successfully, 
     /// otherwise an `AccessFailureException` is thrown.
     member __.Value = 
@@ -280,13 +280,13 @@ type AccessExtensions () =
     /// Adds a requirement to the access-controlled function to only allow files with a certain extension.
     [<Extension>]
     static member FileExtension (access, fileExtension) =
-        if fileExtension = null then nullArg "fileExtension"
-        Access.fileExtension fileExtension access
+      if fileExtension = null then nullArg "fileExtension"
+      Access.fileExtension fileExtension access
     /// Adds a requirement to the access-controlled function to only allow files with certain extensions.
     [<Extension>]
     static member FileExtensions (access, [<ParamArray>] fileExtensions) =
-        if fileExtensions = null then nullArg "fileExtensions"
-        Access.fileExtensions (List.ofArray fileExtensions) access
+      if fileExtensions = null then nullArg "fileExtensions"
+      Access.fileExtensions (List.ofArray fileExtensions) access
     /// Let the access-controlled function only evaluate once.
     [<Extension>]
     static member Once (acc : Access<'T, 'TResult>) = Access.once acc

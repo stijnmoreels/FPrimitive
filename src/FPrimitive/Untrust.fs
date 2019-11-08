@@ -14,10 +14,10 @@ type Untrust<'a> (value : 'a) =
     member internal __.tryGetValue (validator : 'a -> Result<'b, string list>) = validator value
     /// Tries to get the wrapped value out of the untrusted boundary by validating the value.
     member __.TryGetValue (validator : Func<_, _>, output : outref<'a>) =
-        if validator = null then nullArg "validator"
-        if validator.Invoke value 
-        then output <- value; true
-        else output <- Unchecked.defaultof<'a>; false
+      if validator = null then nullArg "validator"
+      if validator.Invoke value 
+      then output <- value; true
+      else output <- Unchecked.defaultof<'a>; false
     static member op_Implicit (x : byte) = Untrust x
     static member op_Implicit (x : int) = Untrust x
     static member op_Implicit (x : byte[]) = Untrust x

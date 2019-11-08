@@ -22,3 +22,9 @@
 * Spec additions
   * `dependsOn` introduces dependent specifications to re-use and split complex specs into more maintainable building blocks
   * `alphabetical`, `alphanum`, ... introduces a way to check a string for charaters only in the alphabeth
+
+#### 2.0.0
+* Spec invariants: makes relationships between models more easy to describe
+* Maybe: add optional type for better C# domain modeling
+* Guard: add simple guard class for quick argument checking, but limit functionality to push users to use specifications instead
+* Remove some unnecessary types to limit target projects

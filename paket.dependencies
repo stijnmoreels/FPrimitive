@@ -6,6 +6,7 @@ nuget FSharp.Core
 github stijnmoreels/System Time.fs
 github stijnmoreels/System Option.fs
 github stijnmoreels/System Result.fs
+github stijnmoreels/System Maybe.fs
 
 group Test
     source https://www.nuget.org/api/v2

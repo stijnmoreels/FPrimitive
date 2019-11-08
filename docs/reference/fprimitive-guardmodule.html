@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8"/>
-    <title>AlphanumSpecial - FPrimitive</title>
+    <title>Guard - FPrimitive</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="description" content=""/>
     <meta name="author" content="Stijn Moreels"/>
@@ -35,66 +35,44 @@
 
 
 
-<h1>AlphanumSpecial</h1>
+<h1>Guard</h1>
 <p>
-
-    <span>Namespace: FPrimitive</span><br />
-    </p>
+  <span>Namespace: FPrimitive</span><br />
+        <span>
+          Attributes:<br />
+[&lt;CompilationRepresentation(4)&gt;]<br />
+          
+      </span>
+</p>
 <div class="xmldoc">
-<p>Model representation of an alphanumerical value or special charaters.</p>
+<p>Basic guard class to verify 'null' checks; but only that. Everything else should be written as specifications.</p>
 
 </div>
-  <h3>Instance members</h3>
+
+<!-- Render nested types and modules, if there are any -->
+
+  <h3>Functions and values</h3>
   <table class="table table-bordered member-list">
     <thead>
-      <tr><td>Instance member</td><td>Description</td></tr>
+      <tr><td>Function or value</td><td>Description</td></tr>
     </thead>
     <tbody>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '226', 226)" onmouseover="showTip(event, '226', 226)">
-            x.Value
+          <code onmouseout="hideTip(event, '29', 29)" onmouseover="showTip(event, '29', 29)">
+            against predicate ex
           </code>
-          <div class="tip" id="226">
-            <strong>Signature:</strong> string<br />
+          <div class="tip" id="29">
+            <strong>Signature:</strong> predicate:(unit -&gt; bool) -&gt; ex:(type) -&gt; unit<br />
                                   </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Types.fs#L45-45" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Guard.fs#L9-9" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          <p>Gets the original string representation of the alphanumerical value or special charaters.</p>
-
-
-              <p>CompiledName: <code>get_Value</code></p>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  <h3>Static members</h3>
-  <table class="table table-bordered member-list">
-    <thead>
-      <tr><td>Static member</td><td>Description</td></tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td class="member-name">
-
-          <code onmouseout="hideTip(event, '227', 227)" onmouseover="showTip(event, '227', 227)">
-            AlphanumSpecial.create(txt)
-          </code>
-          <div class="tip" id="227">
-            <strong>Signature:</strong> txt:string -&gt; Result&lt;AlphanumSpecial,string list&gt;<br />
-                                  </div>
-        </td>
-        <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Types.fs#L47-47" class="github-link">
-              <img src="../content/img/github.png" class="normal" />
-              <img src="../content/img/github-blue.png" class="hover" />
-            </a>
-          <p>Try to create an alphanumerical value from a given raw text.</p>
+          <p>Custom guard precondition with an exception instance.</p>
 
 
         </td>
@@ -102,19 +80,19 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '228', 228)" onmouseover="showTip(event, '228', 228)">
-            AlphanumSpecial.Create(txt)
+          <code onmouseout="hideTip(event, '30', 30)" onmouseover="showTip(event, '30', 30)">
+            againstT predicate message
           </code>
-          <div class="tip" id="228">
-            <strong>Signature:</strong> txt:string -&gt; ValidationResult&lt;AlphanumSpecial&gt;<br />
-                                  </div>
+          <div class="tip" id="30">
+            <strong>Signature:</strong> predicate:(unit -&gt; bool) -&gt; message:string -&gt; unit<br />
+                          <strong>Type parameters:</strong> 'T                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Types.fs#L52-52" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Guard.fs#L13-13" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          <p>Try to create an alphanumerical value or special charaters from a given raw text.</p>
+          <p>Custom guard precondition with an exception type and message.</p>
 
 
         </td>
@@ -122,19 +100,41 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '229', 229)" onmouseover="showTip(event, '229', 229)">
-            AlphanumSpecial.op_Implicit(x)
+          <code onmouseout="hideTip(event, '31', 31)" onmouseover="showTip(event, '31', 31)">
+            notAnyNull param message
           </code>
-          <div class="tip" id="229">
-            <strong>Signature:</strong> x:AlphanumSpecial -&gt; string<br />
-                                  </div>
+          <div class="tip" id="31">
+            <strong>Signature:</strong> param:seq&lt;&#39;?10142&gt; -&gt; message:string -&gt; unit<br />
+                          <strong>Type parameters:</strong> '?10142                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Types.fs#L53-53" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Guard.fs#L20-20" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          
+          <p>Guard against any 'null' reference in the sequence with a custom exception message.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '32', 32)" onmouseover="showTip(event, '32', 32)">
+            notNull param message
+          </code>
+          <div class="tip" id="32">
+            <strong>Signature:</strong> param:&#39;?10140 -&gt; message:string -&gt; unit<br />
+                          <strong>Type parameters:</strong> '?10140                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Guard.fs#L17-17" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Guard against a 'null' reference with a custom exception message.</p>
+
+
         </td>
       </tr>
     </tbody>

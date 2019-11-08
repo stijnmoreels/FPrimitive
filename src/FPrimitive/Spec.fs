@@ -3,6 +3,8 @@
 open System
 open System.Collections.Generic
 open System.Runtime.CompilerServices
+open System.Runtime.InteropServices
+open System.Text.RegularExpressions
 
 open Microsoft.FSharp.Core
 
@@ -14,7 +16,7 @@ type CascadeMode =
   | FirstFailure
 
 /// Type alias for the validation requirement.
-type Requirement<'T> = 'T -> bool * string
+type Req<'T> = 'T -> bool * string
 
 /// Representation of a domain specification that contains the validation for the model.
 type Spec<'T> =
@@ -26,28 +28,21 @@ type Spec<'T> =
       /// Gets the child specifications.
       Dependents : Spec<'T> list }
 
-/// Representation of a domain specification that contains the validation for the model.
-type Spec =
-    /// Start defininig a specification for a type.
-    static member Of<'T>() : Spec<'T> =
-        { Requirements = []
-          Cascade = Continue
-          Dependents = [] }
-
 /// Operations on the `Spec<_>` type. 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module Spec =
-  open System.Text.RegularExpressions
-
   /// Start defininig a specification for a type.
   let def<'a> : Spec<'a> = 
     { Requirements = []
-      Cascade = Continue
+      Cascade = FirstFailure
       Dependents = [] }
 
   /// Adds a custom requirement to the specification.
   let add req spec =
     { spec with Requirements = req :: spec.Requirements }
+    
+  /// Adds a custom requirement to the specification.
+  let verify verifier msg spec = add (fun x -> verifier x, msg) spec
 
   /// Adds a requirement for the result of the specified mapping, 
   /// which defines that the result should be equal to the specified value.
@@ -241,13 +236,24 @@ module Spec =
 
   /// Adds a requirement for the result of the specified mapping, 
   /// which defines that the result should be a match to the specified regular expression pattern.
-  let regexOf selector pattern message spec =
+  let matchesOf selector pattern message spec =
     let regex = Regex (pattern)
     add (fun x -> selector x |> regex.IsMatch, message) spec
+
+  /// Adds a requirement to check if the value is a match to the specified regular expression pattern.
+  let matches pattern message spec =
+    matchesOf id pattern message spec
+
+  /// Adds a requirement for the result of the specified mapping, 
+  /// which defines that the result should be a match to the specified regular expression pattern.
+  [<Obsolete("Use 'matchesOf' instead")>]
+  let regexOf selector pattern message spec =
+    matchesOf selector pattern message spec
   
   /// Adds a requirement to check if the value is a match to the specified regular expression pattern.
+  [<Obsolete("Use 'matches' instead")>]
   let regex pattern message spec =
-    regexOf id pattern message spec
+    matchesOf id pattern message spec
 
   let private alphabet = ['a'..'z'] @ ['A'..'Z']
 
@@ -353,11 +359,109 @@ module Spec =
   let merge spec1 spec2 =
     { def with Dependents = [spec1; spec2] }
 
+  /// Maps the to-be-validated value before the requirements are verified, therefore controlling the input value of this specification and further added requirements.
+  let rec comap f spec =
+    { Requirements = List.map (fun r -> f >> r) spec.Requirements
+      Cascade = spec.Cascade
+      Dependents = List.map (comap f) spec.Dependents }
+
+  /// Maps the requirements of this specification to another requirement function structure.
+  let rec map (f : Req<'a> -> Req<'b>) spec =
+    { Requirements = List.map f spec.Requirements
+      Cascade = spec.Cascade
+      Dependents = List.map (map f) spec.Dependents }
+
+  /// Adds a pre-valildation function to all the requirements of this specification.
+  let rec preval f spec =
+    map (fun r -> fun x -> match f x with | Ok y -> r y | Error msg -> false, msg) spec
+
+  /// Maps this specification to work with a list of values.
+  let rec list spec =
+    let asList r xs =
+      List.map r xs 
+      |> List.reduce (fun (x, err1) (y, err2) -> x && y, err1 + Environment.NewLine + err2)
+    map asList spec
+
+  /// Maps this specification to work with array of values.
+  let rec array spec =
+      let asArray r xs =
+        Array.map r xs 
+        |> Array.reduce (fun (x, err1) (y, err2) -> x && y, err1 + Environment.NewLine + err2)
+      map asArray spec
+
+  /// Maps this specification to work with sequences of values.
+  let rec seq spec =
+      let asSeq r xs =
+        Seq.map r xs |> Seq.reduce (fun (x, err1) (y, err2) -> x && y, err1 + Environment.NewLine + err2)
+      map asSeq spec
+
+  let private reduceCascade cs =
+    if List.contains FirstFailure cs
+    then FirstFailure 
+    else Continue
+
+  /// Makes a new specification that's describes an invariant relation between two given specifications.
+  let invariant spec1 spec2 =
+    let r1 = List.map (fun f -> fst >> f) spec1.Requirements
+    let r2 = List.map (fun f -> snd >> f) spec2.Requirements
+    let rs = r1 @ r2
+
+    let cascade = reduceCascade [ spec1.Cascade; spec2.Cascade ] 
+
+    let d1 = List.map (comap fst) spec1.Dependents
+    let d2 = List.map (comap snd) spec2.Dependents
+    let ds = d1 @ d2
+
+    { Requirements = rs
+      Cascade = cascade
+      Dependents = ds }
+
+  let private x__ (x, _, _) = x
+  let private _x_ (_, y, _) = y
+  let private __x (_, _, z) = z
+
+  /// Makes a new specification that's describes an invariant relation between three given specifications.
+  let invariant3 spec1 spec2 spec3 =
+    let r1 = List.map (fun f -> x__ >> f) spec1.Requirements
+    let r2 = List.map (fun f -> _x_ >> f) spec2.Requirements
+    let r3 = List.map (fun f -> __x >> f) spec3.Requirements
+    let rs = List.concat [ r1; r2; r3 ]
+
+    let cascade = reduceCascade [ spec1.Cascade; spec2.Cascade; spec3.Cascade ] 
+
+    let d1 = List.map (comap x__) spec1.Dependents
+    let d2 = List.map (comap _x_) spec2.Dependents
+    let d3 = List.map (comap __x) spec3.Dependents
+    let ds = List.concat [ d1; d2; d3 ]
+
+    { Requirements = rs
+      Cascade = cascade
+      Dependents = ds }
+
+/// Representation of a domain specification that contains the validation for the model.
+type Spec =
+  /// Start defininig a specification for a type.
+  static member Of<'T>() : Spec<'T> =
+      { Requirements = []
+        Cascade = Continue
+        Dependents = [] }
+  
+  /// Combines two specifications as dependents of a new specification which will run before any extra requirements that's been added after this point.
+  static member Merge (spec1 : Spec<'T>, spec2) = Spec.merge spec1 spec2
+  /// Makes a new specification that's describes an invariant relation between two given specifications.
+  static member Invariant (spec1 : Spec<'T1>, spec2 : Spec<'T2>) = Spec.invariant spec1 spec2 |> Spec.comap (fun (t : ValueTuple<_, _>) -> t.ToTuple())
+  /// Makes a new specification that's describes an invariant relation between three given specifications.
+  static member Invariant (spec1 : Spec<'T1>, spec2 : Spec<'T2>, spec3 : Spec<'T3>) = Spec.invariant3 spec1 spec2 spec3 |> Spec.comap (fun (t : ValueTuple<_, _, _>) -> t.ToTuple())
+
 /// Computation expression builder for the domain specification `Spec<_>`.
-type SpecBuilder<'a, 'b> internal (validate : Spec<'a> -> 'b) =
+type SpecBuilder<'a, 'b> internal (validate : Spec<'a> -> 'b, ?start) =
+  let start = Option.defaultValue Spec.def<'a> start
   /// Adds a custom requirement to the specification.
   [<CustomOperation("add")>]
   member __.Add (state, req) = Spec.add req state
+  /// Adds a custom requirement to the specification.
+  [<CustomOperation("verify")>]
+  member __.Verify (state, verifier, msg) = Spec.verify verifier msg state
   /// Change the way the validation of requirements should happen.
   [<CustomOperation("cascade")>]
   member __.Cascade (state, mode) = Spec.cascade mode state
@@ -514,11 +618,18 @@ type SpecBuilder<'a, 'b> internal (validate : Spec<'a> -> 'b) =
   member __.ExclusiveBetween (state, min, max, message) = Spec.exclusiveBetween min max message state
   /// Adds a requirement for the result of the specified mapping, 
   /// which defines that the result should be a match to the specified regular expression pattern.
-  [<CustomOperation("regexOf")>]
-  member __.RegexOf (state, selector, pattern, message) = Spec.regexOf selector pattern message state
+  [<CustomOperation("regexOf"); Obsolete("Use 'matchesOf' instead")>]
+  member __.RegexOf (state, selector, pattern, message) = Spec.matchesOf selector pattern message state
   /// Adds a requirement to check if the value is a match to the specified regular expression pattern.
-  [<CustomOperation("regex")>]
-  member __.Regex (state, pattern, message) = Spec.regex pattern message state
+  [<CustomOperation("regex"); Obsolete("Use 'matches' instead")>]
+  member __.Regex (state, pattern, message) = Spec.matches pattern message state
+  /// Adds a requirement for the result of the specified mapping, 
+  /// which defines that the result should be a match to the specified regular expression pattern.
+  [<CustomOperation("matchesOf")>]
+  member __.MatchesOf (state, selector, pattern, message) = Spec.matchesOf selector pattern message state
+  /// Adds a requirement to check if the value is a match to the specified regular expression pattern.
+  [<CustomOperation("matches")>]
+  member __.Mathces (state, pattern, message) = Spec.matches pattern message state
   /// Adds a requirement for the result of the specified mapping,
   /// which defines that the result should be a string containing only charaters in the alphabet.
   [<CustomOperation("alphabeticalOf")>]
@@ -540,7 +651,7 @@ type SpecBuilder<'a, 'b> internal (validate : Spec<'a> -> 'b) =
   /// Adds a requirement to check for alphanumerical values or special charaters
   [<CustomOperation("alphanumSpecial")>]
   member __.AlphanumSpecial (state, message) = Spec.alphanumSpecial message state
-  member __.Yield (_) = Spec.def<'a>
+  member __.Yield (_) = start
   member __.Run (spec) = validate spec
 
 /// Exposure values/functions for the `Spec<_>` type.
@@ -558,7 +669,9 @@ module SpecExposure =
   let specModel<'a, 'b> createModel value = new SpecBuilder<'a, Result<'b, string list>> (Spec.createModel createModel value)
   /// Computation builder to build an `Spec<_>` instance that gets validated a custom domain model when runned.
   let specModelWith<'a, 'b> createModel value = new SpecBuilder<'a, Result<'b, string list>> (Spec.createModelWith createModel value)
-
+  /// Makes a new specification that's describes an invariant relation between two given specifications.
+  let specInvariant spec1 spec2 = new SpecBuilder<_, Spec<_>> (id, Spec.invariant spec1 spec2)
+    
 /// Thrown when the value of a validation result is called on an invalid validation result.
 exception InvalidValidationResultException of string
 
@@ -589,33 +702,38 @@ type ValidationResult<'T> internal (result : Result<'T, string list>) =
   static member Failure ([<ParamArray>] errors : string []) = ValidationResult<'T> (errors = errors)
 
   /// Tries to get the value that was validated.
-  [<CompilerMessage("Not designed for F#", 1001, IsHidden = true)>]
   member __.TryGetValue (output : outref<'T>) =
     match result with
     | Ok x -> output <- x; true
     | _ -> output <- Unchecked.defaultof<'T>; false
+  /// Gets the validated value or the absence of the value.
+  member __.ToMaybe ([<Optional>] handleErrors : Action<_>) =
+    let handleErrors = if isNull handleErrors then fun _ -> () else handleErrors.Invoke
+    match result with
+    | Ok x -> Maybe.Just x
+    | Error errs -> handleErrors (Array.ofList errs); Maybe<'T>.Nothing
 
+/// Result type when a value is validated against a domain specification `Spec<_>`.
+[<CompilerMessage("Not designed for F#", 1001, IsHidden = true)>]
+type ValidationResult private () =
   /// Combines validation results into a new validation result.
-  [<CompilerMessage("Not designed for F#", 1001, IsHidden = true)>]
   static member Combine<'TFirst, 'TSecond, 'TResult> 
     ( (validation1 : ValidationResult<'TFirst>), 
       (validation2 : ValidationResult<'TSecond>), 
       (resultSelector : Func<_, _, 'TResult>) ) =
     if validation1.IsValid && validation2.IsValid
-    then ValidationResult (value=resultSelector.Invoke (validation1.Value, validation2.Value))
-    else ValidationResult (validation1.Errors, validation2.Errors)
+    then ValidationResult<'TResult> (value=resultSelector.Invoke (validation1.Value, validation2.Value))
+    else ValidationResult<'TResult> (validation1.Errors, validation2.Errors)
   /// Combines validation results into a new validation result.
-  [<CompilerMessage("Not designed for F#", 1001, IsHidden = true)>]
   static member Combine<'TFirst, 'TSecond, 'TThird, 'TResult>
     ( (validation1 : ValidationResult<'TFirst>),
       (validation2 : ValidationResult<'TSecond>),
       (validation3 : ValidationResult<'TThird>),
       (resultSelector : Func<'TFirst, 'TSecond, 'TThird, 'TResult>) ) =
     if validation1.IsValid && validation2.IsValid && validation3.IsValid
-    then ValidationResult (value=resultSelector.Invoke (validation1.Value, validation2.Value, validation3.Value))
-    else ValidationResult (validation1.Errors, validation2.Errors, validation3.Errors)
+    then ValidationResult<'TResult> (value=resultSelector.Invoke (validation1.Value, validation2.Value, validation3.Value))
+    else ValidationResult<'TResult> (validation1.Errors, validation2.Errors, validation3.Errors)
   /// Combines validation results into a new validation result.
-  [<CompilerMessage("Not designed for F#", 1001, IsHidden = true)>]
   static member Combine<'TFirst, 'TSecond, 'TThird, 'TFourth, 'TResult>
     ( (validation1 : ValidationResult<'TFirst>),
       (validation2 : ValidationResult<'TSecond>),
@@ -623,75 +741,78 @@ type ValidationResult<'T> internal (result : Result<'T, string list>) =
       (validation4 : ValidationResult<'TFourth>),
       (resultSelector : Func<'TFirst, 'TSecond, 'TThird, 'TFourth, 'TResult>) ) =
     if validation1.IsValid && validation2.IsValid && validation3.IsValid && validation4.IsValid
-    then ValidationResult (value=resultSelector.Invoke (validation1.Value, validation2.Value, validation3.Value, validation4.Value))
-    else ValidationResult (validation1.Errors, validation2.Errors, validation3.Errors, validation4.Errors)
+    then ValidationResult<'TResult> (value=resultSelector.Invoke (validation1.Value, validation2.Value, validation3.Value, validation4.Value))
+    else ValidationResult<'TResult> (validation1.Errors, validation2.Errors, validation3.Errors, validation4.Errors)
+
+/// Delegate of: 'T -> bool * string.
+type Requirement<'T> = delegate of 'T -> bool * string
 
 /// Extensions on the `ValidationResult<_>` type to use in C# context.
 [<Extension>]
 [<CompilerMessage("Not designed for F#", 1001, IsHidden = true)>]
 type ValidationResultExtensions =
-    /// Projects the validated result to another value.
-    [<Extension>]
-    static member Select (this : ValidationResult<'T>, selector : Func<'T, 'TResult>) =
-      if isNull selector then nullArg "selector"
-      if this.IsValid then ValidationResult<'TResult> (selector.Invoke this.Value)
-      else ValidationResult<'TResult> this.Errors
-    /// Projects the validated reuslt to another validation result.
-    [<Extension>]
-    static member SelectMany (this : ValidationResult<'T>, selector : Func<'T, ValidationResult<'TResult>>) =
-      if isNull selector then nullArg "selector"
-      if this.IsValid then selector.Invoke (this.Value)
-      else ValidationResult<'TResult> this.Errors
-    /// Projects the validated reuslt to another validation result.
-    [<Extension>]
-    static member Then (this : ValidationResult<'T>, selector) = 
-      if isNull selector then nullArg "selector"
-      this.SelectMany (selector)
-    /// Filters out the validated value with yet another predicate and a series of validation error messages to create a fresh validation result in case the predicate doesn't hold.
-    [<Extension>]
-    static member Where (this : ValidationResult<'T>, predicate : Func<_, _>, [<ParamArray>] errors) =
-      if isNull predicate then nullArg "predicate"
-      if isNull errors then nullArg "errors"
-      if Array.isEmpty errors then invalidArg "errors" "at least a single validation error message should be given"
-      ValidationResult<'T> (Result.filter predicate.Invoke (List.ofArray errors) this.Result)
-    /// Filters out the validated value with yet another specification.
-    [<Extension>]
-    static member Where (this : ValidationResult<'T>, otherSpec : Spec<'T>) =
-      ValidationResult<'T> (Result.bind (fun x -> Spec.validate x otherSpec) this.Result)
-    /// Combines validation results into a new validation result.
-    [<Extension>]
-    static member Zip (this : ValidationResult<'T>, other : ValidationResult<'TOther>) =
-      if this.IsValid && other.IsValid
-      then ValidationResult<'T * 'TOther> ((this.Value, other.Value))
-      else ValidationResult<'T * 'TOther> (this.Errors, other.Errors)
-    /// Combines validation results into a new validation result.
-    [<Extension>]
-    static member And (this : ValidationResult<'T>, other : ValidationResult<'TOther>) = this.Zip (other)
-    /// Combines validation results into a new validation result.
-    [<Extension>]
-    static member Zip (this : ValidationResult<'T>, other : ValidationResult<'TOther>, selector : Func<'T, 'TOther, 'TResult>) =
-      if isNull selector then nullArg "selector"
-      if this.IsValid && other.IsValid
-      then ValidationResult<'TResult> (selector.Invoke (this.Value, other.Value))
-      else ValidationResult<'TResult> (this.Errors, other.Errors)
-    /// Aggregates the validated value to another value when the validation result was successful.
-    [<Extension>]
-    static member Aggregate (this : ValidationResult<'T>, seed : 'TAccummulate, aggregator : Func<'TAccummulate, 'T, 'TAccummulate>) =
-      if isNull seed then nullArg "seed"
-      if isNull aggregator then nullArg "aggregator"
-      if this.IsValid then aggregator.Invoke (seed, this.Value) else seed
-    /// Traverse the given sequence, running the a given selector function over the elements, collecting the outcomes into a new validation result.
-    [<Extension>]
-    static member Traverse (source : IEnumerable<'T>, selector : Func<'T, ValidationResult<'TResult>>) : ValidationResult<IEnumerable<'TResult>> =
-        if isNull source then nullArg "source"
-        if isNull selector then nullArg "selector"
-        ValidationResult<IEnumerable<'TResult>> (result = 
-            Result.traverseSeq (selector.Invoke >> fun x -> x.Result) source)
-    /// Transforms a sequence of validation results into a validation results of a sequence.
-    [<Extension>]
-    static member Sequence (source : IEnumerable<ValidationResult<'T>>) =
-        if isNull source then nullArg "source"
-        ValidationResult<IEnumerable<'T>> (result=Result.sequenceSeq (source |> Seq.map (fun x -> x.Result)))
+  /// Projects the validated result to another value.
+  [<Extension>]
+  static member Select (this : ValidationResult<'T>, selector : Func<'T, 'TResult>) =
+    if isNull selector then nullArg "selector"
+    if this.IsValid then ValidationResult<'TResult> (selector.Invoke this.Value)
+    else ValidationResult<'TResult> this.Errors
+  /// Projects the validated reuslt to another validation result.
+  [<Extension>]
+  static member SelectMany (this : ValidationResult<'T>, selector : Func<'T, ValidationResult<'TResult>>) =
+    if isNull selector then nullArg "selector"
+    if this.IsValid then selector.Invoke (this.Value)
+    else ValidationResult<'TResult> this.Errors
+  /// Projects the validated reuslt to another validation result.
+  [<Extension>]
+  static member Then (this : ValidationResult<'T>, selector) = 
+    if isNull selector then nullArg "selector"
+    this.SelectMany (selector)
+  /// Filters out the validated value with yet another predicate and a series of validation error messages to create a fresh validation result in case the predicate doesn't hold.
+  [<Extension>]
+  static member Where (this : ValidationResult<'T>, predicate : Func<_, _>, [<ParamArray>] errors) =
+    if isNull predicate then nullArg "predicate"
+    if isNull errors then nullArg "errors"
+    if Array.isEmpty errors then invalidArg "errors" "at least a single validation error message should be given"
+    ValidationResult<'T> (Result.filter predicate.Invoke (List.ofArray errors) this.Result)
+  /// Filters out the validated value with yet another specification.
+  [<Extension>]
+  static member Where (this : ValidationResult<'T>, otherSpec : Spec<'T>) =
+    ValidationResult<'T> (Result.bind (fun x -> Spec.validate x otherSpec) this.Result)
+  /// Combines validation results into a new validation result.
+  [<Extension>]
+  static member Zip (this : ValidationResult<'T>, other : ValidationResult<'TOther>) =
+    if this.IsValid && other.IsValid
+    then ValidationResult<'T * 'TOther> ((this.Value, other.Value))
+    else ValidationResult<'T * 'TOther> (this.Errors, other.Errors)
+  /// Combines validation results into a new validation result.
+  [<Extension>]
+  static member And (this : ValidationResult<'T>, other : ValidationResult<'TOther>) = this.Zip (other)
+  /// Combines validation results into a new validation result.
+  [<Extension>]
+  static member Zip (this : ValidationResult<'T>, other : ValidationResult<'TOther>, selector : Func<'T, 'TOther, 'TResult>) =
+    if isNull selector then nullArg "selector"
+    if this.IsValid && other.IsValid
+    then ValidationResult<'TResult> (selector.Invoke (this.Value, other.Value))
+    else ValidationResult<'TResult> (this.Errors, other.Errors)
+  /// Aggregates the validated value to another value when the validation result was successful.
+  [<Extension>]
+  static member Aggregate (this : ValidationResult<'T>, seed : 'TAccummulate, aggregator : Func<'TAccummulate, 'T, 'TAccummulate>) =
+    if isNull seed then nullArg "seed"
+    if isNull aggregator then nullArg "aggregator"
+    if this.IsValid then aggregator.Invoke (seed, this.Value) else seed
+  /// Traverse the given sequence, running the a given selector function over the elements, collecting the outcomes into a new validation result.
+  [<Extension>]
+  static member Traverse (source : IEnumerable<'T>, selector : Func<'T, ValidationResult<'TResult>>) : ValidationResult<IEnumerable<'TResult>> =
+    if isNull source then nullArg "source"
+    if isNull selector then nullArg "selector"
+    ValidationResult<IEnumerable<'TResult>> (result = 
+      Result.traverseSeq (selector.Invoke >> fun x -> x.Result) source)
+  /// Transforms a sequence of validation results into a validation results of a sequence.
+  [<Extension>]
+  static member Sequence (source : IEnumerable<ValidationResult<'T>>) =
+    if isNull source then nullArg "source"
+    ValidationResult<IEnumerable<'T>> (result=Result.sequenceSeq (source |> Seq.map (fun x -> x.Result)))
 
 /// Exception thrown when the validation of a value against a domain specification failed.
 exception ValidationFailureException of string
@@ -1343,17 +1464,45 @@ type SpecExtensions =
 
   /// Adds a requirement for the result of the specified mapping, 
   /// which defines that the result should be a match to the specified regular expression pattern.
-  [<Extension>]
+  [<Extension; Obsolete("Use 'Matches' instead")>]
   static member Regex ((spec : Spec<'T>), (selector : Func<'T, string>), pattern, message) =
     if selector = null then nullArg "selector"
     if message = null then nullArg "message"
-    Spec.regexOf selector.Invoke pattern message spec
+    Spec.matchesOf selector.Invoke pattern message spec
+
+  /// Adds a requirement to check if the value is a match to the specified regular expression pattern.
+  [<Extension; Obsolete("Use 'Matches' instead")>]
+  static member Regex ((spec : Spec<string>), pattern, message) =
+    if message = null then nullArg "message"
+    Spec.matches pattern message spec
+
+  /// Adds a requirement for the result of the specified mapping, 
+  /// which defines that the result should be a match to the specified regular expression pattern.
+  [<Extension>]
+  static member Regex ((spec : Spec<'T>), (selector : Func<'T, string>), expr : Regex, message) =
+    if selector = null then nullArg "selector"
+    if message = null then nullArg "message"
+    Spec.matchesOf selector.Invoke (expr.ToString()) message spec
 
   /// Adds a requirement to check if the value is a match to the specified regular expression pattern.
   [<Extension>]
-  static member Regex ((spec : Spec<string>), pattern, message) =
+  static member Regex ((spec : Spec<string>), expr : Regex, message) =
     if message = null then nullArg "message"
-    Spec.regex pattern message spec
+    Spec.matches (expr.ToString()) message spec
+
+  /// Adds a requirement for the result of the specified mapping, 
+  /// which defines that the result should be a match to the specified regular expression pattern.
+  [<Extension>]
+  static member Matches ((spec : Spec<'T>), (selector : Func<'T, string>), pattern, message) =
+    if selector = null then nullArg "selector"
+    if message = null then nullArg "message"
+    Spec.matchesOf selector.Invoke pattern message spec
+
+  /// Adds a requirement to check if the value is a match to the specified regular expression pattern.
+  [<Extension>]
+  static member Matches ((spec : Spec<string>), pattern, message) =
+    if message = null then nullArg "message"
+    Spec.matches pattern message spec
 
   /// Adds a requirement for the result of the specified mapping,
   /// which defines that the result should be a string containing only charaters in the alphabet.
@@ -1416,6 +1565,33 @@ type SpecExtensions =
   static member Cascade ((spec : Spec<'T>), mode) = 
     Spec.cascade mode spec
 
+  /// Maps the requirements of this specification to antother requirement function structure.
+  [<Extension>]
+  static member Select (spec : Spec<'T>, selector : Func<Requirement<'T>, Requirement<'TResult>>) =
+    if isNull selector then nullArg "selector"
+    Spec.map (fun r -> let f = selector.Invoke(Requirement r) in if isNull f then nullArg "selector return value" else f.Invoke) spec
+
+  /// Maps the to-be-validated value before the requirements are verified, therefore controlling the input value of this specification and further added requirements.
+  [<Extension>]
+  static member PreSelect (spec, preSelector : Func<_, _>) =
+    if isNull preSelector then nullArg "preSelector"
+    Spec.comap preSelector.Invoke spec
+
+  /// Adds a pre-valildation function to all the requirements of this specification.
+  [<Extension>]
+  static member PreValidate (spec, preValidator : Func<_, ValidationResult<_>>) =
+    if isNull preValidator then nullArg "preValidator"
+    let f x = preValidator.Invoke(x).Result |> Result.mapError (fun errs -> String.Join (Environment.NewLine, errs))
+    Spec.preval f spec
+
+  /// Transforms this specification to work with a array of values.
+  [<Extension>]
+  static member ForArray (spec) = Spec.array spec
+
+  /// Maps this specification to work with sequences of values.
+  [<Extension>]
+  static member ForEnumerable (spec) = Spec.seq spec
+
   /// Determine whether the specified value satisfies the domain specification.
   [<Extension>]
   static member IsSatisfiedBy ((spec : Spec<'T>), value) =
@@ -1424,7 +1600,7 @@ type SpecExtensions =
   /// Validate the specified value to the domain specification.
   [<Extension>]
   static member Validate ((spec : Spec<'T>), value) =
-    ValidationResult (result=Spec.validate value spec)
+    ValidationResult<'T> (result=Spec.validate value spec)
 
   /// Validate the specified value to the domain specification.
   [<Extension>]
@@ -1478,7 +1654,7 @@ type SpecExtensions =
   [<Extension>]
   static member CreateModel (specification, untrusted, (creator : Func<'T, 'TResult>)) =
     if creator = null then nullArg "creator"
-    ValidationResult (result=Untrust.getWithResult (fun x -> Spec.createModel creator.Invoke x specification) untrusted)
+    ValidationResult<'TResult> (result=Untrust.getWithResult (fun x -> Spec.createModel creator.Invoke x specification) untrusted)
 
   /// Tries to get the wrapped value out of the untrusted boundary by validating the value.
   [<Extension>]
