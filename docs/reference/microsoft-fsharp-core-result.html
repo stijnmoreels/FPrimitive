@@ -76,15 +76,15 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '148', 148)" onmouseover="showTip(event, '148', 148)">
+          <code onmouseout="hideTip(event, '223', 223)" onmouseover="showTip(event, '223', 223)">
             apply fResult xResult
           </code>
-          <div class="tip" id="148">
-            <strong>Signature:</strong> fResult:Result&lt;(&#39;?10317 -&gt; &#39;?10318),&#39;?10319 list&gt; -&gt; xResult:Result&lt;&#39;?10317,&#39;?10319 list&gt; -&gt; Result&lt;&#39;?10318,&#39;?10319 list&gt;<br />
-                          <strong>Type parameters:</strong> '?10317, '?10318, '?10319                      </div>
+          <div class="tip" id="223">
+            <strong>Signature:</strong> fResult:Result&lt;(&#39;?11678 -&gt; &#39;?11679),&#39;?11680 list&gt; -&gt; xResult:Result&lt;&#39;?11678,&#39;?11680 list&gt; -&gt; Result&lt;&#39;?11679,&#39;?11680 list&gt;<br />
+                          <strong>Type parameters:</strong> '?11678, '?11679, '?11680                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L75-75" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L110-110" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -96,15 +96,35 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '149', 149)" onmouseover="showTip(event, '149', 149)">
-            catch f handler x
+          <code onmouseout="hideTip(event, '224', 224)" onmouseover="showTip(event, '224', 224)">
+            applyWith fError fResult xResult
           </code>
-          <div class="tip" id="149">
-            <strong>Signature:</strong> f:(&#39;?10416 -&gt; &#39;?10417) -&gt; handler:(exn -&gt; &#39;?10418) -&gt; x:&#39;?10416 -&gt; Result&lt;&#39;?10417,&#39;?10418&gt;<br />
-                          <strong>Type parameters:</strong> '?10416, '?10417, '?10418                      </div>
+          <div class="tip" id="224">
+            <strong>Signature:</strong> fError:(&#39;e -&gt; &#39;e -&gt; &#39;e) -&gt; fResult:Result&lt;(&#39;f -&gt; &#39;g),&#39;e&gt; -&gt; xResult:Result&lt;&#39;f,&#39;e&gt; -&gt; Result&lt;&#39;g,&#39;e&gt;<br />
+                          <strong>Type parameters:</strong> 'e, 'f, 'g                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L209-209" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L106-106" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Applies a function <code>f</code> in <code>Ok f</code> to a <code>x</code> in <code>Ok x</code> when both are <code>Ok</code> values.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '225', 225)" onmouseover="showTip(event, '225', 225)">
+            catch f handler x
+          </code>
+          <div class="tip" id="225">
+            <strong>Signature:</strong> f:(&#39;?11791 -&gt; &#39;?11792) -&gt; handler:(exn -&gt; &#39;?11793) -&gt; x:&#39;?11791 -&gt; Result&lt;&#39;?11792,&#39;?11793&gt;<br />
+                          <strong>Type parameters:</strong> '?11791, '?11792, '?11793                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L263-263" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -117,15 +137,15 @@ but handling the possible thrown exception with a given <code>handler</code> int
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '150', 150)" onmouseover="showTip(event, '150', 150)">
+          <code onmouseout="hideTip(event, '226', 226)" onmouseover="showTip(event, '226', 226)">
             catchBind f handler x
           </code>
-          <div class="tip" id="150">
-            <strong>Signature:</strong> f:(&#39;?10424 -&gt; Result&lt;&#39;?10425,&#39;?10426&gt;) -&gt; handler:(exn -&gt; &#39;?10426) -&gt; x:Result&lt;&#39;?10424,&#39;?10426&gt; -&gt; Result&lt;&#39;?10425,&#39;?10426&gt;<br />
-                          <strong>Type parameters:</strong> '?10424, '?10425, '?10426                      </div>
+          <div class="tip" id="226">
+            <strong>Signature:</strong> f:(&#39;?11799 -&gt; Result&lt;&#39;?11800,&#39;?11801&gt;) -&gt; handler:(exn -&gt; &#39;?11801) -&gt; x:Result&lt;&#39;?11799,&#39;?11801&gt; -&gt; Result&lt;&#39;?11800,&#39;?11801&gt;<br />
+                          <strong>Type parameters:</strong> '?11799, '?11800, '?11801                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L219-219" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L273-273" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -137,15 +157,15 @@ but handling the possible thrown exception with a given <code>handler</code> int
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '151', 151)" onmouseover="showTip(event, '151', 151)">
+          <code onmouseout="hideTip(event, '227', 227)" onmouseover="showTip(event, '227', 227)">
             catchIter f handler x
           </code>
-          <div class="tip" id="151">
-            <strong>Signature:</strong> f:(&#39;?10428 -&gt; unit) -&gt; handler:(exn -&gt; &#39;?10429) -&gt; x:Result&lt;&#39;?10428,&#39;?10429&gt; -&gt; Result&lt;&#39;?10428,&#39;?10429&gt;<br />
-                          <strong>Type parameters:</strong> '?10428, '?10429                      </div>
+          <div class="tip" id="227">
+            <strong>Signature:</strong> f:(&#39;?11803 -&gt; unit) -&gt; handler:(exn -&gt; &#39;?11804) -&gt; x:Result&lt;&#39;?11803,&#39;?11804&gt; -&gt; Result&lt;&#39;?11803,&#39;?11804&gt;<br />
+                          <strong>Type parameters:</strong> '?11803, '?11804                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L224-224" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L278-278" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -157,15 +177,15 @@ but handling the possible thrown exception with a given <code>handler</code> int
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '152', 152)" onmouseover="showTip(event, '152', 152)">
+          <code onmouseout="hideTip(event, '228', 228)" onmouseover="showTip(event, '228', 228)">
             catchMap f handler x
           </code>
-          <div class="tip" id="152">
-            <strong>Signature:</strong> f:(&#39;?10420 -&gt; &#39;?10421) -&gt; handler:(exn -&gt; &#39;?10422) -&gt; x:Result&lt;&#39;?10420,&#39;?10422&gt; -&gt; Result&lt;&#39;?10421,&#39;?10422&gt;<br />
-                          <strong>Type parameters:</strong> '?10420, '?10421, '?10422                      </div>
+          <div class="tip" id="228">
+            <strong>Signature:</strong> f:(&#39;?11795 -&gt; &#39;?11796) -&gt; handler:(exn -&gt; &#39;?11797) -&gt; x:Result&lt;&#39;?11795,&#39;?11797&gt; -&gt; Result&lt;&#39;?11796,&#39;?11797&gt;<br />
+                          <strong>Type parameters:</strong> '?11795, '?11796, '?11797                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L214-214" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L268-268" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -177,15 +197,15 @@ but handling the possible thrown exception with a given <code>handler</code> int
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '153', 153)" onmouseover="showTip(event, '153', 153)">
+          <code onmouseout="hideTip(event, '229', 229)" onmouseover="showTip(event, '229', 229)">
             choose f xs
           </code>
-          <div class="tip" id="153">
+          <div class="tip" id="229">
             <strong>Signature:</strong> f:(&#39;a -&gt; Result&lt;&#39;b,&#39;c list&gt;) -&gt; xs:&#39;a list -&gt; &#39;b list<br />
                           <strong>Type parameters:</strong> 'a, 'b, 'c                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L204-204" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L258-258" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -197,15 +217,15 @@ but handling the possible thrown exception with a given <code>handler</code> int
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '154', 154)" onmouseover="showTip(event, '154', 154)">
+          <code onmouseout="hideTip(event, '230', 230)" onmouseover="showTip(event, '230', 230)">
             contains value _arg1
           </code>
-          <div class="tip" id="154">
-            <strong>Signature:</strong> value:&#39;?10290 -&gt; _arg1:Result&lt;&#39;?10290,&#39;?10291&gt; -&gt; bool<br />
-                          <strong>Type parameters:</strong> '?10290, '?10291                      </div>
+          <div class="tip" id="230">
+            <strong>Signature:</strong> value:&#39;?11629 -&gt; _arg1:Result&lt;&#39;?11629,&#39;?11630&gt; -&gt; bool<br />
+                          <strong>Type parameters:</strong> '?11629, '?11630                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L33-33" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L41-41" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -217,15 +237,15 @@ but handling the possible thrown exception with a given <code>handler</code> int
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '155', 155)" onmouseover="showTip(event, '155', 155)">
+          <code onmouseout="hideTip(event, '231', 231)" onmouseover="showTip(event, '231', 231)">
             either ifOk ifError result
           </code>
-          <div class="tip" id="155">
+          <div class="tip" id="231">
             <strong>Signature:</strong> ifOk:(&#39;a -&gt; &#39;b) -&gt; ifError:(&#39;c -&gt; &#39;b) -&gt; result:Result&lt;&#39;a,&#39;c&gt; -&gt; &#39;b<br />
                           <strong>Type parameters:</strong> 'a, 'b, 'c                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L232-232" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L286-286" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -237,12 +257,12 @@ but handling the possible thrown exception with a given <code>handler</code> int
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '156', 156)" onmouseover="showTip(event, '156', 156)">
+          <code onmouseout="hideTip(event, '232', 232)" onmouseover="showTip(event, '232', 232)">
             error(arg0)
           </code>
-          <div class="tip" id="156">
-            <strong>Signature:</strong> arg0:&#39;?10274 -&gt; Result&lt;&#39;?10275,&#39;?10274&gt;<br />
-                          <strong>Type parameters:</strong> '?10274, '?10275                      </div>
+          <div class="tip" id="232">
+            <strong>Signature:</strong> arg0:&#39;?11606 -&gt; Result&lt;&#39;?11607,&#39;?11606&gt;<br />
+                          <strong>Type parameters:</strong> '?11606, '?11607                      </div>
         </td>
         <td class="xmldoc">
                       <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L13-13" class="github-link">
@@ -257,15 +277,35 @@ but handling the possible thrown exception with a given <code>handler</code> int
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '157', 157)" onmouseover="showTip(event, '157', 157)">
-            exists predicate _arg1
+          <code onmouseout="hideTip(event, '233', 233)" onmouseover="showTip(event, '233', 233)">
+            errors(x)
           </code>
-          <div class="tip" id="157">
-            <strong>Signature:</strong> predicate:(&#39;?10287 -&gt; bool) -&gt; _arg1:Result&lt;&#39;?10287,&#39;?10288&gt; -&gt; bool<br />
-                          <strong>Type parameters:</strong> '?10287, '?10288                      </div>
+          <div class="tip" id="233">
+            <strong>Signature:</strong> x:&#39;?11609 -&gt; Result&lt;&#39;?11610,&#39;?11609 list&gt;<br />
+                          <strong>Type parameters:</strong> '?11609, '?11610                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L28-28" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L16-16" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Creates a failures results.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '234', 234)" onmouseover="showTip(event, '234', 234)">
+            exists predicate _arg1
+          </code>
+          <div class="tip" id="234">
+            <strong>Signature:</strong> predicate:(&#39;?11626 -&gt; bool) -&gt; _arg1:Result&lt;&#39;?11626,&#39;?11627&gt; -&gt; bool<br />
+                          <strong>Type parameters:</strong> '?11626, '?11627                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L36-36" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -277,15 +317,15 @@ but handling the possible thrown exception with a given <code>handler</code> int
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '158', 158)" onmouseover="showTip(event, '158', 158)">
+          <code onmouseout="hideTip(event, '235', 235)" onmouseover="showTip(event, '235', 235)">
             filter predicate ifError r
           </code>
-          <div class="tip" id="158">
+          <div class="tip" id="235">
             <strong>Signature:</strong> predicate:(&#39;a -&gt; bool) -&gt; ifError:&#39;b -&gt; r:Result&lt;&#39;a,&#39;b&gt; -&gt; Result&lt;&#39;a,&#39;b&gt;<br />
                           <strong>Type parameters:</strong> 'a, 'b                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L38-38" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L46-46" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -297,15 +337,15 @@ but handling the possible thrown exception with a given <code>handler</code> int
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '159', 159)" onmouseover="showTip(event, '159', 159)">
+          <code onmouseout="hideTip(event, '236', 236)" onmouseover="showTip(event, '236', 236)">
             filterWith predicate ifError _arg1
           </code>
-          <div class="tip" id="159">
-            <strong>Signature:</strong> predicate:(&#39;?10296 -&gt; bool) -&gt; ifError:(unit -&gt; &#39;?10297) -&gt; _arg1:Result&lt;&#39;?10296,&#39;?10297&gt; -&gt; Result&lt;&#39;?10296,&#39;?10297&gt;<br />
-                          <strong>Type parameters:</strong> '?10296, '?10297                      </div>
+          <div class="tip" id="236">
+            <strong>Signature:</strong> predicate:(&#39;?11635 -&gt; bool) -&gt; ifError:(unit -&gt; &#39;?11636) -&gt; _arg1:Result&lt;&#39;?11635,&#39;?11636&gt; -&gt; Result&lt;&#39;?11635,&#39;?11636&gt;<br />
+                          <strong>Type parameters:</strong> '?11635, '?11636                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L45-45" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L53-53" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -317,15 +357,15 @@ but handling the possible thrown exception with a given <code>handler</code> int
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '160', 160)" onmouseover="showTip(event, '160', 160)">
+          <code onmouseout="hideTip(event, '237', 237)" onmouseover="showTip(event, '237', 237)">
             flatten(_arg1)
           </code>
-          <div class="tip" id="160">
-            <strong>Signature:</strong> _arg1:Result&lt;Result&lt;&#39;?10368,&#39;?10369&gt;,&#39;?10369&gt; -&gt; Result&lt;&#39;?10368,&#39;?10369&gt;<br />
-                          <strong>Type parameters:</strong> '?10368, '?10369                      </div>
+          <div class="tip" id="237">
+            <strong>Signature:</strong> _arg1:Result&lt;Result&lt;&#39;?11737,&#39;?11738&gt;,&#39;?11738&gt; -&gt; Result&lt;&#39;?11737,&#39;?11738&gt;<br />
+                          <strong>Type parameters:</strong> '?11737, '?11738                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L152-152" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L197-197" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -337,15 +377,15 @@ but handling the possible thrown exception with a given <code>handler</code> int
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '161', 161)" onmouseover="showTip(event, '161', 161)">
+          <code onmouseout="hideTip(event, '238', 238)" onmouseover="showTip(event, '238', 238)">
             fold accummulator seed r
           </code>
-          <div class="tip" id="161">
-            <strong>Signature:</strong> accummulator:(&#39;?10283 -&gt; &#39;?10284 -&gt; &#39;?10283) -&gt; seed:&#39;?10283 -&gt; r:Result&lt;&#39;?10284,&#39;?10285&gt; -&gt; &#39;?10283<br />
-                          <strong>Type parameters:</strong> '?10283, '?10284, '?10285                      </div>
+          <div class="tip" id="238">
+            <strong>Signature:</strong> accummulator:(&#39;?11622 -&gt; &#39;?11623 -&gt; &#39;?11622) -&gt; seed:&#39;?11622 -&gt; r:Result&lt;&#39;?11623,&#39;?11624&gt; -&gt; &#39;?11622<br />
+                          <strong>Type parameters:</strong> '?11622, '?11623, '?11624                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L22-22" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L30-30" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -357,15 +397,15 @@ but handling the possible thrown exception with a given <code>handler</code> int
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '162', 162)" onmouseover="showTip(event, '162', 162)">
+          <code onmouseout="hideTip(event, '239', 239)" onmouseover="showTip(event, '239', 239)">
             getOrElse ifError _arg1
           </code>
-          <div class="tip" id="162">
+          <div class="tip" id="239">
             <strong>Signature:</strong> ifError:(&#39;a -&gt; &#39;b) -&gt; _arg1:Result&lt;&#39;b,&#39;a&gt; -&gt; &#39;b<br />
                           <strong>Type parameters:</strong> 'a, 'b                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L168-168" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L213-213" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -377,15 +417,15 @@ but handling the possible thrown exception with a given <code>handler</code> int
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '163', 163)" onmouseover="showTip(event, '163', 163)">
+          <code onmouseout="hideTip(event, '240', 240)" onmouseover="showTip(event, '240', 240)">
             getOrValue ifError result
           </code>
-          <div class="tip" id="163">
+          <div class="tip" id="240">
             <strong>Signature:</strong> ifError:&#39;a -&gt; result:Result&lt;&#39;a,&#39;b&gt; -&gt; &#39;a<br />
                           <strong>Type parameters:</strong> 'a, 'b                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L173-173" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L218-218" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -397,15 +437,15 @@ but handling the possible thrown exception with a given <code>handler</code> int
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '164', 164)" onmouseover="showTip(event, '164', 164)">
+          <code onmouseout="hideTip(event, '241', 241)" onmouseover="showTip(event, '241', 241)">
             isError(_arg1)
           </code>
-          <div class="tip" id="164">
-            <strong>Signature:</strong> _arg1:Result&lt;&#39;?10280,&#39;?10281&gt; -&gt; bool<br />
-                          <strong>Type parameters:</strong> '?10280, '?10281                      </div>
+          <div class="tip" id="241">
+            <strong>Signature:</strong> _arg1:Result&lt;&#39;?11615,&#39;?11616&gt; -&gt; bool<br />
+                          <strong>Type parameters:</strong> '?11615, '?11616                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L19-19" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L22-22" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -417,15 +457,15 @@ but handling the possible thrown exception with a given <code>handler</code> int
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '165', 165)" onmouseover="showTip(event, '165', 165)">
+          <code onmouseout="hideTip(event, '242', 242)" onmouseover="showTip(event, '242', 242)">
             isOk(_arg1)
           </code>
-          <div class="tip" id="165">
+          <div class="tip" id="242">
             <strong>Signature:</strong> _arg1:Result&lt;&#39;a,&#39;b&gt; -&gt; bool<br />
                           <strong>Type parameters:</strong> 'a, 'b                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L16-16" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L19-19" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -437,15 +477,15 @@ but handling the possible thrown exception with a given <code>handler</code> int
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '166', 166)" onmouseover="showTip(event, '166', 166)">
+          <code onmouseout="hideTip(event, '243', 243)" onmouseover="showTip(event, '243', 243)">
             iter f result
           </code>
-          <div class="tip" id="166">
-            <strong>Signature:</strong> f:(&#39;?10371 -&gt; unit) -&gt; result:Result&lt;&#39;?10371,&#39;?10372&gt; -&gt; Result&lt;&#39;?10371,&#39;?10372&gt;<br />
-                          <strong>Type parameters:</strong> '?10371, '?10372                      </div>
+          <div class="tip" id="243">
+            <strong>Signature:</strong> f:(&#39;?11740 -&gt; unit) -&gt; result:Result&lt;&#39;?11740,&#39;?11741&gt; -&gt; Result&lt;&#39;?11740,&#39;?11741&gt;<br />
+                          <strong>Type parameters:</strong> '?11740, '?11741                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L158-158" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L203-203" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -457,15 +497,15 @@ but handling the possible thrown exception with a given <code>handler</code> int
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '167', 167)" onmouseover="showTip(event, '167', 167)">
+          <code onmouseout="hideTip(event, '244', 244)" onmouseover="showTip(event, '244', 244)">
             iterError f result
           </code>
-          <div class="tip" id="167">
-            <strong>Signature:</strong> f:(&#39;?10374 -&gt; unit) -&gt; result:Result&lt;&#39;?10375,&#39;?10374&gt; -&gt; Result&lt;&#39;?10375,&#39;?10374&gt;<br />
-                          <strong>Type parameters:</strong> '?10374, '?10375                      </div>
+          <div class="tip" id="244">
+            <strong>Signature:</strong> f:(&#39;?11743 -&gt; unit) -&gt; result:Result&lt;&#39;?11744,&#39;?11743&gt; -&gt; Result&lt;&#39;?11744,&#39;?11743&gt;<br />
+                          <strong>Type parameters:</strong> '?11743, '?11744                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L161-161" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L206-206" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -477,15 +517,15 @@ but handling the possible thrown exception with a given <code>handler</code> int
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '168', 168)" onmouseover="showTip(event, '168', 168)">
+          <code onmouseout="hideTip(event, '245', 245)" onmouseover="showTip(event, '245', 245)">
             lift2 f xResult yResult
           </code>
-          <div class="tip" id="168">
-            <strong>Signature:</strong> f:(&#39;?10299 -&gt; &#39;?10300 -&gt; &#39;?10301) -&gt; xResult:Result&lt;&#39;?10299,&#39;?10302 list&gt; -&gt; yResult:Result&lt;&#39;?10300,&#39;?10302 list&gt; -&gt; Result&lt;&#39;?10301,&#39;?10302 list&gt;<br />
-                          <strong>Type parameters:</strong> '?10299, '?10300, '?10301, '?10302                      </div>
+          <div class="tip" id="245">
+            <strong>Signature:</strong> f:(&#39;?11643 -&gt; &#39;?11644 -&gt; &#39;?11645) -&gt; xResult:Result&lt;&#39;?11643,&#39;?11646 list&gt; -&gt; yResult:Result&lt;&#39;?11644,&#39;?11646 list&gt; -&gt; Result&lt;&#39;?11645,&#39;?11646 list&gt;<br />
+                          <strong>Type parameters:</strong> '?11643, '?11644, '?11645, '?11646                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L51-51" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L66-66" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -497,15 +537,35 @@ but handling the possible thrown exception with a given <code>handler</code> int
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '169', 169)" onmouseover="showTip(event, '169', 169)">
-            lift3 f xResult yResult zResult
+          <code onmouseout="hideTip(event, '246', 246)" onmouseover="showTip(event, '246', 246)">
+            lift2With fError f xResult yResult
           </code>
-          <div class="tip" id="169">
-            <strong>Signature:</strong> f:(&#39;?10304 -&gt; &#39;?10305 -&gt; &#39;?10306 -&gt; &#39;?10307) -&gt; xResult:Result&lt;&#39;?10304,&#39;?10308 list&gt; -&gt; yResult:Result&lt;&#39;?10305,&#39;?10308 list&gt; -&gt; zResult:Result&lt;&#39;?10306,&#39;?10308 list&gt; -&gt; Result&lt;&#39;?10307,&#39;?10308 list&gt;<br />
-                          <strong>Type parameters:</strong> '?10304, '?10305, '?10306, '?10307, '?10308                      </div>
+          <div class="tip" id="246">
+            <strong>Signature:</strong> fError:(&#39;f -&gt; &#39;f -&gt; &#39;f) -&gt; f:(&#39;g -&gt; &#39;h -&gt; &#39;i) -&gt; xResult:Result&lt;&#39;g,&#39;f&gt; -&gt; yResult:Result&lt;&#39;h,&#39;f&gt; -&gt; Result&lt;&#39;i,&#39;f&gt;<br />
+                          <strong>Type parameters:</strong> 'f, 'g, 'h, 'i                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L58-58" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L59-59" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Lifts a two argument function to work with result types.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '247', 247)" onmouseover="showTip(event, '247', 247)">
+            lift3 f xResult yResult zResult
+          </code>
+          <div class="tip" id="247">
+            <strong>Signature:</strong> f:(&#39;?11654 -&gt; &#39;?11655 -&gt; &#39;?11656 -&gt; &#39;?11657) -&gt; xResult:Result&lt;&#39;?11654,&#39;?11658 list&gt; -&gt; yResult:Result&lt;&#39;?11655,&#39;?11658 list&gt; -&gt; zResult:Result&lt;&#39;?11656,&#39;?11658 list&gt; -&gt; Result&lt;&#39;?11657,&#39;?11658 list&gt;<br />
+                          <strong>Type parameters:</strong> '?11654, '?11655, '?11656, '?11657, '?11658                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L78-78" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -517,15 +577,35 @@ but handling the possible thrown exception with a given <code>handler</code> int
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '170', 170)" onmouseover="showTip(event, '170', 170)">
-            lift4 f xResult yResult zResult aResult
+          <code onmouseout="hideTip(event, '248', 248)" onmouseover="showTip(event, '248', 248)">
+            lift3With(...)
           </code>
-          <div class="tip" id="170">
-            <strong>Signature:</strong> f:(&#39;?10310 -&gt; &#39;?10311 -&gt; &#39;?10312 -&gt; &#39;?10313 -&gt; &#39;?10314) -&gt; xResult:Result&lt;&#39;?10310,&#39;?10315 list&gt; -&gt; yResult:Result&lt;&#39;?10311,&#39;?10315 list&gt; -&gt; zResult:Result&lt;&#39;?10312,&#39;?10315 list&gt; -&gt; aResult:Result&lt;&#39;?10313,&#39;?10315 list&gt; -&gt; Result&lt;&#39;?10314,&#39;?10315 list&gt;<br />
-                          <strong>Type parameters:</strong> '?10310, '?10311, '?10312, '?10313, '?10314, '?10315                      </div>
+          <div class="tip" id="248">
+            <strong>Signature:</strong> fError:(&#39;?11648 -&gt; &#39;?11648 -&gt; &#39;?11648) -&gt; f:(&#39;?11649 -&gt; &#39;?11650 -&gt; &#39;?11651 -&gt; &#39;?11652) -&gt; xResult:Result&lt;&#39;?11649,&#39;?11648&gt; -&gt; yResult:Result&lt;&#39;?11650,&#39;?11648&gt; -&gt; zResult:Result&lt;&#39;?11651,&#39;?11648&gt; -&gt; Result&lt;&#39;?11652,&#39;?11648&gt;<br />
+                          <strong>Type parameters:</strong> '?11648, '?11649, '?11650, '?11651, '?11652                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L65-65" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L70-70" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Lifts a three argument function to work with result types.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '249', 249)" onmouseover="showTip(event, '249', 249)">
+            lift4 f xResult yResult zResult aResult
+          </code>
+          <div class="tip" id="249">
+            <strong>Signature:</strong> f:(&#39;?11667 -&gt; &#39;?11668 -&gt; &#39;?11669 -&gt; &#39;?11670 -&gt; &#39;?11671) -&gt; xResult:Result&lt;&#39;?11667,&#39;?11672 list&gt; -&gt; yResult:Result&lt;&#39;?11668,&#39;?11672 list&gt; -&gt; zResult:Result&lt;&#39;?11669,&#39;?11672 list&gt; -&gt; aResult:Result&lt;&#39;?11670,&#39;?11672 list&gt; -&gt; Result&lt;&#39;?11671,&#39;?11672 list&gt;<br />
+                          <strong>Type parameters:</strong> '?11667, '?11668, '?11669, '?11670, '?11671, '?11672                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L102-102" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -537,15 +617,35 @@ but handling the possible thrown exception with a given <code>handler</code> int
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '171', 171)" onmouseover="showTip(event, '171', 171)">
-            map2 f r1 r2
+          <code onmouseout="hideTip(event, '250', 250)" onmouseover="showTip(event, '250', 250)">
+            lift4With(...)
           </code>
-          <div class="tip" id="171">
-            <strong>Signature:</strong> f:(&#39;?10321 -&gt; &#39;?10322 -&gt; &#39;?10323) -&gt; r1:Result&lt;&#39;?10321,&#39;?10324 list&gt; -&gt; r2:Result&lt;&#39;?10322,&#39;?10324 list&gt; -&gt; Result&lt;&#39;?10323,&#39;?10324 list&gt;<br />
-                          <strong>Type parameters:</strong> '?10321, '?10322, '?10323, '?10324                      </div>
+          <div class="tip" id="250">
+            <strong>Signature:</strong> fError:(&#39;?11660 -&gt; &#39;?11660 -&gt; &#39;?11660) -&gt; f:(&#39;?11661 -&gt; &#39;?11662 -&gt; &#39;?11663 -&gt; &#39;?11664 -&gt; &#39;?11665) -&gt; xResult:Result&lt;&#39;?11661,&#39;?11660&gt; -&gt; yResult:Result&lt;&#39;?11662,&#39;?11660&gt; -&gt; zResult:Result&lt;&#39;?11663,&#39;?11660&gt; -&gt; aResult:Result&lt;&#39;?11664,&#39;?11660&gt; -&gt; Result&lt;&#39;?11665,&#39;?11660&gt;<br />
+                          <strong>Type parameters:</strong> '?11660, '?11661, '?11662, '?11663, '?11664, '?11665                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L79-79" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L82-82" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Lifts a four argument function to work with result types.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '251', 251)" onmouseover="showTip(event, '251', 251)">
+            map2 f r1 r2
+          </code>
+          <div class="tip" id="251">
+            <strong>Signature:</strong> f:(&#39;?11682 -&gt; &#39;?11683 -&gt; &#39;?11684) -&gt; r1:Result&lt;&#39;?11682,&#39;?11685 list&gt; -&gt; r2:Result&lt;&#39;?11683,&#39;?11685 list&gt; -&gt; Result&lt;&#39;?11684,&#39;?11685 list&gt;<br />
+                          <strong>Type parameters:</strong> '?11682, '?11683, '?11684, '?11685                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L114-114" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -557,15 +657,15 @@ but handling the possible thrown exception with a given <code>handler</code> int
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '172', 172)" onmouseover="showTip(event, '172', 172)">
+          <code onmouseout="hideTip(event, '252', 252)" onmouseover="showTip(event, '252', 252)">
             map3 f r1 r2 r3
           </code>
-          <div class="tip" id="172">
-            <strong>Signature:</strong> f:(&#39;?10326 -&gt; &#39;?10327 -&gt; &#39;?10328 -&gt; &#39;?10329) -&gt; r1:Result&lt;&#39;?10326,&#39;?10330 list&gt; -&gt; r2:Result&lt;&#39;?10327,&#39;?10330 list&gt; -&gt; r3:Result&lt;&#39;?10328,&#39;?10330 list&gt; -&gt; Result&lt;&#39;?10329,&#39;?10330 list&gt;<br />
-                          <strong>Type parameters:</strong> '?10326, '?10327, '?10328, '?10329, '?10330                      </div>
+          <div class="tip" id="252">
+            <strong>Signature:</strong> f:(&#39;?11687 -&gt; &#39;?11688 -&gt; &#39;?11689 -&gt; &#39;?11690) -&gt; r1:Result&lt;&#39;?11687,&#39;?11691 list&gt; -&gt; r2:Result&lt;&#39;?11688,&#39;?11691 list&gt; -&gt; r3:Result&lt;&#39;?11689,&#39;?11691 list&gt; -&gt; Result&lt;&#39;?11690,&#39;?11691 list&gt;<br />
+                          <strong>Type parameters:</strong> '?11687, '?11688, '?11689, '?11690, '?11691                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L87-87" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L122-122" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -577,15 +677,15 @@ but handling the possible thrown exception with a given <code>handler</code> int
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '173', 173)" onmouseover="showTip(event, '173', 173)">
+          <code onmouseout="hideTip(event, '253', 253)" onmouseover="showTip(event, '253', 253)">
             map4 f r1 r2 r3 r4
           </code>
-          <div class="tip" id="173">
-            <strong>Signature:</strong> f:(&#39;?10332 -&gt; &#39;?10333 -&gt; &#39;?10334 -&gt; &#39;?10335 -&gt; &#39;?10336) -&gt; r1:Result&lt;&#39;?10332,&#39;?10337 list&gt; -&gt; r2:Result&lt;&#39;?10333,&#39;?10337 list&gt; -&gt; r3:Result&lt;&#39;?10334,&#39;?10337 list&gt; -&gt; r4:Result&lt;&#39;?10335,&#39;?10337 list&gt; -&gt; Result&lt;&#39;?10336,&#39;?10337 list&gt;<br />
-                          <strong>Type parameters:</strong> '?10332, '?10333, '?10334, '?10335, '?10336, '?10337                      </div>
+          <div class="tip" id="253">
+            <strong>Signature:</strong> f:(&#39;?11693 -&gt; &#39;?11694 -&gt; &#39;?11695 -&gt; &#39;?11696 -&gt; &#39;?11697) -&gt; r1:Result&lt;&#39;?11693,&#39;?11698 list&gt; -&gt; r2:Result&lt;&#39;?11694,&#39;?11698 list&gt; -&gt; r3:Result&lt;&#39;?11695,&#39;?11698 list&gt; -&gt; r4:Result&lt;&#39;?11696,&#39;?11698 list&gt; -&gt; Result&lt;&#39;?11697,&#39;?11698 list&gt;<br />
+                          <strong>Type parameters:</strong> '?11693, '?11694, '?11695, '?11696, '?11697, '?11698                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L99-99" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L134-134" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -597,15 +697,15 @@ but handling the possible thrown exception with a given <code>handler</code> int
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '174', 174)" onmouseover="showTip(event, '174', 174)">
+          <code onmouseout="hideTip(event, '254', 254)" onmouseover="showTip(event, '254', 254)">
             mapBoth ifOk ifError result
           </code>
-          <div class="tip" id="174">
-            <strong>Signature:</strong> ifOk:(&#39;?10439 -&gt; &#39;?10440) -&gt; ifError:(&#39;?10441 -&gt; &#39;?10442) -&gt; result:Result&lt;&#39;?10439,&#39;?10441&gt; -&gt; Result&lt;&#39;?10440,&#39;?10442&gt;<br />
-                          <strong>Type parameters:</strong> '?10439, '?10440, '?10441, '?10442                      </div>
+          <div class="tip" id="254">
+            <strong>Signature:</strong> ifOk:(&#39;a -&gt; &#39;b) -&gt; ifError:(&#39;c -&gt; &#39;d) -&gt; result:Result&lt;&#39;a,&#39;c&gt; -&gt; Result&lt;&#39;b,&#39;d&gt;<br />
+                          <strong>Type parameters:</strong> 'a, 'b, 'c, 'd                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L238-238" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L292-292" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -617,15 +717,35 @@ but handling the possible thrown exception with a given <code>handler</code> int
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '175', 175)" onmouseover="showTip(event, '175', 175)">
-            multipleErrors(result)
+          <code onmouseout="hideTip(event, '255', 255)" onmouseover="showTip(event, '255', 255)">
+            mapTo value _arg1
           </code>
-          <div class="tip" id="175">
-            <strong>Signature:</strong> result:Result&lt;&#39;?10377,&#39;?10378&gt; -&gt; Result&lt;&#39;?10377,&#39;?10378 list&gt;<br />
-                          <strong>Type parameters:</strong> '?10377, '?10378                      </div>
+          <div class="tip" id="255">
+            <strong>Signature:</strong> value:&#39;?11618 -&gt; _arg1:Result&lt;&#39;?11619,&#39;?11620&gt; -&gt; Result&lt;&#39;?11618,&#39;?11620&gt;<br />
+                          <strong>Type parameters:</strong> '?11618, '?11619, '?11620                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L165-165" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L25-25" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Maps to a fixed <code>Ok</code> value <code>x</code> when the result is <code>Ok x</code>.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '256', 256)" onmouseover="showTip(event, '256', 256)">
+            multipleErrors(result)
+          </code>
+          <div class="tip" id="256">
+            <strong>Signature:</strong> result:Result&lt;&#39;?11746,&#39;?11747&gt; -&gt; Result&lt;&#39;?11746,&#39;?11747 list&gt;<br />
+                          <strong>Type parameters:</strong> '?11746, '?11747                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L210-210" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -638,15 +758,35 @@ Useful when the signature of the required function requires multiple <code>Error
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '176', 176)" onmouseover="showTip(event, '176', 176)">
+          <code onmouseout="hideTip(event, '257', 257)" onmouseover="showTip(event, '257', 257)">
+            ofObj error _arg1
+          </code>
+          <div class="tip" id="257">
+            <strong>Signature:</strong> error:&#39;?11781 -&gt; _arg1:&#39;?11782 -&gt; Result&lt;&#39;?11782,&#39;?11781&gt;<br />
+                          <strong>Type parameters:</strong> '?11781, '?11782                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L249-249" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Transforms an object from to a <code>Ok x</code> result when the object is not <code>null</code>; otherwise <code>Error error</code> with the specified error.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '258', 258)" onmouseover="showTip(event, '258', 258)">
             ofOption ifNone opt
           </code>
-          <div class="tip" id="176">
+          <div class="tip" id="258">
             <strong>Signature:</strong> ifNone:&#39;c -&gt; opt:&#39;d option -&gt; Result&lt;&#39;d,&#39;c&gt;<br />
                           <strong>Type parameters:</strong> 'c, 'd                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L189-189" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L234-234" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -658,15 +798,15 @@ Useful when the signature of the required function requires multiple <code>Error
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '177', 177)" onmouseover="showTip(event, '177', 177)">
+          <code onmouseout="hideTip(event, '259', 259)" onmouseover="showTip(event, '259', 259)">
             ofOptionWith ifNone _arg1
           </code>
-          <div class="tip" id="177">
-            <strong>Signature:</strong> ifNone:(unit -&gt; &#39;?10394) -&gt; _arg1:&#39;?10395 option -&gt; Result&lt;&#39;?10395,&#39;?10394&gt;<br />
-                          <strong>Type parameters:</strong> '?10394, '?10395                      </div>
+          <div class="tip" id="259">
+            <strong>Signature:</strong> ifNone:(unit -&gt; &#39;?11763) -&gt; _arg1:&#39;?11764 option -&gt; Result&lt;&#39;?11764,&#39;?11763&gt;<br />
+                          <strong>Type parameters:</strong> '?11763, '?11764                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L184-184" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L229-229" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -678,12 +818,12 @@ Useful when the signature of the required function requires multiple <code>Error
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '178', 178)" onmouseover="showTip(event, '178', 178)">
+          <code onmouseout="hideTip(event, '260', 260)" onmouseover="showTip(event, '260', 260)">
             ok(arg0)
           </code>
-          <div class="tip" id="178">
-            <strong>Signature:</strong> arg0:&#39;?10271 -&gt; Result&lt;&#39;?10271,&#39;?10272&gt;<br />
-                          <strong>Type parameters:</strong> '?10271, '?10272                      </div>
+          <div class="tip" id="260">
+            <strong>Signature:</strong> arg0:&#39;?11603 -&gt; Result&lt;&#39;?11603,&#39;?11604&gt;<br />
+                          <strong>Type parameters:</strong> '?11603, '?11604                      </div>
         </td>
         <td class="xmldoc">
                       <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L10-10" class="github-link">
@@ -698,15 +838,15 @@ Useful when the signature of the required function requires multiple <code>Error
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '179', 179)" onmouseover="showTip(event, '179', 179)">
+          <code onmouseout="hideTip(event, '261', 261)" onmouseover="showTip(event, '261', 261)">
             orElse ifError _arg1
           </code>
-          <div class="tip" id="179">
-            <strong>Signature:</strong> ifError:(&#39;?10386 -&gt; Result&lt;&#39;?10387,&#39;?10388&gt;) -&gt; _arg1:Result&lt;&#39;?10387,&#39;?10386&gt; -&gt; Result&lt;&#39;?10387,&#39;?10388&gt;<br />
-                          <strong>Type parameters:</strong> '?10386, '?10387, '?10388                      </div>
+          <div class="tip" id="261">
+            <strong>Signature:</strong> ifError:(&#39;?11755 -&gt; Result&lt;&#39;?11756,&#39;?11757&gt;) -&gt; _arg1:Result&lt;&#39;?11756,&#39;?11755&gt; -&gt; Result&lt;&#39;?11756,&#39;?11757&gt;<br />
+                          <strong>Type parameters:</strong> '?11755, '?11756, '?11757                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L176-176" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L221-221" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -718,15 +858,15 @@ Useful when the signature of the required function requires multiple <code>Error
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '180', 180)" onmouseover="showTip(event, '180', 180)">
+          <code onmouseout="hideTip(event, '262', 262)" onmouseover="showTip(event, '262', 262)">
             orElseValue ifError result
           </code>
-          <div class="tip" id="180">
-            <strong>Signature:</strong> ifError:Result&lt;&#39;?10390,&#39;?10391&gt; -&gt; result:Result&lt;&#39;?10390,&#39;?10392&gt; -&gt; Result&lt;&#39;?10390,&#39;?10391&gt;<br />
-                          <strong>Type parameters:</strong> '?10390, '?10391, '?10392                      </div>
+          <div class="tip" id="262">
+            <strong>Signature:</strong> ifError:Result&lt;&#39;?11759,&#39;?11760&gt; -&gt; result:Result&lt;&#39;?11759,&#39;?11761&gt; -&gt; Result&lt;&#39;?11759,&#39;?11760&gt;<br />
+                          <strong>Type parameters:</strong> '?11759, '?11760, '?11761                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L181-181" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L226-226" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -738,15 +878,15 @@ Useful when the signature of the required function requires multiple <code>Error
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '181', 181)" onmouseover="showTip(event, '181', 181)">
+          <code onmouseout="hideTip(event, '263', 263)" onmouseover="showTip(event, '263', 263)">
             sequence(xs)
           </code>
-          <div class="tip" id="181">
-            <strong>Signature:</strong> xs:Result&lt;&#39;b,&#39;c list&gt; list -&gt; Result&lt;&#39;b list,&#39;c list&gt;<br />
-                          <strong>Type parameters:</strong> 'b, 'c                      </div>
+          <div class="tip" id="263">
+            <strong>Signature:</strong> xs:Result&lt;&#39;?11734,&#39;?11735 list&gt; list -&gt; Result&lt;&#39;?11734 list,&#39;?11735 list&gt;<br />
+                          <strong>Type parameters:</strong> '?11734, '?11735                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L149-149" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L194-194" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -758,19 +898,19 @@ Useful when the signature of the required function requires multiple <code>Error
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '182', 182)" onmouseover="showTip(event, '182', 182)">
+          <code onmouseout="hideTip(event, '264', 264)" onmouseover="showTip(event, '264', 264)">
             sequenceSeq(xs)
           </code>
-          <div class="tip" id="182">
-            <strong>Signature:</strong> xs:seq&lt;Result&lt;&#39;a,&#39;b list&gt;&gt; -&gt; Result&lt;seq&lt;&#39;a&gt;,&#39;b list&gt;<br />
-                          <strong>Type parameters:</strong> 'a, 'b                      </div>
+          <div class="tip" id="264">
+            <strong>Signature:</strong> xs:seq&lt;Result&lt;&#39;?11723,&#39;?11724 list&gt;&gt; -&gt; Result&lt;seq&lt;&#39;?11723&gt;,&#39;?11724 list&gt;<br />
+                          <strong>Type parameters:</strong> '?11723, '?11724                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L137-137" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L177-177" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          <p>Transorms a sequence of results into a result of a sequence.</p>
+          <p>Transforms a sequence of results into a result of a sequence.</p>
 
 
         </td>
@@ -778,15 +918,15 @@ Useful when the signature of the required function requires multiple <code>Error
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '183', 183)" onmouseover="showTip(event, '183', 183)">
+          <code onmouseout="hideTip(event, '265', 265)" onmouseover="showTip(event, '265', 265)">
             switch(f)
           </code>
-          <div class="tip" id="183">
-            <strong>Signature:</strong> f:(&#39;?10431 -&gt; &#39;?10432) -&gt; &#39;?10431 -&gt; Result&lt;&#39;?10432,&#39;?10433&gt;<br />
-                          <strong>Type parameters:</strong> '?10431, '?10432, '?10433                      </div>
+          <div class="tip" id="265">
+            <strong>Signature:</strong> f:(&#39;?11806 -&gt; &#39;?11807) -&gt; &#39;?11806 -&gt; Result&lt;&#39;?11807,&#39;?11808&gt;<br />
+                          <strong>Type parameters:</strong> '?11806, '?11807, '?11808                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L229-229" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L283-283" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -798,15 +938,15 @@ Useful when the signature of the required function requires multiple <code>Error
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '184', 184)" onmouseover="showTip(event, '184', 184)">
+          <code onmouseout="hideTip(event, '266', 266)" onmouseover="showTip(event, '266', 266)">
             toArray(result)
           </code>
-          <div class="tip" id="184">
-            <strong>Signature:</strong> result:Result&lt;&#39;?10403,&#39;?10404&gt; -&gt; &#39;?10403 []<br />
-                          <strong>Type parameters:</strong> '?10403, '?10404                      </div>
+          <div class="tip" id="266">
+            <strong>Signature:</strong> result:Result&lt;&#39;?11772,&#39;?11773&gt; -&gt; &#39;?11772 []<br />
+                          <strong>Type parameters:</strong> '?11772, '?11773                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L195-195" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L240-240" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -818,15 +958,15 @@ Useful when the signature of the required function requires multiple <code>Error
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '185', 185)" onmouseover="showTip(event, '185', 185)">
+          <code onmouseout="hideTip(event, '267', 267)" onmouseover="showTip(event, '267', 267)">
             toList(result)
           </code>
-          <div class="tip" id="185">
-            <strong>Signature:</strong> result:Result&lt;&#39;?10400,&#39;?10401&gt; -&gt; &#39;?10400 list<br />
-                          <strong>Type parameters:</strong> '?10400, '?10401                      </div>
+          <div class="tip" id="267">
+            <strong>Signature:</strong> result:Result&lt;&#39;?11769,&#39;?11770&gt; -&gt; &#39;?11769 list<br />
+                          <strong>Type parameters:</strong> '?11769, '?11770                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L192-192" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L237-237" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -838,15 +978,35 @@ Useful when the signature of the required function requires multiple <code>Error
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '186', 186)" onmouseover="showTip(event, '186', 186)">
-            toOption(result)
+          <code onmouseout="hideTip(event, '268', 268)" onmouseover="showTip(event, '268', 268)">
+            toObj(result)
           </code>
-          <div class="tip" id="186">
-            <strong>Signature:</strong> result:Result&lt;&#39;?10409,&#39;?10410&gt; -&gt; &#39;?10409 option<br />
-                          <strong>Type parameters:</strong> '?10409, '?10410                      </div>
+          <div class="tip" id="268">
+            <strong>Signature:</strong> result:Result&lt;&#39;T,&#39;TError&gt; -&gt; &#39;T<br />
+                          <strong>Type parameters:</strong> 'T, 'TError                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L201-201" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L254-254" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Transforms a result to an object using the <code>Ok x</code> value; otherwise use the default value of the <code>Ok x</code> type.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '269', 269)" onmouseover="showTip(event, '269', 269)">
+            toOption(result)
+          </code>
+          <div class="tip" id="269">
+            <strong>Signature:</strong> result:Result&lt;&#39;a,&#39;b&gt; -&gt; &#39;a option<br />
+                          <strong>Type parameters:</strong> 'a, 'b                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L246-246" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -858,15 +1018,15 @@ Useful when the signature of the required function requires multiple <code>Error
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '187', 187)" onmouseover="showTip(event, '187', 187)">
+          <code onmouseout="hideTip(event, '270', 270)" onmouseover="showTip(event, '270', 270)">
             toSeq(result)
           </code>
-          <div class="tip" id="187">
-            <strong>Signature:</strong> result:Result&lt;&#39;?10406,&#39;?10407&gt; -&gt; seq&lt;&#39;?10406&gt;<br />
-                          <strong>Type parameters:</strong> '?10406, '?10407                      </div>
+          <div class="tip" id="270">
+            <strong>Signature:</strong> result:Result&lt;&#39;?11775,&#39;?11776&gt; -&gt; seq&lt;&#39;?11775&gt;<br />
+                          <strong>Type parameters:</strong> '?11775, '?11776                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L198-198" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L243-243" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -878,15 +1038,15 @@ Useful when the signature of the required function requires multiple <code>Error
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '188', 188)" onmouseover="showTip(event, '188', 188)">
+          <code onmouseout="hideTip(event, '271', 271)" onmouseover="showTip(event, '271', 271)">
             traverse f xs
           </code>
-          <div class="tip" id="188">
-            <strong>Signature:</strong> f:(&#39;?10361 -&gt; Result&lt;&#39;?10362,&#39;?10363 list&gt;) -&gt; xs:&#39;?10361 list -&gt; Result&lt;&#39;?10362 list,&#39;?10363 list&gt;<br />
-                          <strong>Type parameters:</strong> '?10361, '?10362, '?10363                      </div>
+          <div class="tip" id="271">
+            <strong>Signature:</strong> f:(&#39;a -&gt; Result&lt;&#39;b,&#39;c list&gt;) -&gt; xs:&#39;a list -&gt; Result&lt;&#39;b list,&#39;c list&gt;<br />
+                          <strong>Type parameters:</strong> 'a, 'b, 'c                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L141-141" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L190-190" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -899,15 +1059,15 @@ collecting the outcomes into a result.</p>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '189', 189)" onmouseover="showTip(event, '189', 189)">
+          <code onmouseout="hideTip(event, '272', 272)" onmouseover="showTip(event, '272', 272)">
             traverseSeq f xs
           </code>
-          <div class="tip" id="189">
-            <strong>Signature:</strong> f:(&#39;a -&gt; Result&lt;&#39;b,&#39;c list&gt;) -&gt; xs:seq&lt;&#39;a&gt; -&gt; Result&lt;seq&lt;&#39;b&gt;,&#39;c list&gt;<br />
-                          <strong>Type parameters:</strong> 'a, 'b, 'c                      </div>
+          <div class="tip" id="272">
+            <strong>Signature:</strong> f:(&#39;?11719 -&gt; Result&lt;&#39;?11720,&#39;?11721 list&gt;) -&gt; xs:seq&lt;&#39;?11719&gt; -&gt; Result&lt;seq&lt;&#39;?11720&gt;,&#39;?11721 list&gt;<br />
+                          <strong>Type parameters:</strong> '?11719, '?11720, '?11721                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L129-129" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L173-173" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -920,15 +1080,57 @@ collecting the outcomes into a result.</p>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '190', 190)" onmouseover="showTip(event, '190', 190)">
-            zip2 r1 r2
+          <code onmouseout="hideTip(event, '273', 273)" onmouseover="showTip(event, '273', 273)">
+            traverseSeqWith fError f xs
           </code>
-          <div class="tip" id="190">
-            <strong>Signature:</strong> r1:Result&lt;&#39;?10339,&#39;?10340 list&gt; -&gt; r2:Result&lt;&#39;?10341,&#39;?10340 list&gt; -&gt; Result&lt;(&#39;?10339 * &#39;?10341),&#39;?10340 list&gt;<br />
-                          <strong>Type parameters:</strong> '?10339, '?10340, '?10341                      </div>
+          <div class="tip" id="273">
+            <strong>Signature:</strong> fError:(&#39;e -&gt; &#39;e -&gt; &#39;e) -&gt; f:(&#39;f -&gt; Result&lt;&#39;g,&#39;e&gt;) -&gt; xs:seq&lt;&#39;f&gt; -&gt; Result&lt;seq&lt;&#39;g&gt;,&#39;e&gt;<br />
+                          <strong>Type parameters:</strong> 'e, 'f, 'g                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L119-119" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L164-164" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Traverse over a sequence running a given mapping function over the elements,
+collecting the outcomes into a result.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '274', 274)" onmouseover="showTip(event, '274', 274)">
+            traverseWith fError f xs
+          </code>
+          <div class="tip" id="274">
+            <strong>Signature:</strong> fError:(&#39;?11726 -&gt; &#39;?11726 -&gt; &#39;?11726) -&gt; f:(&#39;?11727 -&gt; Result&lt;&#39;?11728,&#39;?11726&gt;) -&gt; xs:&#39;?11727 list -&gt; Result&lt;&#39;?11728 list,&#39;?11726&gt;<br />
+                          <strong>Type parameters:</strong> '?11726, '?11727, '?11728                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L181-181" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Traverse over a list running a given mapping function over the elements,
+collecting the outcomes into a result.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '275', 275)" onmouseover="showTip(event, '275', 275)">
+            zip2 r1 r2
+          </code>
+          <div class="tip" id="275">
+            <strong>Signature:</strong> r1:Result&lt;&#39;?11700,&#39;?11701 list&gt; -&gt; r2:Result&lt;&#39;?11702,&#39;?11701 list&gt; -&gt; Result&lt;(&#39;?11700 * &#39;?11702),&#39;?11701 list&gt;<br />
+                          <strong>Type parameters:</strong> '?11700, '?11701, '?11702                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L154-154" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -940,15 +1142,15 @@ collecting the outcomes into a result.</p>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '191', 191)" onmouseover="showTip(event, '191', 191)">
+          <code onmouseout="hideTip(event, '276', 276)" onmouseover="showTip(event, '276', 276)">
             zip3 r1 r2 r3
           </code>
-          <div class="tip" id="191">
-            <strong>Signature:</strong> r1:Result&lt;&#39;?10343,&#39;?10344 list&gt; -&gt; r2:Result&lt;&#39;?10345,&#39;?10344 list&gt; -&gt; r3:Result&lt;&#39;?10346,&#39;?10344 list&gt; -&gt; Result&lt;(&#39;?10343 * &#39;?10345 * &#39;?10346),&#39;?10344 list&gt;<br />
-                          <strong>Type parameters:</strong> '?10343, '?10344, '?10345, '?10346                      </div>
+          <div class="tip" id="276">
+            <strong>Signature:</strong> r1:Result&lt;&#39;?11704,&#39;?11705 list&gt; -&gt; r2:Result&lt;&#39;?11706,&#39;?11705 list&gt; -&gt; r3:Result&lt;&#39;?11707,&#39;?11705 list&gt; -&gt; Result&lt;(&#39;?11704 * &#39;?11706 * &#39;?11707),&#39;?11705 list&gt;<br />
+                          <strong>Type parameters:</strong> '?11704, '?11705, '?11706, '?11707                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L122-122" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L157-157" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -960,15 +1162,15 @@ collecting the outcomes into a result.</p>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '192', 192)" onmouseover="showTip(event, '192', 192)">
+          <code onmouseout="hideTip(event, '277', 277)" onmouseover="showTip(event, '277', 277)">
             zip4 r1 r2 r3 r4
           </code>
-          <div class="tip" id="192">
-            <strong>Signature:</strong> r1:Result&lt;&#39;?10348,&#39;?10349 list&gt; -&gt; r2:Result&lt;&#39;?10350,&#39;?10349 list&gt; -&gt; r3:Result&lt;&#39;?10351,&#39;?10349 list&gt; -&gt; r4:Result&lt;&#39;?10352,&#39;?10349 list&gt; -&gt; Result&lt;(&#39;?10348 * &#39;?10350 * &#39;?10351 * &#39;?10352),&#39;?10349 list&gt;<br />
-                          <strong>Type parameters:</strong> '?10348, '?10349, '?10350, '?10351, '?10352                      </div>
+          <div class="tip" id="277">
+            <strong>Signature:</strong> r1:Result&lt;&#39;?11709,&#39;?11710 list&gt; -&gt; r2:Result&lt;&#39;?11711,&#39;?11710 list&gt; -&gt; r3:Result&lt;&#39;?11712,&#39;?11710 list&gt; -&gt; r4:Result&lt;&#39;?11713,&#39;?11710 list&gt; -&gt; Result&lt;(&#39;?11709 * &#39;?11711 * &#39;?11712 * &#39;?11713),&#39;?11710 list&gt;<br />
+                          <strong>Type parameters:</strong> '?11709, '?11710, '?11711, '?11712, '?11713                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L125-125" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Result.fs#L160-160" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>

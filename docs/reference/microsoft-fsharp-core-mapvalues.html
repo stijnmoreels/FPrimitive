@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8"/>
-    <title>Untrust - FPrimitive</title>
+    <title>MapValues - FPrimitive</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="description" content=""/>
     <meta name="author" content="Stijn Moreels"/>
@@ -35,13 +35,16 @@
 
 
 
-<h1>Untrust</h1>
+<h1>MapValues</h1>
 <p>
-  <span>Namespace: FPrimitive</span><br />
-  </p>
+  <span>Namespace: Microsoft.FSharp.Core</span><br />
+        <span>
+          Attributes:<br />
+[&lt;AutoOpen&gt;]<br />
+          
+      </span>
+</p>
 <div class="xmldoc">
-<p>Representation of an untrusted value that should be validated first before it can be used.</p>
-
 </div>
 
 <!-- Render nested types and modules, if there are any -->
@@ -55,19 +58,19 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '180', 180)" onmouseover="showTip(event, '180', 180)">
-            getWith validator x
+          <code onmouseout="hideTip(event, '200', 200)" onmouseover="showTip(event, '200', 200)">
+            map
           </code>
-          <div class="tip" id="180">
-            <strong>Signature:</strong> validator:(&#39;a -&gt; bool) -&gt; x:Untrust&lt;&#39;a&gt; -&gt; &#39;a option<br />
-                          <strong>Type parameters:</strong> 'a                      </div>
+          <div class="tip" id="200">
+            <strong>Signature:</strong> MapBuilder&lt;(type),obj&gt;<br />
+                          <strong>Type parameters:</strong> 'TKey, 'TValue                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Untrust.fs#L34-34" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Map.fs#L89-89" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          <p>Tries to get the wrapped value out of the untrusted boundary by validating the value.</p>
+          <p>Builds a map where duplicate entries are overridden.</p>
 
 
         </td>
@@ -75,39 +78,19 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '181', 181)" onmouseover="showTip(event, '181', 181)">
-            getWithOption validator x
+          <code onmouseout="hideTip(event, '201', 201)" onmouseover="showTip(event, '201', 201)">
+            mapu
           </code>
-          <div class="tip" id="181">
-            <strong>Signature:</strong> validator:(&#39;a -&gt; &#39;b option) -&gt; x:Untrust&lt;&#39;a&gt; -&gt; &#39;b option<br />
-                          <strong>Type parameters:</strong> 'a, 'b                      </div>
+          <div class="tip" id="201">
+            <strong>Signature:</strong> MapBuilder&lt;&#39;TKey,seq&lt;&#39;TValue&gt;&gt;<br />
+                          <strong>Type parameters:</strong> 'TKey, 'TValue                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Untrust.fs#L36-36" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Map.fs#L92-92" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          <p>Tries to get the wrapped value out of the untrusted boundary by validating the value.</p>
-
-
-        </td>
-      </tr>
-      <tr>
-        <td class="member-name">
-
-          <code onmouseout="hideTip(event, '182', 182)" onmouseover="showTip(event, '182', 182)">
-            getWithResult validator x
-          </code>
-          <div class="tip" id="182">
-            <strong>Signature:</strong> validator:(&#39;a -&gt; Result&lt;&#39;b,Map&lt;string,string list&gt;&gt;) -&gt; x:Untrust&lt;&#39;a&gt; -&gt; Result&lt;&#39;b,Map&lt;string,string list&gt;&gt;<br />
-                          <strong>Type parameters:</strong> 'a, 'b                      </div>
-        </td>
-        <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Untrust.fs#L38-38" class="github-link">
-              <img src="../content/img/github.png" class="normal" />
-              <img src="../content/img/github-blue.png" class="hover" />
-            </a>
-          <p>Tries to get the wrapped value out of the untrusted boundary by validating the value.</p>
+          <p>Builds a map where values of duplicate entries are updated.</p>
 
 
         </td>

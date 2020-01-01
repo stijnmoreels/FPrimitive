@@ -7,6 +7,7 @@ open System.Runtime.InteropServices
 open System.Text.RegularExpressions
 
 open Microsoft.FSharp.Core
+open System.Diagnostics
 
 /// Representation on how the model should be validated.
 type CascadeMode = 
@@ -18,11 +19,15 @@ type CascadeMode =
 /// Type alias for the validation requirement.
 type Req<'T> = 'T -> bool * string
 
+type ErrorsByTag = Map<string, string list>
+
 /// Representation of a domain specification that contains the validation for the model.
 type Spec<'T> =
   private 
+    { /// Gets the name to describe the set of requirements for a specific type.
+      Tag : string
       /// Gets all the requirements of the domain specification that the model should uphold.
-    { Requirements : ('T -> bool * string) list
+      Requirements : ('T -> bool * string) list
       /// Gets the mode in which the validation of the model should happen.
       Cascade : CascadeMode
       /// Gets the child specifications.
@@ -31,11 +36,18 @@ type Spec<'T> =
 /// Operations on the `Spec<_>` type. 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module Spec =
-  /// Start defininig a specification for a type.
-  let def<'a> : Spec<'a> = 
-    { Requirements = []
+  /// Start defininig a specification for a type with a name.
+  let tag name =
+    { Tag = name
+      Requirements = []
       Cascade = FirstFailure
       Dependents = [] }
+
+  /// Start defininig a specification for a type.
+  let def<'a> : Spec<'a> = tag "other"
+
+  /// Creates an validation error from a tag and message.
+  let error tag error = Error <| Map.create tag [error]
 
   /// Adds a custom requirement to the specification.
   let add req spec =
@@ -52,7 +64,7 @@ module Spec =
   /// Adds a requirement to check equality to a specified value.
   let equal value message spec =
     equalOf id value message spec
-  
+
   /// Adds a requirement for the result of the specified mapping, 
   /// which defines that the result should not be equal to the specified value.
   let notEqualOf selector value message spec =
@@ -108,14 +120,32 @@ module Spec =
   let notNullOrWhiteSpace message spec =
     notNullOrWhiteSpaceOf id message spec
 
-  /// Adds a requirement for the reuslt of the specified mapping,
-  /// whcih defines that the result should be a string starting with the specified header.
+  /// Adds a requirement for the result of the specified mapping,
+  /// which defines that the result should be a string starting with the specified header.
   let startsWithOf selector header message spec =
-    add (selector >> fun (s : string) -> s.StartsWith (header), message) spec
+    add (selector >> fun (s : string) -> s.StartsWith header, message) spec
 
   /// Adds a requirement to check if the string starts with the specified header.
   let startsWith header message spec =
     startsWithOf id header message spec
+
+  /// Adds a requirement for the result of the specified mapping,
+  /// which defines that the result should be a string ending with the specified trailer.
+  let endsWithOf selector trailer message spec =
+    add (selector >> fun (s : string) -> s.EndsWith trailer, message) spec
+
+  /// Adds a requirement to check if the string ends with the specified trailer.
+  let endsWith trailer message spec =
+    endsWithOf id trailer message spec
+
+  /// Adds a requirement for the result of the specified mapping,
+  /// which defines that the result should be a sequence equal (item-wise) to another sequence.
+  let seqEqualOf selector (ys : _ seq) message spec =
+    add (fun x -> selector x |> fun xs -> System.Linq.Enumerable.SequenceEqual (xs, ys), message) spec
+
+  /// Adds a requirement to check if the sequence is equal (item-wise) to another sequence.
+  let seqEqual ys message spec =
+    seqEqualOf id ys message spec
 
   /// Adds a requirement for the result of the specified mapping, 
   /// which defines that the result should be a non-empty sequence.
@@ -136,6 +166,78 @@ module Spec =
     forallOf id predicate message spec
 
   /// Adds a requirement for the resulting sequence of the specified mapping,
+  /// which defines that none of the elements of the sequence should satisfy the specified predicate.
+  let fornoneOf selector predicate message spec =
+    add (fun x -> selector x |> Seq.forall (not << predicate), message) spec
+
+  /// Adds a requirement for the sequence to check that none of the elements of the sequence satisfy the specified predicate.
+  let fornone predicate message spec =
+    fornoneOf id predicate message spec
+
+  /// Adds a requirement for the resulting sequence of the specified mapping,
+  /// which defines that none of the elements of the sequence should be equal to `null`.
+  let fornoneNullOf selector message spec =
+    fornoneOf selector (fun x -> obj.ReferenceEquals (x, null)) message spec
+
+  /// Adds a requirement for the sequence to check that none of the elements of the sequence are equal to `null`.
+  let fornoneNull message spec =
+    fornoneNullOf id message spec
+
+  /// Adds a requirement for the resulting sequence of the specified mapping,
+  /// which defines that a given item should be present in the sequence.
+  let containsOf selector item message spec =
+    add (fun x -> selector x |> Seq.contains item, message) spec
+
+  /// Adds a requirement for the sequence to verify if a given item is present in the sequence.
+  let contains item message spec =
+    containsOf id item message spec
+
+  /// Adds a requirement for the resulting sequence of the specified mapping,
+  /// which defines that a given item should not be present in the sequence.
+  let notContainsOf selector item message spec =
+    add (fun x -> selector x |> Seq.contains item |> not, message) spec
+
+  /// Adds a requirement for the sequence to verify if a given item is not present in the sequence.
+  let notContains item message spec =
+    notContainsOf id item message spec
+
+  /// Adds a requirement for the resulting sequence of the specified mapping,
+  /// which defines that a given set of items should all be present in th sequence.
+  let containsAllOf selector items message spec =
+    add (fun x -> selector x |> fun xs -> Seq.forall (fun y -> Seq.contains y xs) items, message) spec
+
+  /// Adds a requirement for the sequence to verify if a given set of items are all present in the sequence.
+  let containsAll items message spec =
+    containsAllOf id items message spec
+
+  /// Adds a requirement for the resulting sequence of the specified mapping,
+  /// which defines that any item in the sequence to satisy the specified predicate.
+  let existsOf selector predicate message spec =
+    add (fun x -> selector x |> Seq.exists predicate, message) spec
+
+  /// Adds a requirement for the sequence to verify if any element satisfy the specified predicate.
+  let exists predicate message spec =
+    existsOf id predicate message spec
+
+  /// Adds a requirement for the resulting sequence of the specified mapping,
+  /// which defines that none item in the sequence satisfy the specified predicate.
+  let notExistsOf selector predicate message spec =
+    add (fun x -> selector x |> Seq.exists predicate |> not, message) spec
+
+  /// Adds a requirement for the sequence to verify if none item satisfy the specified predicate.
+  let notExists predicate message spec =
+    notExistsOf id predicate message spec
+
+  /// Adds a requirement for the resulting sequence of the specified mapping,
+  /// which defines that only a single element in the sequence should satisfy the specified predicate.
+  let singleOf selector predicate message spec =
+    add (fun x -> selector x |> fun xs -> Seq.filter predicate xs |> Seq.length = 1, message) spec
+
+  /// Adds a requirement for the sequence to verify if only a single element satisfy the specified predicate.
+  let single predicate message spec =
+    singleOf id predicate message spec
+
+  /// Adds a requirement for the resulting sequence of the specified mapping,
   /// which defines that all elements of the sequence should be unique.
   let uniqueOf selectSeq selectKey message spec =
     add (fun x -> selectSeq x |> Seq.groupBy selectKey |> Seq.forall (fun (_, g) -> Seq.length g = 1), message) spec
@@ -143,6 +245,22 @@ module Spec =
   /// Adds a requirement to check for sequences with only unique elements.
   let unique selectKey message spec =
     uniqueOf id selectKey message spec
+
+  /// Adds a requirement for the resulting sequence of the specified mapping,
+  /// which defines that the sequence should match the specified structure; in the form of predicates for each seperate element.
+  let structureOf selector plan message spec =
+    let req xs =
+      let xs = selector xs
+      if Seq.length xs <> Seq.length plan
+      then false, "length of structure plan doesn't match length of input sequence"
+      else Seq.mapi2 (fun i x f -> if f x then -1 else i) xs plan
+           |> Seq.filter ((<>) -1)
+           |> fun xs -> Seq.isEmpty xs, sprintf "%s (indexes: %s)" message (String.Join (", ", xs))
+    add req spec
+
+  /// Adds a requirement for the sequence to verify if the sequence match the specified structure; in the form of predicates for each seperate element.
+  let structure plan message spec =
+    structureOf id plan message spec
 
   /// Adds a requirement for the resulting sequence of the specified mapping, 
   /// which defines that the sequence should have a length of the specified length.
@@ -179,7 +297,7 @@ module Spec =
   /// Adds a requirement for the sequence to check if the sequence has a length within the specified range (min, max).
   let lengthBetween min max message spec =
     lengthBetweenOf id min max message spec
-    
+
   /// Adds a requirement for the result of the specified mapping, 
   /// which defines that the result should be less than (`limit > value`) the specified limit.
   let lessThanOf selector limit message spec =
@@ -299,35 +417,47 @@ module Spec =
   let isType<'T, 'TExpected> message (spec : Spec<'T>) =
     isTypeOf id message spec
 
+  /// Change the tag of the specification.
+  let withTag name spec = { spec with Tag = name }
+
   /// Change the way the validation of requirements should happen.
   let cascade mode spec = { spec with Cascade = mode }
-  
+
   /// Validate the specified value to the domain specification.
-  let rec validate value { Requirements = xs; Cascade = mode; Dependents = ds } =
+  let rec validate (value : 'T) { Tag = tag; Requirements = xs; Cascade = mode; Dependents = ds } : Result<'T, ErrorsByTag> =
     let checkRequirement f =
       let ok, err = try f value with ex -> false, "Exception thrown during validating requirement: " + ex.Message
       if ok then None else Some err
     
+    let tagOrProp error =
+      let error = if isNull error then String.Empty else error
+      let m = Regex.Match (error, "@\w+")
+      if m.Success then sprintf "%s.%s" tag (m.Value.TrimStart '@')
+      else tag
+
     let dependantResult =
-      List.map (validate value) ds 
-      |> Result.sequence
-      |> Result.map (fun _ -> value)
+      List.rev ds
+      |> List.map (validate value)
+      |> Result.traverse (Result.mapError Map.toList)
+      |> Result.mapBoth (fun _ -> value) Map.ofListg
 
     match dependantResult with
     | Ok _ ->
         let errors =
           match mode with
-          | Continue -> List.choose checkRequirement xs
+          | Continue -> List.rev xs |> List.choose checkRequirement
           | FirstFailure -> 
-            let folder acc f = Option.orElseWith (fun () -> checkRequirement f) acc
-            xs |> List.fold folder None
-               |> Option.toList
+            let folder f acc = Option.orElseWith (fun () -> checkRequirement f) acc
+            List.foldBack folder xs None
+            |> Option.toList
         if errors.Length = 0 then Ok value
-        else Error errors
+        else List.groupBy tagOrProp errors 
+             |> Map.ofListg
+             |> Error
     | x -> x
 
   /// Validate the specified untrusted value to the domain specification.
-  let validateUntrust (untrusted : Untrust<'a>) (spec : Spec<'a>) =
+  let validateUntrust (untrusted : Untrust<'T>) (spec : Spec<'T>) : Result<'T, ErrorsByTag> =
     untrusted.tryGetValue (fun x -> validate x spec)
 
   /// Validate the specified value to the domain specification, discarding the error messages.
@@ -338,13 +468,11 @@ module Spec =
 
   /// Create a domain model after the validate of the specifed value to the domain specification succeeds.
   let createModel f value spec =
-    validate value spec
-    |> Result.map f
+    validate value spec |> Result.map f
 
   /// Create a domain model after the validate of the specifed value to the domain specification succeeds.
   let createModelWith f value spec =
-    validate value spec
-    |> Result.bind f
+    validate value spec |> Result.bind f
 
   /// Determine whether the specified value satisfies the domain specification.
   let isSatisfiedBy value spec =
@@ -361,13 +489,15 @@ module Spec =
 
   /// Maps the to-be-validated value before the requirements are verified, therefore controlling the input value of this specification and further added requirements.
   let rec comap f spec =
-    { Requirements = List.map (fun r -> f >> r) spec.Requirements
+    { Tag = spec.Tag
+      Requirements = List.map (fun r -> f >> r) spec.Requirements
       Cascade = spec.Cascade
       Dependents = List.map (comap f) spec.Dependents }
 
   /// Maps the requirements of this specification to another requirement function structure.
   let rec map (f : Req<'a> -> Req<'b>) spec =
-    { Requirements = List.map f spec.Requirements
+    { Tag = spec.Tag
+      Requirements = List.map f spec.Requirements
       Cascade = spec.Cascade
       Dependents = List.map (map f) spec.Dependents }
 
@@ -375,24 +505,24 @@ module Spec =
   let rec preval f spec =
     map (fun r -> fun x -> match f x with | Ok y -> r y | Error msg -> false, msg) spec
 
+  let private combine_bool_message (x, err1) (y, err2) = x && y, err1 + Environment.NewLine + err2
+
   /// Maps this specification to work with a list of values.
   let rec list spec =
     let asList r xs =
-      List.map r xs 
-      |> List.reduce (fun (x, err1) (y, err2) -> x && y, err1 + Environment.NewLine + err2)
+      List.map r xs |> List.reduce combine_bool_message
     map asList spec
 
   /// Maps this specification to work with array of values.
   let rec array spec =
       let asArray r xs =
-        Array.map r xs 
-        |> Array.reduce (fun (x, err1) (y, err2) -> x && y, err1 + Environment.NewLine + err2)
+        Array.map r xs |> Array.reduce combine_bool_message
       map asArray spec
 
   /// Maps this specification to work with sequences of values.
   let rec seq spec =
       let asSeq r xs =
-        Seq.map r xs |> Seq.reduce (fun (x, err1) (y, err2) -> x && y, err1 + Environment.NewLine + err2)
+        Seq.map r xs |> Seq.reduce combine_bool_message
       map asSeq spec
 
   let private reduceCascade cs =
@@ -412,7 +542,8 @@ module Spec =
     let d2 = List.map (comap snd) spec2.Dependents
     let ds = d1 @ d2
 
-    { Requirements = rs
+    { Tag = sprintf "%s+%s" spec1.Tag spec2.Tag
+      Requirements = rs
       Cascade = cascade
       Dependents = ds }
 
@@ -434,18 +565,17 @@ module Spec =
     let d3 = List.map (comap __x) spec3.Dependents
     let ds = List.concat [ d1; d2; d3 ]
 
-    { Requirements = rs
+    { Tag = sprintf "%s+%s+%s" spec1.Tag spec2.Tag spec3.Tag
+      Requirements = rs
       Cascade = cascade
       Dependents = ds }
 
 /// Representation of a domain specification that contains the validation for the model.
 type Spec =
   /// Start defininig a specification for a type.
-  static member Of<'T>() : Spec<'T> =
-      { Requirements = []
-        Cascade = Continue
-        Dependents = [] }
-  
+  static member Of<'T>() = Spec.def<'T>
+  /// Start defininig a specification for a type.
+  static member Of<'T>(name) : Spec<'T> = Spec.tag name
   /// Combines two specifications as dependents of a new specification which will run before any extra requirements that's been added after this point.
   static member Merge (spec1 : Spec<'T>, spec2) = Spec.merge spec1 spec2
   /// Makes a new specification that's describes an invariant relation between two given specifications.
@@ -465,6 +595,9 @@ type SpecBuilder<'a, 'b> internal (validate : Spec<'a> -> 'b, ?start) =
   /// Change the way the validation of requirements should happen.
   [<CustomOperation("cascade")>]
   member __.Cascade (state, mode) = Spec.cascade mode state
+  /// Change the tag of the specification.
+  [<CustomOperation("tag")>]
+  member __.Tag (state, name) = Spec.withTag name state
   /// Adds another specification on which the current specification depends on.
   /// This dependent specification will run before the current specification and contain only the errors of the dependents in case of a validation failure.
   [<CustomOperation("dependsOn")>]
@@ -525,6 +658,20 @@ type SpecBuilder<'a, 'b> internal (validate : Spec<'a> -> 'b, ?start) =
   /// whcih defines that the result should be a string starting with the specified header.
   [<CustomOperation("startsWithOf")>]
   member __.StartsWithOf (state, selector, header, message) = Spec.startsWithOf selector header message state
+  /// Adds a requirement for the result of the specified mapping,
+  /// which defines that the result should be a string ending with the specified trailer.
+  [<CustomOperation("endsWithOf")>]
+  member __.EndsWithOf (state, selector, trailer, message) = Spec.endsWithOf selector trailer message state
+  /// Adds a requirement to check if the string ends with the specified trailer.
+  [<CustomOperation("endsWith")>]
+  member __.EndsWith (state, trailer, message) = Spec.endsWith trailer message state
+  /// Adds a requirement for the result of the specified mapping,
+  /// which defines that the result should be a sequence equal (item-wise) to another sequence.
+  [<CustomOperation("seqEqualOf")>]
+  member __.SeqEqualOf (state, selector, ys, message) = Spec.seqEqualOf selector ys message state
+  /// Adds a requirement to check if the sequence is equal (item-wise) to another sequence.
+  [<CustomOperation("seqEqual")>]
+  member __.SeqEqual (state, ys, message) = Spec.seqEqual ys message state
   /// Adds a requirement for the result of the specified mapping, 
   /// which defines that the result should be a non-empty sequence.
   [<CustomOperation("nonEmptyOf")>]
@@ -540,12 +687,75 @@ type SpecBuilder<'a, 'b> internal (validate : Spec<'a> -> 'b, ?start) =
   [<CustomOperation("forall")>]
   member __.ForAll (state, predicate, message) = Spec.forall predicate message state
   /// Adds a requirement for the resulting sequence of the specified mapping,
+  /// which defines that none of the elements of the sequence should satisfy the specified predicate.
+  [<CustomOperation("fornoneOf")>]
+  member __.ForNoneOf (state, selector, predicate, message) = Spec.fornoneOf selector predicate message state
+  /// Adds a requirement for the sequence to check that none the elements of the sequence satisfy the specified predicate.
+  [<CustomOperation("fornone")>]
+  member __.ForNone (state, predicate, message) = Spec.fornone predicate message state
+  /// Adds a requirement for the resulting sequence of the specified mapping,
+  /// which defines that none of the elements of the sequence should be equal to `null`.
+  [<CustomOperation("fornoneNullOf")>]
+  member __.ForNoneNullOf (state, selector, message) = Spec.fornoneNullOf selector message state
+  /// Adds a requirement for the sequence to check that none of the elements of the sequence are equal to `null`.
+  [<CustomOperation("fornoneNull")>]
+  member __.ForNoneNull (state, message) = Spec.fornoneNull message state
+  /// Adds a requirement for the resulting sequence of the specified mapping,
+  /// which defines that a given item should be present in the sequence.
+  [<CustomOperation("containsOf")>]
+  member __.ContainsOf (state, selector, item, message) = Spec.containsOf selector item message state
+  /// Adds a requirement for the sequence to verify if a given item is present in the sequence.
+  [<CustomOperation("contains")>]
+  member __.Contains (state, item, message) = Spec.contains item message state
+  /// Adds a requirement for the resulting sequence of the specified mapping,
+  /// which defines that a given item should not be present in the sequence.
+  [<CustomOperation("notContainsOf")>]
+  member __.NotContainsOf (state, selector, item, message) = Spec.notContainsOf selector item message state
+  /// Adds a requirement for the sequence to verify if a given item is not present in the sequence.
+  [<CustomOperation("notContains")>]
+  member __.NotContains (state, item, message) = Spec.notContains item message state
+  /// Adds a requirement for the resulting sequence of the specified mapping,
+  /// which defines that a given item should not be present in the sequence.
+  [<CustomOperation("containsAllOf")>]
+  member __.ContainsAllOf (state, selector, items, message) = Spec.containsAllOf selector items message state
+  /// Adds a requirement for the sequence to verify if a given set of items are all present in the sequence.
+  [<CustomOperation("containsAll")>]
+  member __.ContainsAll (state, items, message) = Spec.containsAll items message state
+  /// Adds a requirement for the resulting sequence of the specified mapping,
+  /// which defines that any item in the sequence to satisy the specified predicate.
+  [<CustomOperation("existsOf")>]
+  member __.ExistsOf (state, selector, predicate, message) = Spec.existsOf selector predicate message state
+  /// Adds a requirement for the sequence to verify if any element satisfy the specified predicate.
+  [<CustomOperation("exists")>]
+  member __.Exists (state, predicate, message) = Spec.exists predicate message state
+  /// Adds a requirement for the resulting sequence of the specified mapping,
+  /// which defines that none item in the sequence to satisy the specified predicate.
+  [<CustomOperation("notExistsOf")>]
+  member __.NotExistsOf (state, selector, predicate, message) = Spec.notExistsOf selector predicate message state
+  /// Adds a requirement for the sequence to verify if none element satisfy the specified predicate.
+  [<CustomOperation("notExists")>]
+  member __.NotExists (state, predicate, message) = Spec.notExists predicate message state
+  /// Adds a requirement for the resulting sequence of the specified mapping,
+  /// which defines that only a single element in the sequence should satisfy the specified predicate.
+  [<CustomOperation("singleOf")>]
+  member __.SingleOf (state, selector, predicate, message) = Spec.singleOf selector predicate message state
+  /// Adds a requirement for the sequence to verify if only a single element satisfy the specified predicate.
+  [<CustomOperation("single")>]
+  member  __.Single (state, predicate, message) = Spec.single predicate message state
+  /// Adds a requirement for the resulting sequence of the specified mapping,
   /// which defines that all elements of the sequence should be unique.
   [<CustomOperation("uniqueOf")>]
   member __.UniqueOf (state, selectSeq, selectKey, message) = Spec.uniqueOf selectSeq selectKey message state
   /// Adds a requirement to check for sequences with only unique elements.
   [<CustomOperation("unique")>]
   member __.Unique (state, selectKey, message) = Spec.unique selectKey message state
+  /// Adds a requirement for the resulting sequence of the specified mapping,
+  /// which defines that the sequence should match the specified structure; in the form of predicates for each seperate element.
+  [<CustomOperation("structureOf")>]
+  member __.StructureOf (state, selector, plan, message) = Spec.structureOf selector plan message state
+  /// Adds a requirement for the sequence to verify if the sequence match the specified structure; in the form of predicates for each seperate element.
+  [<CustomOperation("structure")>]
+  member __.Structure (state, plan, message) = Spec.structure plan message state
   /// Adds a requirement for the resulting sequence of the specified mapping, 
   /// which defines that the sequence should have a length of the specified length.
   [<CustomOperation("lengthOf")>]
@@ -660,18 +870,35 @@ module SpecExposure =
   /// Computation builder to create an `Spec<_>` instance.
   let spec<'a> = new SpecBuilder<'a, Spec<'a>> (id)
   /// Computation builder to build an `Spec<_>` instance that gets validated to a `Result<_, string list>` when runned.
-  let specResult<'a> value = new SpecBuilder<'a, Result<'a, string list>> (Spec.validate value)
+  let specResult<'a> value = new SpecBuilder<'a, Result<'a, ErrorsByTag>> (Spec.validate value)
   /// Computation builder to build an `Spec<_>` instance that gets validated to a `Option<_>` when runned.
   let specOption<'a> value = new SpecBuilder<'a, 'a option> (Spec.validateOption value)
   /// Computation builder to build an `Spec,_>` instance that gets validated from an `Untrust<_>` to a `Result<_, string list>` when runned.
-  let specUntrust<'a> untrusted = new SpecBuilder<'a, Result<'a, string list>> (Spec.validateUntrust untrusted)
+  let specUntrust<'a> untrusted = new SpecBuilder<'a, Result<'a, ErrorsByTag>> (Spec.validateUntrust untrusted)
   /// Computation builder to build an `Spec<_>` instance that gets validated a custom domain model when runned.
-  let specModel<'a, 'b> createModel value = new SpecBuilder<'a, Result<'b, string list>> (Spec.createModel createModel value)
+  let specModel<'a, 'b> createModel value = new SpecBuilder<'a, Result<'b, ErrorsByTag>> (Spec.createModel createModel value)
   /// Computation builder to build an `Spec<_>` instance that gets validated a custom domain model when runned.
-  let specModelWith<'a, 'b> createModel value = new SpecBuilder<'a, Result<'b, string list>> (Spec.createModelWith createModel value)
+  let specModelWith<'a, 'b> createModel value = new SpecBuilder<'a, Result<'b, ErrorsByTag>> (Spec.createModelWith createModel value)
   /// Makes a new specification that's describes an invariant relation between two given specifications.
   let specInvariant spec1 spec2 = new SpecBuilder<_, Spec<_>> (id, Spec.invariant spec1 spec2)
-    
+
+/// Extra operations on the `Result<_, _>` type with `Map<_, _>` as error type.
+module Result =
+  /// Lifts a two argument function to work with result types.
+  let lift2Map f xResult yResult =
+    Result.lift2With Map.append f xResult yResult
+  /// Applies a function `f` in `Ok f` to a `x` in `Ok x` when both are `Ok` values.
+  let applyMap fResult xResult =
+    Result.applyWith Map.append fResult xResult
+  /// Traverse over a sequence running a given mapping function over the elements, 
+  /// collecting the outcomes into a result.
+  let traverseSeqMap f m =
+    Result.traverseSeqWith Map.append f m
+  /// Transforms a sequence of results into a result of a sequence.
+  let sequenceSeqMap m = traverseSeqMap id m
+
+module internal Map = let others xs = Map.create "other" xs
+
 /// Thrown when the value of a validation result is called on an invalid validation result.
 exception InvalidValidationResultException of string
 
@@ -680,13 +907,22 @@ exception InvalidValidationResultException of string
 /// Result type when a value is validated against a domain specification `Spec<_>`.
 [<Struct; NoEquality; NoComparison>]
 [<CompilerMessage("Not designed for F#", 1001, IsHidden = true)>]
-type ValidationResult<'T> internal (result : Result<'T, string list>) =
+[<DebuggerDisplay("{IsValid ? \"Success: \" + Value : \"Failure: \" + System.String.Join(\", \", Errors)}")>]
+type ValidationResult<'T> internal (result : Result<'T, ErrorsByTag>) =
   /// Initializes a new instance of the `ValidationResult` class.
   new (value : 'T) = ValidationResult<'T> (Ok value)
   /// Initializes a new instance of the `ValidationResult` class.
-  new (errors : string seq) = ValidationResult<'T> (Error (List.ofSeq errors))
+  new (errors : string seq) = ValidationResult<'T> (Error (Map.others (List.ofSeq errors)))
   /// Initializes a new instance of the `ValidationResult` class.
-  internal new ([<ParamArray>] errors : string [] []) = ValidationResult<'T> (Error (Array.concat errors |> List.ofArray))
+  internal new ([<ParamArray>] errors : string [] []) = ValidationResult<'T> (Error (Map.others (Array.concat errors |> List.ofArray)))
+  /// Initializes a new instance of the `ValidationResult` class.
+  internal new ([<ParamArray>] details : IDictionary<string, string array> []) = 
+    let errors =
+      details |> Seq.map (Seq.map (fun (KeyValue (k, vs)) -> k, Seq.ofArray vs))
+              |> Seq.concat
+              |> Map.ofSeqg
+              |> Map.mapv List.ofSeq
+    ValidationResult<'T> (Error errors)
   /// Gets the F# result from this validation result.
   member internal __.Result = result
   /// Gets the value that was validated (possible `null` when the validation failed).
@@ -694,12 +930,30 @@ type ValidationResult<'T> internal (result : Result<'T, string list>) =
   /// Gets a value indicating whether the validation succeeded.
   member __.IsValid = Result.isOk result
   /// Gets the series of validation errors that describe to what domain requirements the validated value doesn't satisfy.
-  member __.Errors : string array = Result.either (fun _ -> Array.empty) Array.ofList result
+  member __.Errors : string array = Result.either (fun _ -> Array.empty) (Map.values >> List.concat >> Array.ofList) result
+  /// Gets the series of validation error details that describe what domain requirements for each validated property value doesn't satisfy.
+  member __.Details : IDictionary<string, string array> = Result.either (fun _ -> dict []) (Map.mapv Array.ofList >> Map.toDict) result
 
   /// Creates a successful validation result with a specified value.
   static member Success (value : 'T) = ValidationResult<'T> (value = value)
   /// Creats an unsuccessful validation result with the specified errors.
   static member Failure ([<ParamArray>] errors : string []) = ValidationResult<'T> (errors = errors)
+
+  static member op_Implicit (result : Result<'T, string list>) = 
+    ValidationResult<'T> (Result.mapError Map.others result)
+  
+  static member op_Implicit (result : ValidationResult<'T>) = 
+    result.Result
+    |> Result.mapError (Map.mapv Array.ofList >> Map.toDict)
+    |> Outcome.OfFSharpResult
+  
+  static member op_Implicit (outcome : Outcome<'T, string array>) = 
+    let result = Outcome.ToFSharpResult outcome |> Result.mapError (List.ofArray >> Map.others)
+    ValidationResult<'T> (result=result)
+
+  static member op_Implicit (outcome : Outcome<'T, IDictionary<string, string array>>) = 
+      let result = Outcome.ToFSharpResult outcome |> Result.mapError (Map.ofDict >> Map.mapv List.ofArray)
+      ValidationResult<'T> (result=result)
 
   /// Tries to get the value that was validated.
   member __.TryGetValue (output : outref<'T>) =
@@ -707,11 +961,19 @@ type ValidationResult<'T> internal (result : Result<'T, string list>) =
     | Ok x -> output <- x; true
     | _ -> output <- Unchecked.defaultof<'T>; false
   /// Gets the validated value or the absence of the value.
-  member __.ToMaybe ([<Optional>] handleErrors : Action<_>) =
+  member this.ToMaybe ([<Optional>] handleErrors : Action<_>) =
     let handleErrors = if isNull handleErrors then fun _ -> () else handleErrors.Invoke
     match result with
     | Ok x -> Maybe.Just x
-    | Error errs -> handleErrors (Array.ofList errs); Maybe<'T>.Nothing
+    | Error _ -> handleErrors this.Errors; Maybe<'T>.Nothing
+  /// Transforms the validation result to an abstracted outcome result.
+  member this.ToOutcome () = ValidationResult.op_Implicit this
+  /// Returns a string that represents either the string representation of the successful value, or the concatenation of validation errors.
+  override this.ToString () = 
+    if this.IsValid 
+    then sprintf "Success: %A" this.Value 
+    else let toPropOverview prop errors = String.Join (Environment.NewLine, [| yield sprintf "%s: " prop; yield! Array.map (sprintf " -> %s") errors |])
+         String.Join (Environment.NewLine, Seq.map (fun (KeyValue (prop, errors)) -> toPropOverview prop errors) this.Details)
 
 /// Result type when a value is validated against a domain specification `Spec<_>`.
 [<CompilerMessage("Not designed for F#", 1001, IsHidden = true)>]
@@ -723,7 +985,7 @@ type ValidationResult private () =
       (resultSelector : Func<_, _, 'TResult>) ) =
     if validation1.IsValid && validation2.IsValid
     then ValidationResult<'TResult> (value=resultSelector.Invoke (validation1.Value, validation2.Value))
-    else ValidationResult<'TResult> (validation1.Errors, validation2.Errors)
+    else ValidationResult<'TResult> (validation1.Details, validation2.Details)
   /// Combines validation results into a new validation result.
   static member Combine<'TFirst, 'TSecond, 'TThird, 'TResult>
     ( (validation1 : ValidationResult<'TFirst>),
@@ -732,7 +994,7 @@ type ValidationResult private () =
       (resultSelector : Func<'TFirst, 'TSecond, 'TThird, 'TResult>) ) =
     if validation1.IsValid && validation2.IsValid && validation3.IsValid
     then ValidationResult<'TResult> (value=resultSelector.Invoke (validation1.Value, validation2.Value, validation3.Value))
-    else ValidationResult<'TResult> (validation1.Errors, validation2.Errors, validation3.Errors)
+    else ValidationResult<'TResult> (validation1.Details, validation2.Details, validation3.Details)
   /// Combines validation results into a new validation result.
   static member Combine<'TFirst, 'TSecond, 'TThird, 'TFourth, 'TResult>
     ( (validation1 : ValidationResult<'TFirst>),
@@ -742,7 +1004,10 @@ type ValidationResult private () =
       (resultSelector : Func<'TFirst, 'TSecond, 'TThird, 'TFourth, 'TResult>) ) =
     if validation1.IsValid && validation2.IsValid && validation3.IsValid && validation4.IsValid
     then ValidationResult<'TResult> (value=resultSelector.Invoke (validation1.Value, validation2.Value, validation3.Value, validation4.Value))
-    else ValidationResult<'TResult> (validation1.Errors, validation2.Errors, validation3.Errors, validation4.Errors)
+    else ValidationResult<'TResult> (validation1.Details, validation2.Details, validation3.Details, validation4.Details)
+  /// Creates an validation error for a given tag and a message.
+  static member Error<'T> (tag, message) =
+    ValidationResult<'T> (result = Spec.error tag message)
 
 /// Delegate of: 'T -> bool * string.
 type Requirement<'T> = delegate of 'T -> bool * string
@@ -774,7 +1039,7 @@ type ValidationResultExtensions =
     if isNull predicate then nullArg "predicate"
     if isNull errors then nullArg "errors"
     if Array.isEmpty errors then invalidArg "errors" "at least a single validation error message should be given"
-    ValidationResult<'T> (Result.filter predicate.Invoke (List.ofArray errors) this.Result)
+    ValidationResult<'T> (Result.filter predicate.Invoke (Map.ofList [ "other", List.ofArray errors ]) this.Result)
   /// Filters out the validated value with yet another specification.
   [<Extension>]
   static member Where (this : ValidationResult<'T>, otherSpec : Spec<'T>) =
@@ -806,13 +1071,14 @@ type ValidationResultExtensions =
   static member Traverse (source : IEnumerable<'T>, selector : Func<'T, ValidationResult<'TResult>>) : ValidationResult<IEnumerable<'TResult>> =
     if isNull source then nullArg "source"
     if isNull selector then nullArg "selector"
-    ValidationResult<IEnumerable<'TResult>> (result = 
-      Result.traverseSeq (selector.Invoke >> fun x -> x.Result) source)
+    let result = Result.traverseSeqMap (selector.Invoke >> fun x -> x.Result) source
+    ValidationResult<IEnumerable<'TResult>> (result = result)
   /// Transforms a sequence of validation results into a validation results of a sequence.
   [<Extension>]
   static member Sequence (source : IEnumerable<ValidationResult<'T>>) =
     if isNull source then nullArg "source"
-    ValidationResult<IEnumerable<'T>> (result=Result.sequenceSeq (source |> Seq.map (fun x -> x.Result)))
+    let result = Result.sequenceSeqMap (source |> Seq.map (fun x -> x.Result))
+    ValidationResult<IEnumerable<'T>> (result = result)
 
 /// Exception thrown when the validation of a value against a domain specification failed.
 exception ValidationFailureException of string
@@ -960,42 +1226,62 @@ type SpecExtensions =
     if isNull message then nullArg "message"
     Spec.startsWithOf selector.Invoke header message spec
 
+  /// Adds a requirement for the result of the specified mapping,
+  /// which defines that the result should be a string ending with the specified trailer.
+  [<Extension>]
+  static member EndsWith (spec : Spec<'T>, selector : Func<'T, string>, trailer, message) =
+    if isNull selector then nullArg "selector"
+    if isNull trailer then nullArg "trailer"
+    if isNull message then nullArg "message"
+    Spec.endsWithOf selector.Invoke trailer message spec
+
+  /// Adds a requirement to check if the string ends with the specified trailer.
+  [<Extension>]
+  static member EndsWith (spec : Spec<string>, trailer, message) =
+    if isNull message then nullArg "message"
+    Spec.endsWith trailer message spec
+
+  /// Adds a requirement for the result of the specified mapping,
+  /// which defines that the result should be a sequence equal (item-wise) to another sequence.
+  [<Extension>]
+  static member SequenceEqual (spec : Spec<'T>, selector : Func<'T, IEnumerable<'TResult>>, items, message) =
+    if isNull selector then nullArg "selector"
+    if isNull items then nullArg "items"
+    if isNull message then nullArg "message"
+    Spec.seqEqualOf selector.Invoke items message spec
+  
+  /// Adds a requirement to check if the sequence is equal (item-wise) to another sequence.
+  [<Extension>]
+  static member SequenceEqual (spec : Spec<IEnumerable<'T>>, items, message) =
+    if isNull items then nullArg "items"
+    if isNull message then nullArg "message"
+    Spec.seqEqual items message spec
+
+  /// Adds a requirement to check if the sequence is equal (item-wise) to another sequence.
+  [<Extension>]
+  static member SequenceEqual (spec : Spec<IList<'T>>, items, message) =
+    if isNull items then nullArg "items"
+    if isNull message then nullArg "message"
+    Spec.seqEqual items message spec
+
+  /// Adds a requirement to check if the sequence is equal (item-wise) to another sequence.
+  [<Extension>]
+  static member SequenceEqual (spec : Spec<ICollection<'T>>, items, message) =
+    if isNull items then nullArg "items"
+    if isNull message then nullArg "message"
+    Spec.seqEqual items message spec
+
+  /// Adds a requirement to check if the sequence is equal (item-wise) to another sequence.
+  [<Extension>]
+  static member SequenceEqual (spec : Spec<'T array>, items, message) =
+    if isNull items then nullArg "items"
+    if isNull message then nullArg "message"
+    Spec.seqEqual items message spec
+
   /// Adds a requirement for the result of the specified mapping, 
   /// which defines that the result should be a non-empty sequence.
   [<Extension>]
   static member NonEmpty ((spec : Spec<'T>), (selector : Func<'T, IEnumerable<'TResult>>), message) =
-    if selector = null then nullArg "selector"
-    if message = null then nullArg "message"
-    Spec.nonEmptyOf selector.Invoke message spec
-
-  /// Adds a requirement for the result of the specified mapping, 
-  /// which defines that the result should be a non-empty sequence.
-  [<Extension>]
-  static member NonEmpty ((spec : Spec<'T>), (selector : Func<'T, ICollection<'TResult>>), message) =
-    if selector = null then nullArg "selector"
-    if message = null then nullArg "message"
-    Spec.nonEmptyOf selector.Invoke message spec
-
-  /// Adds a requirement for the result of the specified mapping, 
-  /// which defines that the result should be a non-empty sequence.
-  [<Extension>]
-  static member NonEmpty ((spec : Spec<'T>), (selector : Func<'T, IList<'TResult>>), message) =
-    if selector = null then nullArg "selector"
-    if message = null then nullArg "message"
-    Spec.nonEmptyOf selector.Invoke message spec
-
-  /// Adds a requirement for the result of the specified mapping, 
-  /// which defines that the result should be a non-empty sequence.
-  [<Extension>]
-  static member NonEmpty ((spec : Spec<'T>), (selector : Func<'T, 'TResult[]>), message) =
-    if selector = null then nullArg "selector"
-    if message = null then nullArg "message"
-    Spec.nonEmptyOf selector.Invoke message spec
-
-  /// Adds a requirement for the result of the specified mapping, 
-  /// which defines that the result should be a non-empty sequence.
-  [<Extension>]
-  static member NonEmpty ((spec : Spec<'T>), (selector : Func<'T, IDictionary<'TKey, 'TValue>>), message) =
     if selector = null then nullArg "selector"
     if message = null then nullArg "message"
     Spec.nonEmptyOf selector.Invoke message spec
@@ -1033,39 +1319,7 @@ type SpecExtensions =
   /// Adds a requirement for the resulting sequence of the specified mapping, 
   /// which defines that all elements of the sequence should satisfy the specified predicate.
   [<Extension>]
-  static member All ((spec : Spec<'T>), (selector : Func<'T, IEnumerable<'TResult>>), (predicate : Func<'TResult, bool>), message) =
-    if selector = null then nullArg "selector"
-    if predicate = null then nullArg "predicate"
-    Spec.forallOf selector.Invoke predicate.Invoke message spec
-
-  /// Adds a requirement for the resulting sequence of the specified mapping, 
-  /// which defines that all elements of the sequence should satisfy the specified predicate.
-  [<Extension>]
-  static member All ((spec : Spec<'T>), (selector : Func<'T, ICollection<'TResult>>), (predicate : Func<'TResult, bool>), message) =
-    if selector = null then nullArg "selector"
-    if predicate = null then nullArg "predicate"
-    Spec.forallOf selector.Invoke predicate.Invoke message spec
-
-  /// Adds a requirement for the resulting sequence of the specified mapping, 
-  /// which defines that all elements of the sequence should satisfy the specified predicate.
-  [<Extension>]
-  static member All ((spec : Spec<'T>), (selector : Func<'T, IList<'TResult>>), (predicate : Func<'TResult, bool>), message) =
-    if selector = null then nullArg "selector"
-    if predicate = null then nullArg "predicate"
-    Spec.forallOf selector.Invoke predicate.Invoke message spec
-  
-  /// Adds a requirement for the resulting sequence of the specified mapping, 
-  /// which defines that all elements of the sequence should satisfy the specified predicate.
-  [<Extension>]
-  static member All ((spec : Spec<'T>), (selector : Func<'T, 'TResult[]>), (predicate : Func<'TResult, bool>), message) =
-    if selector = null then nullArg "selector"
-    if predicate = null then nullArg "predicate"
-    Spec.forallOf selector.Invoke predicate.Invoke message spec
-
-  /// Adds a requirement for the resulting sequence of the specified mapping, 
-  /// which defines that all elements of the sequence should satisfy the specified predicate.
-  [<Extension>]
-  static member All ((spec : Spec<'T>), (selector : Func<'T, IDictionary<'TKey, 'TValue>>), (predicate : Func<KeyValuePair<'TKey, 'TValue>, bool>), message) =
+  static member All (spec : Spec<'T>, selector : Func<'T, IEnumerable<'TResult>>, predicate : Func<'TResult, bool>, message) =
     if selector = null then nullArg "selector"
     if predicate = null then nullArg "predicate"
     Spec.forallOf selector.Invoke predicate.Invoke message spec
@@ -1105,42 +1359,365 @@ type SpecExtensions =
     if message = null then nullArg "message"
     Spec.forall predicate.Invoke message spec
 
+  /// Adds a requirement for the resulting sequence of the specified mapping,
+  /// which defines that none of the elements of the sequence should satisfy the specified predicate.
+  [<Extension>]
+  static member None (spec : Spec<'T>, selector : Func<'T, IEnumerable<'TResult>>, predicate : Func<'TResult, bool>, message) =
+    if isNull selector then nullArg "selector"
+    if isNull predicate then nullArg "predicate"
+    if isNull message then nullArg "message"
+    Spec.fornoneOf selector.Invoke predicate.Invoke message spec
+
+  /// Adds a requirement for the sequence to check that non of the elements of the sequence satisfy the specified predicate.
+  [<Extension>]
+  static member None (spec : Spec<IEnumerable<'T>>, predicate : Func<'T, bool>, message) =
+    if isNull predicate then nullArg "predicate"
+    if isNull message then nullArg "message"
+    Spec.fornone predicate.Invoke message spec
+
+  /// Adds a requirement for the sequence to check that non of the elements of the sequence satisfy the specified predicate.
+  [<Extension>]
+  static member None (spec : Spec<IList<'T>>, predicate : Func<'T, bool>, message) =
+    if isNull predicate then nullArg "predicate"
+    if isNull message then nullArg "message"
+    Spec.fornone predicate.Invoke message spec
+
+  /// Adds a requirement for the sequence to check that non of the elements of the sequence satisfy the specified predicate.
+  [<Extension>]
+  static member None (spec : Spec<ICollection<'T>>, predicate : Func<'T, bool>, message) =
+    if isNull predicate then nullArg "predicate"
+    if isNull message then nullArg "message"
+    Spec.fornone predicate.Invoke message spec
+
+  /// Adds a requirement for the sequence to check that non of the elements of the sequence satisfy the specified predicate.
+  [<Extension>]
+  static member None (spec : Spec<'T[]>, predicate : Func<'T, bool>, message) =
+    if isNull predicate then nullArg "predicate"
+    if isNull message then nullArg "message"
+    Spec.fornone predicate.Invoke message spec
+
+  /// Adds a requirement for the resulting sequence of the specified mapping,
+  /// which defines that none of the elements of the sequence should be equal to `null`.
+  [<Extension>]
+  static member NoneNull (spec : Spec<'T>, selector : Func<'T, IEnumerable<'TResult>>, message) =
+    if isNull selector then nullArg "selector"
+    if isNull message then nullArg "message"
+    Spec.fornoneNullOf selector.Invoke message spec
+
+  /// Adds a requirement for the sequence to check that none of the elements of the sequence are equal to `null`.
+  [<Extension>]
+  static member NoneNull (spec : Spec<IEnumerable<'T>>, message) =
+    if isNull message then nullArg "message"
+    Spec.fornoneNull message spec
+
+  /// Adds a requirement for the sequence to check that none of the elements of the sequence are equal to `null`.
+  [<Extension>]
+  static member NoneNull (spec : Spec<IList<'T>>, message) =
+    if isNull message then nullArg "message"
+    Spec.fornoneNull message spec
+
+  /// Adds a requirement for the sequence to check that none of the elements of the sequence are equal to `null`.
+  [<Extension>]
+  static member NoneNull (spec : Spec<ICollection<'T>>, message) =
+    if isNull message then nullArg "message"
+    Spec.fornoneNull message spec
+
+  /// Adds a requirement for the sequence to check that none of the elements of the sequence are equal to `null`.
+  [<Extension>]
+  static member NoneNull (spec : Spec<'T[]>, message) =
+    if isNull message then nullArg "message"
+    Spec.fornoneNull message spec
+
+  /// Adds a requirement for the resulting sequence of the specified mapping,
+  /// which defines that a given item should be present in the sequence.
+  [<Extension>]
+  static member Contains (spec : Spec<'T>, selector : Func<'T, IEnumerable<'TResult>>, item, message) =
+    if isNull selector then nullArg "selector"
+    if isNull message then nullArg "message"
+    Spec.containsOf selector.Invoke item message spec
+
+  /// Adds a requirement for the sequence to verify if a given item is present in the sequence.
+  [<Extension>]
+  static member Contains (spec : Spec<IEnumerable<'T>>, item, message) =
+    if isNull message then nullArg "message"
+    Spec.contains item message spec
+
+  /// Adds a requirement for the sequence to verify if a given item is present in the sequence.
+  [<Extension>]
+  static member Contains (spec : Spec<IList<'T>>, item, message) =
+    if isNull message then nullArg "message"
+    Spec.contains item message spec
+
+  /// Adds a requirement for the sequence to verify if a given item is present in the sequence.
+  [<Extension>]
+  static member Contains (spec : Spec<ICollection<'T>>, item, message) =
+    if isNull message then nullArg "message"
+    Spec.contains item message spec
+
+  /// Adds a requirement for the sequence to verify if a given item is present in the sequence.
+  [<Extension>]
+  static member Contains (spec : Spec<'T[]>, item, message) =
+    if isNull message then nullArg "message"
+    Spec.contains item message spec
+
+  /// Adds a requirement for the resulting sequence of the specified mapping,
+  /// which defines that a given item should not be present in the sequence.
+  [<Extension>]
+  static member NotContains (spec : Spec<'T>, selector : Func<'T, IEnumerable<'TResult>>, item, message) =
+    if isNull selector then nullArg "selector"
+    if isNull message then nullArg "message"
+    Spec.notContainsOf selector.Invoke item message spec
+
+  /// Adds a requirement for the sequence to verify if a given item is not present in the sequence.
+  [<Extension>]
+  static member NotContains (spec : Spec<IEnumerable<'T>>, item, message) =
+    if isNull message then nullArg "message"
+    Spec.notContains item message spec
+
+  /// Adds a requirement for the sequence to verify if a given item is not present in the sequence.
+  [<Extension>]
+  static member NotContains (spec : Spec<IList<'T>>, item, message) =
+    if isNull message then nullArg "message"
+    Spec.notContains item message spec
+
+  /// Adds a requirement for the sequence to verify if a given item is not present in the sequence.
+  [<Extension>]
+  static member NotContains (spec : Spec<ICollection<'T>>, item, message) =
+    if isNull message then nullArg "message"
+    Spec.notContains item message spec
+
+  /// Adds a requirement for the sequence to verify if a given item is not present in the sequence.
+  [<Extension>]
+  static member NotContains (spec : Spec<'T[]>, item, message) =
+    if isNull message then nullArg "message"
+    Spec.notContains item message spec
+
+  /// Adds a requirement for the resulting sequence of the specified mapping,
+  /// which defines that a given set of items should all be present in th sequence.
+  [<Extension>]
+  static member ContainsAll (spec : Spec<'T>, selector : Func<'T, IEnumerable<'TResult>>, items, message) =
+    if isNull selector then nullArg "selector"
+    if isNull items then nullArg "items"
+    if isNull message then nullArg "message"
+    Spec.containsAllOf selector.Invoke items message spec
+
+  /// Adds a requirement for the sequence to verify if a given set of items are all present in the sequence.
+  [<Extension>]
+  static member ContainsAll (spec : Spec<IEnumerable<'T>>, items, message) =
+    if isNull items then nullArg "items"
+    if isNull message then nullArg "message"
+    Spec.containsAll items message spec
+
+  /// Adds a requirement for the sequence to verify if a given set of items are all present in the sequence.
+  [<Extension>]
+  static member ContainsAll (spec : Spec<ICollection<'T>>, items, message) =
+    if isNull items then nullArg "items"
+    if isNull message then nullArg "message"
+    Spec.containsAll items message spec
+
+  /// Adds a requirement for the sequence to verify if a given set of items are all present in the sequence.
+  [<Extension>]
+  static member ContainsAll (spec : Spec<IList<'T>>, items, message) =
+    if isNull items then nullArg "items"
+    if isNull message then nullArg "message"
+    Spec.containsAll items message spec
+
+  /// Adds a requirement for the sequence to verify if a given set of items are all present in the sequence.
+  [<Extension>]
+  static member ContainsAll (spec : Spec<'T array>, items, message) =
+    if isNull items then nullArg "items"
+    if isNull message then nullArg "message"
+    Spec.containsAll items message spec
+
+  /// Adds a requirement for the resulting sequence of the specified mapping,
+  /// which defines that any item in the sequence to satisy the specified predicate.
+  [<Extension>]
+  static member Any (spec : Spec<'T>, selector : Func<'T, IEnumerable<'TResult>>, predicate : Func<'TResult, bool>, message) =
+    if isNull selector then nullArg "selector"
+    if isNull predicate then nullArg "predicate"
+    if isNull message then nullArg "message"
+    Spec.existsOf selector.Invoke predicate.Invoke message spec
+
+  /// Adds a requirement for the sequence to verify if any element satisfy the specified predicate.
+  [<Extension>]
+  static member Any (spec : Spec<IEnumerable<'T>>, predicate : Func<'T, bool>, message) =
+    if isNull predicate then nullArg "predicate"
+    if isNull message then nullArg "message"
+    Spec.exists predicate.Invoke message spec
+
+  /// Adds a requirement for the sequence to verify if any element satisfy the specified predicate.
+  [<Extension>]
+  static member Any (spec : Spec<IList<'T>>, predicate : Func<'T, bool>, message) =
+    if isNull predicate then nullArg "predicate"
+    if isNull message then nullArg "message"
+    Spec.exists predicate.Invoke message spec
+
+  /// Adds a requirement for the sequence to verify if any element satisfy the specified predicate.
+  [<Extension>]
+  static member Any (spec : Spec<ICollection<'T>>, predicate : Func<'T, bool>, message) =
+    if isNull predicate then nullArg "predicate"
+    if isNull message then nullArg "message"
+    Spec.exists predicate.Invoke message spec
+
+  /// Adds a requirement for the sequence to verify if any element satisfy the specified predicate.
+  [<Extension>]
+  static member Any (spec : Spec<'T[]>, predicate : Func<'T, bool>, message) =
+    if isNull predicate then nullArg "predicate"
+    if isNull message then nullArg "message"
+    Spec.exists predicate.Invoke message spec
+
+  /// Adds a requirement for the resulting sequence of the specified mapping,
+  /// which defines that none item in the sequence to satisy the specified predicate.
+  [<Extension>]
+  static member NotAny (spec : Spec<'T>, selector : Func<'T, IEnumerable<'TResult>>, predicate : Func<'TResult, bool>, message) =
+    if isNull selector then nullArg "selector"
+    if isNull predicate then nullArg "predicate"
+    if isNull message then nullArg "message"
+    Spec.notExistsOf selector.Invoke predicate.Invoke message spec
+
+  /// Adds a requirement for the sequence to verify if none element satisfy the specified predicate.
+  [<Extension>]
+  static member NotAny (spec : Spec<IEnumerable<'T>>, predicate : Func<'T, bool>, message) =
+    if isNull predicate then nullArg "predicate"
+    if isNull message then nullArg "message"
+    Spec.notExists predicate.Invoke message spec
+
+  /// Adds a requirement for the sequence to verify if none element satisfy the specified predicate.
+  [<Extension>]
+  static member NotAny (spec : Spec<IList<'T>>, predicate : Func<'T, bool>, message) =
+    if isNull predicate then nullArg "predicate"
+    if isNull message then nullArg "message"
+    Spec.notExists predicate.Invoke message spec
+
+  /// Adds a requirement for the sequence to verify if none element satisfy the specified predicate.
+  [<Extension>]
+  static member NotAny (spec : Spec<ICollection<'T>>, predicate : Func<'T, bool>, message) =
+    if isNull predicate then nullArg "predicate"
+    if isNull message then nullArg "message"
+    Spec.notExists predicate.Invoke message spec
+
+  /// Adds a requirement for the sequence to verify if none element satisfy the specified predicate.
+  [<Extension>]
+  static member NotAny (spec : Spec<'T[]>, predicate : Func<'T, bool>, message) =
+    if isNull predicate then nullArg "predicate"
+    if isNull message then nullArg "message"
+    Spec.notExists predicate.Invoke message spec
+
+  /// Adds a requirement for the resulting sequence of the specified mapping,
+  /// which defines that all elements of the sequence should be unique.
+  [<Extension>]
+  static member Unique (spec : Spec<'T>, selector : Func<'T, IEnumerable<'TResult>>, selectKey : Func<'TResult, 'TKey>, message) =
+    if isNull selector then nullArg "selector"
+    if isNull selectKey then nullArg "selectKey"
+    if isNull message then nullArg "message"
+    Spec.uniqueOf selector.Invoke selectKey.Invoke message spec
+
+  /// Adds a requirement to check for sequences with only unique elements.
+  [<Extension>]
+  static member Unique (spec : Spec<IEnumerable<'T>>, selectKey : Func<'T, 'TKey>, message) =
+    if isNull selectKey then nullArg "selectKey"
+    if isNull message then nullArg "message"
+    Spec.unique selectKey.Invoke message spec
+
+  /// Adds a requirement to check for sequences with only unique elements.
+  [<Extension>]
+  static member Unique (spec : Spec<IList<'T>>, selectKey : Func<'T, 'TKey>, message) =
+    if isNull selectKey then nullArg "selectKey"
+    if isNull message then nullArg "message"
+    Spec.unique selectKey.Invoke message spec
+
+  /// Adds a requirement to check for sequences with only unique elements.
+  [<Extension>]
+  static member Unique (spec : Spec<ICollection<'T>>, selectKey : Func<'T, 'TKey>, message) =
+    if isNull selectKey then nullArg "selectKey"
+    if isNull message then nullArg "message"
+    Spec.unique selectKey.Invoke message spec
+
+  /// Adds a requirement to check for sequences with only unique elements.
+  [<Extension>]
+  static member Unique (spec : Spec<'T[]>, selectKey : Func<'T, 'TKey>, message) =
+    if isNull selectKey then nullArg "selectKey"
+    if isNull message then nullArg "message"
+    Spec.unique selectKey.Invoke message spec
+
+  /// Adds a requirement for the resulting sequence of the specified mapping,
+  /// which defines that only a single element in the sequence should satisfy the specified predicate.
+  [<Extension>]
+  static member Single (spec : Spec<'T>, selector : Func<'T, IEnumerable<'TResult>>, predicate : Func<'TResult, bool>, message) =
+    if isNull selector then nullArg "selector"
+    if isNull predicate then nullArg "predicate"
+    if isNull message then nullArg "message"
+    Spec.singleOf selector.Invoke predicate.Invoke message spec
+
+  /// Adds a requirement for the sequence to verify if only a single element satisfy the specified predicate.
+  [<Extension>]
+  static member Single (spec : Spec<IEnumerable<'T>>, predicate : Func<'T, bool>, message) =
+    if isNull predicate then nullArg "predicate"
+    if isNull message then nullArg "message"
+    Spec.single predicate.Invoke message spec
+
+  /// Adds a requirement for the sequence to verify if only a single element satisfy the specified predicate.
+  [<Extension>]
+  static member Single (spec : Spec<IList<'T>>, predicate : Func<'T, bool>, message) =
+    if isNull predicate then nullArg "predicate"
+    if isNull message then nullArg "message"
+    Spec.single predicate.Invoke message spec
+
+  /// Adds a requirement for the sequence to verify if only a single element satisfy the specified predicate.
+  [<Extension>]
+  static member Single (spec : Spec<ICollection<'T>>, predicate : Func<'T, bool>, message) =
+    if isNull predicate then nullArg "predicate"
+    if isNull message then nullArg "message"
+    Spec.single predicate.Invoke message spec
+
+  /// Adds a requirement for the sequence to verify if only a single element satisfy the specified predicate.
+  [<Extension>]
+  static member Single (spec : Spec<'T[]>, predicate : Func<'T, bool>, message) =
+    if isNull predicate then nullArg "predicate"
+    if isNull message then nullArg "message"
+    Spec.single predicate.Invoke message spec
+
+  /// Adds a requirement for the resulting sequence of the specified mapping,
+  /// which defines that the sequence should match the specified structure; in the form of predicates for each seperate element.
+  [<Extension>]
+  static member Structure (spec : Spec<'T>, selector : Func<'T, IEnumerable<'TResult>>, plan, message) =
+    if isNull selector then nullArg "selector"
+    if isNull plan then nullArg "plan"
+    if isNull message then nullArg "message"
+    Spec.structureOf selector.Invoke plan message spec
+
+  /// Adds a requirement for the sequence to verify if the sequence match the specified structure; in the form of predicates for each seperate element.
+  [<Extension>]
+  static member Structure (spec : Spec<IEnumerable<'T>>, plan, message) =
+    if isNull plan then nullArg "plan"
+    if isNull message then nullArg "message"
+    Spec.structure plan message spec
+
+  /// Adds a requirement for the sequence to verify if the sequence match the specified structure; in the form of predicates for each seperate element.
+  [<Extension>]
+  static member Structure (spec : Spec<IList<'T>>, plan, message) =
+    if isNull plan then nullArg "plan"
+    if isNull message then nullArg "message"
+    Spec.structure plan message spec
+
+  /// Adds a requirement for the sequence to verify if the sequence match the specified structure; in the form of predicates for each seperate element.
+  [<Extension>]
+  static member Structure (spec : Spec<ICollection<'T>>, plan, message) =
+    if isNull plan then nullArg "plan"
+    if isNull message then nullArg "message"
+    Spec.structure plan message spec
+
+  /// Adds a requirement for the sequence to verify if the sequence match the specified structure; in the form of predicates for each seperate element.
+  [<Extension>]
+  static member Structure (spec : Spec<'T[]>, plan, message) =
+    if isNull plan then nullArg "plan"
+    if isNull message then nullArg "message"
+    Spec.structure plan message spec
+
   /// Adds a requirement for the resulting sequence of the specified mapping, 
   /// which defines that the sequence should have a length of the specified length.
   [<Extension>]
   static member Length ((spec : Spec<'T>), (selector : Func<'T, IEnumerable<'TResult>>), length, message) = 
-    if selector = null then nullArg "selector"
-    if message = null then nullArg "message"
-    Spec.lengthOf selector.Invoke length message spec
-
-  /// Adds a requirement for the resulting sequence of the specified mapping, 
-  /// which defines that the sequence should have a length of the specified length.
-  [<Extension>]
-  static member Length ((spec : Spec<'T>), (selector : Func<'T, IList<'TResult>>), length, message) = 
-    if selector = null then nullArg "selector"
-    if message = null then nullArg "message"
-    Spec.lengthOf selector.Invoke length message spec
-
-  /// Adds a requirement for the resulting sequence of the specified mapping, 
-  /// which defines that the sequence should have a length of the specified length.
-  [<Extension>]
-  static member Length ((spec : Spec<'T>), (selector : Func<'T, 'TResult[]>), length, message) = 
-    if selector = null then nullArg "selector"
-    if message = null then nullArg "message"
-    Spec.lengthOf selector.Invoke length message spec
-
-  /// Adds a requirement for the resulting sequence of the specified mapping, 
-  /// which defines that the sequence should have a length of the specified length.
-  [<Extension>]
-  static member Length ((spec : Spec<'T>), (selector : Func<'T, ICollection<'TResult>>), length, message) = 
-    if selector = null then nullArg "selector"
-    if message = null then nullArg "message"
-    Spec.lengthOf selector.Invoke length message spec
-
-  /// Adds a requirement for the resulting sequence of the specified mapping, 
-  /// which defines that the sequence should have a length of the specified length.
-  [<Extension>]
-  static member Length ((spec : Spec<'T>), (selector : Func<'T, IDictionary<'TKey, 'TValue>>), length, message) = 
     if selector = null then nullArg "selector"
     if message = null then nullArg "message"
     Spec.lengthOf selector.Invoke length message spec
@@ -1182,34 +1759,6 @@ type SpecExtensions =
     if selector = null then nullArg "selector"
     Spec.lengthMinOf selector.Invoke min message spec
 
-  /// Adds a requirement for the resulting sequence of the specified mapping, 
-  /// which defines that the sequence should have a minimum length.
-  [<Extension>]
-  static member LengthMin ((spec : Spec<'T>), (selector : Func<'T, IList<'TResult>>), min, message) =
-    if selector = null then nullArg "selector"
-    Spec.lengthMinOf selector.Invoke min message spec
-
-  /// Adds a requirement for the resulting sequence of the specified mapping, 
-  /// which defines that the sequence should have a minimum length.
-  [<Extension>]
-  static member LengthMin ((spec : Spec<'T>), (selector : Func<'T, ICollection<'TResult>>), min, message) =
-    if selector = null then nullArg "selector"
-    Spec.lengthMinOf selector.Invoke min message spec
-
-  /// Adds a requirement for the resulting sequence of the specified mapping, 
-  /// which defines that the sequence should have a minimum length.
-  [<Extension>]
-  static member LengthMin ((spec : Spec<'T>), (selector : Func<'T, 'TResult[]>), min, message) =
-    if selector = null then nullArg "selector"
-    Spec.lengthMinOf selector.Invoke min message spec
-
-  /// Adds a requirement for the resulting sequence of the specified mapping, 
-  /// which defines that the sequence should have a minimum length.
-  [<Extension>]
-  static member LengthMin ((spec : Spec<'T>), (selector : Func<'T, IDictionary<'TKey, 'TValue>>), min, message) =
-    if selector = null then nullArg "selector"
-    Spec.lengthMinOf selector.Invoke min message spec
-
   /// Adds a requirement for the sequence to check if the sequence has a minimum length.
   [<Extension>]
   static member LengthMin ((spec : Spec<IEnumerable<'T>>), min, message) =
@@ -1244,38 +1793,6 @@ type SpecExtensions =
   /// which defines that the sequence should have a maximum length.
   [<Extension>]
   static member LengthMax ((spec : Spec<'T>), (selector : Func<'T, IEnumerable<'TResult>>), max, message) =
-    if selector = null then nullArg "selector"
-    if message = null then nullArg "message"
-    Spec.lengthMaxOf selector.Invoke max message spec
- 
-  /// Adds a requirement for the resulting sequence of the specified mapping, 
-  /// which defines that the sequence should have a maximum length.
-  [<Extension>]
-  static member LengthMax ((spec : Spec<'T>), (selector : Func<'T, IList<'TResult>>), max, message) =
-    if selector = null then nullArg "selector"
-    if message = null then nullArg "message"
-    Spec.lengthMaxOf selector.Invoke max message spec
-
-  /// Adds a requirement for the resulting sequence of the specified mapping, 
-  /// which defines that the sequence should have a maximum length.
-  [<Extension>]
-  static member LengthMax ((spec : Spec<'T>), (selector : Func<'T, ICollection<'TResult>>), max, message) =
-    if selector = null then nullArg "selector"
-    if message = null then nullArg "message"
-    Spec.lengthMaxOf selector.Invoke max message spec
-
-  /// Adds a requirement for the resulting sequence of the specified mapping, 
-  /// which defines that the sequence should have a maximum length.
-  [<Extension>]
-  static member LengthMax ((spec : Spec<'T>), (selector : Func<'T, 'TResult[]>), max, message) =
-    if selector = null then nullArg "selector"
-    if message = null then nullArg "message"
-    Spec.lengthMaxOf selector.Invoke max message spec
-
-  /// Adds a requirement for the resulting sequence of the specified mapping, 
-  /// which defines that the sequence should have a maximum length.
-  [<Extension>]
-  static member LengthMax ((spec : Spec<'T>), (selector : Func<'T, IDictionary<'TKey, 'TValue>>), max, message) =
     if selector = null then nullArg "selector"
     if message = null then nullArg "message"
     Spec.lengthMaxOf selector.Invoke max message spec
@@ -1314,38 +1831,6 @@ type SpecExtensions =
   /// which defines that the sequence should have a length within the specified range (min, max).
   [<Extension>]
   static member LengthBetween ((spec : Spec<'T>), (selector : Func<'T, IEnumerable<'TResult>>), min, max, message) =
-    if selector = null then nullArg "selector"
-    if message = null then nullArg "message"
-    Spec.lengthBetweenOf selector.Invoke min max message spec
-  
-  /// Adds a requirement for the resulting sequence of the specified mapping, 
-  /// which defines that the sequence should have a length within the specified range (min, max).
-  [<Extension>]
-  static member LengthBetween ((spec : Spec<'T>), (selector : Func<'T, IList<'TResult>>), min, max, message) =
-    if selector = null then nullArg "selector"
-    if message = null then nullArg "message"
-    Spec.lengthBetweenOf selector.Invoke min max message spec
-
-  /// Adds a requirement for the resulting sequence of the specified mapping, 
-  /// which defines that the sequence should have a length within the specified range (min, max).
-  [<Extension>]
-  static member LengthBetween ((spec : Spec<'T>), (selector : Func<'T, ICollection<'TResult>>), min, max, message) =
-    if selector = null then nullArg "selector"
-    if message = null then nullArg "message"
-    Spec.lengthBetweenOf selector.Invoke min max message spec
-
-  /// Adds a requirement for the resulting sequence of the specified mapping, 
-  /// which defines that the sequence should have a length within the specified range (min, max).
-  [<Extension>]
-  static member LengthBetween ((spec : Spec<'T>), (selector : Func<'T, 'TResult[]>), min, max, message) =
-    if selector = null then nullArg "selector"
-    if message = null then nullArg "message"
-    Spec.lengthBetweenOf selector.Invoke min max message spec
-
-  /// Adds a requirement for the resulting sequence of the specified mapping, 
-  /// which defines that the sequence should have a length within the specified range (min, max).
-  [<Extension>]
-  static member LengthBetween ((spec : Spec<'T>), (selector : Func<'T, IDictionary<'TKey, 'TValue>>), min, max, message) =
     if selector = null then nullArg "selector"
     if message = null then nullArg "message"
     Spec.lengthBetweenOf selector.Invoke min max message spec
@@ -1586,11 +2071,11 @@ type SpecExtensions =
 
   /// Transforms this specification to work with a array of values.
   [<Extension>]
-  static member ForArray (spec) = Spec.array spec
+  static member ForArray (spec : Spec<'T>) = Spec.array spec
 
   /// Maps this specification to work with sequences of values.
   [<Extension>]
-  static member ForEnumerable (spec) = Spec.seq spec
+  static member ForEnumerable (spec : Spec<'T>) : Spec<IEnumerable<'T>> = Spec.seq spec
 
   /// Determine whether the specified value satisfies the domain specification.
   [<Extension>]

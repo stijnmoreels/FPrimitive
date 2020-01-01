@@ -7,6 +7,22 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include="paket.references" />
+    <Compile Include="..\..\paket-files\stijnmoreels\System\Outcome.fs">
+      <Paket>True</Paket>
+      <Link>Outcome.fs</Link>
+    </Compile>
+    <Compile Include="..\..\paket-files\stijnmoreels\System\Map.fs">
+      <Paket>True</Paket>
+      <Link>Map.fs</Link>
+    </Compile>
+    <Compile Include="..\..\paket-files\stijnmoreels\System\Result.fs">
+      <Paket>True</Paket>
+      <Link>Result.fs</Link>
+    </Compile>
+    <Compile Include="..\..\paket-files\stijnmoreels\System\Option.fs">
+      <Paket>True</Paket>
+      <Link>Option.fs</Link>
+    </Compile>
     <Compile Include="..\..\paket-files\stijnmoreels\System\Maybe.fs">
       <Paket>True</Paket>
       <Link>Maybe.fs</Link>
@@ -15,15 +31,7 @@
       <Paket>True</Paket>
       <Link>Time.fs</Link>
     </Compile>
-    <Compile Include="..\..\paket-files\stijnmoreels\System\Option.fs">
-      <Paket>True</Paket>
-      <Link>Option.fs</Link>
-    </Compile>
-    <Compile Include="..\..\paket-files\stijnmoreels\System\Result.fs">
-      <Paket>True</Paket>
-      <Link>Result.fs</Link>
-    </Compile>
-    <Compile Include="Guard.fs" />
+    <Compile Include="Sanitize.fs" />
     <Compile Include="Untrust.fs" />
     <Compile Include="Spec.fs" />
     <Compile Include="Types.fs" />

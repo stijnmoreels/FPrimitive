@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8"/>
-    <title>Maybe - FPrimitive</title>
+    <title>Result - FPrimitive</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="description" content=""/>
     <meta name="author" content="Stijn Moreels"/>
@@ -35,37 +35,39 @@
 
 
 
-<h1>Maybe</h1>
+<h1>Result</h1>
 <p>
-
-    <span>Namespace: System</span><br />
-    </p>
+  <span>Namespace: FPrimitive</span><br />
+  </p>
 <div class="xmldoc">
-<p>Represents a optional model that can either contain a value or not.</p>
+<p>Extra operations on the <code>Result&lt;_, _&gt;</code> type with <code>Map&lt;_, _&gt;</code> as error type.</p>
 
 </div>
-  <h3>Static members</h3>
+
+<!-- Render nested types and modules, if there are any -->
+
+  <h3>Functions and values</h3>
   <table class="table table-bordered member-list">
     <thead>
-      <tr><td>Static member</td><td>Description</td></tr>
+      <tr><td>Function or value</td><td>Description</td></tr>
     </thead>
     <tbody>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '348', 348)" onmouseover="showTip(event, '348', 348)">
-            Maybe.Just(value)
+          <code onmouseout="hideTip(event, '31', 31)" onmouseover="showTip(event, '31', 31)">
+            applyMap fResult xResult
           </code>
-          <div class="tip" id="348">
-            <strong>Signature:</strong> value:&#39;T -&gt; Maybe&lt;&#39;T&gt;<br />
-                          <strong>Type parameters:</strong> 'T                      </div>
+          <div class="tip" id="31">
+            <strong>Signature:</strong> fResult:Result&lt;(&#39;?10346 -&gt; &#39;?10347),Map&lt;&#39;?10348,&#39;?10349&gt;&gt; -&gt; xResult:Result&lt;&#39;?10346,Map&lt;&#39;?10348,&#39;?10349&gt;&gt; -&gt; Result&lt;&#39;?10347,Map&lt;&#39;?10348,&#39;?10349&gt;&gt;<br />
+                          <strong>Type parameters:</strong> '?10346, '?10347, '?10348, '?10349                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Maybe.fs#L43-43" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L891-891" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          <p>Creates an optional instance representing a value.</p>
+          <p>Applies a function <code>f</code> in <code>Ok f</code> to a <code>x</code> in <code>Ok x</code> when both are <code>Ok</code> values.</p>
 
 
         </td>
@@ -73,19 +75,19 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '349', 349)" onmouseover="showTip(event, '349', 349)">
-            Maybe.JustOrNothing(value)
+          <code onmouseout="hideTip(event, '32', 32)" onmouseover="showTip(event, '32', 32)">
+            lift2Map f xResult yResult
           </code>
-          <div class="tip" id="349">
-            <strong>Signature:</strong> value:&#39;T -&gt; Maybe&lt;&#39;T&gt;<br />
-                          <strong>Type parameters:</strong> 'T                      </div>
+          <div class="tip" id="32">
+            <strong>Signature:</strong> f:(&#39;?10340 -&gt; &#39;?10341 -&gt; &#39;?10342) -&gt; xResult:Result&lt;&#39;?10340,Map&lt;&#39;?10343,&#39;?10344&gt;&gt; -&gt; yResult:Result&lt;&#39;?10341,Map&lt;&#39;?10343,&#39;?10344&gt;&gt; -&gt; Result&lt;&#39;?10342,Map&lt;&#39;?10343,&#39;?10344&gt;&gt;<br />
+                          <strong>Type parameters:</strong> '?10340, '?10341, '?10342, '?10343, '?10344                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Maybe.fs#L47-47" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L888-888" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          <p>Creates an optional instance representing a value when the given value is not null.</p>
+          <p>Lifts a two argument function to work with result types.</p>
 
 
         </td>
@@ -93,19 +95,19 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '350', 350)" onmouseover="showTip(event, '350', 350)">
-            Maybe.Nothing()
+          <code onmouseout="hideTip(event, '33', 33)" onmouseover="showTip(event, '33', 33)">
+            sequenceSeqMap(m)
           </code>
-          <div class="tip" id="350">
-            <strong>Signature:</strong> unit -&gt; Maybe&lt;&#39;T&gt;<br />
-                          <strong>Type parameters:</strong> 'T                      </div>
+          <div class="tip" id="33">
+            <strong>Signature:</strong> m:seq&lt;Result&lt;&#39;?10356,Map&lt;&#39;?10357,&#39;?10358&gt;&gt;&gt; -&gt; Result&lt;seq&lt;&#39;?10356&gt;,Map&lt;&#39;?10357,&#39;?10358&gt;&gt;<br />
+                          <strong>Type parameters:</strong> '?10356, '?10357, '?10358                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Maybe.fs#L45-45" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L898-898" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          <p>Creates an optional instance representing the absence of a value.</p>
+          <p>Transforms a sequence of results into a result of a sequence.</p>
 
 
         </td>
@@ -113,39 +115,20 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '351', 351)" onmouseover="showTip(event, '351', 351)">
-            Maybe.OfOption(option)
+          <code onmouseout="hideTip(event, '34', 34)" onmouseover="showTip(event, '34', 34)">
+            traverseSeqMap f m
           </code>
-          <div class="tip" id="351">
-            <strong>Signature:</strong> option:Option&lt;&#39;T&gt; -&gt; Maybe&lt;&#39;T&gt;<br />
-                          <strong>Type parameters:</strong> 'T                      </div>
+          <div class="tip" id="34">
+            <strong>Signature:</strong> f:(&#39;?10351 -&gt; Result&lt;&#39;?10352,Map&lt;&#39;?10353,&#39;?10354&gt;&gt;) -&gt; m:seq&lt;&#39;?10351&gt; -&gt; Result&lt;seq&lt;&#39;?10352&gt;,Map&lt;&#39;?10353,&#39;?10354&gt;&gt;<br />
+                          <strong>Type parameters:</strong> '?10351, '?10352, '?10353, '?10354                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Maybe.fs#L49-49" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L895-895" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          <p>Transforms a F# option to an optional <code>Maybe&lt;&gt;</code> instance.</p>
-
-
-        </td>
-      </tr>
-      <tr>
-        <td class="member-name">
-
-          <code onmouseout="hideTip(event, '352', 352)" onmouseover="showTip(event, '352', 352)">
-            Maybe.ToOption(maybe)
-          </code>
-          <div class="tip" id="352">
-            <strong>Signature:</strong> maybe:Maybe&lt;&#39;T&gt; -&gt; &#39;T option<br />
-                          <strong>Type parameters:</strong> 'T                      </div>
-        </td>
-        <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Maybe.fs#L51-51" class="github-link">
-              <img src="../content/img/github.png" class="normal" />
-              <img src="../content/img/github-blue.png" class="hover" />
-            </a>
-          <p>Transforms a optional <code>Maybe&lt;&gt;</code> instance to a F# option.</p>
+          <p>Traverse over a sequence running a given mapping function over the elements,
+collecting the outcomes into a result.</p>
 
 
         </td>

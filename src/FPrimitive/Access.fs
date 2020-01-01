@@ -181,7 +181,7 @@ module Access =
         Capability = fun x -> 
           match Spec.validate x spec with
           | Ok x -> acc.Capability x
-          | Error errs -> Error errs }
+          | Error errs -> Error (Map.values errs |> List.concat) }
 
 /// Computation expression to control the access of functions.
 type AccessBuilder<'a, 'b> () =
@@ -252,7 +252,7 @@ exception AccessFailureException of string
 
 /// Result type when the access-controlled function is evaluated.
 [<Struct; NoEquality; NoComparison>]
-type AccessResult<'a> internal (result : Result<'a, string list>) =
+type AccessResult<'T> internal (result : Result<'T, string list>) =
     /// Gets a value indicating whether or not the access-controlled function was evaluated successfully.
     member __.Successful = Result.isOk result 
     /// Gets the series of errors that occured during the evaluation of the access-controlled function.
@@ -269,10 +269,15 @@ type AccessResult<'a> internal (result : Result<'a, string list>) =
         let message = sprintf "Access to resource failed: %s" errors
         raise (AccessFailureException message))
     /// Tries to get the result of the access-controlled function based on whether the function evaluated successfully.
-    member __.TryGetValue (output : outref<'a>) =
+    member __.TryGetValue (output : outref<'T>) =
       match result with
       | Ok x -> output <- x; true
-      | _ -> output <- Unchecked.defaultof<'a>; false
+      | _ -> output <- Unchecked.defaultof<'T>; false
+    /// Transforms the access result to an optional instance.
+    member __.ToMaybe () = Maybe.OfOption (Result.toOption result)
+    /// Transfroms the access result to an abstracted outcome result.
+    member __.ToOutcome () = Outcome.OfFSharpResult (Result.mapError Array.ofList result)
+    static member op_Implicit (result : AccessResult<'T>) = result.ToOutcome ()
 
 /// Extensions on the `Access<_, _>` type to use in C# context.
 [<Extension>]

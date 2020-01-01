@@ -1,4 +1,5 @@
 ﻿FSharp.Core
+Newtonsoft.Json.Schema
 
 group Test
     Xunit

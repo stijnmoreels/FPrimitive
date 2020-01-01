@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Map - FPrimitive</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="description" content=""/>
+    <meta name="author" content="Stijn Moreels"/>
+
+    <script src="https://code.jquery.com/jquery-1.8.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.8.23/jquery-ui.js"></script>
+    <script src="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/js/bootstrap.min.js"></script>
+    <link href="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/css/bootstrap-combined.min.css" rel="stylesheet"/>
+
+    <link type="text/css" rel="stylesheet" href="/FPrimitive/content/style.css" />
+    <script type="text/javascript" src="/FPrimitive/content/tips.js"></script>
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="container">
+      <div class="masthead">
+        <ul class="nav nav-pills pull-right">
+          <li><a href="http://fsharp.org">fsharp.org</a></li>
+          <li><a href="https://github.com/stijnmoreels/FPrimitive">github page</a></li>
+        </ul>
+        <h3 class="muted"><a href="/FPrimitive/index.html">FPrimitive</a></h3>
+      </div>
+      <hr />
+      <div class="row">
+        <div class="span9" id="main">
+          
+
+
+
+<h1>Map</h1>
+<p>
+  <span>Namespace: Microsoft.FSharp.Core</span><br />
+  </p>
+<div class="xmldoc">
+<p>Operations on the <code>Map&lt;_, _&gt;</code> type.</p>
+
+</div>
+
+<!-- Render nested types and modules, if there are any -->
+
+  <h3>Functions and values</h3>
+  <table class="table table-bordered member-list">
+    <thead>
+      <tr><td>Function or value</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '185', 185)" onmouseover="showTip(event, '185', 185)">
+            addWith(...)
+          </code>
+          <div class="tip" id="185">
+            <strong>Signature:</strong> updateValue:(&#39;?11897 -&gt; &#39;?11898 -&gt; &#39;?11898) -&gt; createValue:(&#39;?11897 -&gt; &#39;?11898) -&gt; key:&#39;?11899 -&gt; value:&#39;?11897 -&gt; m:Map&lt;&#39;?11899,&#39;?11898&gt; -&gt; Map&lt;&#39;?11899,&#39;?11898&gt;<br />
+                          <strong>Type parameters:</strong> '?11897, '?11898, '?11899                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Map.fs#L16-16" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Adds a value to the map but handles dupplicate values with it.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '186', 186)" onmouseover="showTip(event, '186', 186)">
+            append m1 m2
+          </code>
+          <div class="tip" id="186">
+            <strong>Signature:</strong> m1:Map&lt;&#39;f,&#39;g&gt; -&gt; m2:Map&lt;&#39;f,&#39;g&gt; -&gt; Map&lt;&#39;f,&#39;g&gt;<br />
+                          <strong>Type parameters:</strong> 'f, 'g                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Map.fs#L70-70" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Combines two maps into a new map, duplicate entries are overriden.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '187', 187)" onmouseover="showTip(event, '187', 187)">
+            appendu m1 m2
+          </code>
+          <div class="tip" id="187">
+            <strong>Signature:</strong> m1:Map&lt;&#39;?11935,&#39;?11936&gt; -&gt; m2:Map&lt;&#39;?11935,&#39;?11936&gt; -&gt; Map&lt;&#39;?11935,seq&lt;&#39;?11936&gt;&gt;<br />
+                          <strong>Type parameters:</strong> '?11935, '?11936                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Map.fs#L73-73" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Combines two maps into a new map, updating the values of duplicate entries.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '188', 188)" onmouseover="showTip(event, '188', 188)">
+            create key xs
+          </code>
+          <div class="tip" id="188">
+            <strong>Signature:</strong> key:&#39;d -&gt; xs:&#39;e -&gt; Map&lt;&#39;d,&#39;e&gt;<br />
+                          <strong>Type parameters:</strong> 'd, 'e                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Map.fs#L64-64" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Creates a new map with a key and value.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '189', 189)" onmouseover="showTip(event, '189', 189)">
+            keys(m)
+          </code>
+          <div class="tip" id="189">
+            <strong>Signature:</strong> m:Map&lt;&#39;?11919,&#39;?11920&gt; -&gt; seq&lt;&#39;?11919&gt;<br />
+                          <strong>Type parameters:</strong> '?11919, '?11920                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Map.fs#L58-58" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Gets the keys of the map.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '190', 190)" onmouseover="showTip(event, '190', 190)">
+            mapv f m
+          </code>
+          <div class="tip" id="190">
+            <strong>Signature:</strong> f:(&#39;a -&gt; &#39;b) -&gt; m:Map&lt;&#39;c,&#39;a&gt; -&gt; Map&lt;&#39;c,&#39;b&gt;<br />
+                          <strong>Type parameters:</strong> 'a, 'b, 'c                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Map.fs#L67-67" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Maps the values of the map.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '191', 191)" onmouseover="showTip(event, '191', 191)">
+            ofArrayg(xs)
+          </code>
+          <div class="tip" id="191">
+            <strong>Signature:</strong> xs:(&#39;?11913 * &#39;?11914 []) [] -&gt; Map&lt;&#39;?11913,&#39;?11914 []&gt;<br />
+                          <strong>Type parameters:</strong> '?11913, '?11914                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Map.fs#L46-46" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Converts a grouped <code>array</code> to a <code>Map</code> value where the values of duplicate keys are grouped together.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '192', 192)" onmouseover="showTip(event, '192', 192)">
+            ofArrayu(xs)
+          </code>
+          <div class="tip" id="192">
+            <strong>Signature:</strong> xs:(&#39;?11916 * &#39;?11917) [] -&gt; Map&lt;&#39;?11916,&#39;?11917 []&gt;<br />
+                          <strong>Type parameters:</strong> '?11916, '?11917                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Map.fs#L51-51" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Converts a <code>array</code> to a <code>Map</code> value where the values of duplicate keys are grouped together.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '193', 193)" onmouseover="showTip(event, '193', 193)">
+            ofDict(d)
+          </code>
+          <div class="tip" id="193">
+            <strong>Signature:</strong> d:&#39;a -&gt; Map&lt;&#39;b,&#39;c&gt;<br />
+                          <strong>Type parameters:</strong> 'a, 'b, 'c                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Map.fs#L13-13" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Convert a <code>Map&lt;_, _&gt;</code> value to a <code>IDictionary&lt;_, _&gt;</code> instance.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '194', 194)" onmouseover="showTip(event, '194', 194)">
+            ofListg(xs)
+          </code>
+          <div class="tip" id="194">
+            <strong>Signature:</strong> xs:(&#39;a * &#39;b list) list -&gt; Map&lt;&#39;a,&#39;b list&gt;<br />
+                          <strong>Type parameters:</strong> 'a, 'b                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Map.fs#L34-34" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Converts a grouped <code>list</code> to a <code>Map</code> value where the values of duplicated keys are grouped together.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '195', 195)" onmouseover="showTip(event, '195', 195)">
+            ofListu(xs)
+          </code>
+          <div class="tip" id="195">
+            <strong>Signature:</strong> xs:(&#39;?11910 * &#39;?11911) list -&gt; Map&lt;&#39;?11910,&#39;?11911 list&gt;<br />
+                          <strong>Type parameters:</strong> '?11910, '?11911                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Map.fs#L39-39" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Converts a <code>list</code> to a <code>Map</code> value where the values of duplicated keys are grouped together.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '196', 196)" onmouseover="showTip(event, '196', 196)">
+            ofSeqg(xs)
+          </code>
+          <div class="tip" id="196">
+            <strong>Signature:</strong> xs:seq&lt;&#39;a * seq&lt;&#39;b&gt;&gt; -&gt; Map&lt;&#39;a,seq&lt;&#39;b&gt;&gt;<br />
+                          <strong>Type parameters:</strong> 'a, 'b                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Map.fs#L22-22" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Converts a grouped <code>seq</code> to a <code>Map</code> value where the values of duplicated keys are grouped together.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '197', 197)" onmouseover="showTip(event, '197', 197)">
+            ofSequ(xs)
+          </code>
+          <div class="tip" id="197">
+            <strong>Signature:</strong> xs:seq&lt;&#39;?11904 * &#39;?11905&gt; -&gt; Map&lt;&#39;?11904,seq&lt;&#39;?11905&gt;&gt;<br />
+                          <strong>Type parameters:</strong> '?11904, '?11905                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Map.fs#L27-27" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Converts a <code>seq</code> to a <code>Map</code> value where the values of duplicated keys are grouped together.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '198', 198)" onmouseover="showTip(event, '198', 198)">
+            toDict(m)
+          </code>
+          <div class="tip" id="198">
+            <strong>Signature:</strong> m:Map&lt;&#39;a,&#39;b&gt; -&gt; (type)<br />
+                          <strong>Type parameters:</strong> 'a, 'b                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Map.fs#L10-10" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Convert a <code>IDictionary&lt;_, _&gt;</code> instance to a <code>Map&lt;_, _&gt;</code> value.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '199', 199)" onmouseover="showTip(event, '199', 199)">
+            values(m)
+          </code>
+          <div class="tip" id="199">
+            <strong>Signature:</strong> m:Map&lt;&#39;a,&#39;b&gt; -&gt; seq&lt;&#39;b&gt;<br />
+                          <strong>Type parameters:</strong> 'a, 'b                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Map.fs#L61-61" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Gets the values of the map.</p>
+
+
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+        </div>
+        <div class="span3">
+          <img src="/FPrimitive/img/logo.png" alt="F# Project" style="width:150px;margin:10px" />  
+          <ul class="nav nav-list" id="menu" style="margin-top: 20px;">
+            <li class="nav-header">FPrimitive</li>
+            <li><a href="/FPrimitive/index.html">Home page</a></li>
+            <li class="divider"></li>
+            <li><a href="http://nuget.org/packages/FPrimitive">Get Library via NuGet</a></li>
+            <li><a href="https://github.com/stijnmoreels/FPrimitive">Source Code on GitHub</a></li>
+            <li><a href="/FPrimitive/license.html">License</a></li>
+            <li><a href="/FPrimitive/release-notes.html">Release Notes</a></li>
+            
+            <li class="nav-header">Getting started</li>
+            <li><a href="/FPrimitive/tutorial.html">Sample tutorial</a></li>
+
+            <li class="nav-header">Documentation</li>
+            <li><a href="/FPrimitive/reference/index.html">API Reference</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <a href="https://github.com/stijnmoreels/FPrimitive"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"/></a>
+  </body>
+  </html>

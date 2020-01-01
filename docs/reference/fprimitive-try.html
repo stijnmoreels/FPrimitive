@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8"/>
-    <title>Guard - FPrimitive</title>
+    <title>Try - FPrimitive</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="description" content=""/>
     <meta name="author" content="Stijn Moreels"/>
@@ -35,17 +35,12 @@
 
 
 
-<h1>Guard</h1>
+<h1>Try</h1>
 <p>
   <span>Namespace: FPrimitive</span><br />
-        <span>
-          Attributes:<br />
-[&lt;CompilationRepresentation(4)&gt;]<br />
-          
-      </span>
-</p>
+  </p>
 <div class="xmldoc">
-<p>Basic guard class to verify 'null' checks; but only that. Everything else should be written as specifications.</p>
+<p>Operations on the result type with an exception as error.</p>
 
 </div>
 
@@ -60,39 +55,19 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '29', 29)" onmouseover="showTip(event, '29', 29)">
-            against predicate ex
+          <code onmouseout="hideTip(event, '177', 177)" onmouseover="showTip(event, '177', 177)">
+            append item result
           </code>
-          <div class="tip" id="29">
-            <strong>Signature:</strong> predicate:(unit -&gt; bool) -&gt; ex:(type) -&gt; unit<br />
-                                  </div>
-        </td>
-        <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Guard.fs#L9-9" class="github-link">
-              <img src="../content/img/github.png" class="normal" />
-              <img src="../content/img/github-blue.png" class="hover" />
-            </a>
-          <p>Custom guard precondition with an exception instance.</p>
-
-
-        </td>
-      </tr>
-      <tr>
-        <td class="member-name">
-
-          <code onmouseout="hideTip(event, '30', 30)" onmouseover="showTip(event, '30', 30)">
-            againstT predicate message
-          </code>
-          <div class="tip" id="30">
-            <strong>Signature:</strong> predicate:(unit -&gt; bool) -&gt; message:string -&gt; unit<br />
+          <div class="tip" id="177">
+            <strong>Signature:</strong> item:exn -&gt; result:Try&lt;&#39;T&gt; -&gt; Try&lt;&#39;T&gt;<br />
                           <strong>Type parameters:</strong> 'T                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Guard.fs#L13-13" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Types.fs#L31-31" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          <p>Custom guard precondition with an exception type and message.</p>
+          <p>Append an exception to the exception of the <a href="fprimitive-try.html" title="Try"><code>Try</code></a>.</p>
 
 
         </td>
@@ -100,19 +75,19 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '31', 31)" onmouseover="showTip(event, '31', 31)">
-            notAnyNull param message
+          <code onmouseout="hideTip(event, '178', 178)" onmouseover="showTip(event, '178', 178)">
+            forEx createException result
           </code>
-          <div class="tip" id="31">
-            <strong>Signature:</strong> param:seq&lt;&#39;?10142&gt; -&gt; message:string -&gt; unit<br />
-                          <strong>Type parameters:</strong> '?10142                      </div>
+          <div class="tip" id="178">
+            <strong>Signature:</strong> createException:(&#39;TError -&gt; &#39;?9553) -&gt; result:Result&lt;&#39;T,&#39;TError&gt; -&gt; Try&lt;&#39;T&gt;<br />
+                          <strong>Type parameters:</strong> 'TError, '?9553, 'T                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Guard.fs#L20-20" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Types.fs#L20-20" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          <p>Guard against any 'null' reference in the sequence with a custom exception message.</p>
+          <p>Create a <a href="fprimitive-try.html" title="Try"><code>Try</code></a> alias by creating an exception for the error of the result.</p>
 
 
         </td>
@@ -120,19 +95,19 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '32', 32)" onmouseover="showTip(event, '32', 32)">
-            notNull param message
+          <code onmouseout="hideTip(event, '179', 179)" onmouseover="showTip(event, '179', 179)">
+            ifErrorRaise(result)
           </code>
-          <div class="tip" id="32">
-            <strong>Signature:</strong> param:&#39;?10140 -&gt; message:string -&gt; unit<br />
-                          <strong>Type parameters:</strong> '?10140                      </div>
+          <div class="tip" id="179">
+            <strong>Signature:</strong> result:Try&lt;&#39;T&gt; -&gt; unit<br />
+                          <strong>Type parameters:</strong> 'T                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Guard.fs#L17-17" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Types.fs#L37-37" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          <p>Guard against a 'null' reference with a custom exception message.</p>
+          <p>Raise the exception in the <a href="fprimitive-try.html" title="Try"><code>Try</code></a> when the type alias result is indeed an <code>Error</code>.</p>
 
 
         </td>

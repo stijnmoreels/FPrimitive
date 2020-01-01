@@ -105,6 +105,14 @@
         </tr>
         <tr>
           <td class="type-name">
+            <a href="fprimitive-errorsbytag.html">ErrorsByTag</a>
+          </td>
+          <td class="xmldoc">
+          
+          </td>
+        </tr>
+        <tr>
+          <td class="type-name">
             <a href="fprimitive-invalidvalidationresultexception.html">InvalidValidationResultException</a>
           </td>
           <td class="xmldoc">
@@ -155,10 +163,10 @@
         </tr>
         <tr>
           <td class="type-name">
-            <a href="fprimitive-specbuilder-2.html">SpecBuilder<'a, 'b></a>
+            <a href="fprimitive-try-1.html">Try<'T></a>
           </td>
           <td class="xmldoc">
-          <p>Computation expression builder for the domain specification <code>Spec&lt;_&gt;</code>.</p>
+          <p>Type alias for a result type with an exception as error.</p>
 
 
           </td>
@@ -222,20 +230,30 @@
         </tr>
         <tr>
           <td class="module-name">
-            <a href="fprimitive-guardmodule.html">Guard</a>
+            <a href="fprimitive-readonce.html">ReadOnce</a>
           </td>
           <td class="xmldoc">
-          <p>Basic guard class to verify 'null' checks; but only that. Everything else should be written as specifications.</p>
+          <p>Representation of a value that can only be read once.</p>
 
 
           </td>
         </tr>
         <tr>
           <td class="module-name">
-            <a href="fprimitive-readonce.html">ReadOnce</a>
+            <a href="fprimitive-result.html">Result</a>
           </td>
           <td class="xmldoc">
-          <p>Representation of a value that can only be read once.</p>
+          <p>Extra operations on the <code>Result&lt;_, _&gt;</code> type with <code>Map&lt;_, _&gt;</code> as error type.</p>
+
+
+          </td>
+        </tr>
+        <tr>
+          <td class="module-name">
+            <a href="fprimitive-sanitize.html">Sanitize</a>
+          </td>
+          <td class="xmldoc">
+          <p>Sanitization operations on a string, filtering the untrusted user-input before any parsing, syntax, deserialization, or validation.</p>
 
 
           </td>
@@ -272,6 +290,16 @@
         </tr>
         <tr>
           <td class="module-name">
+            <a href="fprimitive-try.html">Try</a>
+          </td>
+          <td class="xmldoc">
+          <p>Operations on the result type with an exception as error.</p>
+
+
+          </td>
+        </tr>
+        <tr>
+          <td class="module-name">
             <a href="fprimitive-untrust.html">Untrust</a>
           </td>
           <td class="xmldoc">
@@ -296,11 +324,46 @@
     </div>
   <h2>Microsoft.FSharp.Core Namespace</h2>
     <div>
-      <table class="table table-bordered module-list">
+      <table class="table table-bordered type-list">
+    <thead>
+      <tr><td>Type</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td class="type-name">
+            <a href="microsoft-fsharp-core-mapbuilder-2.html">MapBuilder<'TKey, 'TValue></a>
+          </td>
+          <td class="xmldoc">
+          <p>Builder type for computation expressions for the <code>Map&lt;_, _&gt;</code> type.</p>
+
+
+          </td>
+        </tr>
+    </tbody>
+  </table>
+  <table class="table table-bordered module-list">
     <thead>
       <tr><td>Module</td><td>Description</td></tr>
     </thead>
     <tbody>
+        <tr>
+          <td class="module-name">
+            <a href="microsoft-fsharp-core-map.html">Map</a>
+          </td>
+          <td class="xmldoc">
+          <p>Operations on the <code>Map&lt;_, _&gt;</code> type.</p>
+
+
+          </td>
+        </tr>
+        <tr>
+          <td class="module-name">
+            <a href="microsoft-fsharp-core-mapvalues.html">MapValues</a>
+          </td>
+          <td class="xmldoc">
+          
+          </td>
+        </tr>
         <tr>
           <td class="module-name">
             <a href="microsoft-fsharp-core-option.html">Option</a>
@@ -358,6 +421,26 @@
           </td>
           <td class="xmldoc">
           <p>Represents a optional model that can either contain a value or not.</p>
+
+
+          </td>
+        </tr>
+        <tr>
+          <td class="type-name">
+            <a href="system-notfailureexception.html">NotFailureException</a>
+          </td>
+          <td class="xmldoc">
+          <p>Exception thrown when the failure value of a result instance is called while the instance represents a successful outcome.</p>
+
+
+          </td>
+        </tr>
+        <tr>
+          <td class="type-name">
+            <a href="system-notsuccessfulexception.html">NotSuccessfulException</a>
+          </td>
+          <td class="xmldoc">
+          <p>Exception thrown when the successful value of a result instance is called while the instance represents a failure outcome.</p>
 
 
           </td>

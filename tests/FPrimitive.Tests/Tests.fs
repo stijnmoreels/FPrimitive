@@ -1,4 +1,4 @@
-namespace FPrimitive.Tests
+﻿namespace FPrimitive.Tests
 
 open System
 open System.IO
@@ -13,21 +13,57 @@ open FPrimitive
 module Extensions =
   let (<=>) x y = x = y
 
-type ISBN10 =
-  private ISBN10 of int with
+type HttpUri =
+  private HttpUri of Uri with
+    static member create x = specModel (Uri >> HttpUri) x {
+      notNull "cannot create HTTP Uri from 'null'"
+      verify (fun x -> Uri.IsWellFormedUriString (x, UriKind.Absolute)) "URI is not in a well formed format"
+      verify (fun x -> x.StartsWith Uri.UriSchemeHttp || x.StartsWith Uri.UriSchemeHttps) "URI should have a 'http' or 'https' scheme" }
+
+type Author =
+  private Author of string with
     static member create x = 
-      let checksum x =
-          let xs = (string x).ToCharArray() |> Seq.map (string >> int)
-          let sumOfProd =
-            Seq.indexed xs
-            |> Seq.map (fun (i, x) -> i * x)
-            |> Seq.reduce (+)
-          sumOfProd % 11 = 0
-      
-      specModel ISBN10 x {
-        greaterThan 0 "should be greater than zero"
-        equalOf (string >> String.length) 10 "should have a length of 10 charaters"
-        verify checksum "checksum was not correct" }
+      let name = @"[A-Z]{1}[a-z]*\.?"
+      let pattern = sprintf "^(%s)( %s)*$" name name
+      specModel Author x {
+        notNullOrWhiteSpace "author name should not be blank"
+        greaterThanOrEqualOf String.length 1 "author name should at least be a single character"
+        matches pattern (sprintf "author name should match regular expression: %s" pattern) }
+
+type ISBN13 =
+  private ISBN13 of string with
+    static member create x = 
+      let pattern = "^[0-9]+$"
+      let checksum (code : string) =
+        let digits = code.ToCharArray() |> Seq.map (string >> int)
+        let sum = 
+          Seq.take 12 digits 
+          |> Seq.mapi (fun i n -> if i % 2 <> 0 then n * 3 else n)
+          |> Seq.sum
+        let rem = sum % 10
+        let checksum = if rem <> 0 then 10 - rem else rem
+        checksum = Seq.last digits
+      specModel ISBN13 x {
+        notNullOrWhiteSpace "ISBN13 number should not be blank"
+        equalOf String.length 13 "ISBN13 number should be 13 characters"
+        matches pattern (sprintf "ISBN13 number should match regular expression: %s" pattern)
+        startsWith "987" "ISBN13 number should start with '987'"
+        verify checksum "ISBN13 checksum was invalid" } 
+
+type Int1000 =
+  private Int1000 of int with
+    static member create x = specModel Int1000 x {
+      inclusiveBetween 1 1000 "integer number must be between 1-1000" }
+
+type Book =
+  { Author : Author
+    ISBN13 : ISBN13
+    Pages : Int1000 } with
+    static member create author isbn13 pages = result {
+      let! author = Author.create author
+      let! isbn13 = ISBN13.create isbn13
+      let! pages = Int1000.create pages
+      return { Author = author; ISBN13 = isbn13; Pages = pages } }
 
 type Point =
   { Min : int
@@ -36,7 +72,7 @@ type Point =
         let! min = specResult min { exclusiveBetween 0 10 "minimum should be between 0-10 exlusive" }
         let! max = specResult max { exclusiveBetween 11 20 "maximum should be between 11-20 exclusive" }
         return! if min < max then Ok { Min = min; Max = max }
-                else Error ["minimum should be less than maximum"] }
+                else Spec.error "min" "minimum should be less than maximum" }
       
       static member create2 min max =
         let minS = spec { exclusiveBetween 0 10 "minimum should be between 0-10 exlusive" }
@@ -55,8 +91,8 @@ type Text =
       |> Spec.createModel Text s
 
     static member create2 (s) = specModel Text s { 
-        notNull "should not be null"
-        notEmpty "should not be empty" }
+      notNull "should not be null"
+      notEmpty "should not be empty" }
 
 type Person = 
   { FirstName : Text
@@ -70,7 +106,7 @@ type PartyId =
   private PartyId of string with
     static member create x = specModel PartyId x {
       notNullOrWhiteSpace "party ID cannot be null or blank"
-      regex "^#" "party ID should start with hashtag '#'"
+      matches "^#" "party ID should start with hashtag '#'"
       cascade FirstFailure }
 
 open Microsoft.FSharp.Core.Result.Operators
@@ -79,16 +115,16 @@ type Party =
   private { Ids : UniqueSeq<PartyId> } with
     static member create xs = result {
         let! uniqueIds = 
-            specResult xs { nonEmpty "party IDs cannot be empty" }
-            >>= Result.traverseSeq PartyId.create
+            NonEmptySeq.create xs
+            >>= Result.traverseSeqMap PartyId.create
             >>= UniqueSeq<PartyId>.create
         return { Ids = uniqueIds } }
 
 module Tests =
   let formatResult = function
     | Ok _ -> true.ToProperty()
-    | Error (errs : string list) -> 
-      false |@ (String.Join (Environment.NewLine, errs))
+    | Error (errs : ErrorsByTag) -> 
+      false |@ (String.Join (Environment.NewLine, Map.values errs))
   let testSpec desc testCase =
     testProperty desc (testCase >> formatResult)
 
@@ -135,10 +171,6 @@ module Tests =
         String.IsNullOrWhiteSpace x |> not ==> lazy
         specModel id x { notNullOrWhiteSpace "should not be whitespace" }
         |> formatResult
-
-      testSpec "forall" <| fun (xs : NonEmptyArray<NegativeInt>) ->
-        specModel id xs.Get { 
-          forall (fun (NegativeInt x) -> x < 0) "each element should be greater than zero" }
 
       testSpec "length" <| fun (xs : obj []) ->
         specModel id xs { length xs.Length "should have expected length" }
@@ -249,7 +281,7 @@ module Tests =
         |> Spec.isType "should be of type"
         |> Spec.validate x
 
-      testSpec "dependsOn" <| fun (PositiveInt x) -> specModel id x {
+      testSpec "dependsOn" <| fun (PositiveInt x) -> specResult x {
         greaterThan 0 "should be greater than zero"
         dependsOn (spec { 
           notEqual 0 "should not be equal to zero"
@@ -257,12 +289,77 @@ module Tests =
             greaterThanOrEqual 1 "should be greater than or equal to 1" }) }) }
 
       testProperty "dependsOn comes first and fails first" <| fun (NegativeInt x) -> 
-        specResult x {
+        let r = specResult x {
+          tag "base"
           greaterThan 0 "should be greater than zero"
-          dependsOn (spec { equal 0 "should be equal to zero" }) }
-        |> (=) (Error ["should be equal to zero"])
+          dependsOn (spec { 
+            tag "child"
+            equal 0 "@int should be equal to zero" }) }
+        r = Spec.error "child.int" "@int should be equal to zero"
+
+      testProperty "valid type for quick validation" <| fun x isValid ->
+        let r = Valid<_>.createWith x (fun _ -> isValid) "should be valid when predicate holds"
+        Expect.isTrue (Result.isOk r <=> isValid) "should be valid when predicate holds" 
+
+      testSpec "seqEqual" <| fun (xs : int list) -> specResult xs { 
+        seqEqual xs "sequence should be equal to other sequence" }
+
+      testSpec "forall" <| fun (xs : PositiveInt list) -> specResult xs {
+        forall (fun (PositiveInt x) ->  x > 0) "positive integer should be greater than zero" }
+
+      testSpec "fornone" <| fun (xs : NonZeroInt list) -> specResult xs {
+        fornone (fun (NonZeroInt x) -> x = 0) "non-zero integer shouldn't be zero" }
+
+      testSpec "fornoneNull" <| fun (xs : PositiveInt list) -> specResult xs { 
+        fornoneNull "positive integer should not be 'null'" }
+
+      testProperty "structure" <| fun (PositiveInt x) (NegativeInt y) (NonZeroInt z) -> 
+        specResult [x; y; z] {
+          structure [
+            fun x -> x > 0
+            fun y -> y < 0
+            fun z -> z <> 0 ] "should match structure" }
+        |> formatResult
+
+      testProperty "contains" <| fun x xs ->
+        Gen.shuffle (x::xs)
+        |> Arb.fromGen
+        |> Prop.forAll <| fun xs -> 
+          specResult xs { contains x "should contain element" } |> formatResult
+
+      testProperty "containsAll" <| fun xs ys ->
+        Gen.shuffle (Array.append xs ys)
+        |> Arb.fromGen
+        |> Prop.forAll <| fun xs ->
+          specResult xs { containsAll ys "should contain all elements" } |> formatResult
+
+      testProperty "exists" <| fun (PositiveInt x) (xs : NegativeInt list) ->
+        (x :: List.map (fun (NegativeInt y) -> y) xs)
+        |> Gen.shuffle
+        |> Arb.fromGen
+        |> Prop.forAll <| fun xs ->
+          specResult xs { exists ((=) x) "should satisfy element" } |> formatResult
+
+      testProperty "single" <| fun (xs : PositiveInt list) ->
+        Gen.shuffle (0 :: List.map (fun (PositiveInt x) -> x) xs)
+        |> Arb.fromGen
+        |> Prop.forAll <| fun xs -> 
+          specResult xs { single ((=) 0) "should only contain a single zero" } |> formatResult
     ]
 
+  [<Tests>]
+  let orderTests =
+    testList "spec order" [
+      testCase "order" <| fun () ->
+          let xs = [ null; ""; " "; "\n"]
+          let asserter x =
+            Spec.def |> Spec.verify (fun (x : string) -> x.Length > 10) "should be greater than 10 characters" 
+                     |> Spec.notNull "should not be null"
+                     |> Spec.notEmpty "should not be empty"
+                     |> Spec.notWhiteSpace "should not be whitespace"
+                     |> Spec.isSatisfiedBy x
+          Expect.all xs (not << asserter) "should validate in order" 
+    ]
 
   [<Tests>]
   let accessTests =
@@ -422,10 +519,10 @@ module Tests =
         Expect.equal actual None "should not get value when the predicate holds"
 
       testCase "untrust validate result" <| fun _ ->
-        let actual = Untrust.getWithResult (fun x -> if x <> 0 then Ok (NonZeroInt x) else Error ["should be not be zero"]) (Untrust 1)
+        let actual = Untrust.getWithResult (fun x -> if x <> 0 then Ok (NonZeroInt x) else Spec.error "int" "should be not be zero") (Untrust 1)
         Expect.equal actual (Ok (NonZeroInt 1)) "should get value when predicate holds"
-        let actual = Untrust.getWithResult (fun x -> if x <> null then Ok (NonNull x) else Error ["should not be 'null'"]) (Untrust null)
-        Expect.equal actual (Error ["should not be 'null'"]) "should not get value when predicate fails"
+        let actual = Untrust.getWithResult (fun x -> if x <> null then Ok (NonNull x) else Spec.error "int" "should not be 'null'") (Untrust null)
+        Expect.equal actual (Spec.error "int" "should not be 'null'") "should not get value when predicate fails"
 
       testProperty "non-empty sequences are the same" <| fun (objs : NonEmptyArray<obj>) ->
         let xs = Seq.toNonEmpty objs.Get
@@ -443,4 +540,90 @@ module Tests =
         let xs = Seq.toUniqueBy (fun x -> x.ToString ()) objs
         let ys = Seq.toUniqueBy (fun x -> x.ToString ()) objs
         Expect.equal xs ys "should be the same unique seq"
+
+      testProperty "tags are made from strings starting with '@'" <| fun (PositiveInt x) ->
+        Gen.subListOf [ yield! ['a'..'z']; yield! ['A'..'Z'] ]
+        |> Gen.filter (fun xs -> xs.Length > 0)
+        |> Gen.map (fun xs -> String.Join ("", xs))
+        |> Gen.three
+        |> Arb.fromGen
+        |> Prop.forAll <| fun (name, tag1, tag2) ->
+            let r = specResult x { 
+              tag name
+              cascade Continue
+              startsWithOf string "-" (sprintf "the @%s should start with a '-'" tag1)
+              endsWithOf string "." (sprintf "ths @%s should end with a '.'" tag1)
+              lessThanOf (string >> String.length) 0 (sprintf "the length of the @%s should be -1" tag2)
+              inclusiveBetween -1 -100 "should be between -1 <-> -100" }
+            
+            Expect.isError r "validation should fail"
+            let errMap = Result.either (fun _ -> Map.empty) id r
+            Expect.hasLength errMap 3 "valiation error map should have 3 entries"
+            Expect.equal 
+              (Map.tryFind (sprintf "%s.%s" name tag1) errMap) 
+              (Some [ sprintf "the @%s should start with a '-'" tag1
+                      sprintf "ths @%s should end with a '.'" tag1 ])
+              "validation error map should have 2 entries for tag1 with the same 'name.tag' key"
+            Expect.equal
+              (Map.tryFind (sprintf "%s.%s" name tag2) errMap)
+              (Some [ sprintf "the length of the @%s should be -1" tag2 ])
+              "validation error map should have 1 entry with for tag2"
+            Expect.equal 
+              (Map.tryFind name errMap) 
+              (Some [ "should be between -1 <-> -100" ]) 
+              "validation error map should have 1 entry with the 'name' as key"
     ]
+
+  [<Tests>]
+  let sanitize_tests =
+    testList "sanitize" [
+      testProperty "empty when null" <| fun x ->
+        let actual = Sanitize.empty_when_null x
+        Expect.isNotNull actual "can never be 'null'"
+      testProperty "white regex+match" <| fun (NonNull pre_noise) (PositiveInt x) (NonNull post_noise) ->
+        (pre_noise <> string x && post_noise <> string x
+        && not <| pre_noise.Contains (string x)
+        && not <| post_noise.Contains (string x)) ==> lazy
+        let input = sprintf "%s%i%s" pre_noise x post_noise
+        let actual = Sanitize.whitematch (string x) input
+        Expect.equal actual (string x) "should only allow matches"
+      testProperty "white list" <| fun (NonNull pre_noise) x (NonNull post_noise) ->
+        (pre_noise <> string x && post_noise <> string x
+         && not <| pre_noise.Contains (string x)
+         && not <| post_noise.Contains (string x)) ==> lazy
+        let input = sprintf "%s%i%s" pre_noise x post_noise
+        let actual = Sanitize.whitelist [string x] input
+        Expect.equal actual (string x) "should only allow in list"
+      testProperty "black regex+match" <| fun (PositiveInt pre_noise) (NonEmptyString x) (PositiveInt post_noise) ->
+        (not <| x.Contains (string pre_noise) 
+        && not <| x.Contains (string post_noise)
+        && not <| (string pre_noise).Contains (string post_noise)
+        && not <| (string post_noise).Contains (string pre_noise)) ==> lazy
+        let input = sprintf "%i%s%i" pre_noise x post_noise
+        let actual = Sanitize.blackmatch (sprintf "(%i|%i)" pre_noise post_noise) input
+        Expect.equal actual x "should remove noise via match"
+      testProperty "black list" <| fun (PositiveInt pre_noise) (NonEmptyString x) (PositiveInt post_noise) ->
+        (not <| x.Contains (string pre_noise) 
+         && not <| x.Contains (string post_noise)
+         && not <| (string pre_noise).Contains (string post_noise)
+         && not <| (string post_noise).Contains (string pre_noise)) ==> lazy
+        let input = sprintf "%i_%s_%i" pre_noise x post_noise
+        let actual = Sanitize.blacklist [string pre_noise; string post_noise] input
+        Expect.equal actual (sprintf "_%s_" x) "should remove noise via list"
+      testProperty "replace(s)" <| fun (NonEmptyString target) (NonEmptyString value) (NonEmptyString replacement) ->
+        (target <> value && target <> replacement
+         && not <| value.Contains target
+         && not <| target.Contains value ) ==> lazy
+        let input = sprintf "%s%s" target value
+        let actual = Sanitize.replace value replacement input
+        Expect.equal actual (sprintf "%s%s" target replacement) "should replace value with replacement"
+      testProperty "max" <| fun (NonEmptyString x) (PositiveInt length) ->
+          (length <= x.Length) ==> lazy
+          let actual = Sanitize.max length x
+          Expect.isLessThanOrEqual actual.Length length "stripping max length should not less or equal to original length"
+      testProperty "ascii" <| fun (PositiveInt x) ->
+        let input = sprintf "%i👍" x
+        let actual = Sanitize.ascii input
+        Expect.equal actual (string x) "should only get ASCII characters"
+    ]
+  

@@ -1,17 +1,21 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.IO;
 using System.Net.Mail;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Schema;
-using Microsoft.FSharp.Core;
 using FPrimitive;
-using Microsoft.FSharp.Control;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Schema;
 
 namespace FPrimitive.CSharp.Tests
 {
@@ -21,8 +25,10 @@ namespace FPrimitive.CSharp.Tests
         {
             // Specification before the actual check of the base-uri.
             Spec<Uri> spec =
-                Spec.Of<Uri>()
-                    .Add(uri => uri.Scheme == Uri.UriSchemeHttps, "should be 'https' scheme");
+                Spec.Of<Uri>("uri")
+                    .Add(uri => uri.Scheme == Uri.UriSchemeHttps, "@uri should be 'https' scheme");
+
+            ValidationResult<Uri> validationResult = spec.Validate(new Uri("http://localhost", UriKind.Relative));
 
             // Demonstration purposes, generic type could be anything.
             IObservable<T> obs = null;
@@ -49,6 +55,13 @@ namespace FPrimitive.CSharp.Tests
                 Spec.Of<int>()
                     .GreaterThan(0, "should not be zero")
                     .CreateModel(untrusted, i => new NonZeroInt(i));
+
+            Outcome<EbmsString, IDictionary<string, string[]>> ebmsStringResult = EbmsString.Create("mycustomid");
+
+            var int100 = Valid<int>.Create(9, x => x > 0 && x < 100, "should be between 1-100");
+
+            Outcome<EbmsString, Exception> deserialize = Json.Deserialize<EbmsString>(new Valid<JObject>());
+            deserialize.Do(ex => throw ex);
         }
     }
 
@@ -66,7 +79,7 @@ namespace FPrimitive.CSharp.Tests
             var pattern = "^[a-z-A-Z0-9]$";
             return Spec.Of<string>()
                        .NotNullOrWhiteSpace("ebMS string cannot be null or blank")
-                       .Regex(pattern, $"ebMS string can only contain chars that matches {pattern}")
+                       .Matches(pattern, $"ebMS string can only contain chars that matches {pattern}")
                        .CreateModel(value, validated => new EbmsString(validated));
         }
     }
@@ -119,12 +132,12 @@ namespace FPrimitive.CSharp.Tests
 
         public static ValidationResult<ReadableText> Create(string untrusted)
         {
-            return Spec.Of<string>()
-                       .NotNull("Product name should not be 'null'")
-                       .NotEmpty("Product name should not be empty")
-                       .NotWhiteSpace("Product name should not contain only white-space characters")
-                       .Regex("^[a-zA-Z ]+$", "Product name should only contain characters from a-z")
-                       .Add(input => input.Length == 20, "Product name should only have a length of 20")
+            return Spec.Of<string>("name")
+                       .NotNull("Product @name should not be 'null'")
+                       .NotEmpty("Product @name should not be empty")
+                       .NotWhiteSpace("Product @name should not contain only white-space characters")
+                       .Matches("^[a-zA-Z ]+$", "Product @name should only contain characters from a-z")
+                       .Add(input => input.Length == 20, "Product @name should only have a length of 20")
                        .Cascade(CascadeMode.FirstFailure)
                        .CreateModel(untrusted, validated => new ReadableText(validated));
         }
@@ -260,21 +273,19 @@ namespace FPrimitive.CSharp.Tests
 
     public class Party
     {
-        public Party(UniqueSeq<NonWhiteSpaceString> ids)
+        public Party(UniqueEnumerable<NonWhiteSpaceString> ids)
         {
             Ids = ids;
         }
 
-        public UniqueSeq<NonWhiteSpaceString> Ids { get; }
+        public UniqueEnumerable<NonWhiteSpaceString> Ids { get; }
 
         public static ValidationResult<Party> Create(IEnumerable<string> ids)
         {
-            return Spec.Of<IEnumerable<string>>()
-                       .NotNull("unique ID sequence cannot be null")
-                       .All(x => !(x is null), "individual ID's cannot be null")
-                       .CreateModel(ids, xs => xs.Traverse(NonWhiteSpaceString.Create))
-                       .Then(UniqueSeq<NonWhiteSpaceString>.Create)
-                       .Select(xs => new Party(xs));
+            return NonEmptyEnumerable<string>.Create(ids)
+                .Then(xs => xs.Traverse(NonWhiteSpaceString.Create))
+                .Then(xs => xs.AsUnique())
+                .Select(xs => new Party(xs));
         }
     }
 
@@ -416,12 +427,20 @@ namespace FPrimitive.CSharp.Tests
 
         public static ValidationResult<Author> Create(string author)
         {
-            const string pattern = @"^[a-zA-Z\.]+$";
+            const string name = @"[A-Z]{1}[a-z]*\.?";
+            string pattern = $@"^({name})( {name})*$";
             return Spec.Of<string>()
                        .NotNullOrWhiteSpace("author name should not be blank")
                        .Add(s => s.Length > 1, "author name should at least be a single character")
                        .Matches(pattern, $"author name should match regular expression: {pattern}")
                        .CreateModel(author, validated => new Author(validated));
+        }
+
+        /// <summary>Returns a string that represents the current object.</summary>
+        /// <returns>A string that represents the current object.</returns>
+        public override string ToString()
+        {
+            return _name;
         }
     }
 
@@ -436,11 +455,12 @@ namespace FPrimitive.CSharp.Tests
 
         public static ValidationResult<ISBN13> Create(string code)
         {
-            const string pattern = "^[0-9]$";
+            const string pattern = "^[0-9]+$";
             return Spec.Of<string>()
                        .NotNullOrWhiteSpace("ISBN13 number should not be blank")
                        .Add(s => s.Length == 13, "ISBN13 number should be 13 characters long")
                        .Matches(pattern, $"ISBN13 number should match regular expression: {pattern}")
+                       .StartsWith("978", "ISBN13 number should start with '978'")
                        .Add(Checksum, "ISBN13 checksum was invalid")
                        .CreateModel(code, validated => new ISBN13(validated));
         }
@@ -453,7 +473,7 @@ namespace FPrimitive.CSharp.Tests
 
             int sumNumbers = 
                 numbers.Take(12)
-                       .Select((i, n) => i % 2 != 0 ? n * 3 : n)
+                       .Select((n, i) => i % 2 != 0 ? n * 3 : n)
                        .Sum();
 
             int remaining = sumNumbers % 10;
@@ -462,34 +482,281 @@ namespace FPrimitive.CSharp.Tests
             int lastNumber = numbers.Last();
             return checksum == lastNumber;
         }
+
+        /// <summary>Returns a string that represents the current object.</summary>
+        /// <returns>A string that represents the current object.</returns>
+        public override string ToString()
+        {
+            return String.Format("{0:###-#-###-####-#}", _code);
+        }
+    }
+
+    public class Int1000
+    {
+        private readonly int _value;
+
+        private Int1000(int value)
+        {
+            _value = value;
+        }
+
+        public static ValidationResult<Int1000> Create(int value)
+        {
+            return Spec.Of<int>()
+                       .InclusiveBetween(0, 1000, "integer number must be between 1-1000")
+                       .CreateModel(value, validated => new Int1000(validated));
+        }
+
+        /// <summary>Returns a string that represents the current object.</summary>
+        /// <returns>A string that represents the current object.</returns>
+        public override string ToString()
+        {
+            return _value.ToString();
+        }
     }
 
     public class Book
     {
         private readonly Author _author;
         private readonly ISBN13 _isbn13;
+        private readonly Int1000 _pages;
 
-        private Book(Author author, ISBN13 isbn13)
+        private Book(Author author, ISBN13 isbn13, Int1000 pages)
         {
             _author = author;
             _isbn13 = isbn13;
+            _pages = pages;
         }
 
-        public static ValidationResult<Book> Create(string author, string isbn13)
+        public static ValidationResult<Book> Create(string author, string isbn13, int pages)
         {
             ValidationResult<Author> authorResult = Author.Create(author);
             ValidationResult<ISBN13> isbn13Result = ISBN13.Create(isbn13);
+            ValidationResult<Int1000> pagesResult = Int1000.Create(pages);
 
-            return ValidationResult.Combine(authorResult, isbn13Result, (auth, isbn) => new Book(auth, isbn));
+            return ValidationResult.Combine(authorResult, isbn13Result, pagesResult, (auth, isbn, ps) => new Book(auth, isbn, ps));
+        }
+
+        /// <summary>Returns a string that represents the current object.</summary>
+        /// <returns>A string that represents the current object.</returns>
+        public override string ToString()
+        {
+            return $"Book by {_author} with {_pages} pages, ISBN: {_isbn13}";
+        }
+    }
+
+    public static class Map
+    {
+        public static Outcome<Book, IDictionary<string, string[]>> ToModel(Maybe<BookJson> jsonM)
+        {
+            if (jsonM.TryGetValue(out BookJson json))
+            {
+                return Book.Create(json.Author, json.ISBN13, json.Pages);
+            }
+
+            return ValidationResult.Error<Book>("book", "Cannot create book domain model of unknown JSON book representation");
         }
     }
 
     public class BookJson
     {
-        [JsonProperty("author")]
-        public string Author { get; set; }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BookJson"/> class.
+        /// </summary>
+        [JsonConstructor]
+        public BookJson(string author, string isbn13, int pages)
+        {
+            Author = Sanitize.RegexReplace("( ){2,}", String.Empty, author).WhiteMatch(@"[a-zA-Z\. ]+");
+            ISBN13 = Sanitize.RemoveWhitespace(isbn13).BlackList(@"\-");
+            Pages = pages;
+        }
 
-        [JsonProperty("isbn13")]
-        public string ISBN13 { get; set; }
+        [JsonProperty("author"), DefaultValue("")]
+        public string Author { get; }
+
+        [JsonProperty("isbn13"), DefaultValue("")]
+        public string ISBN13 { get; }
+
+        [JsonProperty("pages")]
+        public int Pages { get; }
+
+        [JsonIgnore]
+        public static JSchema Schema
+        {
+            get
+            {
+                var schema = JSchema.Parse(
+                    @"{ 'description': 'A book',
+                        'type': 'object',
+                        'properties': 
+                          { 'author': { 'type': 'string', 'minLength': 1, 'maxLength': 100 },
+                            'isbn13': { 'type': 'string', 'minLength': 13, 'maxLength': 17 },
+                            'pages': { 'type': 'number', 'minimum': 1, 'maximum': 1000 } } }");
+
+                schema.AllowAdditionalProperties = false;
+
+                return schema;
+            }
+        }
+    }
+
+    public static class Json
+    {
+        public static Outcome<JObject, string[]> Load(string content)
+        {
+            if (content is null)
+            {
+                throw new JsonException("Blank content cannot be parsed to valid JSON");
+            }
+
+            var settings = new JsonLoadSettings
+            {
+                CommentHandling = CommentHandling.Ignore,
+                LineInfoHandling = LineInfoHandling.Ignore
+            };
+
+            using (var strReader = new StringReader(content))
+            using (var reader = new JsonTextReader(strReader))
+            {
+                try
+                {
+                    return JObject.Load(reader, settings);
+                }
+                catch (JsonReaderException)
+                {
+                    return new[] { "Content cannot be parsed to valid JSON" };
+                }
+            }
+        }
+
+        public static async Task<OutcomeC<JObject, string[]>> LoadAsync(string content)
+        {
+            if (content is null)
+            {
+                throw new JsonException("Blank content cannot be parsed to valid JSON");
+            }
+
+            var settings = new JsonLoadSettings
+            {
+                CommentHandling = CommentHandling.Ignore,
+                LineInfoHandling = LineInfoHandling.Ignore
+            };
+
+            using (var strReader = new StringReader(content))
+            using (var reader = new JsonTextReader(strReader))
+            {
+                try
+                {
+                    return await JObject.LoadAsync(reader, settings);
+                }
+                catch (JsonReaderException)
+                {
+                    return new[] { "Content cannot be parsed to valid JSON" };
+                }
+            }
+        }
+
+        public static Outcome<Valid<JObject>, string[]> Validate(JObject obj, JSchema sch)
+        {
+            bool isValid = obj.IsValid(sch, out IList<string> errorMessages);
+            return Valid<JObject>.Create(obj, _ => isValid, errorMessages.ToArray());
+        }
+
+        public static Outcome<T, Exception> Deserialize<T>(Valid<JObject> obj, int maxDepth = 1)
+        {
+            var serializer = new JsonSerializer
+            {
+                NullValueHandling = NullValueHandling.Ignore,
+                TypeNameHandling = TypeNameHandling.None,
+                MaxDepth = maxDepth,
+            };
+
+            using (var jtokenReader = new JTokenReader(obj))
+            {
+                try
+                {
+                    return serializer.Deserialize<T>(jtokenReader);
+                }
+                catch (Exception ex)
+                {
+                    return ex;
+                }
+            }
+        }
+    }
+
+    public class MessagePropertyXml
+    {
+        public string Name { get; set; }
+
+        public string Value { get; set; }
+    }
+
+    public class UserMessageXml
+    {
+        public int[] Transactions { get; set; }
+        public MessagePropertyXml[] Properties { get; set; }
+    }
+
+    public class MessageProperty
+    {
+        private MessageProperty(string name, string value)
+        {
+            Name = name;
+            Value = value;
+        }
+
+        public string Name { get; }
+        public string Value { get; }
+
+        public static ValidationResult<MessageProperty> Create(MessagePropertyXml xml)
+        {
+            return Spec.Of<MessagePropertyXml>()
+                       .NotNull("cannot create message property from 'null' input")
+                       .NotNullOrWhiteSpace(x => x.Name, "cannot create message property with blank name")
+                       .NotNullOrWhiteSpace(x => x.Value, "cannot create message property with blank value")
+                       .CreateModel(xml, validated => new MessageProperty(validated.Name, validated.Value));
+        }
+    }
+
+    public class UserMessage
+    {
+        private readonly NonEmptyEnumerable<int> _transactions;
+        private readonly UniqueEnumerable<MessageProperty, string> _properties;
+
+        private UserMessage(
+            NonEmptyEnumerable<int> transactions,
+            UniqueEnumerable<MessageProperty, string> properties)
+        {
+            _transactions = transactions;
+            _properties = properties;
+        }
+
+        public static ValidationResult<UserMessage> Create(UserMessageXml userMessage)
+        {
+            return Spec.Of<UserMessageXml>()
+                       .NotNull("cannot create user message from 'null' input")
+                       .CreateModel(userMessage, Map);
+        }
+
+        private static ValidationResult<UserMessage> Map(UserMessageXml userMessage)
+        {
+            ValidationResult<UserMessage> CreateModel(UserMessageXml validated)
+            {
+                var transactionsResult = NonEmptyEnumerable<int>.Create(validated.Transactions);
+                var propertiesResult =
+                    validated.Properties.Traverse(MessageProperty.Create)
+                             .SelectMany(ids => ids.AsUnique(p => p.Name));
+
+                return ValidationResult.Combine(
+                    transactionsResult,
+                    propertiesResult,
+                    (ts, ps) => new UserMessage(ts, ps));
+            }
+
+            return Spec.Of<UserMessageXml>()
+                       .NotNull("cannot create user message from 'null' input")
+                       .CreateModel(userMessage, CreateModel);
+        }
     }
 }

@@ -1,19 +1,21 @@
-version 5.211.0
+version 5.226.0
 source https://www.nuget.org/api/v2
 
 nuget FSharp.Core
+nuget Newtonsoft.Json.Schema = 3.0.10
 
 github stijnmoreels/System Time.fs
 github stijnmoreels/System Option.fs
 github stijnmoreels/System Result.fs
 github stijnmoreels/System Maybe.fs
+github stijnmoreels/System Outcome.fs
+github stijnmoreels/System Map.fs
 
 group Test
     source https://www.nuget.org/api/v2
     nuget Expecto.TestResults
     nuget Expecto.FsCheck
     nuget Expecto.BenchmarkDotNet
-    nuget Expecto.VisualStudio.TestAdapter
     nuget Argu
     
     nuget Xunit

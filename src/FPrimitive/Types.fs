@@ -11,7 +11,61 @@ open Microsoft.FSharp.Core
 
 #nowarn "1001"
 
+/// Type alias for a result type with an exception as error.
+type Try<'T> = Result<'T, exn>
+
+/// Operations on the result type with an exception as error.
+module Try = 
+  /// Create a `Try` alias by creating an exception for the error of the result.
+  let forEx createException (result : Result<'T, 'TError>) : Try<'T> =
+    match result with
+    | Error args -> Error (createException args :> exn)
+    | Ok x -> Ok x
+
+  let internal appendCore item (ex : exn) =
+    match ex with
+    | :? AggregateException as aex -> AggregateException (aex.InnerExceptions.Append item) :> exn
+    | ex -> AggregateException (seq { yield ex; yield item }) :> exn
+
+  /// Append an exception to the exception of the `Try`.
+  let append item (result : Try<'T>) : Try<'T> =
+    match result with
+    | Error ex -> Error (appendCore item ex)
+    | _ -> result
+
+  /// Raise the exception in the `Try` when the type alias result is indeed an `Error`.
+  let ifErrorRaise (result : Try<'T>) =
+    match result with
+    | Error ex -> raise ex
+    | _ -> ()
+
+/// Model representation of a valididated 'T.
+[<Struct>]
+type Valid<'T> =
+  private Validated of 'T with
+    /// Gets the inner validated value.
+    member this.Value = match this with Validated x -> x
+    /// Create a valid representation of 'T
+    static member create (value : 'T) spec =
+      Spec.createModel Validated value spec
+    /// Create a valid representation of 'T
+    static member Create (value : 'T, spec) =
+      ValidationResult<Valid<'T>> (Valid<'T>.create value spec)
+      |> ValidationResult.op_Implicit
+
+    /// Create a valid representation of 'T
+    static member createWith value predicate message =
+      if predicate value then Ok <| Validated value
+      else Error message
+    /// Create a valid representation of 'T
+    static member Create (value : 'T, predicate : Func<'T, _>, [<ParamArray>] messages : string array) =
+      if isNull predicate then nullArg "predicate"
+      if predicate.Invoke value then Outcome.Success (Validated value)
+      else Outcome.Failure (messages)
+    static member op_Implicit (valid : Valid<'T>) = valid.Value
+
 /// Model representing a sequence of elements with at least a single element.
+[<CompiledName("NonEmptyEnumerable")>]
 type NonEmptySeq<'T> =
   internal NonEmptySeq of values:seq<'T> with
     member private this.Values = match this with NonEmptySeq xs -> xs
@@ -44,6 +98,7 @@ type NonEmptySeq<'T> =
 type 'T nonEmptySeq = NonEmptySeq<'T>
 
 /// Model representing a sequence where each element is considered to be unique.
+[<CompiledName("UniqueEnumerable`2")>]
 type UniqueSeq<'T, 'TKey when 'TKey : equality> internal (values : 'T seq, selectKey) =
   member internal __.values = values
   member internal __.selectKey = selectKey
@@ -63,6 +118,7 @@ type UniqueSeq<'T, 'TKey when 'TKey : equality> internal (values : 'T seq, selec
   static member createWith selectKey values = specModel (fun x -> UniqueSeq (x, selectKey)) values {
     notNull "can't create unique sequence model because 'null' was passed in"
     nonEmpty "can't create unique sequence model of given empty sequence"
+    fornoneNull "can't create unique sequence when one or more elements are 'null'"
     unique selectKey "can't create unique sequence model since the sequence contains duplicate elements"
     cascade FirstFailure }
   /// Tries to create a unique sequence model of the given sequence, 
@@ -90,8 +146,11 @@ type UniqueSeq<'T, 'TKey when 'TKey : equality> internal (values : 'T seq, selec
   member __.Where (predicate : Func<'T, bool>) =
     if isNull predicate then nullArg "predicate"
     UniqueSeq<'T, 'TKey> (Enumerable.Where (values, predicate), selectKey)
+  /// Transforms sequence with unique values to dictionary structure.
+  member __.ToDictionary () = values.ToDictionary (Func<_, _> selectKey)
 
 /// Model representing a sequence where each element is considered to be unique.
+[<CompiledName("UniqueEnumerable`1")>]
 type UniqueSeq<'T when 'T : equality> (values) = 
   inherit UniqueSeq<'T, 'T> (values, id)
   /// Tries to create a unique sequence model of the given sequence
@@ -287,4 +346,5 @@ module Disposable =
   let tryGetValue (x : Disposable<_>) = x.tryGetValue ()
   /// Tries to read the possible disposed value.
   let tryGetValueResult x error = tryGetValue x |> Result.ofOption error
+
 

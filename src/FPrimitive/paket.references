@@ -3,3 +3,5 @@ File:Time.fs .
 File:Option.fs .
 File:Result.fs .
 File:Maybe.fs .
+File:Outcome.fs .
+File:Map.fs .

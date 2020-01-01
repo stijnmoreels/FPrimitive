@@ -24,7 +24,7 @@ open FPrimitive
 /// Composible specifications for your domain types:
 type NonEmptyString =
   private NonEmptyString of string with
-    static member create x : Result<NonEmptyString, string list> =
+    static member create x : Result<NonEmptyString, Map<string, string list>> =
       Spec.def<string>
       |> Spec.notNull "should not be null"
       |> Spec.notEmpty "should not be empty"
@@ -33,7 +33,7 @@ type NonEmptyString =
 /// ...also available as computation expression.
 type NonEmptyList<'a> =
   private NonEmptyList of 'a list with
-    static member create xs : Result<NonEmptyList<'a>, string list> =
+    static member create xs : Result<NonEmptyList<'a>, Map<string, string list>> =
       specModel NonEmptyList xs {
         nonEmpty "list should not be empty"
         lengthBetween 1 10 "list length should be between 1-10" }
