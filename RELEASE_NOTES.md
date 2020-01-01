@@ -28,3 +28,9 @@
 * Maybe: add optional type for better C# domain modeling
 * Guard: add simple guard class for quick argument checking, but limit functionality to push users to use specifications instead
 * Remove some unnecessary types to limit target projects
+
+#### 3.0.0
+* Specifications with tagged errors; using words starting with `@`
+* Sanitization blocks for transformations before validation
+* `Outcome` type for C# devs
+* Extra spec requirements: `containsAll`, `seqEqual`, `structure`...
