@@ -1,6 +1,6 @@
 type file
 id FPrimitive
-version 2.0.0
+version 3.0.0
 title FPrimitive
 summary .NET project to help developers build a correct and more secure domain model.
 description .NET project to help developers build a correct and more secure domain model by providing building blocks, standard types and trust boundaries.
@@ -12,10 +12,10 @@ projectUrl https://github.com/stijnmoreels/FPrimitive
 iconUrl https://raw.githubusercontent.com/stijnmoreels/FPrimitive/master/docs/img/logo.png
 licenseUrl https://github.com/stijnmoreels/FPrimitive/blob/master/LICENSE.txt
 releaseNotes
-    Spec invariants: makes relationships between models more easy to describe
-    Maybe: add optional type for better C# domain modeling
-    Guard: add simple guard class for quick argument checking, but limit functionality to push users to use specifications instead
-    Remove some unnecessary types to limit target projects
+    Specifications with tagged errors; using words starting with `@`
+    Sanitization blocks for transformations before validation
+    `Outcome` type for C# devs
+    Extra spec requirements: `containsAll`, `seqEqual`, `structure`...
 files
     bin/Release/netstandard2.0/*.dll ==> lib/netstandard2.0
     bin/Release/netstandard2.0/*.xml ==> lib/netstandard2.0
