@@ -127,6 +127,21 @@ When this specification fails, the error result would be a map with a single ent
 
 - key:`name.length`: value:`@length of the name should be max 10 char long`.
 
+Cascade: stop/continue on first failure
+---------------------------------------
+
+Each specification is by default configured to **Stop** on the first failure it comes across. This configuration can be alterd so the specification will run all configured requirements.
+This can be useful if the client wants to know all the errors at once instead of a trial-error until each requirement is met.
+*)
+
+// F#
+Spec.def |> Spec.cascade Continue
+
+// C#
+Spec.Of<int>().Cascade(CascadeMode.Continue);
+
+(**
+
 Advanced Scenario's
 -------------------
 
@@ -201,7 +216,7 @@ type ISBN13 =
         tag "isbn13"
         notNullOrWhiteSpace "ISBN13 number should not be blank"
         equalOf String.length 13 "ISBN13 number should have a @length of 13 characters"
-        matches pattern (sprintf "ISBN13 number should match regular expression: %s" pattern)
         startsWith "987" "ISBN13 number should start with '987'"
+        matches pattern (sprintf "ISBN13 number should match regular expression: %s" pattern)
         verify checksum "ISBN13 @checksum was invalid" }
 

@@ -12,32 +12,33 @@ open FPrimitive
 
 /// Composible specifications for your domain types:
 type NonEmptyString =
-  private
-  | NonEmptyString of string
-  static member create x =
-    Spec.def<string>
-    |> Spec.notNull "should not be null"
-    |> Spec.notEmpty "should not be empty"
-    |> Spec.createModel NonEmptyString x
+    private
+    | NonEmptyString of string
+    static member create x =
+        Spec.def<string>
+        |> Spec.notNull "should not be null"
+        |> Spec.notEmpty "should not be empty"
+        |> Spec.createModel NonEmptyString x
 
 /// ...also available as computation expression.
 type NonEmptyList<'a> =
-  private
-  | NonEmptyList of 'a list
-  static member create xs =
-    specModel NonEmptyList xs {
-      nonEmpty "list should not be empty"
-      lengthBetween 1 10 "list length should be between 1-10" }
+    private
+    | NonEmptyList of 'a list
+    static member create xs =
+        specModel NonEmptyList xs {
+            nonEmpty "list should not be empty"
+            lengthBetween 1 10 "list length should be between 1-10"
+        }
 
 
 /// Access controllers for your critical application resources:
 let uncontrolled_critical = ignore
 
 let critical =
-  Access.func uncontrolled_critical
-  |> Access.once
-  |> Access.duringHours 9 17
-  |> Access.revokable
+    Access.func uncontrolled_critical
+    |> Access.once
+    |> Access.duringHours 9 17
+    |> Access.revokable
 
 /// Try to evaluate
 Access.eval () critical
@@ -48,6 +49,7 @@ Access.revoke
 The library comes with comprehensible documentation about the major parts of the project and the complete API reference of the project:
 
  * [Specifications](spec.html) contains some in-depth documentation on the specifications and `Spec` module of the library.
+ * [Accessibility](access.html) contains some in-depth documentation on the accessibility features and the `Access` module of the library.
  * [API Reference](reference/index.html) contains automatically generated documentation for all types, modules
    and functions in the library.
 
@@ -72,3 +74,4 @@ Icons made by [Vectors Market][vectorsmarket] from [www.flaticon.com][flaticon] 
   [flaticon]: https://www.flaticon.com/
   [cc]: http://creativecommons.org/licenses/by/3.0/
 *)
+)

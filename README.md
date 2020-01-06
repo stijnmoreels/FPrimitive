@@ -14,6 +14,12 @@ FPrimitive is a .NET project to help developers build a correct and more secure 
 | --------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | [![Build Status](https://travis-ci.org/stijnmoreels/FPrimitive.svg?branch=master)](https://travis-ci.org/stijnmoreels/FPrimitive) | [![.NET Build status](https://ci.appveyor.com/api/projects/status/2ijw1am46pyhqnur?svg=true)](https://ci.appveyor.com/project/stijnmoreels/fprimitive) |
 
+## Documentation
+The project has a wiki page with further information and some additional resources are also listed here:
+* [Library Documentation Page](https://stijnmoreels.github.io/FPrimitive)
+* [Domain-Driven Security w/ F# FPrimitive & C# Interop](https://www.codit.eu/blog/domain-driven-security-with-f-fprimitive-and-c-interop/)
+* [From Untrusted Input to Strict Model w/ Layered JSON Parsing in F# FPrimitive](https://www.codit.eu/blog/from-untrusted-input-to-strict-model-with-layered-json-parsing-in-f-fprimitive-c/)
+
 ## Examples
 The project contains several reusable building blocks to make your domain model more correct and therefore more secure.
 
