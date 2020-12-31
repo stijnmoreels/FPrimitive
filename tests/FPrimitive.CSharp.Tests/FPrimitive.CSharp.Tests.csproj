@@ -11,9 +11,6 @@
     <!-- <ProjectReference Include="..\..\src\FPrimitive.CSharp\FPrimitive.CSharp.csproj" /> -->
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="FPrimitive.AspNetCore">
-      <HintPath>..\..\src\FPrimitive.AspNetCore\bin\Debug\netstandard2.0\FPrimitive.AspNetCore.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>
