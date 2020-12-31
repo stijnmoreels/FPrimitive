@@ -6,7 +6,6 @@ nuget Newtonsoft.Json.Schema = 3.0.10
 nuget System.ComponentModel.Annotations
 nuget System.Text.Json
 
-github stijnmoreels/System String.fs
 github stijnmoreels/System Time.fs
 github stijnmoreels/System Option.fs
 github stijnmoreels/System Result.fs

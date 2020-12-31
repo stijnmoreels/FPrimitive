@@ -1,5 +1,4 @@
 FSharp.Core
-File:String.fs
 File:Time.fs .
 File:Option.fs .
 File:Result.fs .
