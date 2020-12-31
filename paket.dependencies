@@ -1,7 +1,7 @@
 version 5.245.1
 source https://www.nuget.org/api/v2
 
-nuget FSharp.Core
+nuget FSharp.Core = 4.7.0
 nuget Newtonsoft.Json.Schema = 3.0.10
 nuget System.ComponentModel.Annotations
 nuget System.Text.Json
