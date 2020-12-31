@@ -138,6 +138,7 @@ Target.create "Docs" <| fun _ ->
     Shell.copyRecursive files docsOutput true
     |> Trace.logItems "Copying file: "
     Directory.ensure (docsOutput @@ "content")
+    Directory.ensure (formatting @@ "styles")
     Shell.copyRecursive (formatting @@ "styles") (docsOutput @@ "content") true
     |> Trace.logItems "Copying styles and scripts: "
 

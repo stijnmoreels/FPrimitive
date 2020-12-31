@@ -40,7 +40,7 @@ group FakeBuild
     nuget Fake.DotNet.AssemblyInfoFile
     nuget Fake.DotNet.Paket
     nuget Fake.DotNet.Testing.Expecto 
-    nuget Fake.DotNet.FSFormatting 
+    nuget Fake.DotNet.FSFormatting = 5.20.3
     nuget Fake.Api.GitHub
 
 group Formatting
