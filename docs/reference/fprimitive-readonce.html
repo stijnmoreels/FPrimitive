@@ -33,8 +33,6 @@
         <div class="span9" id="main">
           
 
-
-
 <h1>ReadOnce</h1>
 <p>
   <span>Namespace: FPrimitive</span><br />
@@ -54,16 +52,15 @@
     <tbody>
       <tr>
         <td class="member-name">
-
-          <code onmouseout="hideTip(event, '29', 29)" onmouseover="showTip(event, '29', 29)">
-            tryGetValue(x)
+          <code onmouseout="hideTip(event, '35', 35)" onmouseover="showTip(event, '35', 35)">
+            tryEvalFunc readOnce x
           </code>
-          <div class="tip" id="29">
-            <strong>Signature:</strong> x:ReadOnce&lt;&#39;?9694&gt; -&gt; &#39;?9694 option<br />
-                          <strong>Type parameters:</strong> '?9694                      </div>
+          <div class="tip" id="35">
+            <strong>Signature:</strong> readOnce:ReadOnce&lt;(&#39;a -&gt; &#39;b)&gt; -&gt; x:&#39;a -&gt; &#39;b option<br />
+                          <strong>Type parameters:</strong> 'a, 'b                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Types.fs#L287-287" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Types.fs#L432-432" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -74,16 +71,53 @@
       </tr>
       <tr>
         <td class="member-name">
-
-          <code onmouseout="hideTip(event, '30', 30)" onmouseover="showTip(event, '30', 30)">
-            tryGetValueResult x error
+          <code onmouseout="hideTip(event, '36', 36)" onmouseover="showTip(event, '36', 36)">
+            tryEvalFuncAsync readOnce x
           </code>
-          <div class="tip" id="30">
-            <strong>Signature:</strong> x:ReadOnce&lt;&#39;?9696&gt; -&gt; error:&#39;?9697 -&gt; Result&lt;&#39;?9696,&#39;?9697&gt;<br />
-                          <strong>Type parameters:</strong> '?9696, '?9697                      </div>
+          <div class="tip" id="36">
+            <strong>Signature:</strong> readOnce:ReadOnce&lt;(&#39;a -&gt; Async&lt;&#39;b&gt;)&gt; -&gt; x:&#39;a -&gt; Async&lt;&#39;b option&gt;<br />
+                          <strong>Type parameters:</strong> 'a, 'b                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Types.fs#L289-289" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Types.fs#L435-435" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Tries to read the read-once value.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+          <code onmouseout="hideTip(event, '37', 37)" onmouseover="showTip(event, '37', 37)">
+            tryGetValue(x)
+          </code>
+          <div class="tip" id="37">
+            <strong>Signature:</strong> x:ReadOnce&lt;&#39;?9716&gt; -&gt; &#39;?9716 option<br />
+                          <strong>Type parameters:</strong> '?9716                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Types.fs#L428-428" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Tries to read the read-once value.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+          <code onmouseout="hideTip(event, '38', 38)" onmouseover="showTip(event, '38', 38)">
+            tryGetValueResult x error
+          </code>
+          <div class="tip" id="38">
+            <strong>Signature:</strong> x:ReadOnce&lt;&#39;?9718&gt; -&gt; error:&#39;?9719 -&gt; Result&lt;&#39;?9718,&#39;?9719&gt;<br />
+                          <strong>Type parameters:</strong> '?9718, '?9719                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Types.fs#L430-430" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>

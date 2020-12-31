@@ -8,10 +8,16 @@ open Microsoft.FSharp.Core
 open Expecto
 open FsCheck
 open FPrimitive
+open Microsoft.FSharp.Reflection
 
 [<AutoOpen>]
 module Extensions =
   let (<=>) x y = x = y
+
+  let fromString<'a> (s:string) =
+      match FSharpType.GetUnionCases typeof<'a> |> Array.filter (fun case -> case.Name = s) with
+      |[|case|] -> Some(FSharpValue.MakeUnion(case,[||]) :?> 'a)
+      |_ -> None
 
 type HttpUri =
   private HttpUri of Uri with
@@ -55,15 +61,26 @@ type Int1000 =
     static member create x = specModel Int1000 x {
       inclusiveBetween 1 1000 "integer number must be between 1-1000" }
 
+type Rating =
+  | Unforgettable
+  | VeryGood 
+  | Okay 
+  | AlmostRight
+  | Garbage with
+    static member create s = 
+      Union.create<Rating> s
+
 type Book =
   { Author : Author
     ISBN13 : ISBN13
-    Pages : Int1000 } with
-    static member create author isbn13 pages = result {
+    Pages : Int1000
+    Rating : Rating option } with
+    static member create author isbn13 pages rating = result {
       let! author = Author.create author
       let! isbn13 = ISBN13.create isbn13
       let! pages = Int1000.create pages
-      return { Author = author; ISBN13 = isbn13; Pages = pages } }
+      let! rating = Spec.optional Option.ofObj Rating.create rating
+      return { Author = author; ISBN13 = isbn13; Pages = pages; Rating = rating } }
 
 type Point =
   { Min : int
@@ -94,6 +111,28 @@ type Text =
       notNull "should not be null"
       notEmpty "should not be empty" }
 
+type String100 =
+  private String100 of string with
+    static member create s = specModel String100 s {
+      notNullOrWhiteSpace "string100 should not be empty"
+      stringLengthBetween 1 100 "string100 should have a length of max 100 characters" }
+
+type Sex =
+  | Male
+  | Female
+  | Between
+  | Both
+  | Neither
+  | ItsComplicated
+  | MindYourOwnBusiness
+  | DontKnow
+  | Other with
+  static member create str =
+    FSharpType.GetUnionCases typeof<Sex>
+    |> Array.filter (fun case -> case.Name = str)
+    |> fun xs -> if xs.Length = 1 then Some xs.[0] else None
+    |> Option.map (fun case -> FSharpValue.MakeUnion (case,[||]) :?> Sex)
+
 type Person = 
   { FirstName : Text
     LastName : Text } with
@@ -109,10 +148,20 @@ type PartyId =
       matches "^#" "party ID should start with hashtag '#'"
       cascade FirstFailure }
 
+type Agreement =
+  private Agreement of string with
+    static member create x = specModel Agreement x {
+      notNullOrWhiteSpace "agreement cannot be blank" }
+    static member createIf x =
+      Spec.def<string>
+      |> Spec.notNullOrWhiteSpace "agreement cannot be blank"
+      |> Spec.createModelIf Option.ofObj Agreement x
+
 open Microsoft.FSharp.Core.Result.Operators
+open Fare
 
 type Party =
-  private { Ids : UniqueSeq<PartyId> } with
+  private { Ids : PartyId uniqueSeq } with
     static member create xs = result {
         let! uniqueIds = 
             NonEmptySeq.create xs
@@ -121,81 +170,223 @@ type Party =
         return { Ids = uniqueIds } }
 
 module Tests =
-  let formatResult = function
+  let toProp = function
     | Ok _ -> true.ToProperty()
     | Error (errs : ErrorsByTag) -> 
       false |@ (String.Join (Environment.NewLine, Map.values errs))
   let testSpec desc testCase =
-    testProperty desc (testCase >> formatResult)
+    testProperty desc (testCase >> toProp)
 
   [<Tests>]
   let specTests =
     testList "spec tests" [
       testSpec "add" <| fun (NegativeInt x) ->
-        Spec.def<int> 
-        |> Spec.add (fun x -> x < 0, "should be greater than zero")
-        |> Spec.validate x
-
+        Spec.def |> Spec.add (fun x -> x < 0, "should be lesser than zero")
+                 |> Spec.validate x
+      
+      testSpec "verify" <| fun (PositiveInt x) ->
+        Spec.def |> Spec.verify (fun x -> x > 0) "should be greater than zero"
+                 |> Spec.validate x
+      
       testSpec "equal" <| fun x ->
-        Spec.def 
-        |> Spec.equal x "should be equal"
-        |> Spec.validate x
-
+        Spec.def |> Spec.equal x "should be equal"
+                 |> Spec.validate x
+      
+      testSpec "equal of" <| fun (NegativeInt x) -> specResult x {
+        equalOf abs (abs x) "negative + absolute value should be greater than zero" }
+      
       testProperty "not equal" <| fun x y ->
         x <> y ==> lazy
         Spec.def
         |> Spec.notEqual y "should not be equal"
         |> Spec.validate x
-        |> formatResult
-
+        |> toProp
+      
+      testSpec "not equal of" <| fun (NegativeInt x) -> specResult x { 
+        notEqualOf abs x "absolute of negative is not negative" }
+      
       testSpec "not null" <| fun (NonNull x) ->
         Spec.def<string>
         |> Spec.notNull "should not be null"
         |> Spec.validate x
+      
+      testSpec "not null of" <| fun (NonNull x) -> specResult (Some x) { 
+        notNullOf Option.get "should not be null" }
 
       testSpec "not empty string" <| fun (NonEmptyString x) ->
-        Spec.def<string>
-        |> Spec.notNull "should not be null"
-        |> Spec.notEmpty "should not be empty"
-        |> Spec.validate x
-
-      testSpec "not null or empty" <| fun (NonEmptyString x) ->
-        specModel id x { notNullOrEmpty "should not be whitespace" }
+        Spec.def |> Spec.notNull "should not be null"
+                 |> Spec.notEmpty "should not be empty"
+                 |> Spec.validate x
+      
+      testSpec "not null or empty" <| fun (NonEmptyString x) -> specResult x { 
+        notNullOrEmpty "should not be whitespace" }
 
       testProperty "not white space string" <| fun (NonEmptyString x) ->
         String.IsNullOrWhiteSpace x |> not ==> lazy
-        specModel id x { notWhiteSpace "should not be whitespace" }
-        |> formatResult
+        specResult x { notWhiteSpace "should not be whitespace" } |> toProp
 
       testProperty "not null or white space string" <| fun (NonEmptyString x) ->
         String.IsNullOrWhiteSpace x |> not ==> lazy
-        specModel id x { notNullOrWhiteSpace "should not be whitespace" }
-        |> formatResult
+        specResult x { notNullOrWhiteSpace "should not be whitespace" } |> toProp
 
-      testSpec "length" <| fun (xs : obj []) ->
-        specModel id xs { length xs.Length "should have expected length" }
+      testSpec "starts with" <| fun (NonEmptyString prefix, txt) -> specResult (prefix + txt) {
+        startsWith prefix "should start with prefix" }
+      
+      testSpec "starts with of" <| fun (NonEmptyString prefix, txt) -> specResult (Some <| prefix + txt) {
+        startsWithOf Option.get prefix "should start with prefix" }
+      
+      testSpec "ends with" <| fun (txt, NonEmptyString trailer) -> specResult (txt + trailer) {
+        endsWith trailer "should end with trailer" }
+      
+      testSpec "ends with of" <| fun (txt, NonEmptyString trailer) -> specResult (Some <| txt + trailer) {
+        endsWithOf Option.get trailer "should end with trailer" }
 
-      testSpec "length between" <| fun (xs : obj []) ->
-        specModel id xs { lengthBetween (xs.Length - 1) (xs.Length + 1) "length should in between expected length range" }
+      testSpec "seq equal" <| fun (xs : int list) -> specResult xs { 
+          seqEqual xs "sequence should be equal to other sequence" }
 
-      testSpec "length max" <| fun (xs : obj []) ->
-        specModel id xs { lengthMax (xs.Length + 1) "not higher than max length" }
+      testSpec "non empty" <| fun x ->
+        Spec.def |> Spec.nonEmpty "should not be empty"
+                 |> Spec.validate [x]
+      
+      testSpec "non empty of" <| fun x ->
+        Spec.def |> Spec.nonEmptyOf Option.get "should not be empty"
+                 |> Spec.validate (Some [x])
 
-      testSpec "length min" <| fun (xs : obj []) ->
-        specModel id xs { lengthMin (xs.Length - 1) "not lower than min length" }
+      testSpec "forall" <| fun (xs : PositiveInt list) -> specResult xs {
+        forall (fun (PositiveInt x) ->  x > 0) "positive integer should be greater than zero" }
 
-      testSpec "less than" <| fun (NegativeInt x) ->
-        specModel id x { lessThan 0 "should be less than zero " }
-       
-      testSpec "greater than" <| fun (PositiveInt x) ->
-        specModel id x { greaterThan 0 "should be greater than zero" }
+      testSpec "fornone" <| fun (xs : NonZeroInt list) -> specResult xs {
+        fornone (fun (NonZeroInt x) -> x = 0) "non-zero integer shouldn't be zero" }
 
-      testSpec "greater than or equal" <| fun (NonNegativeInt x) ->
-        specModel id x { greaterThanOrEqual 0 "should be greater than or equal to zero" }
+      testSpec "fornone null" <| fun (xs : PositiveInt list) -> specResult xs { 
+        fornoneNull "positive integer should not be 'null'" }
 
-      testSpec "less than or equal" <| fun (NegativeInt x) ->
-        specModel id x { lessThanOrEqual -1 "should be less than or equal to -1" }
-       
+      testProperty "contains" <| fun x xs ->
+        Gen.shuffle (x::xs)
+        |> Arb.fromGen
+        |> Prop.forAll <| fun xs -> 
+          specResult xs { contains x "should contain element" } |> toProp
+
+      testProperty "contains all" <| fun xs ys ->
+        Gen.shuffle (Array.append xs ys)
+        |> Arb.fromGen
+        |> Prop.forAll <| fun xs ->
+          specResult xs { containsAll ys "should contain all elements" } |> toProp
+
+      testProperty "string contains" <| fun (NonEmptyString x) (NonEmptyString y) ->
+        specResult (x + y) { stringContains x "should contain substring" } |> toProp
+
+      testProperty "string not contains" <| fun (NonEmptyString x) (NonEmptyString y) ->
+        (not <| x.Contains y) ==> lazy
+        specResult x { stringNotContains y "should not contain substring" } |> toProp
+
+      testProperty "string contains all" <| fun (NonEmptyString x) (xs : NonEmptyArray<NonEmptyString>) ->
+        let xs = xs.Get |> Array.map (fun x -> x.Get) |> List.ofArray
+        Gen.shuffle (x::xs)
+        |> Gen.map (fun ys -> String.Join ("", ys))
+        |> Arb.fromGen
+        |> Prop.forAll <| fun str ->
+          specResult str { stringContainsAll xs "should contain all substrings" } 
+          |> toProp
+
+      testProperty "exists" <| fun (PositiveInt x) (xs : NegativeInt list) ->
+        (x :: List.map (fun (NegativeInt y) -> y) xs)
+        |> Gen.shuffle
+        |> Arb.fromGen
+        |> Prop.forAll <| fun xs ->
+          specResult xs { exists ((=) x) "should satisfy element" } |> toProp
+
+      testProperty "not exists" <| fun (xs : PositiveInt list) ->
+        Spec.def
+        |> Spec.notExists ((=) 0) "should not contain zero"
+        |> Spec.validate (xs |> List.map (fun x -> x.Get))
+        |> toProp
+
+      testProperty "single" <| fun (xs : PositiveInt list) ->
+        Gen.shuffle (0 :: List.map (fun (PositiveInt x) -> x) xs)
+        |> Arb.fromGen
+        |> Prop.forAll <| fun xs -> 
+          specResult xs { single ((=) 0) "should only contain a single zero" } 
+          |> toProp
+
+      testProperty "unique" <| fun x y z ->
+        (x <> y && x <> z && y <> z) ==> lazy
+        Spec.def
+        |> Spec.unique ((+) 1) "should have unique elements"
+        |> Spec.validate [x; y; z]
+        |> toProp
+
+      testProperty "unique items" <| fun x y z ->
+        (x <> y && x <> z && y <> z) ==> lazy
+        Spec.def
+        |> Spec.uniqueItems "should have unique elements"
+        |> Spec.validate [x; y; z]
+        |> toProp
+
+      testProperty "structure" <| fun (PositiveInt x) (NegativeInt y) (NonZeroInt z) ->
+          specResult [x; y; z] {
+            structure [
+              fun x -> x > 0
+              fun y -> y < 0
+              fun z -> z <> 0 ] "should match structure" }
+          |> toProp
+
+      testSpec "length" <| fun (xs : obj []) -> specResult xs { 
+        length xs.Length "should have expected length" }
+      
+      testSpec "length between" <| fun (xs : obj []) -> specResult xs { 
+        lengthBetween (xs.Length - 1) (xs.Length + 1) "length should in between expected length range" }
+      
+      testSpec "length max" <| fun (xs : obj []) -> specResult xs { 
+        lengthMax (xs.Length + 1) "not higher than max length" }
+      
+      testSpec "length min" <| fun (xs : obj []) -> specResult xs { 
+        lengthMin (xs.Length - 1) "not lower than min length" }
+
+      testSpec "less than" <| fun (NegativeInt x) -> specResult x { 
+        lessThan 0 "should be less than zero " }
+      
+      testSpec "greater than" <| fun (PositiveInt x) -> specResult x { 
+        greaterThan 0 "should be greater than zero" }
+      
+      testSpec "greater than or equal" <| fun (NonNegativeInt x) -> specResult x { 
+        greaterThanOrEqual 0 "should be greater than or equal to zero" }
+      
+      testSpec "less than or equal" <| fun (NegativeInt x) -> specResult x { 
+        lessThanOrEqual -1 "should be less than or equal to -1" }
+
+      testSpec "string length" <| fun (NonEmptyString txt) ->
+        Spec.def<string>
+        |> Spec.stringLength txt.Length "should have string length of %i"
+        |> Spec.validate txt
+      testProperty "string min length" <| fun (NonEmptyString txt) ->
+        Gen.choose (1, txt.Length)
+        |> Arb.fromGen
+        |> Prop.forAll <| fun x ->
+          Spec.def<string>
+          |> Spec.stringLengthMin x (sprintf "should have min length of %i" x)
+          |> Spec.validate txt
+          |> toProp
+      testProperty "string max length" <| fun (NonEmptyString txt) ->
+        Gen.choose (txt.Length, Int32.MaxValue)
+        |> Arb.fromGen
+        |> Prop.forAll <| fun x ->
+          Spec.def 
+          |> Spec.stringLengthMax x (sprintf "should have max length of %i" x)
+          |> Spec.validate txt 
+          |> toProp
+      testProperty "string between length" <| fun (NonEmptyString txt) ->
+        gen {
+          let! min = Gen.choose (1, txt.Length)
+          let! max = Gen.choose (min, Int32.MaxValue)
+          return min, max }
+        |> Arb.fromGen
+        |> Prop.forAll <| fun (min, max) ->
+          Spec.def
+          |> Spec.stringLengthBetween min max (sprintf "should be between %i and %i" min max)
+          |> Spec.validate txt
+          |> toProp
+
       testProperty "inclusive between" <| fun (PositiveInt min) (PositiveInt max) ->
         min < max ==> lazy
         Gen.choose (min, max)
@@ -204,7 +395,7 @@ module Tests =
           Spec.def<int>
           |> Spec.inclusiveBetween min max (sprintf "should be between %i-%i" min max)
           |> Spec.validate x
-          |> formatResult
+          |> toProp
 
       testProperty "exclusive between" <| fun (PositiveInt min) (PositiveInt diff) ->
         diff > 1 ==> lazy
@@ -215,15 +406,10 @@ module Tests =
           Spec.def<int>
           |> Spec.exclusiveBetween min max (sprintf "should be between %i-%i" min max)
           |> Spec.validate x
-          |> formatResult
+          |> toProp
 
-      testSpec "string length" <| fun (NonEmptyString txt) ->
-        Spec.def<string>
-        |> Spec.lengthOf (fun str -> str.ToCharArray()) txt.Length "should check for string length"
-        |> Spec.validate txt
-
-      testSpec "regex" <| fun (PositiveInt x) ->
-        specModel id (string x) { regex "^[0-9]+$" "should match regex of positive numbers" }
+      testSpec "matches" <| fun (PositiveInt x) ->
+        specModel id (string x) { matches "^[0-9]+$" "should match regex of positive numbers" }
 
       testProperty "alphabetical" <| fun () ->
         ['a'..'z'] @ ['A'..'Z']
@@ -234,7 +420,7 @@ module Tests =
             Spec.def
             |> Spec.alphabetical "should be in alphabet"
             |> Spec.validate (String.Join (String.Empty, str))
-            |> formatResult
+            |> toProp
 
       testProperty "non-alphabetical" <| fun (NonNull (str : string)) ->
         let alphabet = ['a'..'z'] @ ['A'..'Z']
@@ -255,7 +441,7 @@ module Tests =
             Spec.def 
             |> Spec.alphanum "should be alphanumerical"
             |> Spec.validate (String.Join (String.Empty, str))
-            |> formatResult
+            |> toProp
 
       testProperty "alphanumExtra" <| fun (PositiveInt x) ->
           List.map string ['a'..'z'] 
@@ -268,27 +454,104 @@ module Tests =
               Spec.def 
               |> Spec.alphanumSpecial "should be alphanumerical"
               |> Spec.validate (String.Join (String.Empty, str))
-              |> formatResult
+              |> toProp
 
       testProperty "alphanumExtra sentence" <| fun () ->
         Spec.def 
-        |> Spec.alphanumSpecial "sentece should work"
+        |> Spec.alphanumSpecial "sentence should work"
         |> Spec.validate "This is a s@mple of an alpha-numerical test string which can also contain 1235 and *//*^{}[/# "
-        |> formatResult
+        |> toProp
 
-      testSpec "isType" <| fun (NonNull x) ->
+      testSpec "is type T" <| fun (NonNull x) ->
         Spec.def<obj>
-        |> Spec.isType "should be of type"
+        |> Spec.isTypeT "should be of type"
         |> Spec.validate x
 
-      testSpec "dependsOn" <| fun (PositiveInt x) -> specResult x {
+      testSpec "is type" <| fun (x : NegativeInt) ->
+        Spec.def<obj>
+        |> Spec.isType typeof<NegativeInt> "should be of type 'negative int'"
+        |> Spec.validate (x :> obj)
+
+      testProperty "cascade" <| fun (NegativeInt x) ->
+        Spec.tag "int"
+        |> Spec.greaterThan 0 "should be greater than zero"
+        |> Spec.equal 0 "should be equal to zero"
+        |> Spec.cascade Continue
+        |> Spec.validate x
+        |> Result.mapError (fun err -> 
+            Map.count err = 1 
+            && Map.tryFind "int" err 
+            |> Option.map (fun xs -> List.length xs = 2)
+            |> Option.defaultValue false)
+        |> Result.either (fun _ -> false) id
+
+      testProperty "validate" <| fun x ->
+        Spec.def
+        |> Spec.lessThan 0 "int should be less than zero"
+        |> Spec.validate x
+        |> fun r -> Result.isOk r <=> (x < 0)
+
+      testProperty "validate untrust" <| fun x ->
+        Spec.def
+        |> Spec.greaterThan 0 "int should be greater than zero"
+        |> Spec.validateUntrust (Untrust x)
+        |> fun r -> Result.isOk r <=> (x > 0)
+
+      testProperty "validate option" <| fun x ->
+        Spec.def<string>
+        |> Spec.notNullOrWhiteSpace "string should not be blank"
+        |> Spec.validateOption x
+        |> fun r -> Option.isNone r <=> String.IsNullOrWhiteSpace x
+
+      testProperty "create model" <| fun (NonNull x) ->
+        Spec.def
+        |> Spec.notNull "should not be null"
+        |> Spec.createModel NonNull x
+        |> (=) (Ok (NonNull x))
+      
+      testProperty "create model with" <| fun x ->
+        Gen.elements [ Ok; fun _ -> Spec.error "tag" "error" ]
+        |> Arb.fromGen
+        |> Prop.forAll <| fun f ->
+            Spec.def
+            |> Spec.equal x "should be equal to instance"
+            |> Spec.createModelWith f x
+            |> fun r -> Result.isOk r <=> Result.isOk (f x)
+      
+      testProperty "optional" <| fun filter x ->
+          let (Ok value) = Spec.optional filter Ok x
+          value <=> filter x
+
+      testProperty "create model if" <| fun (f : PositiveInt -> NegativeInt option) (x : PositiveInt) ->
+          let r =
+            Spec.def
+            |> Spec.lessThanOf (fun (NegativeInt x) -> x) 0 "should be less than zero"
+            |> Spec.createModelIf f id x 
+          r <=> Ok (f x) |@ (sprintf "left: %A <=> right: %A" r (f x))
+
+      testProperty "create model with if" <| fun f x ->
+          Spec.def
+          |> Spec.notNullOf (fun (NonNull y) -> y) "should not be null"
+          |> Spec.createModelWithIf f Ok x <=> Ok (f x)
+
+      testProperty "validate if" <| fun x -> 
+          let result = specResultIf Option.ofObj x { equal x "should be equal to input" }
+          (result = Ok None <=> (x = null) |@ (sprintf "left: %A <=> right: %A" result x))
+          .|. (result = Ok (Some x) <=> (x <> null) |@ (sprintf "left: %A <=> right: %A" result x))
+
+      testProperty "is satisfied by" <| fun f x ->
+        Spec.def 
+        |> Spec.verify f "can't predict outcome"
+        |> Spec.isSatisfiedBy x <=> f x
+
+      testSpec "depends on" <| fun (PositiveInt x) -> specResult x {
         greaterThan 0 "should be greater than zero"
         dependsOn (spec { 
           notEqual 0 "should not be equal to zero"
           dependsOn (spec {
             greaterThanOrEqual 1 "should be greater than or equal to 1" }) }) }
 
-      testProperty "dependsOn comes first and fails first" <| fun (NegativeInt x) -> 
+      testProperty "depends on comes first and fails first" <| fun (NegativeInt x) -> 
         let r = specResult x {
           tag "base"
           greaterThan 0 "should be greater than zero"
@@ -301,50 +564,84 @@ module Tests =
         let r = Valid<_>.createWith x (fun _ -> isValid) "should be valid when predicate holds"
         Expect.isTrue (Result.isOk r <=> isValid) "should be valid when predicate holds" 
 
-      testSpec "seqEqual" <| fun (xs : int list) -> specResult xs { 
-        seqEqual xs "sequence should be equal to other sequence" }
+      testProperty "merge" <| fun (NegativeInt x) ->
+        let lessThan1 = spec { lessThan 1 "should be less than 1" }
+        let notEqual0 = spec { notEqual 0 "should not be equal to zero" }
+        Spec.merge lessThan1 notEqual0
+        |> Spec.validate x |> toProp
 
-      testSpec "forall" <| fun (xs : PositiveInt list) -> specResult xs {
-        forall (fun (PositiveInt x) ->  x > 0) "positive integer should be greater than zero" }
+      testProperty "comap" <| fun x ->
+        Spec.def
+        |> Spec.verify Option.isSome "should be 'Some'"
+        |> Spec.comap Some
+        |> Spec.validate x |> toProp
 
-      testSpec "fornone" <| fun (xs : NonZeroInt list) -> specResult xs {
-        fornone (fun (NonZeroInt x) -> x = 0) "non-zero integer shouldn't be zero" }
+      testProperty "map" <| fun (NonEmptyArray xs) ->
+        let mutable logs = ""
+        let r =
+          Spec.def
+          |> Spec.nonEmpty "non-empty array should not be empty"
+          |> Spec.map (fun f -> fun x -> 
+            logs <- logs + "start>"
+            let r = f x
+            logs <- logs + "<end"
+            r)
+          |> Spec.validate xs
+        Expect.equal logs "start><end" "map function should add logs"
+        Expect.isOk r "mapped req should still run"
 
-      testSpec "fornoneNull" <| fun (xs : PositiveInt list) -> specResult xs { 
-        fornoneNull "positive integer should not be 'null'" }
+      testProperty "preval-ok" <| fun (x : int) ->
+        let r =
+          Spec.def
+          |> Spec.lessThan 0 "negative int should not be less than zero"
+          |> Spec.preval Ok
+          |> Spec.validate x
+        Result.isOk r <=> (x < 0)
 
-      testProperty "structure" <| fun (PositiveInt x) (NegativeInt y) (NonZeroInt z) -> 
-        specResult [x; y; z] {
-          structure [
-            fun x -> x > 0
-            fun y -> y < 0
-            fun z -> z <> 0 ] "should match structure" }
-        |> formatResult
+      testProperty "preval-error" <| fun (x : int) ->
+        let r =
+          Spec.def
+          |> Spec.lessThan 0 "negative int should not be less than zero"
+          |> Spec.preval (fun _ -> Error "sabotage error")
+          |> Spec.validate x
+        Result.isError r |@ (sprintf "%A" r)
 
-      testProperty "contains" <| fun x xs ->
-        Gen.shuffle (x::xs)
+      testProperty "list" <| fun (xs : NegativeInt list) ->
+        Spec.def
+        |> Spec.lessThanOf (fun (NegativeInt y) -> y) 0 "item should be less than zero"
+        |> Spec.list
+        |> Spec.validate xs |> toProp
+
+      testProperty "array" <| fun (xs : NonEmptyString array) ->
+        Spec.def
+        |> Spec.notEmptyOf (fun (NonEmptyString y) -> y) "item should not be empty"
+        |> Spec.array
+        |> Spec.validate xs |> toProp
+
+      testProperty "seq" <| fun (xs : NonNull<_> array) ->
+        Spec.def 
+        |> Spec.notNullOf (fun (NonNull y) -> y) "item should not be null"
+        |> Spec.seq 
+        |> Spec.validate (Seq.ofArray xs) |> toProp
+
+      testProperty "invariant" <| fun (NonEmptyString name) ->
+        Gen.choose (1, 10)
+        |> Gen.map (fun i -> i, sprintf "#%i %s" i name)
         |> Arb.fromGen
-        |> Prop.forAll <| fun xs -> 
-          specResult xs { contains x "should contain element" } |> formatResult
+        |> Prop.forAll <| fun t ->
+             let specTop10 = spec { inclusiveBetween 1 10 "should be between 1-1(inclusive)" }
+             let specFinalist = spec { notNullOrWhiteSpace "should not be blank" }
+             let s = specInvariant specTop10 specFinalist { 
+                 add (fun (top10, finalist) -> finalist.StartsWith (sprintf "#%i"top10), sprintf "should start with %i" top10) }
+             Spec.validate t s |> toProp
 
-      testProperty "containsAll" <| fun xs ys ->
-        Gen.shuffle (Array.append xs ys)
-        |> Arb.fromGen
-        |> Prop.forAll <| fun xs ->
-          specResult xs { containsAll ys "should contain all elements" } |> formatResult
-
-      testProperty "exists" <| fun (PositiveInt x) (xs : NegativeInt list) ->
-        (x :: List.map (fun (NegativeInt y) -> y) xs)
-        |> Gen.shuffle
-        |> Arb.fromGen
-        |> Prop.forAll <| fun xs ->
-          specResult xs { exists ((=) x) "should satisfy element" } |> formatResult
-
-      testProperty "single" <| fun (xs : PositiveInt list) ->
-        Gen.shuffle (0 :: List.map (fun (PositiveInt x) -> x) xs)
-        |> Arb.fromGen
-        |> Prop.forAll <| fun xs -> 
-          specResult xs { single ((=) 0) "should only contain a single zero" } |> formatResult
+      testProperty "invariant 3" <| fun (NegativeInt x) (PositiveInt y) (NonEmptyString z) ->
+        let x_spec = spec { lessThan 0 "negative int should be greater than zero" }
+        let y_spec = spec { greaterThan 0 "positive int should be greater than zero" }
+        let z_spec = spec { notEmpty "non-empty string type should not be empty" }
+        Spec.invariant3 x_spec y_spec z_spec
+        |> Spec.add (fun (x, y, z) -> x < y && z <> null, "negative int should be less than positive int & non-empty string should not be 'null'")
+        |> Spec.validate (x, y , z) |> toProp
     ]
 
   [<Tests>]
@@ -466,7 +763,7 @@ module Tests =
     ]
 
   type Critical =
-    { Config : ReadOnce<string> }
+    { Config : string readOnce }
 
   type Temp =
     { Value : Disposable<string> }
@@ -480,12 +777,22 @@ module Tests =
         Expect.equal value (Some "secret") "read once type should evaluate once"
         let value = ReadOnce.tryGetValue cri.Config
         Expect.equal value None "read once type should not evaluate twice"
-      
       testCase "read once throw" <| fun _ ->
         let cri = { Config = ReadOnce "connection string" }
         Expect.equal (cri.Config.GetValue ()) "connection string" "read once type should evaluate once"
         Expect.throwsT<AlreadyReadException> (cri.Config.GetValue >> ignore) "read once type should throw after single read"
-
+      testCase "read once func" <| fun () ->
+        let cri = ReadOnce (fun () -> "secret")
+        let value = ReadOnce.tryEvalFunc cri ()
+        Expect.equal value (Some "secret") "read once type should evaluate once"
+        let value = ReadOnce.tryEvalFunc cri ()
+        Expect.equal value None "read once type should not evaluate twice"
+      testCaseAsync "read once func async" <| async {
+        let cri = ReadOnce (fun () -> async.Return 1)
+        let! value = ReadOnce.tryEvalFuncAsync cri ()
+        Expect.equal value (Some 1) "read once type should evaluate once"
+        let! value = ReadOnce.tryEvalFuncAsync cri ()
+        Expect.equal value None "read once type should not evaluate twice" }
       testCase "write once" <| fun _ ->
         let printOnce = WriteOnce.create <| fun name -> printfn "hello %s!" name
         let value = WriteOnce.trySetValue "Elsa" printOnce
@@ -529,6 +836,10 @@ module Tests =
         let ys = Seq.toNonEmpty objs.Get
         Expect.equal xs ys "should be the same non-empty seq"
 
+      testCase "non-emtpy sequence with `None` is still correct" <| fun () ->
+        let xs = Seq.toNonEmpty [ None, Some 1, None, None ]
+        Expect.isOk xs "should accept `None` as a valid entry"
+
       testProperty "unique sequences on elements are the same" <| fun (objs : NonEmptyArray<obj>) ->
         let objs = Seq.distinct objs.Get
         let xs = Seq.toUnique objs
@@ -540,6 +851,11 @@ module Tests =
         let xs = Seq.toUniqueBy (fun x -> x.ToString ()) objs
         let ys = Seq.toUniqueBy (fun x -> x.ToString ()) objs
         Expect.equal xs ys "should be the same unique seq"
+
+      testCase "unique sequence with `None` is still correct" <| fun () ->
+        let xs = Seq.toUnique [ None, Some 1, Some 2 ]
+        Expect.isOk xs "should accept `None` as a valid entry"
+
 
       testProperty "tags are made from strings starting with '@'" <| fun (PositiveInt x) ->
         Gen.subListOf [ yield! ['a'..'z']; yield! ['A'..'Z'] ]
@@ -625,5 +941,9 @@ module Tests =
         let input = sprintf "%i👍" x
         let actual = Sanitize.ascii input
         Expect.equal actual (string x) "should only get ASCII characters"
+      testProperty "all ascii chars allowed" <| fun () ->
+        let input = Xeger("[\x00-\x7F]+").Generate()
+        let actual = Sanitize.ascii input
+        Expect.equal actual input (sprintf "should allow all ASCII characters, left: %A, right: %A" actual input)
     ]
   

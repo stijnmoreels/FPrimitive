@@ -19,14 +19,15 @@ using Newtonsoft.Json.Schema;
 
 namespace FPrimitive.CSharp.Tests
 {
-    public class UnitTest1
+    public class Examples
     {
         public void Test1<T>()
         {
             // Specification before the actual check of the base-uri.
             Spec<Uri> spec =
                 Spec.Of<Uri>("uri")
-                    .Add(uri => uri.Scheme == Uri.UriSchemeHttps, "@uri should be 'https' scheme");
+                    .NotNull("uri should not be 'null'")
+                    .Equal(uri => uri.Scheme, Uri.UriSchemeHttps, "@scheme should be 'https' scheme");
 
             ValidationResult<Uri> validationResult = spec.Validate(new Uri("http://localhost", UriKind.Relative));
 
@@ -62,6 +63,23 @@ namespace FPrimitive.CSharp.Tests
 
             Outcome<EbmsString, Exception> deserialize = Json.Deserialize<EbmsString>(new Valid<JObject>());
             deserialize.Do(ex => throw ex);
+
+            var nonEmptyResult = NonEmptyEnumerable<string>.Create(new[] { "test1", "test2", "test3" });
+            var uniqueResult = UniqueEnumerable<int>.Create(new[] { 1, 2, 3 });
+        }
+
+        private async Task<Outcome<string, string[]>> GetRawSecretAsync()
+        {
+            AccessResult<string> result =
+                await Access.Function<string, Task<string>>(secretName => Task.FromResult("secretValue"))
+                            .EvalAsync("secretName");
+            return result;
+        }
+
+        private async Task<Outcome<string, int>> GetSecretAsync()
+        {
+            return await Access.Function<string, Task<Outcome<string, int>>>(secretName => Task.FromResult(System.Outcome.Success<string, int>("secret")))
+                               .EvalOutcomeAsync("secretName", errors => 1);
         }
     }
 
@@ -515,26 +533,54 @@ namespace FPrimitive.CSharp.Tests
         }
     }
 
+    public enum RatingEnum
+    {
+        Unforgettable,
+        VeryGood,
+        Okay,
+        AlmostRight,
+        Garbage
+    }
+
+    public static class Rating
+    {
+        public static ValidationResult<RatingEnum> Create(string value)
+        {
+            ValidationResult<RatingEnum> validationResult = 
+                Spec.Of<string>()
+                    .NotNullOrWhiteSpace("Rating cannot be blank")
+                    .CreateModel(value, untrusted => 
+                        Enum.TryParse(untrusted, out RatingEnum result) 
+                            ? ValidationResult<RatingEnum>.Success(result)
+                            : ValidationResult<RatingEnum>.Failure("Cannot convert value to rating type"));
+
+            return validationResult;
+        }
+    }
+
     public class Book
     {
         private readonly Author _author;
         private readonly ISBN13 _isbn13;
         private readonly Int1000 _pages;
+        private readonly Maybe<RatingEnum> _rating;
 
-        private Book(Author author, ISBN13 isbn13, Int1000 pages)
+        private Book(Author author, ISBN13 isbn13, Int1000 pages, Maybe<RatingEnum> rating)
         {
             _author = author;
             _isbn13 = isbn13;
             _pages = pages;
+            _rating = rating;
         }
 
-        public static ValidationResult<Book> Create(string author, string isbn13, int pages)
+        public static ValidationResult<Book> Create(string author, string isbn13, int pages, string rating)
         {
             ValidationResult<Author> authorResult = Author.Create(author);
             ValidationResult<ISBN13> isbn13Result = ISBN13.Create(isbn13);
             ValidationResult<Int1000> pagesResult = Int1000.Create(pages);
+            ValidationResult<Maybe<RatingEnum>> ratingResult = Spec.Optional(x => !String.IsNullOrWhiteSpace(x), Rating.Create, rating);
 
-            return ValidationResult.Combine(authorResult, isbn13Result, pagesResult, (auth, isbn, ps) => new Book(auth, isbn, ps));
+            return ValidationResult.Combine(authorResult, isbn13Result, pagesResult, ratingResult, (auth, isbn, ps, r) => new Book(auth, isbn, ps, r));
         }
 
         /// <summary>Returns a string that represents the current object.</summary>
@@ -551,7 +597,7 @@ namespace FPrimitive.CSharp.Tests
         {
             if (jsonM.TryGetValue(out BookJson json))
             {
-                return Book.Create(json.Author, json.ISBN13, json.Pages);
+                return Book.Create(json.Author, json.ISBN13, json.Pages, null);
             }
 
             return ValidationResult.Error<Book>("book", "Cannot create book domain model of unknown JSON book representation");

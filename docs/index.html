@@ -32,8 +32,7 @@
       <hr />
       <div class="row">
         <div class="span9" id="main">
-          
-<h1><a name="FPrimitive" class="anchor" href="#FPrimitive">FPrimitive</a></h1>
+          <h1><a name="FPrimitive" class="anchor" href="#FPrimitive">FPrimitive</a></h1>
 <table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
 <span class="l"> 2: </span>
 <span class="l"> 3: </span>
@@ -69,48 +68,51 @@
 <span class="l">33: </span>
 <span class="l">34: </span>
 <span class="l">35: </span>
+<span class="l">36: </span>
 </pre></td>
 <td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="id">FPrimitive</span>
 
 <span class="c">/// Composible specifications for your domain types:</span>
 <span class="k">type</span> <span class="rt">NonEmptyString</span> <span class="o">=</span>
-  <span class="k">private</span>
-  <span class="pn">|</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="uc">NonEmptyString</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="rt">string</span>
-  <span class="k">static</span> <span class="k">member</span> <span class="fn">create</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="id">x</span> <span class="o">=</span>
-    <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="m">Spec</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="id">def</span><span class="pn">&lt;</span><span onmouseout="hideTip(event, 'fs3', 7)" onmouseover="showTip(event, 'fs3', 7)" class="rt">string</span><span class="pn">&gt;</span>
-    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs5', 8)" onmouseover="showTip(event, 'fs5', 8)" class="m">Spec</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs7', 9)" onmouseover="showTip(event, 'fs7', 9)" class="id">notNull</span> <span class="s">&quot;should not be null&quot;</span>
-    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs5', 10)" onmouseover="showTip(event, 'fs5', 10)" class="m">Spec</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs8', 11)" onmouseover="showTip(event, 'fs8', 11)" class="id">notEmpty</span> <span class="s">&quot;should not be empty&quot;</span>
-    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs5', 12)" onmouseover="showTip(event, 'fs5', 12)" class="m">Spec</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs9', 13)" onmouseover="showTip(event, 'fs9', 13)" class="id">createModel</span> <span onmouseout="hideTip(event, 'fs2', 14)" onmouseover="showTip(event, 'fs2', 14)" class="uc">NonEmptyString</span> <span onmouseout="hideTip(event, 'fs4', 15)" onmouseover="showTip(event, 'fs4', 15)" class="id">x</span>
+    <span class="k">private</span>
+    <span class="pn">|</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="uc">NonEmptyString</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="rt">string</span>
+    <span class="k">static</span> <span class="k">member</span> <span class="fn">create</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="id">x</span> <span class="o">=</span>
+        <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="m">Spec</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="id">def</span><span class="pn">&lt;</span><span onmouseout="hideTip(event, 'fs3', 7)" onmouseover="showTip(event, 'fs3', 7)" class="rt">string</span><span class="pn">&gt;</span>
+        <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs5', 8)" onmouseover="showTip(event, 'fs5', 8)" class="m">Spec</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs7', 9)" onmouseover="showTip(event, 'fs7', 9)" class="id">notNull</span> <span class="s">&quot;should not be null&quot;</span>
+        <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs5', 10)" onmouseover="showTip(event, 'fs5', 10)" class="m">Spec</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs8', 11)" onmouseover="showTip(event, 'fs8', 11)" class="id">notEmpty</span> <span class="s">&quot;should not be empty&quot;</span>
+        <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs5', 12)" onmouseover="showTip(event, 'fs5', 12)" class="m">Spec</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs9', 13)" onmouseover="showTip(event, 'fs9', 13)" class="id">createModel</span> <span onmouseout="hideTip(event, 'fs2', 14)" onmouseover="showTip(event, 'fs2', 14)" class="uc">NonEmptyString</span> <span onmouseout="hideTip(event, 'fs4', 15)" onmouseover="showTip(event, 'fs4', 15)" class="id">x</span>
 
 <span class="c">/// ...also available as computation expression.</span>
 <span class="k">type</span> <span class="rt">NonEmptyList</span><span class="pn">&lt;</span><span class="ta">&#39;</span><span class="id">a</span><span class="pn">&gt;</span> <span class="o">=</span>
-  <span class="k">private</span>
-  <span class="pn">|</span> <span onmouseout="hideTip(event, 'fs10', 16)" onmouseover="showTip(event, 'fs10', 16)" class="uc">NonEmptyList</span> <span class="k">of</span> <span class="ta">&#39;</span><span class="id">a</span> <span onmouseout="hideTip(event, 'fs11', 17)" onmouseover="showTip(event, 'fs11', 17)" class="rt">list</span>
-  <span class="k">static</span> <span class="k">member</span> <span class="fn">create</span> <span onmouseout="hideTip(event, 'fs12', 18)" onmouseover="showTip(event, 'fs12', 18)" class="id">xs</span> <span class="o">=</span>
-    <span onmouseout="hideTip(event, 'fs13', 19)" onmouseover="showTip(event, 'fs13', 19)" class="fn">specModel</span> <span onmouseout="hideTip(event, 'fs10', 20)" onmouseover="showTip(event, 'fs10', 20)" class="uc">NonEmptyList</span> <span onmouseout="hideTip(event, 'fs12', 21)" onmouseover="showTip(event, 'fs12', 21)" class="id">xs</span> <span class="pn">{</span>
-      <span class="id">nonEmpty</span> <span class="s">&quot;list should not be empty&quot;</span>
-      <span class="id">lengthBetween</span> <span class="n">1</span> <span class="n">10</span> <span class="s">&quot;list length should be between 1-10&quot;</span> <span class="pn">}</span>
+    <span class="k">private</span>
+    <span class="pn">|</span> <span onmouseout="hideTip(event, 'fs10', 16)" onmouseover="showTip(event, 'fs10', 16)" class="uc">NonEmptyList</span> <span class="k">of</span> <span class="ta">&#39;</span><span class="id">a</span> <span onmouseout="hideTip(event, 'fs11', 17)" onmouseover="showTip(event, 'fs11', 17)" class="rt">list</span>
+    <span class="k">static</span> <span class="k">member</span> <span class="fn">create</span> <span onmouseout="hideTip(event, 'fs12', 18)" onmouseover="showTip(event, 'fs12', 18)" class="id">xs</span> <span class="o">=</span>
+        <span onmouseout="hideTip(event, 'fs13', 19)" onmouseover="showTip(event, 'fs13', 19)" class="fn">specModel</span> <span onmouseout="hideTip(event, 'fs10', 20)" onmouseover="showTip(event, 'fs10', 20)" class="uc">NonEmptyList</span> <span onmouseout="hideTip(event, 'fs12', 21)" onmouseover="showTip(event, 'fs12', 21)" class="id">xs</span> <span class="pn">{</span>
+            <span onmouseout="hideTip(event, 'fs14', 22)" onmouseover="showTip(event, 'fs14', 22)" class="k">nonEmpty</span> <span class="s">&quot;list should not be empty&quot;</span>
+            <span onmouseout="hideTip(event, 'fs15', 23)" onmouseover="showTip(event, 'fs15', 23)" class="k">lengthBetween</span> <span class="n">1</span> <span class="n">10</span> <span class="s">&quot;list length should be between 1-10&quot;</span>
+        <span class="pn">}</span>
 
 
 <span class="c">/// Access controllers for your critical application resources:</span>
-<span class="k">let</span> <span onmouseout="hideTip(event, 'fs14', 22)" onmouseover="showTip(event, 'fs14', 22)" class="fn">uncontrolled_critical</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs15', 23)" onmouseover="showTip(event, 'fs15', 23)" class="fn">ignore</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs16', 24)" onmouseover="showTip(event, 'fs16', 24)" class="fn">uncontrolled_critical</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs17', 25)" onmouseover="showTip(event, 'fs17', 25)" class="fn">ignore</span>
 
-<span class="k">let</span> <span onmouseout="hideTip(event, 'fs16', 24)" onmouseover="showTip(event, 'fs16', 24)" class="id">critical</span> <span class="o">=</span>
-  <span onmouseout="hideTip(event, 'fs17', 25)" onmouseover="showTip(event, 'fs17', 25)" class="m">Access</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs18', 26)" onmouseover="showTip(event, 'fs18', 26)" class="id">func</span> <span onmouseout="hideTip(event, 'fs14', 27)" onmouseover="showTip(event, 'fs14', 27)" class="fn">uncontrolled_critical</span>
-  <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs17', 28)" onmouseover="showTip(event, 'fs17', 28)" class="m">Access</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs19', 29)" onmouseover="showTip(event, 'fs19', 29)" class="id">once</span>
-  <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs17', 30)" onmouseover="showTip(event, 'fs17', 30)" class="m">Access</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs20', 31)" onmouseover="showTip(event, 'fs20', 31)" class="id">duringHours</span> <span class="n">9</span> <span class="n">17</span>
-  <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs17', 32)" onmouseover="showTip(event, 'fs17', 32)" class="m">Access</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs21', 33)" onmouseover="showTip(event, 'fs21', 33)" class="id">revokable</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs18', 26)" onmouseover="showTip(event, 'fs18', 26)" class="id">critical</span> <span class="o">=</span>
+    <span onmouseout="hideTip(event, 'fs19', 27)" onmouseover="showTip(event, 'fs19', 27)" class="m">Access</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs20', 28)" onmouseover="showTip(event, 'fs20', 28)" class="id">func</span> <span onmouseout="hideTip(event, 'fs16', 29)" onmouseover="showTip(event, 'fs16', 29)" class="fn">uncontrolled_critical</span>
+    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs19', 30)" onmouseover="showTip(event, 'fs19', 30)" class="m">Access</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs21', 31)" onmouseover="showTip(event, 'fs21', 31)" class="id">once</span>
+    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs19', 32)" onmouseover="showTip(event, 'fs19', 32)" class="m">Access</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs22', 33)" onmouseover="showTip(event, 'fs22', 33)" class="id">duringHours</span> <span class="n">9</span> <span class="n">17</span>
+    <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs19', 34)" onmouseover="showTip(event, 'fs19', 34)" class="m">Access</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs23', 35)" onmouseover="showTip(event, 'fs23', 35)" class="id">revokable</span>
 
 <span class="c">/// Try to evaluate</span>
-<span onmouseout="hideTip(event, 'fs17', 34)" onmouseover="showTip(event, 'fs17', 34)" class="m">Access</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs22', 35)" onmouseover="showTip(event, 'fs22', 35)" class="id">eval</span> <span class="pn">(</span><span class="pn">)</span> <span onmouseout="hideTip(event, 'fs16', 36)" onmouseover="showTip(event, 'fs16', 36)" class="id">critical</span>
+<span onmouseout="hideTip(event, 'fs19', 36)" onmouseover="showTip(event, 'fs19', 36)" class="m">Access</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs24', 37)" onmouseover="showTip(event, 'fs24', 37)" class="id">eval</span> <span class="pn">(</span><span class="pn">)</span> <span onmouseout="hideTip(event, 'fs18', 38)" onmouseover="showTip(event, 'fs18', 38)" class="id">critical</span>
 <span class="c">/// Revoke when neccessary</span>
-<span onmouseout="hideTip(event, 'fs17', 37)" onmouseover="showTip(event, 'fs17', 37)" class="m">Access</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs23', 38)" onmouseover="showTip(event, 'fs23', 38)" class="id">revoke</span>
+<span onmouseout="hideTip(event, 'fs19', 39)" onmouseover="showTip(event, 'fs19', 39)" class="m">Access</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs25', 40)" onmouseover="showTip(event, 'fs25', 40)" class="id">revoke</span>
 </code></pre></td>
 </tr>
 </table>
 <p>The library comes with comprehensible documentation about the major parts of the project and the complete API reference of the project:</p>
 <ul>
 <li><a href="spec.html">Specifications</a> contains some in-depth documentation on the specifications and <code>Spec</code> module of the library.</li>
+<li><a href="access.html">Accessibility</a> contains some in-depth documentation on the accessibility features and the <code>Access</code> module of the library.</li>
 <li>
 <a href="reference/index.html">API Reference</a> contains automatically generated documentation for all types, modules
 and functions in the library.
@@ -124,30 +126,38 @@ consider adding <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/
 redistribution for both commercial and non-commercial purposes. For more information see the
 <a href="https://github.com/stijnmoreels/FPrimitive/blob/master/LICENSE.txt">License file</a> in the GitHub repository.</p>
 <p>Icons made by <a href="https://www.flaticon.com/authors/vectors-market">Vectors Market</a> from <a href="https://www.flaticon.com/">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/">CC 3.0</a>.</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="pn">)</span>
+</code></pre></td>
+</tr>
+</table>
 
 <div class="tip" id="fs1">namespace FPrimitive</div>
 <div class="tip" id="fs2">Multiple items<br />union case NonEmptyString.NonEmptyString: string -&gt; NonEmptyString<br /><br />--------------------<br />type NonEmptyString =<br />&#160;&#160;private | NonEmptyString of string<br />&#160;&#160;&#160;&#160;static member create : x:string -&gt; Result&lt;NonEmptyString,ErrorsByTag&gt;<br /><em><br /><br />&#160;Composible specifications for your domain types:</em></div>
 <div class="tip" id="fs3">Multiple items<br />val string : value:&#39;T -&gt; string<br /><br />--------------------<br />type string = System.String</div>
 <div class="tip" id="fs4">val x : string</div>
-<div class="tip" id="fs5">Multiple items<br />module Spec<br /><br />from FPrimitive<br /><br />--------------------<br />type Spec =<br />&#160;&#160;static member Invariant : spec1:Spec&lt;&#39;T1&gt; * spec2:Spec&lt;&#39;T2&gt; -&gt; Spec&lt;struct (&#39;T1 * &#39;T2)&gt;<br />&#160;&#160;static member Invariant : spec1:Spec&lt;&#39;T1&gt; * spec2:Spec&lt;&#39;T2&gt; * spec3:Spec&lt;&#39;T3&gt; -&gt; Spec&lt;struct (&#39;T1 * &#39;T2 * &#39;T3)&gt;<br />&#160;&#160;static member Merge : spec1:Spec&lt;&#39;T&gt; * spec2:Spec&lt;&#39;T&gt; -&gt; Spec&lt;&#39;T&gt;<br />&#160;&#160;static member Of : unit -&gt; Spec&lt;&#39;T&gt;<br />&#160;&#160;static member Of : name:string -&gt; Spec&lt;&#39;T&gt;<br /><br />--------------------<br />type Spec&lt;&#39;T&gt; =<br />&#160;&#160;private {Tag: string;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Requirements: (&#39;T -&gt; bool * string) list;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Cascade: CascadeMode;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Dependents: Spec&lt;&#39;T&gt; list;}</div>
+<div class="tip" id="fs5">Multiple items<br />module Spec<br /><br />from FPrimitive<br /><br />--------------------<br />type Spec =<br />&#160;&#160;static member Invariant : spec1:Spec&lt;&#39;T1&gt; * spec2:Spec&lt;&#39;T2&gt; -&gt; Spec&lt;struct (&#39;T1 * &#39;T2)&gt;<br />&#160;&#160;static member Invariant : spec1:Spec&lt;&#39;T1&gt; * spec2:Spec&lt;&#39;T2&gt; * spec3:Spec&lt;&#39;T3&gt; -&gt; Spec&lt;struct (&#39;T1 * &#39;T2 * &#39;T3)&gt;<br />&#160;&#160;static member Merge : spec1:Spec&lt;&#39;T&gt; * spec2:Spec&lt;&#39;T&gt; -&gt; Spec&lt;&#39;T&gt;<br />&#160;&#160;static member Of : unit -&gt; Spec&lt;&#39;T&gt;<br />&#160;&#160;static member Of : name:string -&gt; Spec&lt;&#39;T&gt;<br />&#160;&#160;static member Optional : filter:Func&lt;&#39;T,bool&gt; * creator:Func&lt;&#39;T,ValidationResult&lt;&#39;TResult&gt;&gt; * value:&#39;T -&gt; ValidationResult&lt;Maybe&lt;&#39;TResult&gt;&gt;<br />&#160;&#160;static member Optional : filter:Func&lt;&#39;T,Maybe&lt;&#39;TValue&gt;&gt; * creator:Func&lt;&#39;TValue,ValidationResult&lt;&#39;TResult&gt;&gt; * value:&#39;T -&gt; ValidationResult&lt;Maybe&lt;&#39;TResult&gt;&gt;<br /><br />--------------------<br />type Spec&lt;&#39;T&gt; =<br />&#160;&#160;private { Tag: string<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Requirements: (&#39;T -&gt; bool * string) list<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Cascade: CascadeMode<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Dependents: Spec&lt;&#39;T&gt; list }</div>
 <div class="tip" id="fs6">val def&lt;&#39;a&gt; : Spec&lt;&#39;a&gt;</div>
 <div class="tip" id="fs7">val notNull : message:string -&gt; spec:Spec&lt;&#39;a&gt; -&gt; Spec&lt;&#39;a&gt; (requires equality and &#39;a : null)</div>
 <div class="tip" id="fs8">val notEmpty : message:string -&gt; spec:Spec&lt;string&gt; -&gt; Spec&lt;string&gt;</div>
 <div class="tip" id="fs9">val createModel : f:(&#39;a -&gt; &#39;b) -&gt; value:&#39;a -&gt; spec:Spec&lt;&#39;a&gt; -&gt; Result&lt;&#39;b,ErrorsByTag&gt;</div>
-<div class="tip" id="fs10">Multiple items<br />union case NonEmptyList.NonEmptyList: &#39;a list -&gt; NonEmptyList&lt;&#39;a&gt;<br /><br />--------------------<br />type NonEmptyList&lt;&#39;a&gt; =<br />&#160;&#160;private | NonEmptyList of &#39;a list<br />&#160;&#160;&#160;&#160;static member create : xs:&#39;a0 list -&gt; &#39;b<br /><em><br /><br />&#160;...also available as computation expression.</em></div>
+<div class="tip" id="fs10">Multiple items<br />union case NonEmptyList.NonEmptyList: &#39;a list -&gt; NonEmptyList&lt;&#39;a&gt;<br /><br />--------------------<br />type NonEmptyList&lt;&#39;a&gt; =<br />&#160;&#160;private | NonEmptyList of &#39;a list<br />&#160;&#160;&#160;&#160;static member create : xs:&#39;a0 list -&gt; Result&lt;NonEmptyList&lt;&#39;a0&gt;,ErrorsByTag&gt;<br /><em><br /><br />&#160;...also available as computation expression.</em></div>
 <div class="tip" id="fs11">type &#39;T list = List&lt;&#39;T&gt;</div>
 <div class="tip" id="fs12">val xs : &#39;a list</div>
 <div class="tip" id="fs13">val specModel : createModel:(&#39;a -&gt; &#39;b) -&gt; value:&#39;a -&gt; SpecBuilder&lt;&#39;a,Result&lt;&#39;b,ErrorsByTag&gt;&gt;</div>
-<div class="tip" id="fs14">val uncontrolled_critical : (&#39;a -&gt; unit)<br /><em><br /><br />&#160;Access controllers for your critical application resources:</em></div>
-<div class="tip" id="fs15">val ignore : value:&#39;T -&gt; unit</div>
-<div class="tip" id="fs16">val critical : Access&lt;unit,unit&gt;</div>
-<div class="tip" id="fs17">Multiple items<br />module Access<br /><br />from FPrimitive<br /><br />--------------------<br />type Access&lt;&#39;T,&#39;TResult&gt; =<br />&#160;&#160;private {Capability: &#39;T -&gt; Result&lt;&#39;TResult,string list&gt;;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Revokable: (unit -&gt; unit) option;}</div>
-<div class="tip" id="fs18">val func : f:(&#39;a -&gt; &#39;b) -&gt; Access&lt;&#39;a,&#39;b&gt;</div>
-<div class="tip" id="fs19">val once : acc:Access&lt;&#39;a,&#39;b&gt; -&gt; Access&lt;&#39;a,&#39;b&gt;</div>
-<div class="tip" id="fs20">val duringHours : min:int -&gt; max:int -&gt; acc:Access&lt;&#39;a,&#39;b&gt; -&gt; Access&lt;&#39;a,&#39;b&gt;</div>
-<div class="tip" id="fs21">val revokable : acc:Access&lt;&#39;a,&#39;b&gt; -&gt; Access&lt;&#39;a,&#39;b&gt;</div>
-<div class="tip" id="fs22">val eval : x:&#39;a -&gt; Access&lt;&#39;a,&#39;b&gt; -&gt; Result&lt;&#39;b,string list&gt;</div>
-<div class="tip" id="fs23">val revoke : acc:Access&lt;&#39;a,&#39;b&gt; -&gt; unit</div>
+<div class="tip" id="fs14">custom operation: nonEmpty (string)<br /><br />Calls SpecBuilder.NonEmpty</div>
+<div class="tip" id="fs15">custom operation: lengthBetween (int) (int) (string)<br /><br />Calls SpecBuilder.LengthBetween</div>
+<div class="tip" id="fs16">val uncontrolled_critical : (&#39;a -&gt; unit)<br /><em><br /><br />&#160;Access controllers for your critical application resources:</em></div>
+<div class="tip" id="fs17">val ignore : value:&#39;T -&gt; unit</div>
+<div class="tip" id="fs18">val critical : Access&lt;unit,unit&gt;</div>
+<div class="tip" id="fs19">Multiple items<br />module Access<br /><br />from FPrimitive<br /><br />--------------------<br />type Access&lt;&#39;T,&#39;TResult&gt; =<br />&#160;&#160;private { Capability: &#39;T -&gt; Result&lt;&#39;TResult,string list&gt;<br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Revokable: (unit -&gt; unit) option }</div>
+<div class="tip" id="fs20">val func : f:(&#39;a -&gt; &#39;b) -&gt; Access&lt;&#39;a,&#39;b&gt;</div>
+<div class="tip" id="fs21">val once : acc:Access&lt;&#39;a,&#39;b&gt; -&gt; Access&lt;&#39;a,&#39;b&gt;</div>
+<div class="tip" id="fs22">val duringHours : min:int -&gt; max:int -&gt; acc:Access&lt;&#39;a,&#39;b&gt; -&gt; Access&lt;&#39;a,&#39;b&gt;</div>
+<div class="tip" id="fs23">val revokable : acc:Access&lt;&#39;a,&#39;b&gt; -&gt; Access&lt;&#39;a,&#39;b&gt;</div>
+<div class="tip" id="fs24">val eval : x:&#39;a -&gt; Access&lt;&#39;a,&#39;b&gt; -&gt; Result&lt;&#39;b,string list&gt;</div>
+<div class="tip" id="fs25">val revoke : acc:Access&lt;&#39;a,&#39;b&gt; -&gt; unit</div>
 
         </div>
         <div class="span3">

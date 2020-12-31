@@ -3,37 +3,48 @@
 open System
 
 /// Representation of an untrusted value that should be validated first before it can be used. 
-type Untrust<'a> (value : 'a) = 
+[<Struct; NoEquality; NoComparison>]
+type Untrust<'T> (value : 'T) = 
     /// Tries to get the wrapped value out of the untrusted boundary by validating the value.
     member internal __.tryGetValue (validator) =
         if validator value then Some value
         else None
     /// Tries to get the wrapped value out of the untrusted boundary by validating the value.
-    member internal __.tryGetValue (validator : 'a -> 'b option) = validator value
+    member internal __.tryGetValue (validator : 'T -> 'TResult option) = validator value
     /// Tries to get the wrapped value out of the untrusted boundary by validating the value.
-    member internal __.tryGetValue (validator : 'a -> Result<'b, string list>) = validator value
+    member internal __.tryGetValue (validator : 'T -> Result<'TResult, string list>) = validator value
     /// Tries to get the wrapped value out of the untrusted boundary by validating the value.
-    member internal __.tryGetValue (validator : 'a -> Result<'b, Map<string, string list>>) = validator value
+    member internal __.tryGetValue (validator : 'T -> Result<'TResult, 'TError>) = validator value
+    
     /// Tries to get the wrapped value out of the untrusted boundary by validating the value.
-    member __.TryGetValue (validator : Func<_, _>, output : outref<'a>) =
+    member __.TryGetValue (validator : Func<'T, Maybe<'TResult>>) = 
+      if isNull validator then nullArg "validator"
+      validator.Invoke value
+    /// Tries to get the wrapped value out of the untrusted boundary by validating the value.
+    member __.TryGetValue (validator : Func<'T, Outcome<'TResult, 'TError>>) =
+      if isNull validator then nullArg "validator"
+      validator.Invoke value
+    /// Tries to get the wrapped value out of the untrusted boundary by validating the value.
+    member __.TryGetValue (validator : Func<'T, bool>, output : outref<'T>) =
       if validator = null then nullArg "validator"
       if validator.Invoke value 
       then output <- value; true
-      else output <- Unchecked.defaultof<'a>; false
+      else output <- Unchecked.defaultof<'T>; false
     static member op_Implicit (x : byte) = Untrust x
     static member op_Implicit (x : int) = Untrust x
     static member op_Implicit (x : byte[]) = Untrust x
     static member op_Implicit (x : string) = Untrust x
+    override __.ToString () = sprintf "Untrust: %A" value
 
 /// Representation of an untrusted value that should be validated first before it can be used. 
 type 'T untrust = Untrust<'T>
 
 /// Representation of an untrusted value that should be validated first before it can be used. 
+[<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module Untrust = 
     /// Tries to get the wrapped value out of the untrusted boundary by validating the value.
-    let getWith (validator : 'a -> bool) (x : Untrust<'a>) = x.tryGetValue validator
+    let getWith (validator : 'T -> bool) (x : Untrust<'T>) = x.tryGetValue validator
     /// Tries to get the wrapped value out of the untrusted boundary by validating the value.
-    let getWithOption (validator : 'a -> 'b option) (x : Untrust<'a>) = x.tryGetValue validator
+    let getWithOption (validator : 'T -> 'TResult option) (x : Untrust<'T>) = x.tryGetValue validator
     /// Tries to get the wrapped value out of the untrusted boundary by validating the value.
-    let getWithResult (validator : 'a -> Result<'b, Map<string, string list>>) (x : Untrust<'a>) = x.tryGetValue validator
-
+    let getWithResult (validator : 'T -> Result<'TResult, 'TError>) (x : Untrust<'T>) = x.tryGetValue validator

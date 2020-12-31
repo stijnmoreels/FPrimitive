@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8"/>
-    <title>Untrust - FPrimitive</title>
+    <title>String - FPrimitive</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="description" content=""/>
     <meta name="author" content="Stijn Moreels"/>
@@ -33,14 +33,17 @@
         <div class="span9" id="main">
           
 
-
-
-<h1>Untrust</h1>
+<h1>String</h1>
 <p>
-  <span>Namespace: FPrimitive</span><br />
-  </p>
+  <span>Namespace: System</span><br />
+        <span>
+          Attributes:<br />
+[&lt;CompilationRepresentation(4)&gt;]<br />
+          
+      </span>
+</p>
 <div class="xmldoc">
-<p>Representation of an untrusted value that should be validated first before it can be used.</p>
+<p>Common extensions on the System.String type.</p>
 
 </div>
 
@@ -54,60 +57,57 @@
     <tbody>
       <tr>
         <td class="member-name">
-
-          <code onmouseout="hideTip(event, '180', 180)" onmouseover="showTip(event, '180', 180)">
-            getWith validator x
+          <code onmouseout="hideTip(event, '334', 334)" onmouseover="showTip(event, '334', 334)">
+            isNotBlank(x)
           </code>
-          <div class="tip" id="180">
-            <strong>Signature:</strong> validator:(&#39;a -&gt; bool) -&gt; x:Untrust&lt;&#39;a&gt; -&gt; &#39;a option<br />
-                          <strong>Type parameters:</strong> 'a                      </div>
+          <div class="tip" id="334">
+            <strong>Signature:</strong> x:string -&gt; bool<br />
+                                  </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Untrust.fs#L34-34" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/String.fs#L11-11" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          <p>Tries to get the wrapped value out of the untrusted boundary by validating the value.</p>
+          <p>Determines if a string is not blank.</p>
 
 
         </td>
       </tr>
       <tr>
         <td class="member-name">
-
-          <code onmouseout="hideTip(event, '181', 181)" onmouseover="showTip(event, '181', 181)">
-            getWithOption validator x
+          <code onmouseout="hideTip(event, '335', 335)" onmouseover="showTip(event, '335', 335)">
+            isNotEmpty(x)
           </code>
-          <div class="tip" id="181">
-            <strong>Signature:</strong> validator:(&#39;a -&gt; &#39;b option) -&gt; x:Untrust&lt;&#39;a&gt; -&gt; &#39;b option<br />
-                          <strong>Type parameters:</strong> 'a, 'b                      </div>
+          <div class="tip" id="335">
+            <strong>Signature:</strong> x:string -&gt; bool<br />
+                                  </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Untrust.fs#L36-36" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/String.fs#L9-9" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          <p>Tries to get the wrapped value out of the untrusted boundary by validating the value.</p>
+          <p>Determines if a string is not empty.</p>
 
 
         </td>
       </tr>
       <tr>
         <td class="member-name">
-
-          <code onmouseout="hideTip(event, '182', 182)" onmouseover="showTip(event, '182', 182)">
-            getWithResult validator x
+          <code onmouseout="hideTip(event, '336', 336)" onmouseover="showTip(event, '336', 336)">
+            isNotNull(x)
           </code>
-          <div class="tip" id="182">
-            <strong>Signature:</strong> validator:(&#39;a -&gt; Result&lt;&#39;b,Map&lt;string,string list&gt;&gt;) -&gt; x:Untrust&lt;&#39;a&gt; -&gt; Result&lt;&#39;b,Map&lt;string,string list&gt;&gt;<br />
-                          <strong>Type parameters:</strong> 'a, 'b                      </div>
+          <div class="tip" id="336">
+            <strong>Signature:</strong> x:string -&gt; bool<br />
+                                  </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Untrust.fs#L38-38" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/String.fs#L7-7" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          <p>Tries to get the wrapped value out of the untrusted boundary by validating the value.</p>
+          <p>Determines if a string is not <code>null</code>.</p>
 
 
         </td>

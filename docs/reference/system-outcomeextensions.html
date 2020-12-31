@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>OutcomeExtensions - FPrimitive</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="description" content=""/>
+    <meta name="author" content="Stijn Moreels"/>
+
+    <script src="https://code.jquery.com/jquery-1.8.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.8.23/jquery-ui.js"></script>
+    <script src="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/js/bootstrap.min.js"></script>
+    <link href="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/css/bootstrap-combined.min.css" rel="stylesheet"/>
+
+    <link type="text/css" rel="stylesheet" href="/FPrimitive/content/style.css" />
+    <script type="text/javascript" src="/FPrimitive/content/tips.js"></script>
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="container">
+      <div class="masthead">
+        <ul class="nav nav-pills pull-right">
+          <li><a href="http://fsharp.org">fsharp.org</a></li>
+          <li><a href="https://github.com/stijnmoreels/FPrimitive">github page</a></li>
+        </ul>
+        <h3 class="muted"><a href="/FPrimitive/index.html">FPrimitive</a></h3>
+      </div>
+      <hr />
+      <div class="row">
+        <div class="span9" id="main">
+          
+
+<h1>OutcomeExtensions</h1>
+<p>
+
+    <span>Namespace: System</span><br />
+            <span>
+            Attributes: <br />
+[&lt;Extension&gt;]<br />
+            
+        </span>
+</p>
+<div class="xmldoc">
+<p>Adds extensions on the <code>Result&lt;&gt;</code> model for easier control of successful/failure models.</p>
+
+</div>
+  <h3>Static members</h3>
+  <table class="table table-bordered member-list">
+    <thead>
+      <tr><td>Static member</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="member-name">
+          <code onmouseout="hideTip(event, '1027', 1027)" onmouseover="showTip(event, '1027', 1027)">
+            OutcomeExtensions.Aggregate(...)
+          </code>
+          <div class="tip" id="1027">
+            <strong>Signature:</strong> (result:Outcome&lt;&#39;T,&#39;TError&gt; * seed:&#39;TResult * aggregator:Func&lt;&#39;TResult,&#39;T,&#39;TResult&gt;) -&gt; &#39;TResult<br />
+                          <strong>Type parameters:</strong> 'T, 'TError, 'TResult                        <span>
+            <strong>Attributes:</strong><br />
+[&lt;Extension&gt;]<br />
+          </span>
+          </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Outcome.fs#L180-180" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Collapse an result instance to another type from the seed via the given aggregator function.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+          <code onmouseout="hideTip(event, '1028', 1028)" onmouseover="showTip(event, '1028', 1028)">
+            OutcomeExtensions.AppendError(...)
+          </code>
+          <div class="tip" id="1028">
+            <strong>Signature:</strong> (result:Outcome&lt;&#39;T,seq&lt;&#39;TError&gt;&gt; * error:&#39;TError) -&gt; Outcome&lt;&#39;T,seq&lt;&#39;TError&gt;&gt;<br />
+                          <strong>Type parameters:</strong> 'T, 'TError                        <span>
+            <strong>Attributes:</strong><br />
+[&lt;Extension&gt;]<br />
+          </span>
+          </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Outcome.fs#L350-350" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Append error to the outcome instance.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+          <code onmouseout="hideTip(event, '1029', 1029)" onmouseover="showTip(event, '1029', 1029)">
+            OutcomeExtensions.AppendErrors(...)
+          </code>
+          <div class="tip" id="1029">
+            <strong>Signature:</strong> (result:Outcome&lt;&#39;T,seq&lt;&#39;TError&gt;&gt; * errors:&#39;TError array) -&gt; Outcome&lt;&#39;T,seq&lt;&#39;TError&gt;&gt;<br />
+                          <strong>Type parameters:</strong> 'T, 'TError                        <span>
+            <strong>Attributes:</strong><br />
+[&lt;Extension&gt;]<br />
+          </span>
+          </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Outcome.fs#L356-356" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Append errors to the outcome instance.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+          <code onmouseout="hideTip(event, '1030', 1030)" onmouseover="showTip(event, '1030', 1030)">
+            OutcomeExtensions.Catch(...)
+          </code>
+          <div class="tip" id="1030">
+            <strong>Signature:</strong> (result:Outcome&lt;&#39;T,&#39;TError&gt; * selector:Func&lt;&#39;T,Outcome&lt;&#39;TResult,&#39;TError&gt;&gt; * handler:Func&lt;exn,&#39;TError&gt;) -&gt; Outcome&lt;&#39;TResult,&#39;TError&gt;<br />
+                          <strong>Type parameters:</strong> 'T, 'TError, 'TResult                        <span>
+            <strong>Attributes:</strong><br />
+[&lt;Extension&gt;]<br />
+          </span>
+          </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Outcome.fs#L148-148" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Transforms the inner value of the outcome instance to another outcome instance, flatting the result;
+in a safe catched environment with a specified handler.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+          <code onmouseout="hideTip(event, '1031', 1031)" onmouseover="showTip(event, '1031', 1031)">
+            OutcomeExtensions.Catch(...)
+          </code>
+          <div class="tip" id="1031">
+            <strong>Signature:</strong> (result:Outcome&lt;&#39;T,&#39;TError&gt; * selector:Func&lt;&#39;T,&#39;TResult&gt; * handler:Func&lt;exn,&#39;TError&gt;) -&gt; Outcome&lt;&#39;TResult,&#39;TError&gt;<br />
+                          <strong>Type parameters:</strong> 'T, 'TError, 'TResult                        <span>
+            <strong>Attributes:</strong><br />
+[&lt;Extension&gt;]<br />
+          </span>
+          </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Outcome.fs#L123-123" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Transforms the inner value of the outcome instance to another value in a safe catched environment with a specified handler.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+          <code onmouseout="hideTip(event, '1032', 1032)" onmouseover="showTip(event, '1032', 1032)">
+            OutcomeExtensions.Deconstruct(result)
+          </code>
+          <div class="tip" id="1032">
+            <strong>Signature:</strong> result:Outcome&lt;&#39;T,&#39;TError&gt; -&gt; &#39;T * &#39;TError<br />
+                          <strong>Type parameters:</strong> 'T, 'TError                        <span>
+            <strong>Attributes:</strong><br />
+[&lt;Extension&gt;]<br />
+          </span>
+          </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Outcome.fs#L377-377" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Transforms the outcome instance to a value tuple.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+          <code onmouseout="hideTip(event, '1033', 1033)" onmouseover="showTip(event, '1033', 1033)">
+            OutcomeExtensions.Do(...)
+          </code>
+          <div class="tip" id="1033">
+            <strong>Signature:</strong> (result:Outcome&lt;&#39;T,&#39;TError&gt; * action:Action&lt;&#39;T&gt; * handler:Func&lt;exn,&#39;TError&gt;) -&gt; Outcome&lt;&#39;T,&#39;TError&gt;<br />
+                          <strong>Type parameters:</strong> 'T, 'TError                        <span>
+            <strong>Attributes:</strong><br />
+[&lt;Extension&gt;]<br />
+          </span>
+          </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Outcome.fs#L198-198" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Runs an action on the inner error value, without any result in a safe catched environment. Useful for logging.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+          <code onmouseout="hideTip(event, '1034', 1034)" onmouseover="showTip(event, '1034', 1034)">
+            OutcomeExtensions.Do(...)
+          </code>
+          <div class="tip" id="1034">
+            <strong>Signature:</strong> (result:Outcome&lt;&#39;T,&#39;TError&gt; * actionError:Action&lt;&#39;TError&gt;) -&gt; Outcome&lt;&#39;T,&#39;TError&gt;<br />
+                          <strong>Type parameters:</strong> 'T, 'TError                        <span>
+            <strong>Attributes:</strong><br />
+[&lt;Extension&gt;]<br />
+          </span>
+          </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Outcome.fs#L192-192" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Runs an action on the inner error value, without any result. Useful for logging.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+          <code onmouseout="hideTip(event, '1035', 1035)" onmouseover="showTip(event, '1035', 1035)">
+            OutcomeExtensions.Do(result, action)
+          </code>
+          <div class="tip" id="1035">
+            <strong>Signature:</strong> (result:Outcome&lt;&#39;T,&#39;TError&gt; * action:Action&lt;&#39;T&gt;) -&gt; Outcome&lt;&#39;T,&#39;TError&gt;<br />
+                          <strong>Type parameters:</strong> 'T, 'TError                        <span>
+            <strong>Attributes:</strong><br />
+[&lt;Extension&gt;]<br />
+          </span>
+          </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Outcome.fs#L186-186" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Runs an action on the inner value, without any result. Useful for logging.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+          <code onmouseout="hideTip(event, '1036', 1036)" onmouseover="showTip(event, '1036', 1036)">
+            OutcomeExtensions.FormatErrors(...)
+          </code>
+          <div class="tip" id="1036">
+            <strong>Signature:</strong> (result:Outcome&lt;&#39;T,seq&lt;&#39;TError&gt;&gt; * seperator:string) -&gt; string<br />
+                          <strong>Type parameters:</strong> 'T, 'TError                        <span>
+            <strong>Attributes:</strong><br />
+[&lt;Extension&gt;]<br />
+          </span>
+          </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Outcome.fs#L362-362" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Format errors in the outcome instance.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+          <code onmouseout="hideTip(event, '1037', 1037)" onmouseover="showTip(event, '1037', 1037)">
+            OutcomeExtensions.GetOrElse(...)
+          </code>
+          <div class="tip" id="1037">
+            <strong>Signature:</strong> (result:Outcome&lt;&#39;T,&#39;TError&gt; * defaultError:&#39;TError) -&gt; &#39;TError<br />
+                          <strong>Type parameters:</strong> 'T, 'TError                        <span>
+            <strong>Attributes:</strong><br />
+[&lt;Extension&gt;]<br />
+          </span>
+          </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Outcome.fs#L305-305" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Tries to get the failure error of the outcome instance, or a default value.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+          <code onmouseout="hideTip(event, '1038', 1038)" onmouseover="showTip(event, '1038', 1038)">
+            OutcomeExtensions.GetOrElse(...)
+          </code>
+          <div class="tip" id="1038">
+            <strong>Signature:</strong> (result:Outcome&lt;&#39;T,&#39;TError&gt; * otherwise:Func&lt;&#39;TError&gt;) -&gt; &#39;TError<br />
+                          <strong>Type parameters:</strong> 'T, 'TError                        <span>
+            <strong>Attributes:</strong><br />
+[&lt;Extension&gt;]<br />
+          </span>
+          </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Outcome.fs#L299-299" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Gets the failure error of the outcome instance, or an evaluated default value.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+          <code onmouseout="hideTip(event, '1039', 1039)" onmouseover="showTip(event, '1039', 1039)">
+            OutcomeExtensions.GetOrElse(...)
+          </code>
+          <div class="tip" id="1039">
+            <strong>Signature:</strong> (result:Outcome&lt;&#39;T,&#39;TError&gt; * defaultValue:&#39;T) -&gt; &#39;T<br />
+                          <strong>Type parameters:</strong> 'T, 'TError                        <span>
+            <strong>Attributes:</strong><br />
+[&lt;Extension&gt;]<br />
+          </span>
+          </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Outcome.fs#L294-294" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Gets the successful value of the outcome instance, or a default value.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+          <code onmouseout="hideTip(event, '1040', 1040)" onmouseover="showTip(event, '1040', 1040)">
+            OutcomeExtensions.GetOrElse(...)
+          </code>
+          <div class="tip" id="1040">
+            <strong>Signature:</strong> (result:Outcome&lt;&#39;T,&#39;TError&gt; * otherwise:Func&lt;&#39;T&gt;) -&gt; &#39;T<br />
+                          <strong>Type parameters:</strong> 'T, 'TError                        <span>
+            <strong>Attributes:</strong><br />
+[&lt;Extension&gt;]<br />
+          </span>
+          </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Outcome.fs#L288-288" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Gets the successful value of the outcome instance, or an evaluated default value.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+          <code onmouseout="hideTip(event, '1041', 1041)" onmouseover="showTip(event, '1041', 1041)">
+            OutcomeExtensions.ManyErrors(result)
+          </code>
+          <div class="tip" id="1041">
+            <strong>Signature:</strong> result:Outcome&lt;&#39;T,&#39;TError&gt; -&gt; Outcome&lt;&#39;T,seq&lt;&#39;TError&gt;&gt;<br />
+                          <strong>Type parameters:</strong> 'T, 'TError                        <span>
+            <strong>Attributes:</strong><br />
+[&lt;Extension&gt;]<br />
+          </span>
+          </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Outcome.fs#L344-344" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Use multiple error types for the outcome instance.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+          <code onmouseout="hideTip(event, '1042', 1042)" onmouseover="showTip(event, '1042', 1042)">
+            OutcomeExtensions.Match(...)
+          </code>
+          <div class="tip" id="1042">
+            <strong>Signature:</strong> (result:Outcome&lt;&#39;T,&#39;TError&gt; * ifSuccess:Func&lt;&#39;T,&#39;TResult&gt; * ifFailure:Func&lt;&#39;TError,&#39;TResult&gt;) -&gt; &#39;TResult<br />
+                          <strong>Type parameters:</strong> 'T, 'TError, 'TResult                        <span>
+            <strong>Attributes:</strong><br />
+[&lt;Extension&gt;]<br />
+          </span>
+          </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Outcome.fs#L322-322" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Maps both the successful and failure value of the outcome instance to another type.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+          <code onmouseout="hideTip(event, '1043', 1043)" onmouseover="showTip(event, '1043', 1043)">
+            OutcomeExtensions.OrElse(...)
+          </code>
+          <div class="tip" id="1043">
+            <strong>Signature:</strong> (result:Outcome&lt;&#39;T,&#39;TError&gt; * otherwise:Func&lt;&#39;TError,Outcome&lt;&#39;T,&#39;TError&gt;&gt;) -&gt; Outcome&lt;&#39;T,&#39;TError&gt;<br />
+                          <strong>Type parameters:</strong> 'T, 'TError                        <span>
+            <strong>Attributes:</strong><br />
+[&lt;Extension&gt;]<br />
+          </span>
+          </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Outcome.fs#L281-281" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Switch to another result if the current result represents a failure.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+          <code onmouseout="hideTip(event, '1044', 1044)" onmouseover="showTip(event, '1044', 1044)">
+            OutcomeExtensions.Plus(...)
+          </code>
+          <div class="tip" id="1044">
+            <strong>Signature:</strong> (result1:Outcome&lt;&#39;T,&#39;TError&gt; * result2:Outcome&lt;&#39;T,&#39;TError&gt; * ifSuccess:Func&lt;&#39;T,&#39;T,&#39;T&gt; * ifFailure:Func&lt;&#39;TError,&#39;TError,&#39;TError&gt;) -&gt; Outcome&lt;&#39;T,&#39;TError&gt;<br />
+                          <strong>Type parameters:</strong> 'T, 'TError                        <span>
+            <strong>Attributes:</strong><br />
+[&lt;Extension&gt;]<br />
+          </span>
+          </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Outcome.fs#L266-266" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Transforms two results together, the abstracted 'plus' (+) operator.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+          <code onmouseout="hideTip(event, '1045', 1045)" onmouseover="showTip(event, '1045', 1045)">
+            OutcomeExtensions.Select(...)
+          </code>
+          <div class="tip" id="1045">
+            <strong>Signature:</strong> (result:Outcome&lt;&#39;T,&#39;TError&gt; * selector:Func&lt;&#39;T,&#39;TResult&gt; * selectorError:Func&lt;&#39;TError,&#39;TErrorResult&gt;) -&gt; Outcome&lt;&#39;TResult,&#39;TErrorResult&gt;<br />
+                          <strong>Type parameters:</strong> 'T, 'TError, 'TResult, 'TErrorResult                        <span>
+            <strong>Attributes:</strong><br />
+[&lt;Extension&gt;]<br />
+          </span>
+          </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Outcome.fs#L115-115" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Transforms both the value and the error at the same time.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+          <code onmouseout="hideTip(event, '1046', 1046)" onmouseover="showTip(event, '1046', 1046)">
+            OutcomeExtensions.Select(...)
+          </code>
+          <div class="tip" id="1046">
+            <strong>Signature:</strong> (result:Outcome&lt;&#39;T,&#39;TError&gt; * selectorError:Func&lt;&#39;TError,&#39;TErrorResult&gt;) -&gt; Outcome&lt;&#39;T,&#39;TErrorResult&gt;<br />
+                          <strong>Type parameters:</strong> 'T, 'TError, 'TErrorResult                        <span>
+            <strong>Attributes:</strong><br />
+[&lt;Extension&gt;]<br />
+          </span>
+          </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Outcome.fs#L108-108" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Transforms the inner error value of the result instance to another value.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+          <code onmouseout="hideTip(event, '1047', 1047)" onmouseover="showTip(event, '1047', 1047)">
+            OutcomeExtensions.Select(...)
+          </code>
+          <div class="tip" id="1047">
+            <strong>Signature:</strong> (result:Outcome&lt;&#39;T,&#39;TError&gt; * selector:Func&lt;&#39;T,&#39;TResult&gt;) -&gt; Outcome&lt;&#39;TResult,&#39;TError&gt;<br />
+                          <strong>Type parameters:</strong> 'T, 'TError, 'TResult                        <span>
+            <strong>Attributes:</strong><br />
+[&lt;Extension&gt;]<br />
+          </span>
+          </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Outcome.fs#L101-101" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Transforms the inner value of the result instance to another value.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+          <code onmouseout="hideTip(event, '1048', 1048)" onmouseover="showTip(event, '1048', 1048)">
+            OutcomeExtensions.SelectMany(...)
+          </code>
+          <div class="tip" id="1048">
+            <strong>Signature:</strong> (result:Outcome&lt;&#39;T,&#39;TError&gt; * selector:Func&lt;&#39;T,Outcome&lt;&#39;TResult,&#39;TError&gt;&gt;) -&gt; Outcome&lt;&#39;TResult,&#39;TError&gt;<br />
+                          <strong>Type parameters:</strong> 'T, 'TError, 'TResult                        <span>
+            <strong>Attributes:</strong><br />
+[&lt;Extension&gt;]<br />
+          </span>
+          </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Outcome.fs#L141-141" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Transforms the inner value of the result instance to another result instance, flatting the result.
+See also <code>Then</code>.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+          <code onmouseout="hideTip(event, '1049', 1049)" onmouseover="showTip(event, '1049', 1049)">
+            OutcomeExtensions.Sequence(sequence)
+          </code>
+          <div class="tip" id="1049">
+            <strong>Signature:</strong> sequence:seq&lt;Outcome&lt;&#39;T,&#39;TError&gt;&gt; -&gt; Outcome&lt;seq&lt;&#39;T&gt;,&#39;TError&gt;<br />
+                          <strong>Type parameters:</strong> 'T, 'TError                        <span>
+            <strong>Attributes:</strong><br />
+[&lt;Extension&gt;]<br />
+          </span>
+          </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Outcome.fs#L339-339" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Transforms a sequence of outcome instances to a single outcome instance with a sequence.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+          <code onmouseout="hideTip(event, '1050', 1050)" onmouseover="showTip(event, '1050', 1050)">
+            OutcomeExtensions.Then(result, selector)
+          </code>
+          <div class="tip" id="1050">
+            <strong>Signature:</strong> (result:Outcome&lt;&#39;T,&#39;TError&gt; * selector:Func&lt;&#39;T,Outcome&lt;&#39;TResult,&#39;TError&gt;&gt;) -&gt; Outcome&lt;&#39;TResult,&#39;TError&gt;<br />
+                          <strong>Type parameters:</strong> 'T, 'TError, 'TResult                        <span>
+            <strong>Attributes:</strong><br />
+[&lt;Extension&gt;]<br />
+          </span>
+          </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Outcome.fs#L165-165" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Transforms the inner value of the result instance to another result instance, flatting the result.
+See also <code>Then</code>.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+          <code onmouseout="hideTip(event, '1051', 1051)" onmouseover="showTip(event, '1051', 1051)">
+            OutcomeExtensions.Throw(result)
+          </code>
+          <div class="tip" id="1051">
+            <strong>Signature:</strong> result:Outcome&lt;&#39;T,&#39;?11182&gt; -&gt; unit<br />
+                          <strong>Type parameters:</strong> 'T, '?11182                        <span>
+            <strong>Attributes:</strong><br />
+[&lt;Extension&gt;]<br />
+          </span>
+          </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Outcome.fs#L160-160" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Throws the failure error representing an exception when the outcome instance is indeed a failure.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+          <code onmouseout="hideTip(event, '1052', 1052)" onmouseover="showTip(event, '1052', 1052)">
+            OutcomeExtensions.Throw(...)
+          </code>
+          <div class="tip" id="1052">
+            <strong>Signature:</strong> (result:Outcome&lt;&#39;T,&#39;TError&gt; * createException:Func&lt;&#39;TError,&#39;?11179&gt;) -&gt; unit<br />
+                          <strong>Type parameters:</strong> 'T, 'TError, '?11179                        <span>
+            <strong>Attributes:</strong><br />
+[&lt;Extension&gt;]<br />
+          </span>
+          </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Outcome.fs#L155-155" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Throws the failure error representing an exception when the outcome instance is indeed a failure.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+          <code onmouseout="hideTip(event, '1053', 1053)" onmouseover="showTip(event, '1053', 1053)">
+            OutcomeExtensions.ToFSharpOption(result)
+          </code>
+          <div class="tip" id="1053">
+            <strong>Signature:</strong> result:Outcome&lt;&#39;T,&#39;TError&gt; -&gt; &#39;T option<br />
+                          <strong>Type parameters:</strong> 'T, 'TError                        <span>
+            <strong>Attributes:</strong><br />
+[&lt;Extension&gt;]<br />
+          </span>
+          </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Outcome.fs#L368-368" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Transforms the outcome instance to a F# optional type.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+          <code onmouseout="hideTip(event, '1054', 1054)" onmouseover="showTip(event, '1054', 1054)">
+            OutcomeExtensions.ToFSharpResult(result)
+          </code>
+          <div class="tip" id="1054">
+            <strong>Signature:</strong> result:Outcome&lt;&#39;T,&#39;TError&gt; -&gt; Result&lt;&#39;T,&#39;TError&gt;<br />
+                          <strong>Type parameters:</strong> 'T, 'TError                        <span>
+            <strong>Attributes:</strong><br />
+[&lt;Extension&gt;]<br />
+          </span>
+          </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Outcome.fs#L372-372" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Transforms the outcome instance to a F# result type.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+          <code onmouseout="hideTip(event, '1055', 1055)" onmouseover="showTip(event, '1055', 1055)">
+            OutcomeExtensions.Traverse(...)
+          </code>
+          <div class="tip" id="1055">
+            <strong>Signature:</strong> (sequence:seq&lt;&#39;T&gt; * selector:Func&lt;&#39;T,Outcome&lt;&#39;TResult,&#39;TError&gt;&gt;) -&gt; Outcome&lt;seq&lt;&#39;TResult&gt;,&#39;TError&gt;<br />
+                          <strong>Type parameters:</strong> 'T, 'TResult, 'TError                        <span>
+            <strong>Attributes:</strong><br />
+[&lt;Extension&gt;]<br />
+          </span>
+          </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Outcome.fs#L329-329" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Traverse the sequence, running a mapping function over the elements, collecting the results into an <a href="system-outcome.html" title="Outcome"><code>Outcome</code></a> instance.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+          <code onmouseout="hideTip(event, '1056', 1056)" onmouseover="showTip(event, '1056', 1056)">
+            OutcomeExtensions.TryGetError(...)
+          </code>
+          <div class="tip" id="1056">
+            <strong>Signature:</strong> (result:Outcome&lt;&#39;T,&#39;TError&gt; * error:outref&lt;&#39;TError&gt;) -&gt; bool<br />
+                          <strong>Type parameters:</strong> 'T, 'TError                        <span>
+            <strong>Attributes:</strong><br />
+[&lt;Extension&gt;]<br />
+          </span>
+          </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Outcome.fs#L316-316" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Tries to get the failure error out of the result.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+          <code onmouseout="hideTip(event, '1057', 1057)" onmouseover="showTip(event, '1057', 1057)">
+            OutcomeExtensions.TryGetValue(...)
+          </code>
+          <div class="tip" id="1057">
+            <strong>Signature:</strong> (result:Outcome&lt;&#39;T,&#39;TError&gt; * value:outref&lt;&#39;T&gt;) -&gt; bool<br />
+                          <strong>Type parameters:</strong> 'T, 'TError                        <span>
+            <strong>Attributes:</strong><br />
+[&lt;Extension&gt;]<br />
+          </span>
+          </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Outcome.fs#L310-310" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Tries to get the successful value out of the result.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+          <code onmouseout="hideTip(event, '1058', 1058)" onmouseover="showTip(event, '1058', 1058)">
+            OutcomeExtensions.Using(...)
+          </code>
+          <div class="tip" id="1058">
+            <strong>Signature:</strong> (result:Outcome&lt;&#39;T,&#39;TError&gt; * selector:Func&lt;&#39;T,&#39;TResult&gt; * handler:Func&lt;exn,&#39;TError&gt;) -&gt; Outcome&lt;&#39;TResult,&#39;TError&gt;<br />
+                          <strong>Type parameters:</strong> 'T, 'TError, 'TResult                        <span>
+            <strong>Attributes:</strong><br />
+[&lt;Extension&gt;]<br />
+          </span>
+          </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Outcome.fs#L130-130" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Transforms the inner value of the outcome instance to another value in a safe catched environment with a specified handler and disposes the resource afterwards.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+          <code onmouseout="hideTip(event, '1059', 1059)" onmouseover="showTip(event, '1059', 1059)">
+            OutcomeExtensions.Where(...)
+          </code>
+          <div class="tip" id="1059">
+            <strong>Signature:</strong> (result:Outcome&lt;&#39;T,&#39;TError&gt; * predicate:Func&lt;&#39;T,bool&gt; * error:&#39;TError) -&gt; Outcome&lt;&#39;T,&#39;TError&gt;<br />
+                          <strong>Type parameters:</strong> 'T, 'TError                        <span>
+            <strong>Attributes:</strong><br />
+[&lt;Extension&gt;]<br />
+          </span>
+          </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Outcome.fs#L176-176" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Filters an optional instance by the given predicate, returning a failure outcome result when the predicate doesn't hold.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+          <code onmouseout="hideTip(event, '1060', 1060)" onmouseover="showTip(event, '1060', 1060)">
+            OutcomeExtensions.Where(...)
+          </code>
+          <div class="tip" id="1060">
+            <strong>Signature:</strong> (result:Outcome&lt;&#39;T,&#39;TError&gt; * predicate:Func&lt;&#39;T,bool&gt; * createError:Func&lt;&#39;TError&gt;) -&gt; Outcome&lt;&#39;T,&#39;TError&gt;<br />
+                          <strong>Type parameters:</strong> 'T, 'TError                        <span>
+            <strong>Attributes:</strong><br />
+[&lt;Extension&gt;]<br />
+          </span>
+          </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Outcome.fs#L169-169" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Filters an optional instance by the given predicate, returning a failure outcome result when the predicate doesn't hold.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+          <code onmouseout="hideTip(event, '1061', 1061)" onmouseover="showTip(event, '1061', 1061)">
+            OutcomeExtensions.Zip(...)
+          </code>
+          <div class="tip" id="1061">
+            <strong>Signature:</strong> (result1:Outcome&lt;&#39;T1,&#39;TError&gt; * result2:Outcome&lt;&#39;T2,&#39;TError&gt; * result3:Outcome&lt;&#39;T3,&#39;TError&gt; * result4:Outcome&lt;&#39;T4,&#39;TError&gt; * zipper:Func&lt;&#39;T1,&#39;T2,&#39;T3,&#39;T4,&#39;TResult&gt; * zipperError:Func&lt;&#39;TError,&#39;TError,&#39;TError&gt;) -&gt; Outcome&lt;&#39;TResult,&#39;TError&gt;<br />
+                          <strong>Type parameters:</strong> 'T1, 'TError, 'T2, 'T3, 'T4, 'TResult                        <span>
+            <strong>Attributes:</strong><br />
+[&lt;Extension&gt;]<br />
+          </span>
+          </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Outcome.fs#L238-238" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Combine four result instances with a set of given zipper functions.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+          <code onmouseout="hideTip(event, '1062', 1062)" onmouseover="showTip(event, '1062', 1062)">
+            OutcomeExtensions.Zip(...)
+          </code>
+          <div class="tip" id="1062">
+            <strong>Signature:</strong> (result1:Outcome&lt;&#39;T1,&#39;TError&gt; * result2:Outcome&lt;&#39;T2,&#39;TError&gt; * result3:Outcome&lt;&#39;T3,&#39;TError&gt; * zipper:Func&lt;&#39;T1,&#39;T2,&#39;T3,&#39;TResult&gt; * zipperError:Func&lt;&#39;TError,&#39;TError,&#39;TError&gt;) -&gt; Outcome&lt;&#39;TResult,&#39;TError&gt;<br />
+                          <strong>Type parameters:</strong> 'T1, 'TError, 'T2, 'T3, 'TResult                        <span>
+            <strong>Attributes:</strong><br />
+[&lt;Extension&gt;]<br />
+          </span>
+          </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Outcome.fs#L219-219" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Combine three result instances with a set of given zipper functions.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+          <code onmouseout="hideTip(event, '1063', 1063)" onmouseover="showTip(event, '1063', 1063)">
+            OutcomeExtensions.Zip(...)
+          </code>
+          <div class="tip" id="1063">
+            <strong>Signature:</strong> (result1:Outcome&lt;&#39;T1,&#39;TError&gt; * result2:Outcome&lt;&#39;T2,&#39;TError&gt; * zipper:Func&lt;&#39;T1,&#39;T2,&#39;TResult&gt; * zipperError:Func&lt;&#39;TError,&#39;TError,&#39;TError&gt;) -&gt; Outcome&lt;&#39;TResult,&#39;TError&gt;<br />
+                          <strong>Type parameters:</strong> 'T1, 'TError, 'T2, 'TResult                        <span>
+            <strong>Attributes:</strong><br />
+[&lt;Extension&gt;]<br />
+          </span>
+          </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/paket-files/stijnmoreels/System/Outcome.fs#L205-205" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Combine two result instances with a set of given zipper functions.</p>
+
+
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+        </div>
+        <div class="span3">
+          <img src="/FPrimitive/img/logo.png" alt="F# Project" style="width:150px;margin:10px" />  
+          <ul class="nav nav-list" id="menu" style="margin-top: 20px;">
+            <li class="nav-header">FPrimitive</li>
+            <li><a href="/FPrimitive/index.html">Home page</a></li>
+            <li class="divider"></li>
+            <li><a href="http://nuget.org/packages/FPrimitive">Get Library via NuGet</a></li>
+            <li><a href="https://github.com/stijnmoreels/FPrimitive">Source Code on GitHub</a></li>
+            <li><a href="/FPrimitive/license.html">License</a></li>
+            <li><a href="/FPrimitive/release-notes.html">Release Notes</a></li>
+            
+            <li class="nav-header">Getting started</li>
+            <li><a href="/FPrimitive/tutorial.html">Sample tutorial</a></li>
+
+            <li class="nav-header">Documentation</li>
+            <li><a href="/FPrimitive/reference/index.html">API Reference</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <a href="https://github.com/stijnmoreels/FPrimitive"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"/></a>
+  </body>
+  </html>

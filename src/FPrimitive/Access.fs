@@ -6,6 +6,9 @@ open System.Runtime.CompilerServices
 open System.Threading
 
 open Microsoft.FSharp.Core
+open System.Threading.Tasks
+open System.Collections.Generic
+open System.Security.Principal
 
 /// Represents an access-controlled function.
 type Access<'T, 'TResult> = 
@@ -50,12 +53,35 @@ module Access =
         Capability = fun x -> 
           if predicate x then acc.Capability x 
           else Error [ "access failure:" + error ] }
-  
+
   /// Evaluate the access-controlled function.
   let eval x { Capability = f } = f x
- 
+
   /// Evaluate the access-controlled function with unit `()`.
   let evalUnit acc = acc.Capability ()
+
+  /// Evaluate the access-controlled function asynchronously.
+  let evalAsync x { Capability = f } = async { 
+    match f x with
+    | Ok a -> let! result = a
+              return Ok result 
+    | Error err -> return Error err }
+
+  /// Evaluate the access-controlled function asynchronously.
+  let evalUnitAsync a = evalAsync () a
+
+  /// Evaluate the access-controlled result function asynchronously with a custom access error failures mapping.
+  let evalResultAsync x mapErrors { Capability = f } = async {
+    match f x with
+    | Ok a -> 
+      let! result = a
+      match result with
+      | Ok y -> return Ok y
+      | Error err -> return Error err
+    | Error err -> return Error (mapErrors err) }
+
+  /// Evaluate the access-controlled result function asynchronously with a custom access error failures mapping.
+  let evalUnitResultAsync mapErrors a = evalResultAsync () mapErrors a
 
   /// Revokes the access-controlled function.
   let revoke acc = Option.iter (fun f -> f ()) acc.Revokable
@@ -183,64 +209,76 @@ module Access =
           | Ok x -> acc.Capability x
           | Error errs -> Error (Map.values errs |> List.concat) }
 
+  /// Makes the access-controlled function dependent in which role the current user is.
+  let inRole roleName (currentUser : IPrincipal) acc =
+    if isNull roleName then nullArg "roleName"
+    { acc with
+        Capability = fun x ->
+          if currentUser.IsInRole roleName
+          then acc.Capability x
+          else Error [ sprintf "access failure: user '%s' must be in role '%s' to access this resource" currentUser.Identity.Name roleName ] }
+
 /// Computation expression to control the access of functions.
 type AccessBuilder<'a, 'b> () =
-    member __.Yield (_) = 
-        { Revokable = None
-          Capability = fun _ -> Error [ "access failure: no resource was configured" ] }
-    /// Creates an access controlled function from a custom function.
-    [<CustomOperation("func")>]
-    member __.Func (_, f) = Access.func f
-    /// Creates an access-controlled function from a function, directly using the returned `Result`.
-    [<CustomOperation("funcResult")>]
-    member __.FuncResult (_, f) = Access.funcResult f
-    /// Creates an access controlled function from a function, directly using the returned `Option`.
-    [<CustomOperation("funcOption")>]
-    member __.FuncOption (_, f, error) = Access.funcOption f error
-    /// Creates an access-controlled function that only retrieves files from a certain directory.
-    [<CustomOperation("onlyFilesFrom")>]
-    member __.OnlyFilesFrom (_, dir) = Access.onlyFilesFrom dir
-    /// Creates an access-controlled function that only retrieves files from certain directories.
-    [<CustomOperation("onlyFilesFromDirs")>]
-    member __.OnlyFilesFromDirs (_, dirs) = Access.onlyFilesFromDirs dirs
-    /// Adds a requirement to the access-controlled function to only allow files with a certain extension.
-    [<CustomOperation("fileExtension")>]
-    member __.Extension (state, ext) = Access.fileExtension ext state
-    /// Adds a requirement to the access-controlled function to only allow files with certain extensions.
-    [<CustomOperation("filesExtensions")>]
-    member __.Extensions (state, exts) = Access.fileExtensions exts state
-    /// Creates an access-controlled function to only allow `Uri` values with a certain base `Uri`.
-    [<CustomOperation("onlyUriFromBase")>]
-    member __.OnlyUriFrombase (_, baseUri) = Access.onlyUriFromBase baseUri
-    [<CustomOperation("filter")>]
-    member __.Filter (state, predicate, error) = Access.filter predicate error state
-    /// Let the access-controlled function only evaluate once.
-    [<CustomOperation("once")>]
-    member __.Once (state) = Access.once state
-    /// Let the access-controlled function only evaluate two times.
-    [<CustomOperation("twice")>]
-    member __.Twice (state) = Access.twice state
-    /// Let the access-controlled function only evaluate a certain amount of times.
-    [<CustomOperation("times")>]
-    member __.Times (state, count) = Access.times count state
-    /// Make the access-controlled function revokable.
-    [<CustomOperation("revokable")>]
-    member __.Revokable (state) = Access.revokable state
-    /// Automatically revoke the access-controlled after a specified delay.
-    [<CustomOperation("revokedAfter")>]
-    member __.RevokedAfter (state, delay) = Access.revokedAfter delay state
-    /// Automatically revoke the access-controlled function when the specified observable emits a value.
-    [<CustomOperation("revokedWhen")>]
-    member __.RevokedWhen (state, observable) = Access.revokedWhen observable state
-    /// Make the access-controlled function only available during certain dates.
-    [<CustomOperation("duringDates")>]
-    member __.DuringDates (state, min, max) = Access.duringDates min max state
-    /// Make the access-controlled function only available during certain hours.
-    [<CustomOperation("duringHours")>]
-    member __.DuringHours (state, min, max) = Access.duringHours min max state
-    /// Adds input-validation to the access-controlled function.
-    [<CustomOperation("satisfy")>]
-    member __.Satisfy (state, spec) = Access.satisfy spec state
+  member __.Yield (_) = 
+    { Revokable = None
+      Capability = fun _ -> Error [ "access failure: no resource was configured" ] }
+  /// Creates an access controlled function from a custom function.
+  [<CustomOperation("func")>]
+  member __.Func (_, f) = Access.func f
+  /// Creates an access-controlled function from a function, directly using the returned `Result`.
+  [<CustomOperation("funcResult")>]
+  member __.FuncResult (_, f) = Access.funcResult f
+  /// Creates an access controlled function from a function, directly using the returned `Option`.
+  [<CustomOperation("funcOption")>]
+  member __.FuncOption (_, f, error) = Access.funcOption f error
+  /// Creates an access-controlled function that only retrieves files from a certain directory.
+  [<CustomOperation("onlyFilesFrom")>]
+  member __.OnlyFilesFrom (_, dir) = Access.onlyFilesFrom dir
+  /// Creates an access-controlled function that only retrieves files from certain directories.
+  [<CustomOperation("onlyFilesFromDirs")>]
+  member __.OnlyFilesFromDirs (_, dirs) = Access.onlyFilesFromDirs dirs
+  /// Adds a requirement to the access-controlled function to only allow files with a certain extension.
+  [<CustomOperation("fileExtension")>]
+  member __.Extension (state, ext) = Access.fileExtension ext state
+  /// Adds a requirement to the access-controlled function to only allow files with certain extensions.
+  [<CustomOperation("filesExtensions")>]
+  member __.Extensions (state, exts) = Access.fileExtensions exts state
+  /// Creates an access-controlled function to only allow `Uri` values with a certain base `Uri`.
+  [<CustomOperation("onlyUriFromBase")>]
+  member __.OnlyUriFrombase (_, baseUri) = Access.onlyUriFromBase baseUri
+  [<CustomOperation("filter")>]
+  member __.Filter (state, predicate, error) = Access.filter predicate error state
+  /// Let the access-controlled function only evaluate once.
+  [<CustomOperation("once")>]
+  member __.Once (state) = Access.once state
+  /// Let the access-controlled function only evaluate two times.
+  [<CustomOperation("twice")>]
+  member __.Twice (state) = Access.twice state
+  /// Let the access-controlled function only evaluate a certain amount of times.
+  [<CustomOperation("times")>]
+  member __.Times (state, count) = Access.times count state
+  /// Make the access-controlled function revokable.
+  [<CustomOperation("revokable")>]
+  member __.Revokable (state) = Access.revokable state
+  /// Automatically revoke the access-controlled after a specified delay.
+  [<CustomOperation("revokedAfter")>]
+  member __.RevokedAfter (state, delay) = Access.revokedAfter delay state
+  /// Automatically revoke the access-controlled function when the specified observable emits a value.
+  [<CustomOperation("revokedWhen")>]
+  member __.RevokedWhen (state, observable) = Access.revokedWhen observable state
+  /// Make the access-controlled function only available during certain dates.
+  [<CustomOperation("duringDates")>]
+  member __.DuringDates (state, min, max) = Access.duringDates min max state
+  /// Make the access-controlled function only available during certain hours.
+  [<CustomOperation("duringHours")>]
+  member __.DuringHours (state, min, max) = Access.duringHours min max state
+  /// Adds input-validation to the access-controlled function.
+  [<CustomOperation("satisfy")>]
+  member __.Satisfy (state, spec) = Access.satisfy spec state
+  /// Makes the access-controlled function dependent in which role the current user is.
+  [<CustomOperation("inRole")>]
+  member __.InRole (state, roleName, currentUser) = Access.inRole roleName currentUser state
 
 /// Exposure values for the `Access<_, _>` type.
 [<AutoOpen>]
@@ -253,78 +291,129 @@ exception AccessFailureException of string
 /// Result type when the access-controlled function is evaluated.
 [<Struct; NoEquality; NoComparison>]
 type AccessResult<'T> internal (result : Result<'T, string list>) =
-    /// Gets a value indicating whether or not the access-controlled function was evaluated successfully.
-    member __.Successful = Result.isOk result 
-    /// Gets the series of errors that occured during the evaluation of the access-controlled function.
-    member __.Errors =
-      match result with
-      | Ok _ -> [||]
-      | Error errs -> Array.ofList errs
-    /// Gets the result of the access-controlled function if the function evaluated successfully, 
-    /// otherwise an `AccessFailureException` is thrown.
-    member __.Value = 
-      result
-      |> Result.getOrElse (fun errs ->
-        let errors = Environment.NewLine + String.Join (Environment.NewLine + " -> ", Array.ofList errs)
-        let message = sprintf "Access to resource failed: %s" errors
-        raise (AccessFailureException message))
-    /// Tries to get the result of the access-controlled function based on whether the function evaluated successfully.
-    member __.TryGetValue (output : outref<'T>) =
-      match result with
-      | Ok x -> output <- x; true
-      | _ -> output <- Unchecked.defaultof<'T>; false
-    /// Transforms the access result to an optional instance.
-    member __.ToMaybe () = Maybe.OfOption (Result.toOption result)
-    /// Transfroms the access result to an abstracted outcome result.
-    member __.ToOutcome () = Outcome.OfFSharpResult (Result.mapError Array.ofList result)
-    static member op_Implicit (result : AccessResult<'T>) = result.ToOutcome ()
+  /// Gets a value indicating whether or not the access-controlled function was evaluated successfully.
+  member __.Successful = Result.isOk result 
+  /// Gets the series of errors that occured during the evaluation of the access-controlled function.
+  member __.Errors =
+    match result with
+    | Ok _ -> [||]
+    | Error errs -> Array.ofList errs
+  /// Gets the result of the access-controlled function if the function evaluated successfully, 
+  /// otherwise an `AccessFailureException` is thrown.
+  member __.Value = 
+    result
+    |> Result.getOrElse (fun errs ->
+      let errors = Environment.NewLine + String.Join (Environment.NewLine + " -> ", Array.ofList errs)
+      let message = sprintf "Access to resource failed: %s" errors
+      raise (AccessFailureException message))
+  /// Tries to get the result of the access-controlled function based on whether the function evaluated successfully.
+  member __.TryGetValue (output : outref<'T>) =
+    match result with
+    | Ok x -> output <- x; true
+    | _ -> output <- Unchecked.defaultof<'T>; false
+  /// Transforms the access result to an optional instance.
+  member __.ToMaybe () = Maybe.OfOption (Result.toOption result)
+  /// Transfroms the access result to an abstracted outcome result.
+  member __.ToOutcome () = Outcome.OfFSharpResult (Result.mapError Array.ofList result)
+  /// Creates a successful access result instance.
+  static member Success (value : 'T) = AccessResult<'T> (Ok value)
+  /// Creates a failure access result instance.
+  static member Failure (errors : IEnumerable<string>) =
+    if isNull errors then nullArg "errors"
+    if Seq.exists isNull errors then invalidArg "errors" "contains one or more 'null' error entries"
+    AccessResult (Error (List.ofSeq errors))
+  static member op_Implicit (result : AccessResult<'T>) = result.ToOutcome ()
 
 /// Extensions on the `Access<_, _>` type to use in C# context.
 [<Extension>]
 type AccessExtensions () =
-    /// Adds a requirement to the access-controlled function to only allow files with a certain extension.
-    [<Extension>]
-    static member FileExtension (access, fileExtension) =
-      if fileExtension = null then nullArg "fileExtension"
-      Access.fileExtension fileExtension access
-    /// Adds a requirement to the access-controlled function to only allow files with certain extensions.
-    [<Extension>]
-    static member FileExtensions (access, [<ParamArray>] fileExtensions) =
-      if fileExtensions = null then nullArg "fileExtensions"
-      Access.fileExtensions (List.ofArray fileExtensions) access
-    /// Let the access-controlled function only evaluate once.
-    [<Extension>]
-    static member Once (acc : Access<'T, 'TResult>) = Access.once acc
-    /// Let the access-controlled function only evaluate two times.
-    [<Extension>]
-    static member Twice (acc : Access<'T, 'TResult>) = Access.twice acc
-    /// Let the access-controlled function only evaluate a certain amount of times.
-    [<Extension>]
-    static member Times (acc : Access<'T, 'TResult>, count) = Access.times count acc
-    /// Make the access-controlled function revokable.
-    [<Extension>]
-    static member Revokable (acc : Access<'T, 'TResult>) = Access.revokable acc
-    /// Automatically revoke the access-controlled after a specified delay.
-    [<Extension>]
-    static member RevokedAfter (acc : Access<'T, 'TResult>, delay) = Access.revokedAfter delay acc
-    /// Automatically revoke the access-controlled function when the specified observable emits a value.
-    [<Extension>]
-    static member RevokedWhen (acc : Access<'T, 'TResult>, observable) = Access.revokedWhen observable acc
-    /// Make the access-controlled function only available during certain dates.
-    [<Extension>]
-    static member During (acc : Access<'T, 'TResult>, min, max) = Access.duringDates min max acc
-    /// Make the access-controlled function only available during certain hours.
-    [<Extension>]
-    static member DuringHours (acc : Access<'T, 'TResult>, min, max) = Access.duringHours min max acc
-    /// Adds input-validation to the access-controlled function.
-    [<Extension>]
-    static member Satisfy (acc : Access<'T, 'TResult>, spec) = Access.satisfy spec acc
-    /// Revokes the access-controlled function.
-    [<Extension>]
-    static member Revoke (acc : Access<'T, 'TResult>) = Option.iter (fun f -> f ()) acc.Revokable
-    /// Evaluate the access-controlled function.
-    [<Extension>]
-    static member Eval (acc : Access<unit, 'TResult>) = Access.eval () acc |> AccessResult<'TResult>
-    /// Evaluate the access-controlled function.
-    [<Extension>]
-    static member Eval (acc : Access<'T, 'TResult>, input : 'T) : AccessResult<'TResult> = Access.eval input acc |> AccessResult<'TResult>
+  /// Adds a requirement to the access-controlled function to only allow files with a certain extension.
+  [<Extension>]
+  static member FileExtension (access, fileExtension) =
+    if fileExtension = null then nullArg "fileExtension"
+    Access.fileExtension fileExtension access
+  /// Adds a requirement to the access-controlled function to only allow files with certain extensions.
+  [<Extension>]
+  static member FileExtensions (access, [<ParamArray>] fileExtensions) =
+    if fileExtensions = null then nullArg "fileExtensions"
+    Access.fileExtensions (List.ofArray fileExtensions) access
+  /// Adds a custom requirement to the access-controlled function.
+  [<Extension>]
+  static member Where (access : Access<'T, 'TResult>, func : Func<'T, bool>, errorMessage) =
+    if isNull func then nullArg "func"
+    if isNull errorMessage then nullArg "errorMessage"
+    Access.filter func.Invoke errorMessage access
+  /// Let the access-controlled function only evaluate once.
+  [<Extension>]
+  static member Once (acc : Access<'T, 'TResult>) = Access.once acc
+  /// Let the access-controlled function only evaluate two times.
+  [<Extension>]
+  static member Twice (acc : Access<'T, 'TResult>) = Access.twice acc
+  /// Let the access-controlled function only evaluate a certain amount of times.
+  [<Extension>]
+  static member Times (acc : Access<'T, 'TResult>, count) = Access.times count acc
+  /// Make the access-controlled function revokable.
+  [<Extension>]
+  static member Revokable (acc : Access<'T, 'TResult>) = Access.revokable acc
+  /// Automatically revoke the access-controlled after a specified delay.
+  [<Extension>]
+  static member RevokedAfter (acc : Access<'T, 'TResult>, delay) = Access.revokedAfter delay acc
+  /// Automatically revoke the access-controlled function when the specified observable emits a value.
+  [<Extension>]
+  static member RevokedWhen (acc : Access<'T, 'TResult>, observable) = Access.revokedWhen observable acc
+  /// Make the access-controlled function only available during certain dates.
+  [<Extension>]
+  static member During (acc : Access<'T, 'TResult>, min, max) = Access.duringDates min max acc
+  /// Make the access-controlled function only available during certain hours.
+  [<Extension>]
+  static member DuringHours (acc : Access<'T, 'TResult>, min, max) = Access.duringHours min max acc
+  /// Adds input-validation to the access-controlled function.
+  [<Extension>]
+  static member Satisfy (acc : Access<'T, 'TResult>, spec) = Access.satisfy spec acc
+  /// Makes the access-controlled function dependent in which role the current user is.
+  [<Extension>]
+  static member InRole (acc : Access<'T, 'TResult>, roleName, currentUser) = Access.inRole roleName currentUser acc
+  /// Revokes the access-controlled function.
+  [<Extension>]
+  static member Revoke (acc : Access<'T, 'TResult>) = Option.iter (fun f -> f ()) acc.Revokable
+  /// Evaluate the access-controlled function.
+  [<Extension>]
+  static member Eval (acc : Access<unit, 'TResult>) = Access.eval () acc |> AccessResult<'TResult>
+  /// Evaluate the access-controlled function.
+  [<Extension>]
+  static member Eval (acc : Access<'T, 'TResult>, input : 'T) : AccessResult<'TResult> = 
+    Access.eval input acc |> AccessResult<'TResult>
+  /// Evaluates the access-controlled function or throw an `AccessFailureException`.
+  [<Extension>]
+  static member EvalOrThrow (acc : Access<'T, 'TResult>, input : 'T) = acc.Eval(input).Value
+  /// Evaluate the access-controlled function asynchronously.
+  [<Extension>]
+  static member EvalAsync (acc : Access<'T, Task<'TResult>>, input : 'T) =
+    async { 
+      match acc.Capability input with
+      | Ok t -> 
+        let! result = Async.AwaitTask t
+        return AccessResult.Success result
+      | Error err -> return AccessResult<'T>.Failure err }
+    |> Async.StartAsTask
+  /// Evaluate the access-controlled function asynchronously.
+  [<Extension>]
+  static member EvalAsync (acc : Access<unit, Task<'TResult>>) = acc.EvalAsync (())
+  /// Evaluate the access-controlled result function asynchronously with a custom access error failures mapping.
+  [<Extension>]
+  static member EvalOutcomeAsync (acc : Access<'T, Task<Outcome<'TResult, 'TError>>>, input : 'T, mapErrors : Func<IEnumerable<string>, 'TError>) =
+    if isNull mapErrors then nullArg "mapErrors"
+    async {
+      match acc.Capability input with
+      | Ok t ->
+        let! result = Async.AwaitTask t
+        if result.IsSuccess 
+        then return Outcome.Success result.Value
+        else return Outcome.Failure result.Error
+      | Error err -> return Outcome.Failure (mapErrors.Invoke err) }
+    |> Async.StartAsTask
+  /// Evaluate the access-controlled result function asynchronously with a custom access error failures mapping.
+  [<Extension>]
+  static member EvalOutcomeAsync (acc : Access<unit, Task<Outcome<'TResult, 'TError>>>, mapErrors : Func<IEnumerable<string>, 'TError>) =
+    acc.EvalOutcomeAsync ((), mapErrors)
+

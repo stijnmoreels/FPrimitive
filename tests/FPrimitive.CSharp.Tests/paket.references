@@ -4,4 +4,5 @@ Newtonsoft.Json.Schema
 group Test
     Xunit
     Xunit.Runner.VisualStudio
+    FsCheck.Xunit
     Microsoft.NET.Test.Sdk

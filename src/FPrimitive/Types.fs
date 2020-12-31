@@ -8,6 +8,12 @@ open System.Runtime.CompilerServices
 open System.Threading
 
 open Microsoft.FSharp.Core
+open System.Threading.Tasks
+open Microsoft.FSharp.Reflection
+open System.Runtime.InteropServices
+open System.Reflection
+open System.Diagnostics
+open System.Text.RegularExpressions
 
 #nowarn "1001"
 
@@ -39,6 +45,17 @@ module Try =
     | Error ex -> raise ex
     | _ -> ()
 
+  /// Get the value of the `Try` or raise the exception.
+  let getOrRaise (r : Try<_>) = Result.either id raise r
+
+  /// Create a `Try` alias when running a function for an exception that satisfied the given exception filter.
+  let createWhen exFilter f x : Try<_> =
+    try Ok (f x)
+    with ex when exFilter ex -> Error ex
+
+  /// Create a `Try` alias when running a function.
+  let create f x = createWhen (fun _ -> true) f x
+
 /// Model representation of a valididated 'T.
 [<Struct>]
 type Valid<'T> =
@@ -64,6 +81,121 @@ type Valid<'T> =
       else Outcome.Failure (messages)
     static member op_Implicit (valid : Valid<'T>) = valid.Value
 
+/// Representation of a 'secure' structure of how an error can be reported.
+/// Explicitly stating what information will be shared with the user.
+type ErrorMessage =
+  private { /// Gets the type of information that the application require from the user.
+            RequiredFromUser : string
+            /// Gets information that should be shared with the user.
+            SharedWithUser : IDictionary<string, string>
+            /// Gets the explanation of how the user should solve the error.
+            ErrorSolving : string } with
+    /// <summary>
+    /// Creates a new instance of the <see cref="ErrorMessage"/> class.
+    /// </summary>
+    /// <param name="requiredFromuser">The explanation of what's required from the user (ex: 'Requires a valid input for person's firstname')</param>
+    /// <param name="sharedWithUser">The collection of values that will be shared with the user, be careful of what's in here.</param>
+    /// <param name="errorSolving">The explanation of how the user can solve the error.</param>
+    /// <exception cref="ArgumentException">Thrown when the <paramref name="requiredFromUser"/> or <paramref name="errorSolving"/> is blank, or the <paramref name="requiredFromUser"/> doesn't conform with the expected format.</exception>
+    /// <exception cref="ArgumentNullException">Thrown when the <paramref name="sharedWithUser"/> is <c>null</c></exception>
+    static member Create (requiredFromUser, sharedWithUser, errorSolving) =
+      if String.IsNullOrWhiteSpace requiredFromUser 
+      then invalidArg "requiredFromUser" "Requires a non-blank explanation of what's' required from the user"
+      if isNull sharedWithUser then nullArg "sharedWithUser"
+      if String.IsNullOrWhiteSpace errorSolving 
+      then invalidArg "errorSolving" "Requires a non-blank explanation of how the user's supposed to sovle the error"
+      if not <| Regex.IsMatch (requiredFromUser, "^[a-zA-Z,\.']+$") 
+      then invalidArg "requiredFromUser" "Requires a 'simple' explenation of the error, containing only a-z & A-Z characthers"
+      { RequiredFromUser = requiredFromUser
+        SharedWithUser = sharedWithUser
+        ErrorSolving = errorSolving }
+    override this.ToString () =
+      sprintf "Required from user: %s%sContext:%A%sHow to solve:%s" 
+        this.RequiredFromUser Environment.NewLine
+        this.SharedWithUser Environment.NewLine
+        this.ErrorSolving
+
+/// Represents a way of a 'secure' application exception 
+/// that explicitly states what information should be shared with the user.
+[<Serializable>]
+type SecureApplicationException =
+  inherit ApplicationException
+  /// Initializes a new instance of the <see cref="SecureApplicationException" /> class.
+  new () = { inherit ApplicationException () }
+  /// <summary>
+  /// Initializes a new instance of the <see cref="SecureApplicationException" /> class.
+  /// </summary>
+  /// <param name="message">The message that describes the exception.</param>
+  new (message) = { inherit ApplicationException (message) }
+  /// <summary>
+  /// Initializes a new instance of the <see cref="SecureApplicationException" /> class.
+  /// </summary>
+  /// <param name="message">The message that describes the exception.</param>
+  /// <param name="innerException">The exception that is the cause of the current exception.</param>
+  new (message, innerException : exn) = { inherit ApplicationException (message, innerException) }
+  /// <summary>
+  /// Initializes a new instance of the <see cref="SecureApplicationException" /> class.
+  /// </summary>
+  /// <param name="requiredFromuser">The explanation of what's required from the user (ex: 'Requires a valid input for person's firstname')</param>
+  /// <param name="sharedWithUser">The collection of values that will be shared with the user, be careful of what's in here.</param>
+  /// <param name="errorSolving">The explanation of how the user can solve the error.</param>
+  /// <param name="innerException">The exception that is the cause of the current exception.</param>
+  /// <exception cref="ArgumentException">Thrown when the <paramref name="requiredFromUser"/> or <paramref name="errorSolving"/> is blank, or the <paramref name="requiredFromUser"/> doesn't conform with the expected format.</exception>
+  /// <exception cref="ArgumentNullException">Thrown when the <paramref name="sharedWithUser"/> is <c>null</c></exception>
+  new (requiredFromUser, sharedWithUser, errorSolving, innerException) =
+    let msg = ErrorMessage.Create (requiredFromUser, sharedWithUser, errorSolving)
+    { inherit ApplicationException (string msg, innerException) }
+  /// <summary>
+  /// Initializes a new instance of the <see cref="SecureApplicationException" /> class.
+  /// </summary>
+  /// <param name="requiredFromuser">The explanation of what's required from the user (ex: 'Requires a valid input for person's firstname')</param>
+  /// <param name="sharedWithUser">The collection of values that will be shared with the user, be careful of what's in here.</param>
+  /// <param name="errorSolving">The explanation of how the user can solve the error.</param>
+  /// <exception cref="ArgumentException">Thrown when the <paramref name="requiredFromUser"/> or <paramref name="errorSolving"/> is blank, or the <paramref name="requiredFromUser"/> doesn't conform with the expected format.</exception>
+  /// <exception cref="ArgumentNullException">Thrown when the <paramref name="sharedWithUser"/> is <c>null</c></exception>
+  new (requiredFromUser, sharedWithUser, errorSolving) =
+    let msg = ErrorMessage.Create (requiredFromUser, sharedWithUser, errorSolving)
+    { inherit ApplicationException (string msg) }
+
+/// Model with operations related to discriminated unions.
+type Union =
+  /// Determines if the given string is a union case entry of the given type.
+  [<CompiledName("IsUnionCase")>]
+  static member isUnionCase<'T> (s : string, [<Optional; DefaultParameterValue(BindingFlags.Default)>] bindingFlags : BindingFlags) =
+    FSharpType.IsUnion (typeof<'T>, bindingFlags)
+    && FSharpType.GetUnionCases (typeof<'T>, bindingFlags)
+       |> Array.exists (fun c -> c.Name = s)
+  /// Converts a string to a discriminated union entry with optional args during creation.
+  static member ofString (s : string, [<Optional; DefaultParameterValue(BindingFlags.Default)>] bindingFlags : BindingFlags, [<ParamArray>] args) =
+    try if FSharpType.IsUnion (typeof<'T>, bindingFlags)
+        then let args = Array.map box<'TArg> args |> Array.ofSeq
+             FSharpType.GetUnionCases (typeof<'T>, bindingFlags)
+             |> Array.filter (fun case -> case.Name = s)
+             |> function
+                  | [|case|] -> Some (FSharpValue.MakeUnion(case, args, bindingFlags) :?> 'T)
+                  |_ -> None
+        else None
+    with _ -> None
+  /// Converts a string to a discriminated union entry with optional args during creation.
+  static member OfString (s : string, [<ParamArray>] args, [<Optional>] bindingFlags : BindingFlags option) =
+    Union.ofString (s, args, bindingFlags) |> Maybe.OfOption
+  /// Validates a string to a discriminated union entry with optional args during creation.
+  [<CompiledName("Create")>]
+  static member create (s : string, [<Optional; DefaultParameterValue(BindingFlags.Default)>] bindingFlags : BindingFlags, [<ParamArray>] args) =
+    let message = "cannot create union case because the input string doesn't represent a union case entry field"
+    Spec.def<string>
+    |> Spec.verify (fun s -> Union.isUnionCase (s, bindingFlags)) message
+    |> Spec.createModelWith (fun x -> Union.ofString (x, bindingFlags, args) |> Option.toResult (Map.create "union" [message])) s
+  /// Validates a string to a discriminated union entry with optional args during creation.
+  static member create (s : string, [<Optional; DefaultParameterValue(BindingFlags.Default)>] bindingFlags : BindingFlags) =
+    Union.create (s, bindingFlags, Array.empty)
+  /// Validates a string to a discriminated union entry with optional args during creation.
+  static member create (s : string, [<ParamArray>] args) =
+    Union.create (s, BindingFlags.Default, args)
+  /// Validates a string to a discriminated union entry with optional args during creation.
+  static member create (s : string) =
+    Union.create (s, BindingFlags.Default, Array.empty)
+
 /// Model representing a sequence of elements with at least a single element.
 [<CompiledName("NonEmptyEnumerable")>]
 type NonEmptySeq<'T> =
@@ -72,33 +204,40 @@ type NonEmptySeq<'T> =
     interface IEnumerable<'T> with
       member this.GetEnumerator () = this.Values.GetEnumerator ()
       member this.GetEnumerator () = this.Values.GetEnumerator () :> IEnumerator
-       
     /// Tries to create a non-empty sequence model of a given sequence.
     static member create (values : 'T seq) = specModel NonEmptySeq values {
       notNull "can't create non-empty sequence because 'null' was passed in"
       nonEmpty "can't create non-empty sequence model of given empty sequence"
+      fornoneNull "can't create non-empty sequence because one or more entries was 'null'"
       cascade FirstFailure }
     /// Tries to create an non-empty sequence model of a given sequence.
-    static member Create (values : 'T seq) =
-        ValidationResult<NonEmptySeq<'T>> (result=NonEmptySeq.create values)
+    static member Create (values : 'T seq) = NonEmptySeq.create values |> ValidationResult<NonEmptySeq<'T>>
 
     /// Projects each element of the non-empty sequence to a new form.
-    member this.Select (selector : Func<_, _>) =
+    member this.Select<'TResult> (selector : Func<'T, 'TResult>) =
       if isNull selector then nullArg "selector"
       Enumerable.Select (this.Values, selector) |> NonEmptySeq
     /// Projects each element of the non-empty sequence to a new non-empty sequence and flattens the resulting non-empty sequences into one non-empty sequence
-    member this.TrySelectMany (selector : Func<_, NonEmptySeq<_>>) =
+    member this.TrySelectMany<'TResult> (selector : Func<'T, NonEmptySeq<'TResult>>) =
       if isNull selector then nullArg "selector"
       Enumerable.SelectMany (this.Values, selector.Invoke >> fun xs -> xs.Values) |> NonEmptySeq.Create
     /// Filters the elements in the non-empty sequence and tries to create a non-empty sequence of the resulting elements.
-    member this.TryWhere (selector : Func<_, _>) =
-      Enumerable.Where (this.Values, selector) |> NonEmptySeq.Create
+    member this.TryWhere (predicate : Func<'T, bool>) =
+      if isNull predicate then nullArg "predicate"
+      Enumerable.Where (this.Values, predicate) |> NonEmptySeq.Create
+    /// Concatenates to non-empty sequences.
+    member this.Concat (other : NonEmptySeq<'T>) =
+      Enumerable.Concat (this.Values, other.Values) |> NonEmptySeq
+    /// Applies a specified function to the corresponding elements of two non-empty sequences, producing a sequences of the results.
+    member this.Zip<'TOther, 'TResult> (other : NonEmptySeq<'TOther>, zipper : Func<'T, 'TOther, 'TResult>) =
+      if isNull zipper then nullArg "zipper"
+      Enumerable.Zip (this.Values, other.Values, zipper) |> NonEmptySeq
 
 /// Model representing a sequence of elements with at least a single element.
 type 'T nonEmptySeq = NonEmptySeq<'T>
 
 /// Model representing a sequence where each element is considered to be unique.
-[<CompiledName("UniqueEnumerable`2")>]
+[<CompiledName("UniqueEnumerable`2"); AllowNullLiteral(false)>]
 type UniqueSeq<'T, 'TKey when 'TKey : equality> internal (values : 'T seq, selectKey) =
   member internal __.values = values
   member internal __.selectKey = selectKey
@@ -116,7 +255,6 @@ type UniqueSeq<'T, 'TKey when 'TKey : equality> internal (values : 'T seq, selec
   /// Tries to create a unique sequence model of the given sequence, 
   /// using the given selector to select the key to compare the elements in the sequence.
   static member createWith selectKey values = specModel (fun x -> UniqueSeq (x, selectKey)) values {
-    notNull "can't create unique sequence model because 'null' was passed in"
     nonEmpty "can't create unique sequence model of given empty sequence"
     fornoneNull "can't create unique sequence when one or more elements are 'null'"
     unique selectKey "can't create unique sequence model since the sequence contains duplicate elements"
@@ -150,7 +288,7 @@ type UniqueSeq<'T, 'TKey when 'TKey : equality> internal (values : 'T seq, selec
   member __.ToDictionary () = values.ToDictionary (Func<_, _> selectKey)
 
 /// Model representing a sequence where each element is considered to be unique.
-[<CompiledName("UniqueEnumerable`1")>]
+[<CompiledName("UniqueEnumerable`1"); AllowNullLiteral(false)>]
 type UniqueSeq<'T when 'T : equality> (values) = 
   inherit UniqueSeq<'T, 'T> (values, id)
   /// Tries to create a unique sequence model of the given sequence
@@ -253,6 +391,9 @@ module Seq =
   let tryFilter f (xs : NonEmptySeq<_>) =
     Seq.filter f xs |> NonEmptySeq.create
 
+  /// Applies a specified function to the corresponding elements of two non-empty sequences, producing a sequences of results.
+  let zipNonEmpty (xs : NonEmptySeq<_>) ys f = xs.Zip (ys, f)
+
 /// Exception that gets thrown when a `ReadOnce<_>` instance was being read more than once.
 exception AlreadyReadException of string
 
@@ -287,33 +428,162 @@ module ReadOnce =
   let tryGetValue (x : ReadOnce<_>) = x.tryGetValue ()
   /// Tries to read the read-once value.
   let tryGetValueResult x error = tryGetValue x |> Result.ofOption error
+  /// Tries to read the read-once value.
+  let tryEvalFunc (readOnce : ReadOnce<('a -> 'b)>) (x : 'a) = 
+    readOnce.tryGetValue () |> Option.map (fun f -> f x)
+  /// Tries to read the read-once value.
+  let tryEvalFuncAsync (readOnce : ReadOnce<('a -> Async<'b>)>) (x : 'a) = async {
+    match readOnce.tryGetValue () with
+    | Some f -> let! result = f x
+                return Some result
+    | None -> return None }
+
+type ReadOnceExtensions =
+  ///Tries to reads the read-once function or return `Maybe<>.Nothing`.
+  static member TryEvalFunction (readOnce : ReadOnce<Func<'T, 'TResult>>) (x : 'T) =
+    match readOnce.tryGetValue () with
+    | Some f -> Maybe.Just (f.Invoke x)
+    | None -> Maybe.Nothing ()
+  ///Tries to reads the read-once function or return `Maybe<>.Nothing`.
+  static member TryEvalFunctionAsync (readOnce : ReadOnce<Func<'T, Task<'TResult>>>) (x : 'T) =
+    async { match readOnce.tryGetValue () with
+            | Some f -> let! result = Async.AwaitTask (f.Invoke x)
+                        return Maybe.Just result
+            | None -> return Maybe.Nothing () }
+    |> Async.StartAsTask
 
 /// Exception that gets thrown when a `Write<_>` instance was being written more than once.
 exception AlreadyWrittenException of string
 
 /// Representation of a value that can only be written once.
-type WriteOnce<'T> (write : 'T -> unit) =
+type WriteOnce<'T, 'TResult> (write : 'T -> 'TResult) =
   /// Creates a representation of a value that can only be written once.
-  new (writeAction : Action<'T>) = WriteOnce<'T> (write=writeAction.Invoke)
+  new (writeFunc : Func<'T, 'TResult>) = WriteOnce<'T, 'TResult> (write=writeFunc.Invoke)
 
-  member val private Fun = ref (write :> obj)
+  member val internal Fun = ref (write :> obj)
   /// Tries to write the value to the write-once function.
-  [<CompiledName("TrySetValue")>]
   member this.trySetValue (value) =
     let f = Interlocked.Exchange (this.Fun, null)
-    if f <> null then (f :?> 'T -> unit) value; true
-    else false
+    if f <> null then Some <| (f :?> 'T -> 'TResult) value
+    else None
+  /// Tries to write the value to the write-once function.
+  member this.TrySetValue (value) = 
+    this.trySetValue value |> Maybe.OfOption
+  /// Tries to write the value to the write-once function.
+  member this.TrySetValue (value, result : outref<'TResult>) =
+    match this.trySetValue value with
+    | Some x -> result <- x; true
+    | None -> result <- Unchecked.defaultof<'TResult>; false
   /// Write the value to the write-once function and throws an 'AlreadyWrittenException` when the value was already written.
   member this.SetValue (value) =
-    if not <| this.trySetValue value
-    then raise (AlreadyWrittenException (sprintf "The value of type %s has already been written" typeof<'T>.Name))
+    match this.trySetValue value with
+    | Some result -> result
+    | None -> raise (AlreadyWrittenException (sprintf "The value of type %s has already been written" typeof<'T>.Name))
+
+/// Representation of a value that can only be written once.
+type WriteOnce<'T> (write : 'T -> unit) =
+  inherit WriteOnce<'T, unit> (write=write)
+  /// Creates a representation of a value that can only be written once.
+  new (writeAction : Action<'T>) = WriteOnce<'T> (write=writeAction.Invoke)
+  /// Tries to write the value to the write-once function.
+  [<CompiledName("TrySetValue")>]
+  member __.trySetValue (value) =
+    let f = Interlocked.Exchange (base.Fun, null)
+    if f <> null then (f :?> 'T -> unit) value; true
+    else false
+
+/// Representation of a value that can only be written once.
+type WriteOnceAsync<'T, 'TResult> (write : 'T -> Async<'TResult>) =
+  /// Creates a representation of a value that can only be written once.
+  new (writeFunc : Func<'T, Task<'TResult>>) = WriteOnceAsync<'T, 'TResult> (write=fun x -> writeFunc.Invoke x |> Async.AwaitTask)
+  member val private Fun = ref (write :> obj)
+  /// Tries to write the value to the write-once function.
+  member this.trySetValueAsync (value) = async {
+    let f = Interlocked.Exchange (this.Fun, null)
+    if f <> null 
+    then let! result = (f :?> 'T -> Async<'TResult>) value
+         return Some result
+    else return None }
+  /// Tries to write the value to the write-once function.
+  member this.TrySetValueAsync (value) = 
+    async { let! result = this.trySetValueAsync value 
+            return Maybe.OfOption result } 
+    |> Async.StartAsTask
+  /// Write the value to the write-once function and returns and error when the value was already written.
+  member this.setValueAsync (value) = async {
+    let! result = this.trySetValueAsync value
+    match result with
+    | Some x -> return Ok x
+    | None -> return Error (sprintf "The value of type %s has already been written" typeof<'T>.Name) }
+  /// Write the value to the write-once function and returns an error when the value was already written.
+  member this.SetValueAsync (value) =
+    async { let! result = this.setValueAsync value
+            return Outcome.OfFSharpResult result } 
+    |> Async.StartAsTask
+
+/// Representation of a value that can only be written once.
+type WriteOnceAsync<'T> (write : 'T -> Async<unit>) =
+  inherit WriteOnceAsync<'T, unit> (write=write)
+  /// Creates a representation of a value that can only be written once.
+  new (writeFunc : Func<'T, Task>) = WriteOnceAsync<'T> (write=fun x -> writeFunc.Invoke x |> Async.AwaitTask)
+  member val private Fun = ref (write :> obj)
+  /// Tries to write the value to the write-once function.
+  member this.trySetValueAsync (value) = async {
+    let f = Interlocked.Exchange (this.Fun, null)
+    if f <> null 
+    then do! (f :?> 'T -> Async<unit>) value
+         return true
+    else return false }
+  /// Tries to write the value to the write-once function.
+  member this.TrySetValueAsync (value) = 
+    this.trySetValueAsync value |> Async.StartAsTask
 
 /// Representation of a function that can be written once.
 module WriteOnce =
   /// Creates a representation of a value that can only be written once.
-  let create f = WriteOnce (write=f)
+  let create f = WriteOnce<_> (write=f)
+  /// Creates a representation of a value that can only be written once.
+  let createWithResult f = WriteOnce<_, _> (write=f)
+  /// Creates a representation of a value that can only be written once.
+  let createAsync f = WriteOnceAsync<_> (write=f)
+  /// Creates a representation of a value that can only be written once.
+  let createAsyncWithResult f = WriteOnceAsync<_, _> (write=f)
   /// Tries to write the value to the write-once function.
   let trySetValue value (x : WriteOnce<_>) = x.trySetValue value
+  /// Tries to write the value to the write-once function.
+  let trySetValueWithResult value (x : WriteOnce<_, _>) = x.trySetValue value
+  /// Tries to write the value to the write-once function.
+  let trySetValueAsync value (x : WriteOnceAsync<_>) = x.trySetValueAsync value
+  /// Tries to write the value to the write-once function.
+  let trySetValueAsyncWithResult value (x : WriteOnceAsync<_, _>) = x.trySetValueAsync value
+
+/// Exception thrown when an instance of the `SetOnce<_>` type tries to set the value more than once.
+exception AlreadySetException of string
+
+/// Represents a model that can set a value once.
+type SetOnce<'T when 'T : not struct> (?valueName, ?defaultValue) =
+  let valueName = defaultArg valueName "set-once value"
+  member val private value = defaultArg defaultValue Unchecked.defaultof<'T> with get, set
+  member val private CanSet = ref (true :> obj)
+  /// Tries to set the value on this set-once model.  
+  member this.trySetValue (value) =
+    if Interlocked.Exchange (this.CanSet, false) :?> bool
+    then this.value <- value; Some ()
+    else None
+  /// Tries to set the value on this set-once model.
+  member this.TrySetValue (value) =
+    this.trySetValue value |> Maybe.OfOption
+  /// Tries to set the value on this set-once model.
+  member this.TrySetValue (value, result : outref<_>) =
+    match this.trySetValue value with
+    | Some _ -> result <- true
+    | None -> result <- false
+  /// Gets or sets the set-once value. Remark that the 'set' will throw an `AlreadySetException` when the value was already setted.
+  member this.Value
+    with get () = this.value
+    and set v = 
+      this.trySetValue v
+      |> Option.iterNone (fun () -> raise (AlreadySetException (sprintf "The '%s' is already set and can't be setted more than once" valueName)))
 
 /// Representation of a value that can be disposed/removed any time.
 type Disposable<'a> (value : 'a) =

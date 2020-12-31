@@ -33,8 +33,6 @@
         <div class="span9" id="main">
           
 
-
-
 <h1>SpecExposure</h1>
 <p>
   <span>Namespace: FPrimitive</span><br />
@@ -59,16 +57,15 @@
     <tbody>
       <tr>
         <td class="member-name">
-
-          <code onmouseout="hideTip(event, '170', 170)" onmouseover="showTip(event, '170', 170)">
+          <code onmouseout="hideTip(event, '207', 207)" onmouseover="showTip(event, '207', 207)">
             spec
           </code>
-          <div class="tip" id="170">
+          <div class="tip" id="207">
             <strong>Signature:</strong> SpecBuilder&lt;&#39;a,Spec&lt;&#39;a&gt;&gt;<br />
                           <strong>Type parameters:</strong> 'a                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L871-871" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L1010-1010" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -79,16 +76,15 @@
       </tr>
       <tr>
         <td class="member-name">
-
-          <code onmouseout="hideTip(event, '171', 171)" onmouseover="showTip(event, '171', 171)">
+          <code onmouseout="hideTip(event, '208', 208)" onmouseover="showTip(event, '208', 208)">
             specInvariant spec1 spec2
           </code>
-          <div class="tip" id="171">
-            <strong>Signature:</strong> spec1:Spec&lt;&#39;?10336&gt; -&gt; spec2:Spec&lt;&#39;?10337&gt; -&gt; SpecBuilder&lt;(&#39;?10336 * &#39;?10337),Spec&lt;&#39;?10336 * &#39;?10337&gt;&gt;<br />
-                          <strong>Type parameters:</strong> '?10336, '?10337                      </div>
+          <div class="tip" id="208">
+            <strong>Signature:</strong> spec1:Spec&lt;&#39;?10513&gt; -&gt; spec2:Spec&lt;&#39;?10514&gt; -&gt; SpecBuilder&lt;(&#39;?10513 * &#39;?10514),Spec&lt;&#39;?10513 * &#39;?10514&gt;&gt;<br />
+                          <strong>Type parameters:</strong> '?10513, '?10514                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L883-883" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L1024-1024" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -99,16 +95,15 @@
       </tr>
       <tr>
         <td class="member-name">
-
-          <code onmouseout="hideTip(event, '172', 172)" onmouseover="showTip(event, '172', 172)">
+          <code onmouseout="hideTip(event, '209', 209)" onmouseover="showTip(event, '209', 209)">
             specModel createModel value
           </code>
-          <div class="tip" id="172">
+          <div class="tip" id="209">
             <strong>Signature:</strong> createModel:(&#39;a -&gt; &#39;b) -&gt; value:&#39;a -&gt; SpecBuilder&lt;&#39;a,Result&lt;&#39;b,ErrorsByTag&gt;&gt;<br />
                           <strong>Type parameters:</strong> 'a, 'b                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L879-879" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L1020-1020" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -119,16 +114,34 @@
       </tr>
       <tr>
         <td class="member-name">
+          <code onmouseout="hideTip(event, '210', 210)" onmouseover="showTip(event, '210', 210)">
+            specModelIf filter createModel value
+          </code>
+          <div class="tip" id="210">
+            <strong>Signature:</strong> filter:(obj -&gt; &#39;a option) -&gt; createModel:(&#39;a -&gt; &#39;b) -&gt; value:obj -&gt; SpecBuilder&lt;&#39;a,Result&lt;&#39;b option,ErrorsByTag&gt;&gt;<br />
+                          <strong>Type parameters:</strong> 'a, 'b                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L1026-1026" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Makes an optional creation of a domain model using an optional specification that only happens when the given filter succeeds.</p>
 
-          <code onmouseout="hideTip(event, '173', 173)" onmouseover="showTip(event, '173', 173)">
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+          <code onmouseout="hideTip(event, '211', 211)" onmouseover="showTip(event, '211', 211)">
             specModelWith createModel value
           </code>
-          <div class="tip" id="173">
+          <div class="tip" id="211">
             <strong>Signature:</strong> createModel:(&#39;a -&gt; Result&lt;&#39;b,ErrorsByTag&gt;) -&gt; value:&#39;a -&gt; SpecBuilder&lt;&#39;a,Result&lt;&#39;b,ErrorsByTag&gt;&gt;<br />
                           <strong>Type parameters:</strong> 'a, 'b                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L881-881" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L1022-1022" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -139,16 +152,15 @@
       </tr>
       <tr>
         <td class="member-name">
-
-          <code onmouseout="hideTip(event, '174', 174)" onmouseover="showTip(event, '174', 174)">
+          <code onmouseout="hideTip(event, '212', 212)" onmouseover="showTip(event, '212', 212)">
             specOption(value)
           </code>
-          <div class="tip" id="174">
+          <div class="tip" id="212">
             <strong>Signature:</strong> value:&#39;a -&gt; SpecBuilder&lt;&#39;a,&#39;a option&gt;<br />
                           <strong>Type parameters:</strong> 'a                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L875-875" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L1016-1016" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -159,16 +171,15 @@
       </tr>
       <tr>
         <td class="member-name">
-
-          <code onmouseout="hideTip(event, '175', 175)" onmouseover="showTip(event, '175', 175)">
+          <code onmouseout="hideTip(event, '213', 213)" onmouseover="showTip(event, '213', 213)">
             specResult(value)
           </code>
-          <div class="tip" id="175">
+          <div class="tip" id="213">
             <strong>Signature:</strong> value:&#39;a -&gt; SpecBuilder&lt;&#39;a,Result&lt;&#39;a,ErrorsByTag&gt;&gt;<br />
                           <strong>Type parameters:</strong> 'a                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L873-873" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L1012-1012" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -179,16 +190,34 @@
       </tr>
       <tr>
         <td class="member-name">
+          <code onmouseout="hideTip(event, '214', 214)" onmouseover="showTip(event, '214', 214)">
+            specResultIf filter value
+          </code>
+          <div class="tip" id="214">
+            <strong>Signature:</strong> filter:(obj -&gt; &#39;a option) -&gt; value:obj -&gt; SpecBuilder&lt;&#39;a,Result&lt;&#39;a option,ErrorsByTag&gt;&gt;<br />
+                          <strong>Type parameters:</strong> 'a                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L1014-1014" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Computation builder to build an <code>Spec&lt;_&gt;</code> instance that gets validated to a <code>Result&lt;_ option, string list&gt;</code> when runned and the filter succeeds.</p>
 
-          <code onmouseout="hideTip(event, '176', 176)" onmouseover="showTip(event, '176', 176)">
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+          <code onmouseout="hideTip(event, '215', 215)" onmouseover="showTip(event, '215', 215)">
             specUntrust(untrusted)
           </code>
-          <div class="tip" id="176">
+          <div class="tip" id="215">
             <strong>Signature:</strong> untrusted:Untrust&lt;&#39;a&gt; -&gt; SpecBuilder&lt;&#39;a,Result&lt;&#39;a,ErrorsByTag&gt;&gt;<br />
                           <strong>Type parameters:</strong> 'a                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L877-877" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Spec.fs#L1018-1018" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>

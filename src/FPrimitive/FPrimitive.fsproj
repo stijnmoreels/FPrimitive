@@ -7,6 +7,10 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include="paket.references" />
+    <Compile Include="..\..\paket-files\stijnmoreels\System\String.fs">
+      <Paket>True</Paket>
+      <Link>paket-files/String.fs</Link>
+    </Compile>
     <Compile Include="..\..\paket-files\stijnmoreels\System\Outcome.fs">
       <Paket>True</Paket>
       <Link>Outcome.fs</Link>

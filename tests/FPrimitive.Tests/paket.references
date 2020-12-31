@@ -4,3 +4,4 @@ group Test
     Expecto
     Expecto.BenchmarkDotNet
     Expecto.FsCheck
+    Fare

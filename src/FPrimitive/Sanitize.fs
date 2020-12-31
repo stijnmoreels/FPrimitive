@@ -5,6 +5,7 @@ open System.Collections.Generic
 open System.Text
 open System.Text.RegularExpressions
 open System.Runtime.CompilerServices
+open System.Net
 
 /// Sanitization operations on a string, filtering the untrusted user-input before any parsing, syntax, deserialization, or validation.
 module Sanitize =
@@ -129,7 +130,10 @@ module Sanitize =
   [<CompiledName("ASCII")>]
   let ascii (input : string) =
     let input = empty_when_null input
-    Regex.Replace (input, @"[^\u0020-\u007E]", String.Empty);
+    Regex.Replace (input, @"[^\x00-\x7F]", String.Empty);
+  /// Converts a string to a HTML-encoded string.
+  let htmlEncode (input : string) =
+    WebUtility.HtmlEncode input
   /// Transforms the input to a lower-case representation.
   [<CompiledName("ToLower")>]
   let lower (input : string) =
@@ -242,3 +246,5 @@ type SanitizeExtensions private () =
   [<Extension>] static member Header (input, value) = Sanitize.header value input
   /// Adds trailer if the input doesn't end with one.
   [<Extension>] static member Trailer (input, value) = Sanitize.trailer value input
+  /// Filters out only ASCII characters in the given input.
+  [<Extension>] static member Ascii (input) = Sanitize.ascii input

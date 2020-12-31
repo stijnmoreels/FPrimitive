@@ -1,9 +1,12 @@
-version 5.226.0
+version 5.245.1
 source https://www.nuget.org/api/v2
 
 nuget FSharp.Core
 nuget Newtonsoft.Json.Schema = 3.0.10
+nuget System.ComponentModel.Annotations
+nuget System.Text.Json
 
+github stijnmoreels/System String.fs
 github stijnmoreels/System Time.fs
 github stijnmoreels/System Option.fs
 github stijnmoreels/System Result.fs
@@ -17,8 +20,10 @@ group Test
     nuget Expecto.FsCheck
     nuget Expecto.BenchmarkDotNet
     nuget Argu
+    nuget Fare
     
     nuget Xunit
+    nuget FsCheck.Xunit
     nuget Xunit.Runner.VisualStudio
     nuget Microsoft.NET.Test.Sdk
 
@@ -43,5 +48,5 @@ group Formatting
     source https://nuget.org/api/v2
     source https://ci.appveyor.com/nuget/fsharp-formatting
 
-    nuget FSharp.Formatting prerelease
-    nuget FSharp.Formatting.CommandTool prerelease
+    nuget FSharp.Formatting
+    nuget FSharp.Formatting.CommandTool

@@ -33,8 +33,6 @@
         <div class="span9" id="main">
           
 
-
-
 <h1>WriteOnce</h1>
 <p>
   <span>Namespace: FPrimitive</span><br />
@@ -54,16 +52,15 @@
     <tbody>
       <tr>
         <td class="member-name">
-
-          <code onmouseout="hideTip(event, '183', 183)" onmouseover="showTip(event, '183', 183)">
+          <code onmouseout="hideTip(event, '225', 225)" onmouseover="showTip(event, '225', 225)">
             create(f)
           </code>
-          <div class="tip" id="183">
-            <strong>Signature:</strong> f:(&#39;?9708 -&gt; unit) -&gt; WriteOnce&lt;&#39;?9708&gt;<br />
-                          <strong>Type parameters:</strong> '?9708                      </div>
+          <div class="tip" id="225">
+            <strong>Signature:</strong> f:(&#39;?9780 -&gt; unit) -&gt; WriteOnce&lt;&#39;?9780&gt;<br />
+                          <strong>Type parameters:</strong> '?9780                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Types.fs#L314-314" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Types.fs#L544-544" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -74,16 +71,129 @@
       </tr>
       <tr>
         <td class="member-name">
-
-          <code onmouseout="hideTip(event, '184', 184)" onmouseover="showTip(event, '184', 184)">
-            trySetValue value x
+          <code onmouseout="hideTip(event, '226', 226)" onmouseover="showTip(event, '226', 226)">
+            createAsync(f)
           </code>
-          <div class="tip" id="184">
-            <strong>Signature:</strong> value:&#39;?9710 -&gt; x:WriteOnce&lt;&#39;?9710&gt; -&gt; bool<br />
-                          <strong>Type parameters:</strong> '?9710                      </div>
+          <div class="tip" id="226">
+            <strong>Signature:</strong> f:(&#39;?9785 -&gt; Async&lt;unit&gt;) -&gt; WriteOnceAsync&lt;&#39;?9785&gt;<br />
+                          <strong>Type parameters:</strong> '?9785                      </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Types.fs#L316-316" class="github-link">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Types.fs#L548-548" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Creates a representation of a value that can only be written once.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+          <code onmouseout="hideTip(event, '227', 227)" onmouseover="showTip(event, '227', 227)">
+            createAsyncWithResult(f)
+          </code>
+          <div class="tip" id="227">
+            <strong>Signature:</strong> f:(&#39;?9787 -&gt; Async&lt;&#39;?9788&gt;) -&gt; WriteOnceAsync&lt;&#39;?9787,&#39;?9788&gt;<br />
+                          <strong>Type parameters:</strong> '?9787, '?9788                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Types.fs#L550-550" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Creates a representation of a value that can only be written once.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+          <code onmouseout="hideTip(event, '228', 228)" onmouseover="showTip(event, '228', 228)">
+            createWithResult(f)
+          </code>
+          <div class="tip" id="228">
+            <strong>Signature:</strong> f:(&#39;?9782 -&gt; &#39;?9783) -&gt; WriteOnce&lt;&#39;?9782,&#39;?9783&gt;<br />
+                          <strong>Type parameters:</strong> '?9782, '?9783                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Types.fs#L546-546" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Creates a representation of a value that can only be written once.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+          <code onmouseout="hideTip(event, '229', 229)" onmouseover="showTip(event, '229', 229)">
+            trySetValue value x
+          </code>
+          <div class="tip" id="229">
+            <strong>Signature:</strong> value:&#39;?9790 -&gt; x:WriteOnce&lt;&#39;?9790&gt; -&gt; bool<br />
+                          <strong>Type parameters:</strong> '?9790                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Types.fs#L552-552" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Tries to write the value to the write-once function.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+          <code onmouseout="hideTip(event, '230', 230)" onmouseover="showTip(event, '230', 230)">
+            trySetValueAsync value x
+          </code>
+          <div class="tip" id="230">
+            <strong>Signature:</strong> value:&#39;?9795 -&gt; x:WriteOnceAsync&lt;&#39;?9795&gt; -&gt; Async&lt;bool&gt;<br />
+                          <strong>Type parameters:</strong> '?9795                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Types.fs#L556-556" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Tries to write the value to the write-once function.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+          <code onmouseout="hideTip(event, '231', 231)" onmouseover="showTip(event, '231', 231)">
+            trySetValueAsyncWithResult value x
+          </code>
+          <div class="tip" id="231">
+            <strong>Signature:</strong> value:&#39;?9797 -&gt; x:WriteOnceAsync&lt;&#39;?9797,&#39;?9798&gt; -&gt; Async&lt;&#39;?9798 option&gt;<br />
+                          <strong>Type parameters:</strong> '?9797, '?9798                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Types.fs#L558-558" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Tries to write the value to the write-once function.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+          <code onmouseout="hideTip(event, '232', 232)" onmouseover="showTip(event, '232', 232)">
+            trySetValueWithResult value x
+          </code>
+          <div class="tip" id="232">
+            <strong>Signature:</strong> value:&#39;?9792 -&gt; x:WriteOnce&lt;&#39;?9792,&#39;?9793&gt; -&gt; &#39;?9793 option<br />
+                          <strong>Type parameters:</strong> '?9792, '?9793                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/stijnmoreels/FPrimitive/tree/master/src/FPrimitive/Types.fs#L554-554" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>

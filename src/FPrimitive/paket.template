@@ -1,6 +1,6 @@
 type file
 id FPrimitive
-version 3.0.0
+version 3.0.1
 title FPrimitive
 summary .NET project to help developers build a correct and more secure domain model.
 description .NET project to help developers build a correct and more secure domain model by providing building blocks, standard types and trust boundaries.
@@ -19,4 +19,8 @@ releaseNotes
 files
     bin/Release/netstandard2.0/*.dll ==> lib/netstandard2.0
     bin/Release/netstandard2.0/*.xml ==> lib/netstandard2.0
-dependencies FSharp.Core >= 4.7
+dependencies
+    FSharp.Core >= 4.7.2
+    FSharp.Core >= 4.7.2
+    FSharp.Core >= 4.7.2
+    FSharp.Core >= 4.7.2
