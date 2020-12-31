@@ -1,4 +1,4 @@
-version 5.245.1
+version 5.249.0
 source https://www.nuget.org/api/v2
 
 nuget FSharp.Core = 4.7.0
@@ -47,5 +47,5 @@ group Formatting
     source https://nuget.org/api/v2
     source https://ci.appveyor.com/nuget/fsharp-formatting
 
-    nuget FSharp.Formatting
-    nuget FSharp.Formatting.CommandTool
+    nuget FSharp.Formatting = 7.2.9
+    nuget FSharp.Formatting.CommandTool = 7.2.9
