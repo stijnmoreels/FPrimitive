@@ -65,7 +65,7 @@ namespace FPrimitive.CSharp.Tests
             return Prop.ForAll(emptyOrNotEmpty.ToArbitrary(), target =>
             {
                 Spec<string> spec = Spec.Of<string>().NotNullOrEmpty("should not be null or empty");
-                return spec.ToProperty(target, !String.IsNullOrEmpty(target));
+                return spec.ToProperty(target, !string.IsNullOrEmpty(target));
             });
         }
 
@@ -73,7 +73,7 @@ namespace FPrimitive.CSharp.Tests
         public Property NotNullOrWhiteSpace()
         {
             Gen<string> nonEmptyString = Arb.Generate<NonEmptyString>().Select(x => x.Get);
-            Gen<string> whiteSpace = Arb.Generate<PositiveInt>().Select(x => String.Join("", Enumerable.Repeat(" ", x.Get)));
+            Gen<string> whiteSpace = Arb.Generate<PositiveInt>().Select(x => string.Join("", Enumerable.Repeat(" ", x.Get)));
             Gen<string> genString = nonEmptyString.Or(whiteSpace).OrNull();
 
             Gen<Func<Spec<string>>> genSpec = Gen.Constant<Func<Spec<string>>>(() => Spec.Of<string>().NotNullOrWhiteSpace("should not be null or whitespace"))
@@ -83,7 +83,7 @@ namespace FPrimitive.CSharp.Tests
             return Prop.ForAll(genString.ToArbitrary(), genSpec.ToArbitrary(), (target, getSpec) =>
             {
                 Spec<string> spec = getSpec();
-                return spec.ToProperty(target, !String.IsNullOrWhiteSpace(target));
+                return spec.ToProperty(target, !string.IsNullOrWhiteSpace(target));
             });
         }
 
@@ -195,7 +195,7 @@ namespace FPrimitive.CSharp.Tests
         public Property String_Contains(NonEmptyString substring, string remaining)
         {
             Gen<string> gen = Gen.Shuffle(new[] { substring.Get, remaining })
-               .Select(strings => String.Join(String.Empty, strings))
+               .Select(strings => string.Join(string.Empty, strings))
                .Or(Arb.Generate<string>())
                .Or(Gen.Constant(substring.Get));
 
@@ -210,7 +210,7 @@ namespace FPrimitive.CSharp.Tests
         public Property String_NotContains(NonEmptyString substring, NonNull<string> remaining)
         {
             Gen<string> gen = Gen.Shuffle(new[] { substring.Get, remaining.Get })
-               .Select(strings => String.Join(String.Empty, strings))
+               .Select(strings => string.Join(string.Empty, strings))
                .Or(Arb.Generate<NonNull<string>>().Select(s => s.Get))
                .Or(Gen.Constant(substring.Get));
 
@@ -226,9 +226,9 @@ namespace FPrimitive.CSharp.Tests
         {
             IEnumerable<string> substrings = nonEmptySubstrings.Get.Select(s => s.Get);
             Gen<string> gen = Gen.Shuffle(substrings.Append(remaining.Get))
-               .Select(strings => String.Join(String.Empty, strings))
+               .Select(strings => string.Join(string.Empty, strings))
                .Or(Arb.Generate<NonNull<string>>().Select(s => s.Get))
-               .Or(Gen.Constant(String.Join(String.Empty, substrings)));
+               .Or(Gen.Constant(string.Join(string.Empty, substrings)));
 
             return Prop.ForAll(gen.ToArbitrary(), target =>
             {
@@ -348,7 +348,7 @@ namespace FPrimitive.CSharp.Tests
             Spec<string[]> spec = Spec.Of<string[]>()
                 .Structure(new Func<string, bool>[]
                 {
-                    s => s != String.Empty,
+                    s => s != string.Empty,
                     s => s != "some string",
                 }, "should match structure");
 
@@ -481,7 +481,7 @@ namespace FPrimitive.CSharp.Tests
         {
             Gen<(int min, int max)> gen = 
                 Gen.Choose(1, s.Get.Length)
-                   .SelectMany(min => Gen.Choose(min, Int32.MaxValue).Select(max => (min, max)));
+                   .SelectMany(min => Gen.Choose(min, int.MaxValue).Select(max => (min, max)));
 
             return Prop.ForAll(gen.ToArbitrary(), range => 
             {
@@ -494,7 +494,7 @@ namespace FPrimitive.CSharp.Tests
         public Property InclusiveBetween(PositiveInt x)
         {
             Gen<Interval> gen =
-                Gen.Constant(Interval.NewInterval(1, Int32.MaxValue))
+                Gen.Constant(Interval.NewInterval(1, int.MaxValue))
                    .Or(Arb.Generate<Interval>());
 
             return Prop.ForAll(gen.ToArbitrary(), interval =>
@@ -508,7 +508,7 @@ namespace FPrimitive.CSharp.Tests
         public Property ExclusiveBetween(PositiveInt x)
         {
             Gen<Interval> gen =
-                Gen.Constant(Interval.NewInterval(0, Int32.MaxValue - 1))
+                Gen.Constant(Interval.NewInterval(0, int.MaxValue - 1))
                    .Or(Arb.Generate<Interval>());
 
             return Prop.ForAll(gen.ToArbitrary(), interval =>
@@ -529,7 +529,7 @@ namespace FPrimitive.CSharp.Tests
             Gen<string> gen = 
                 Gen.Elements(inputs)
                    .NonEmptyListOf()
-                   .Select(parts => String.Join("", parts));
+                   .Select(parts => string.Join("", parts));
 
             return Prop.ForAll(gen.ToArbitrary(), target =>
             {
@@ -549,7 +549,7 @@ namespace FPrimitive.CSharp.Tests
             Gen<string> gen = 
                 Gen.Elements(inputs)
                    .NonEmptyListOf()
-                   .Select(s => String.Join("", s));
+                   .Select(s => string.Join("", s));
             
             return Prop.ForAll(gen.ToArbitrary(), target =>
             {
@@ -570,7 +570,7 @@ namespace FPrimitive.CSharp.Tests
             Gen<string> gen = 
                 Gen.Elements(inputs)
                    .NonEmptyListOf()
-                   .Select(s => String.Join("", s));
+                   .Select(s => string.Join("", s));
             
             return Prop.ForAll(gen.ToArbitrary(), target =>
             {
@@ -592,7 +592,7 @@ namespace FPrimitive.CSharp.Tests
             Gen<string> gen = 
                 Gen.Elements(inputs)
                    .NonEmptyListOf()
-                   .Select(s => String.Join("", s));
+                   .Select(s => string.Join("", s));
             
             return Prop.ForAll(gen.ToArbitrary(), target =>
             {
