@@ -100,81 +100,11 @@ Target.create "Paket" <| fun _ ->
             WorkingDir = "."
             TemplateFile = templateFile })
 
-Target.create "Docs" <| fun _ ->
-    let content    = __SOURCE_DIRECTORY__ @@ "docsrc/content"
-    let docsOutput = __SOURCE_DIRECTORY__ @@ "docs"
-    let files      = __SOURCE_DIRECTORY__ @@ "docsrc/files"
-    let templates  = __SOURCE_DIRECTORY__ @@ "docsrc/tools/templates"
-    let formatting = __SOURCE_DIRECTORY__ @@ "packages/formatting/FSharp.Formatting"
-    let docTemplate = formatting @@ "templates/docpage.cshtml"
-    let root = "/" + project.Name
-    let info =
-          [ "project-name", project.Name
-            "project-author", project.Authors |> List.head
-            "project-summary", project.Summary
-            "project-github", project.GitHubUrl
-            "project-nuget", project.NuGetUrl ]
-            
-    let layoutRootsAll = System.Collections.Generic.Dictionary<string, string list>()
-    layoutRootsAll.Add("en", [ templates
-                               formatting @@ "templates"
-                               formatting @@ "templates/reference" ])
-
-    File.delete "docsrc/content/release-notes.md"
-    Shell.copyFile "docsrc/content/" "RELEASE_NOTES.md"
-    Shell.rename "docsrc/content/release-notes.md" "docsrc/content/RELEASE_NOTES.md"
-
-    File.delete "docsrc/content/license.md"
-    Shell.copyFile "docsrc/content/" "LICENSE.txt"
-    Shell.rename "docsrc/content/license.md" "docsrc/content/LICENSE.txt"
-
-    DirectoryInfo.getSubDirectories (DirectoryInfo.ofPath templates)
-    |> Seq.iter (fun d ->
-        let name = d.Name
-        if name.Length = 2 || name.Length = 3 
-        then layoutRootsAll.Add(name, [ templates @@ name
-                                        formatting @@ "templates"
-                                        formatting @@ "templates/reference" ]))
-    Shell.copyRecursive files docsOutput true
-    |> Trace.logItems "Copying file: "
-    Directory.ensure (docsOutput @@ "content")
-    Directory.ensure (formatting @@ "styles")
-    Shell.copyRecursive (formatting @@ "styles") (docsOutput @@ "content") true
-    |> Trace.logItems "Copying styles and scripts: "
-
-    let langSpecificPath (lang, path:string) =
-        path.Split([|'/'; '\\'|], System.StringSplitOptions.RemoveEmptyEntries)
-        |> Array.exists(fun i -> i = lang)
-    
-    let layoutRoots =
-        let key = layoutRootsAll.Keys |> Seq.tryFind (fun i -> langSpecificPath(i, content))
-        match key with
-        | Some lang -> layoutRootsAll.[lang]
-        | None -> layoutRootsAll.["en"]
-
-    Directory.ensure (docsOutput @@ "reference")
-    !! ("src/**/bin/Release/**/*.dll") 
-    |> FSFormatting.createDocsForDlls (fun args ->
-        { args with
-            OutputDirectory = docsOutput @@ "reference"
-            LayoutRoots =  layoutRootsAll.["en"]
-            ProjectParameters =  ("root", root) :: info
-            SourceRepository = project.GitHubUrl @@ "tree/master" })
-
-    FSFormatting.createDocs (fun args ->
-        { args with
-            Source = content
-            OutputDirectory = docsOutput
-            LayoutRoots = layoutRoots
-            ProjectParameters  = ("root", root) :: info
-            Template = docTemplate })
-
 Target.create "All" ignore
 
 "Clean"
   ==> "Build"
   ==> "Tests"
-  ==> "Docs"
   ==> "Paket"
   ==> "All"
 
