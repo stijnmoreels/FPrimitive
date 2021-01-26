@@ -2,7 +2,7 @@
 
 FPrimitive is a .NET project to help developers build a correct and more secure domain model by providing building blocks, standard types and trust boundaries.
 
-<img src="/docsrc/files/img/logo.png" width=100 height=100 alt="logo" />
+<img src="/docs/img/logo.png" width=100 height=100 alt="logo" />
 
 ## NuGet
 
