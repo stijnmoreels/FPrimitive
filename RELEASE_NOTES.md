@@ -34,3 +34,9 @@
 * Sanitization blocks for transformations before validation
 * `Outcome` type for C# devs
 * Extra spec requirements: `containsAll`, `seqEqual`, `structure`...
+
+#### 3.1.0
+* Provide `Union` to determine validation based on DU's
+* Provide `ErrorMessage` as a means to make more security-safe error messages
+* Provide asynchronous `WriteOnce` models
+* Provide `String` operations on specifications
