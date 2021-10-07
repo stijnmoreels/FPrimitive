@@ -34,7 +34,6 @@ Target.create "Clean" <| fun _ ->
     ++ "src/**/obj"
     ++ "tests/**/bin"
     ++ "tests/**/obj"
-    ++ "docs"
     ++ "bin"
     |> Shell.cleanDirs
 
