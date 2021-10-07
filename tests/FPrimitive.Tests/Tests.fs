@@ -128,10 +128,7 @@ type Sex =
   | DontKnow
   | Other with
   static member create str =
-    FSharpType.GetUnionCases typeof<Sex>
-    |> Array.filter (fun case -> case.Name = str)
-    |> fun xs -> if xs.Length = 1 then Some xs.[0] else None
-    |> Option.map (fun case -> FSharpValue.MakeUnion (case,[||]) :?> Sex)
+    Union.create<Sex> str
 
 type Person = 
   { FirstName : Text
@@ -169,6 +166,17 @@ type Party =
             >>= UniqueSeq<PartyId>.create
         return { Ids = uniqueIds } }
 
+type Direction = Left = 1 | Right = 2 | Forward = 4 | Backward = 8
+
+type Reliability =
+  { RetryCount : int
+    RetryInterval : TimeSpan 
+    Timeout : TimeSpan }
+
+type Order =
+  { Amount : int
+    ArticleNumber : string }
+
 module Tests =
   let toProp = function
     | Ok _ -> true.ToProperty()
@@ -188,6 +196,32 @@ module Tests =
         Spec.def |> Spec.verify (fun x -> x > 0) "should be greater than zero"
                  |> Spec.validate x
       
+      testSpec "conditional" <| fun (x : int) ->
+        Spec.def |> Spec.conditional (fun y -> y < 0) (fun y -> y < 0, "should be less than zero")
+                 |> Spec.conditional (fun y -> y > 0) (fun y -> y > 0, "should be greater than zero")
+                 |> Spec.validate x
+
+      testSpec "filter" <| fun (x : int) ->
+        Spec.def |> Spec.filter ((>) -5) (spec { lessThan -3 "should be less than -3" })
+                 |> Spec.filter ((<) 5) (spec { greaterThan 3 "should be greater than 3" })
+                 |> Spec. validate x
+
+      testSpec "filtering" <| fun (x : int) ->
+        Spec.def 
+        |> Spec.filter (fun x -> x < -3) (Spec.def
+            |> Spec.lessThan -1 "should be less than -1" 
+            |> Spec.lessThan -2 "should be less than -2")
+        |> Spec.validate x
+
+      testProperty "subset" <| fun (PositiveInt amout, articleNumber : Guid) ->
+        Spec.def<Order> 
+        |> Spec.subset (fun x -> x.Amount) (specTag "amount" {
+            greaterThan 0 "amount should be greater than zero" })
+        |> Spec.subset (fun x -> x.ArticleNumber) (specTag "articlenumber" {
+            notNullOrWhiteSpace "article number should not be blank" })
+        |> Spec.validate { Amount = amout; ArticleNumber = articleNumber.ToString() }
+        |> toProp
+
       testSpec "equal" <| fun x ->
         Spec.def |> Spec.equal x "should be equal"
                  |> Spec.validate x
@@ -242,7 +276,7 @@ module Tests =
         endsWithOf Option.get trailer "should end with trailer" }
 
       testSpec "seq equal" <| fun (xs : int list) -> specResult xs { 
-          seqEqual xs "sequence should be equal to other sequence" }
+        seqEqual xs "sequence should be equal to other sequence" }
 
       testSpec "non empty" <| fun x ->
         Spec.def |> Spec.nonEmpty "should not be empty"
@@ -288,6 +322,10 @@ module Tests =
         |> Prop.forAll <| fun str ->
           specResult str { stringContainsAll xs "should contain all substrings" } 
           |> toProp
+
+      testProperty "in enum" <| fun (d : Direction) ->
+        let r = specResult d { inEnum typeof<Direction> "should be defined in the 'Direction' enum" }
+        Result.isOk r <=> Enum.IsDefined (typeof<Direction>, d)
 
       testProperty "exists" <| fun (PositiveInt x) (xs : NegativeInt list) ->
         (x :: List.map (fun (NegativeInt y) -> y) xs)

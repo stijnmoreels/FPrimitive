@@ -102,7 +102,7 @@ module Sanitize =
   [<CompiledName("Trim")>]
   let trim values (input : string) =
     let input = empty_when_null input
-    input.Trim (values)
+    input.Trim (values : char array)
   /// Removes all leading and trailing white space characters in the given input.
   [<CompiledName("Trim")>]
   let trim_ws (input : string) =
@@ -118,13 +118,13 @@ module Sanitize =
   [<CompiledName("Header")>]
   let header value (input : string) =
     let input = empty_when_null input
-    if input.StartsWith value then input
+    if input.StartsWith (value  : string) then input
     else sprintf "%s%s" value input
   /// Adds trailer if the input doesn't end with one.
   [<CompiledName("Trailer")>]
   let trailer value (input : string) =
     let input = empty_when_null input
-    if input.EndsWith value then input
+    if input.EndsWith (value : string) then input
     else sprintf "%s%s" input value
   /// Filters out only ASCII characters in the given input.
   [<CompiledName("ASCII")>]

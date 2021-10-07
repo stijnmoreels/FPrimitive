@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
@@ -13,6 +12,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Schema;
 using FPrimitive;
+using Microsoft.FSharp.Core;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
@@ -617,10 +617,10 @@ namespace FPrimitive.CSharp.Tests
             Pages = pages;
         }
 
-        [JsonProperty("author"), DefaultValue("")]
+        [JsonProperty("author"), System.ComponentModel.DefaultValue("")]
         public string Author { get; }
 
-        [JsonProperty("isbn13"), DefaultValue("")]
+        [JsonProperty("isbn13"), System.ComponentModel.DefaultValue("")]
         public string ISBN13 { get; }
 
         [JsonProperty("pages")]
@@ -804,5 +804,153 @@ namespace FPrimitive.CSharp.Tests
                        .NotNull("cannot create user message from 'null' input")
                        .CreateModel(userMessage, CreateModel);
         }
+    }
+
+    public class ForwardJson
+    {
+        public string ReferenceId { get; set; }
+    }
+
+    public class Id
+    {
+        private Id(string value)
+        {
+            Value = value;
+        }
+        
+        private string Value { get; }
+
+        public static ValidationResult<Id> Create(string value)
+        {
+            return Spec.Of<string>("Id")
+                       .NotNullOrWhiteSpace("Identifier should not be blank")
+                       .LengthBetween(1, 100, "Identifier should have length between 1-100 inconclusive")
+                       .Alphabetical("Identifier should have only elements of the A-Z range")
+                       .CreateModel(value, x => new Id(x));
+        }
+    }
+    
+    public class Forward
+    {
+        private Forward(Id referenceId)
+        {
+            ReferenceId = referenceId;
+        }
+        
+        public Id ReferenceId { get; }
+
+        public static ValidationResult<Forward> Create(string referenceId)
+        {
+            return Id.Create(referenceId).Select(id => new Forward(id));
+        }
+    }
+    
+    public class ParameterJson
+    {
+        public string Key { get; set; }
+        public string Value { get; set; }
+    }
+
+    public class Parameter
+    {
+        private Parameter(string key, string value)
+        {
+            Key = key;
+            Value = value;
+        }
+        
+        private string Key { get; }
+        private string Value { get; }
+
+        public static ValidationResult<Parameter> Create(string key, string value)
+        {
+            return Spec.Of<(string, string)>()
+                       .NotNullOrWhiteSpace(kv => kv.Item1, "Key should not be blank")
+                       .NotNullOrWhiteSpace(kv => kv.Item2, "Value should not be blank")
+                       .CreateModel((key, value), kv => new Parameter(kv.Item1, kv.Item2));
+
+        }
+    }
+
+    public class DeliverJson
+    {
+        public string Type { get; set; }
+        
+        public ParameterJson[] Parameters { get; set; }
+    }
+
+    public class Deliver
+    {
+        private Deliver(string type, NonEmptyEnumerable<Parameter> parameters)
+        {
+            Type = type;
+            Parameters = parameters;
+        }
+        
+        private string Type { get; }
+        private NonEmptyEnumerable<Parameter> Parameters { get; }
+
+        public static ValidationResult<Deliver> Create(string type, ParameterJson[] parameters)
+        {
+            var typeR =
+                Spec.Of<string>()
+                    .NotNullOrWhiteSpace("Type should not be blank")
+                    .Validate(type);
+
+            var parametersR =
+                Spec.Of<ParameterJson>()
+                    .NotNull("Parameter should not be null")
+                    .ForArray()
+                    .NonEmpty("Parameters should not be zero")
+                    .CreateModel(parameters, xs => xs.Select(x => Parameter.Create(x.Key, x.Value)).Sequence())
+                    .SelectMany(xs => xs.AsNonEmpty());
+
+            return ValidationResult.Combine(typeR, parametersR, (t, ps) => new Deliver(t, ps));
+        }
+    }
+
+    public class Target
+    {
+        private Target(FSharpChoice<Forward, Deliver> choice)
+        {
+            MessageHandling = choice;
+        }
+        
+        public FSharpChoice<Forward, Deliver> MessageHandling { get; }
+
+        public static ValidationResult<Target> Create(MessageHandlingJson handling)
+        {
+            return Spec.Of<MessageHandlingJson>()
+                       .NotNull("Message handling should not be null")
+                       .Add(h => h.IsDeliver || h.IsForwarding, "should either be deliver or forwarding")
+                       .Add(h => (h.IsDeliver && h.IsForwarding) == false, "should either be deliver or forwarding")
+                       .CreateModel(handling, h =>
+                       {
+                           if (h.IsDeliver)
+                           {
+                               return Deliver.Create(h.Deliver.Type, h.Deliver.Parameters)
+                                             .Select(FSharpChoice<Forward, Deliver>.NewChoice2Of2);
+                           }
+
+                           return Forward.Create(h.Forward.ReferenceId)
+                                         .Select(FSharpChoice<Forward, Deliver>.NewChoice1Of2);
+                       })
+                       .Select(c => new Target(c));
+        }
+    }
+    
+    public class MessageHandlingJson
+    {
+        [JsonIgnore]
+        public bool IsForwarding => Forward != null;
+        
+        [JsonIgnore]
+        public bool IsDeliver => Deliver != null;
+        
+        [JsonProperty("forward")]
+        public ForwardJson Forward { get; set; }
+        
+        [JsonProperty("deliver")]
+        public DeliverJson Deliver { get; set; }
     }
 }

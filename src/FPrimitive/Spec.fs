@@ -7,6 +7,8 @@ open System.Runtime.CompilerServices
 open System.Runtime.InteropServices
 open System.Text.RegularExpressions
 
+open Microsoft.Extensions.Logging
+open Microsoft.Extensions.Logging.Abstractions
 open Microsoft.FSharp.Core
 
 /// Representation on how the model should be validated.
@@ -31,20 +33,34 @@ type Spec<'T> =
       /// Gets the mode in which the validation of the model should happen.
       Cascade : CascadeMode
       /// Gets the child specifications.
-      Dependents : Spec<'T> list }
+      Dependents : Spec<'T> list
+      /// Gets the logger instance to write diagnostic trace messages and failures during the model validation.
+      Logger : ILogger }
 
 /// Operations on the `Spec<_>` type. 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module Spec =
+  /// Creates a specification with a name and logger.
+  let create name logger = 
+     { Tag = name
+       Requirements = [] 
+       Cascade = FirstFailure
+       Dependents = [] 
+       Logger = logger }
+  
   /// Start defininig a specification for a type with a name.
   let tag name =
     { Tag = name
       Requirements = []
       Cascade = FirstFailure
-      Dependents = [] }
+      Dependents = []
+      Logger = NullLogger.Instance }
 
   /// Start defininig a specification for a type.
-  let def<'a> : Spec<'a> = tag "other"
+  let def<'a> : Spec<'a> = tag "[without tag]"
+
+  /// Starts defining a specification for a type, adding a logger while doing so.
+  let defl<'a> logger : Spec<'a> = create "[without tag]" logger
 
   /// Creates an validation error from a tag and message.
   let error tag error = Error <| Map.create tag [error]
@@ -53,6 +69,13 @@ module Spec =
   let add req spec =
     { spec with Requirements = req :: spec.Requirements }
     
+  /// Adds a conditional requirement to the specification.
+  let conditional predicate requirement spec =
+    { spec with Requirements = (fun x -> if predicate x then requirement x else true, "") :: spec.Requirements }
+
+  /// Adds a logger to the specification.
+  let logger instance spec = { spec with Logger = instance }
+
   /// Adds a custom requirement to the specification.
   let verify verifier msg spec = add (fun x -> verifier x, msg) spec
 
@@ -123,7 +146,7 @@ module Spec =
   /// Adds a requirement for the result of the specified mapping,
   /// which defines that the result should be a string starting with the specified header.
   let startsWithOf selector header message spec =
-    add (selector >> fun (s : string) -> s.StartsWith header, message) spec
+    add (selector >> fun (s : string) -> s.StartsWith (header : string), message) spec
 
   /// Adds a requirement to check if the string starts with the specified header.
   let startsWith header message spec =
@@ -132,7 +155,7 @@ module Spec =
   /// Adds a requirement for the result of the specified mapping,
   /// which defines that the result should be a string ending with the specified trailer.
   let endsWithOf selector trailer message spec =
-    add (selector >> fun (s : string) -> s.EndsWith trailer, message) spec
+    add (selector >> fun (s : string) -> s.EndsWith (trailer : string), message) spec
 
   /// Adds a requirement to check if the string ends with the specified trailer.
   let endsWith trailer message spec =
@@ -213,7 +236,7 @@ module Spec =
   /// Adds a requirement for the resulting string of the specified mapping,
   /// which defines that the given substring is present in the string.
   let stringContainsOf selector sub message spec =
-    add (fun x -> selector x |> fun (str : string) ->  not <| isNull str && str.Contains sub, message) spec
+    add (fun x -> selector x |> fun (str : string) ->  not <| isNull str && str.Contains (sub : string), message) spec
 
   /// Adds a requirement for the string to verify if the given substring is present in the string.
   let stringContains sub message spec =
@@ -222,7 +245,7 @@ module Spec =
   /// Adds a requirement for the resulting string of the specified mapping,
   /// which defines that the given substring is not present in the string
   let stringNotContainsOf selector sub message spec =
-    add (fun x -> selector x |> fun (str : string) -> not <| isNull str && not <| str.Contains sub, message) spec
+    add (fun x -> selector x |> fun (str : string) -> not <| isNull str && not <| str.Contains (sub : string), message) spec
 
   /// Adds a requirement for the string to verify if a given substring is not present in the string.
   let stringNotContains sub message spec =
@@ -231,11 +254,29 @@ module Spec =
   /// Adds a requirement for the resulting string of the specified mapping,
   /// which defines that the given substrings are all present in the string.
   let stringContainsAllOf selector subs message spec =
-    add (fun x -> selector x |> fun (str : string) -> not <| isNull str && Seq.forall (fun sub -> str.Contains sub) subs, message) spec
+    add (fun x -> selector x |> fun (str : string) -> not <| isNull str && Seq.forall (fun sub -> str.Contains (sub : string)) subs, message) spec
 
   /// Adds a requirement for the string to verify if the given substrings are all present in the string.
   let stringContainsAll subs message spec =
     stringContainsAllOf id subs message spec
+
+  /// Adds a requirement for the resulting value of the specified mapping 
+  /// that defines that the given value should be defined in the given enumeration.
+  let inEnumOf selector enumType message spec =
+    add (fun x -> Enum.IsDefined (enumType, selector x), message) spec
+
+  /// Adds a requirement that verifies if the value is defined in the given enumeration.
+  let inEnum enumType message spec =
+    inEnumOf id enumType message spec
+
+  /// Adds a requirement for the resulting value of the specified mapping 
+  /// that defines that the given value should be defined in the given enumeration.
+  let inEnumOfT<'T, 'TEnum when 'TEnum : enum<int32>> (selector : 'T -> 'TEnum) message (spec : Spec<'T>) =
+    inEnumOf selector typeof<'TEnum> message spec
+
+  /// Adds a requirement that verifies if the value is defined in the given enumeration.
+  let inEnumT<'TEnum when 'TEnum : enum<int32>> message spec =
+    inEnumOfT<'TEnum, 'TEnum> id message spec
 
   /// Adds a requirement for the resulting sequence of the specified mapping,
   /// which defines that any item in the sequence to satisy the specified predicate.
@@ -284,11 +325,13 @@ module Spec =
 
   /// Adds a requirement for the resulting sequence of the specified mapping,
   /// which defines that the sequence should match the specified structure; in the form of predicates for each seperate element.
-  let structureOf selector plan message spec =
+  let structureOf selector plan message (spec : Spec<'a>) =
     let req xs =
       let xs = selector xs
       if Seq.length xs <> Seq.length plan
-      then false, "length of structure plan doesn't match length of input sequence"
+      then spec.Logger.LogWarning (
+             "Cannot validate the `structure` requirement of type '{Type}' because the length of the incoming sequence doesn't match with the structure's plan", typeof<'a>.Name)
+           false, "length of structure plan doesn't match length of input sequence"
       else Seq.mapi2 (fun i x f -> if f x then -1 else i) xs plan
            |> Seq.filter ((<>) -1)
            |> fun xs -> Seq.isEmpty xs, sprintf "%s (indexes: %s)" message (String.Join (", ", xs))
@@ -505,10 +548,14 @@ module Spec =
   let cascade mode spec = { spec with Cascade = mode }
 
   /// Validate the specified value to the domain specification.
-  let rec validate (value : 'T) { Tag = tag; Requirements = xs; Cascade = mode; Dependents = ds } : Result<'T, ErrorsByTag> =
+  let rec validate (value : 'T) { Tag = tag; Requirements = xs; Cascade = mode; Dependents = ds; Logger = log } : Result<'T, ErrorsByTag> =
     let checkRequirement f =
-      let ok, err = try f value with ex -> false, "Exception thrown during validating requirement: " + ex.Message
-      if ok then None else Some err
+      let ok, err = 
+        try f value with ex -> 
+            log.LogError(ex, "Cannot check requirement for type '{Type}' because an exception was thrown during validation", typeof<'T>.Name) 
+            false, "Faulted requirement due to an internal failure" 
+      if ok then None 
+      else Some err
     
     let tagOrProp error =
       let error = if isNull error then String.Empty else error
@@ -532,10 +579,12 @@ module Spec =
             List.foldBack folder xs None
             |> Option.toList
         if errors.Length = 0 then Ok value
-        else List.groupBy tagOrProp errors 
-             |> Map.ofListg
-             |> Error
-    | x -> x
+        else let groupedErrors = List.groupBy tagOrProp errors |> Map.ofListg
+             log.LogError ("Validation failure for '{Type}' {Tag}: {Errors}", typeof<'T>.Name, tag, groupedErrors)
+             Error groupedErrors
+    | Error groupedErrors ->
+        log.LogError ("Validation failure for '{Type}' {Tag}: {Errors}", typeof<'T>.Name, tag, groupedErrors)
+        Error groupedErrors
 
   /// Validate the specified untrusted value to the domain specification.
   let validateUntrust (untrusted : Untrust<'T>) (spec : Spec<'T>) : Result<'T, ErrorsByTag> =
@@ -592,18 +641,46 @@ module Spec =
     { Tag = spec.Tag
       Requirements = List.map (fun r -> f >> r) spec.Requirements
       Cascade = spec.Cascade
-      Dependents = List.map (comap f) spec.Dependents }
+      Dependents = List.map (comap f) spec.Dependents
+      Logger = spec.Logger }
 
   /// Maps the requirements of this specification to another requirement function structure.
   let rec map (f : Req<'a> -> Req<'b>) spec =
     { Tag = spec.Tag
       Requirements = List.map f spec.Requirements
       Cascade = spec.Cascade
-      Dependents = List.map (map f) spec.Dependents }
+      Dependents = List.map (map f) spec.Dependents
+      Logger = spec.Logger }
 
   /// Adds a pre-validation function to all the requirements of this specification.
   let preval f spec =
     map (fun r -> fun x -> match f x with | Ok y -> r y | Error msg -> false, msg) spec
+
+  /// Adds a pre-filter function to all the requirements of this specification.
+  let prefilter predicate spec =
+    map (fun r -> fun x -> if predicate x then r x else true, "") spec
+
+  /// Adds a conditional requirement to the specification.
+  let filter predicate dependent spec =
+    prefilter predicate dependent
+    |> dependsOn <| spec
+
+  /// Adds a conditional requirement to the specification that is the result of the specified selection.
+  let filterOf selector predicate dependent spec =
+    prefilter predicate dependent
+    |> comap selector
+    |> dependsOn <| spec
+
+  /// Adds a conditional requirement to the specification that is the result of the specified selection and is not `default`.
+  let filterT (selector : 'T -> 'TResult) dependent spec =
+    prefilter ((<>) Unchecked.defaultof<'TResult>) dependent
+    |> comap selector
+    |> dependsOn <| spec
+
+  /// Adds a dependent specification that will validate a subset of a resulting value of the original specification.
+  let subset (f : 'T -> 'TResult) (dependent : Spec<'TResult>) (spec : Spec<'T>) =
+    comap f dependent
+    |> dependsOn <| spec
 
   let private combine_bool_message (x, err1) (y, err2) = x && y, err1 + Environment.NewLine + err2
 
@@ -648,7 +725,8 @@ module Spec =
     { Tag = sprintf "%s+%s" spec1.Tag spec2.Tag
       Requirements = rs
       Cascade = cascade
-      Dependents = ds }
+      Dependents = ds
+      Logger = spec1.Logger }
 
   let private x__ (x, _, _) = x
   let private _x_ (_, y, _) = y
@@ -671,7 +749,8 @@ module Spec =
     { Tag = sprintf "%s+%s+%s" spec1.Tag spec2.Tag spec3.Tag
       Requirements = rs
       Cascade = cascade
-      Dependents = ds }
+      Dependents = ds
+      Logger = spec1.Logger }
 
 /// Computation expression builder for the domain specification `Spec<_>`.
 type SpecBuilder<'a, 'b> internal (validate : Spec<'a> -> 'b, ?start) =
@@ -679,15 +758,27 @@ type SpecBuilder<'a, 'b> internal (validate : Spec<'a> -> 'b, ?start) =
   /// Adds a custom requirement to the specification.
   [<CustomOperation("add")>]
   member __.Add (state, req) = Spec.add req state
+  /// Adds a conditional requirement to the specification.
+  [<CustomOperation("conditional")>]
+  member __.AddConditional (state, predicate, requirement) = Spec.conditional predicate requirement state
   /// Adds a custom requirement to the specification.
   [<CustomOperation("verify")>]
   member __.Verify (state, verifier, msg) = Spec.verify verifier msg state
+  /// Adds a conditional requirement to the specification.
+  [<CustomOperation("filter")>]
+  member __.Filter (state, predicate, dependent) = Spec.filter predicate dependent state
+  /// Adds a conditional requirement to the specification that is the result of the specified selection.
+  [<CustomOperation("filterOf")>]
+  member __.FilterOf (state, selector, predicate, dependent) = Spec.filterOf selector predicate dependent state
   /// Change the way the validation of requirements should happen.
   [<CustomOperation("cascade")>]
   member __.Cascade (state, mode) = Spec.cascade mode state
   /// Change the tag of the specification.
   [<CustomOperation("tag")>]
   member __.Tag (state, name) = Spec.withTag name state
+  /// Adds a logger to the specification.
+  [<CustomOperation("logger")>]
+  member __.Logger (state, instance) = Spec.logger instance state
   /// Adds another specification on which the current specification depends on.
   /// This dependent specification will run before the current specification and contain only the errors of the dependents in case of a validation failure.
   [<CustomOperation("dependsOn")>]
@@ -832,6 +923,13 @@ type SpecBuilder<'a, 'b> internal (validate : Spec<'a> -> 'b, ?start) =
   /// Adds a requirement for the string to verify if the given substrings are all present in the string.
   [<CustomOperation("stringContainsAll")>]
   member __.StringContainsAll (state, subs, message) = Spec.stringContainsAll subs message state
+  /// Adds a requirement for the resulting value of the specified mapping 
+  /// that defines that the given value should be defined in the given enumeration.
+  [<CustomOperation("inEnumOf")>]
+  member __.InEnumOf (state, selector, enumType, message) = Spec.inEnumOf selector enumType message state
+  /// Adds a requirement that verifies if the value is defined in the given enumeration.
+  [<CustomOperation("inEnum")>]
+  member __.InEnum (state, enumType, message) = Spec.inEnum enumType message state
   /// Adds a requirement for the resulting sequence of the specified mapping,
   /// which defines that any item in the sequence to satisy the specified predicate.
   [<CustomOperation("existsOf")>]
@@ -1008,6 +1106,12 @@ type SpecBuilder<'a, 'b> internal (validate : Spec<'a> -> 'b, ?start) =
 module SpecExposure =
   /// Computation builder to create an `Spec<_>` instance.
   let spec<'a> = new SpecBuilder<'a, Spec<'a>> (id)
+  /// Computation builder to create a specification with a embedded logger.
+  let specLog<'a> logger = new SpecBuilder<'a, Spec<'a>> (id, Spec.defl<'a> logger)
+  /// Computation builder to create a specification with a embedded model tag.
+  let specTag<'a> tag = new SpecBuilder<'a, Spec<'a>> (id, Spec.tag tag)
+  /// Computation builder to create a specification with a embedded model tag and logger.
+  let specWith<'a> tag logger = new SpecBuilder<'a, Spec<'a>> (id, Spec.create tag logger)
   /// Computation builder to build an `Spec<_>` instance that gets validated to a `Result<_, string list>` when runned.
   let specResult<'a> value = new SpecBuilder<'a, Result<'a, ErrorsByTag>> (Spec.validate value)
   /// Computation builder to build an `Spec<_>` instance that gets validated to a `Result<_ option, string list>` when runned and the filter succeeds.
@@ -1047,24 +1151,48 @@ exception InvalidValidationResultException of string
 
 #nowarn "1001"
 
-/// Result type when a value is validated against a domain specification `Spec<_>`.
+/// <summary>
+/// Represents the result type when a value is validated against a domain specification <see cref="Spec{T}" />.
+/// </summary>
 [<Struct; NoEquality; NoComparison>]
 [<CompilerMessage("Not designed for F#", 1001, IsHidden = true)>]
 [<DebuggerDisplay("{IsValid ? \"Success: \" + Value : \"Failure: \" + System.String.Join(\", \", Errors)}")>]
 type ValidationResult<'T> internal (result : Result<'T, ErrorsByTag>) =
-  /// Initializes a new instance of the `ValidationResult` class.
+  /// <summary>
+  /// Initializes a new instance of the <see cref="ValidationResult"/> class with a successful validation result.
+  /// </summary>
+  /// <param name="value">The successful validation result value.</param>
   new (value : 'T) = ValidationResult<'T> (Ok value)
-  /// Initializes a new instance of the `ValidationResult` class.
-  new (errors : string seq) = ValidationResult<'T> (Error (Map.others (List.ofSeq errors)))
-  /// Initializes a new instance of the `ValidationResult` class.
-  internal new ([<ParamArray>] errors : string [] []) = ValidationResult<'T> (Error (Map.others (Array.concat errors |> List.ofArray)))
-  /// Initializes a new instance of the `ValidationResult` class.
-  internal new ([<ParamArray>] details : IDictionary<string, string array> []) = 
+  /// <summary>
+  /// Initializes a new instance of the <see cref="ValidationResult"/> class with a faulted validation errors.
+  /// </summary>
+  /// <param name="errors">The error descriptions of the faulted validation result.</param>
+  /// <exception cref="ArgumentException">Thrown when the <paramref name="errors"/> doesn't contain any validation errors.</exception>
+  new (errors : string seq) = 
+    if Seq.isEmpty errors then invalidArg "errors" "Requires at least a single validation error"
+    ValidationResult<'T> (Error (Map.others (List.ofSeq errors)))
+  /// <summary>
+  /// Initializes a new instance of the <see cref="ValidationResult"/> class with several faulted validation errors.
+  /// </summary>
+  /// <param name="errors">The error descriptions of the faulted validation result.</param>
+  /// <exception cref="ArgumentException">Thrown when the <paramref name="errors"/> doesn't contain any validation errors.</exception>
+  internal new ([<ParamArray>] errors : string [] []) = 
+    if Seq.isEmpty errors then invalidArg "errors" "Requires at least a single validation error"
+    ValidationResult<'T> (Error (Map.others (Array.concat errors |> List.ofArray)))
+  /// <summary>
+  /// Initializes a new instance of the <see cref="ValidationResult"/> class with detailed faulted validation errors.
+  /// </summary>
+  /// <param name="details">The error details of the validation result.</param>
+  /// <exception cref="ArgumentException">Thrown when the <paramref name="details"/> doesn't contain any validation errors.</exception>
+  internal new ([<ParamArray>] details : IReadOnlyDictionary<string, string array> []) = 
+    if Seq.isEmpty details then invalidArg "details" "Requires at least a single validation error"
     let errors =
       details |> Seq.map (Seq.map (fun (KeyValue (k, vs)) -> k, Seq.ofArray vs))
               |> Seq.concat
               |> Map.ofSeqg
               |> Map.mapv List.ofSeq
+    if Seq.isEmpty errors then invalidArg "details" "Requires at least a single validation error"
+    if Seq.isEmpty (Seq.concat (Map.values errors)) then invalidArg "details" "Requires at least a single validation error"
     ValidationResult<'T> (Error errors)
   /// Gets the F# result from this validation result.
   member internal __.Result = result
@@ -1075,11 +1203,15 @@ type ValidationResult<'T> internal (result : Result<'T, ErrorsByTag>) =
   /// Gets the series of validation errors that describe to what domain requirements the validated value doesn't satisfy.
   member __.Errors : string array = Result.either (fun _ -> Array.empty) (Map.values >> List.concat >> Array.ofList) result
   /// Gets the series of validation error details that describe what domain requirements for each validated property value doesn't satisfy.
-  member __.Details : IDictionary<string, string array> = Result.either (fun _ -> dict []) (Map.mapv Array.ofList >> Map.toDict) result
+  member __.Details : IReadOnlyDictionary<string, string array> = Result.either (fun _ -> readOnlyDict []) (Map.mapv Array.ofList >> Map.toReadOnlyDict) result
 
   /// Creates a successful validation result with a specified value.
   static member Success (value : 'T) = ValidationResult<'T> (value = value)
+  /// <summary>
   /// Creats an unsuccessful validation result with the specified errors.
+  /// </summary>
+  /// <param name="errors">The error descriptions of the faulted validation result.</param>
+  /// <exception cref="ArgumentException">Thrown when the <paramref name="errors"/> doesn't contain any validation errors.</exception>
   static member Failure ([<ParamArray>] errors : string []) = ValidationResult<'T> (errors = errors)
 
   static member op_Implicit (result : Result<'T, string list>) = 
@@ -1158,6 +1290,10 @@ type Spec =
   static member Of<'T>() = Spec.def<'T>
   /// Start defininig a specification for a type.
   static member Of<'T>(name) : Spec<'T> = Spec.tag name
+  /// Start defininig a specification for a type, adding a logger while doing so.
+  static member Of<'T>(name, logger) : Spec<'T> = Spec.create name logger
+  /// Starts defining a specification for a type, adding a logger while doing so.
+  static member Of<'T>(logger) : Spec<'T> = Spec.defl<'T> logger
   /// Combines two specifications as dependents of a new specification which will run before any extra requirements that's been added after this point.
   static member Merge (spec1 : Spec<'T>, spec2) = Spec.merge spec1 spec2
   /// Makes a new specification that's describes an invariant relation between two given specifications.
@@ -1186,30 +1322,53 @@ type Requirement<'T> = delegate of 'T -> bool * string
 [<Extension>]
 [<CompilerMessage("Not designed for F#", 1001, IsHidden = true)>]
 type ValidationResultExtensions =
+  /// <summary>
   /// Projects the validated result to another value.
+  /// </summary>
+  /// <param name="result">The validation result to transform.</param>
+  /// <param name="selector">The transformation function to select another value from the validation <paramref name="result"/>.</param>
+  /// <exception cref="ArgumentNullException">Thrown when the <paramref name="selector"/> is <c>null</c>.</exception>
   [<Extension>]
-  static member Select (this : ValidationResult<'T>, selector : Func<'T, 'TResult>) =
+  static member Select (result : ValidationResult<'T>, selector : Func<'T, 'TResult>) =
     if isNull selector then nullArg "selector"
-    if this.IsValid then ValidationResult<'TResult> (selector.Invoke this.Value)
-    else ValidationResult<'TResult> this.Errors
+    if result.IsValid then ValidationResult<'TResult> (selector.Invoke result.Value)
+    else ValidationResult<'TResult> result.Errors
+  /// <summary>
+  /// Projects the validated result to another validation result.
+  /// </summary>
+  /// <param name="result">The validation result to transform.</param>
+  /// <param name="selector">The transformation function to select another value from the validation <paramref name="result"/>.</param>
+  /// <exception cref="ArgumentNullException">Thrown when the <paramref name="selector"/> is <c>null</c>.</exception>
+  [<Extension>]
+  static member SelectMany (result : ValidationResult<'T>, selector : Func<'T, ValidationResult<'TResult>>) =
+    if isNull selector then nullArg "selector"
+    if result.IsValid then selector.Invoke (result.Value)
+    else ValidationResult<'TResult> result.Errors
+  /// <summary>
   /// Projects the validated reuslt to another validation result.
+  /// </summary>
+  /// <param name="result">The validation result to transform.</param>
+ /// <param name="selector">The transformation function to select another value from the validation <paramref name="result"/>.</param>
+ /// <exception cref="ArgumentNullException">Thrown when the <paramref name="selector"/> is <c>null</c>.</exception>
   [<Extension>]
-  static member SelectMany (this : ValidationResult<'T>, selector : Func<'T, ValidationResult<'TResult>>) =
+  static member Then (result : ValidationResult<'T>, selector) = 
     if isNull selector then nullArg "selector"
-    if this.IsValid then selector.Invoke (this.Value)
-    else ValidationResult<'TResult> this.Errors
-  /// Projects the validated reuslt to another validation result.
-  [<Extension>]
-  static member Then (this : ValidationResult<'T>, selector) = 
-    if isNull selector then nullArg "selector"
-    this.SelectMany (selector)
+    result.SelectMany (selector)
+  /// <summary>
   /// Filters out the validated value with yet another predicate and a series of validation error messages to create a fresh validation result in case the predicate doesn't hold.
+  /// </summary>
+  /// <param name="result">The validation result to inspect.</param>
+  /// <param name="predicate">The filtering function that determines whether or not the validation result is considered valid.</param>
+  /// <param name="errors">The validation error descriptions that will result in a fresh validation result when the <paramref name="predicate"/> doesn't hold.</param>
+  /// <exception cref="ArgumentNullException">Thrown when the <paramref name="predicate"/> or <paramref name="errors"/> is <c>null</c>.</exception>
+  /// <exception cref="ArgumentException">Thrown when the <paramref name="errors"/> doesn't contain any validation errors.</exception>
   [<Extension>]
   static member Where (this : ValidationResult<'T>, predicate : Func<_, _>, [<ParamArray>] errors) =
     if isNull predicate then nullArg "predicate"
     if isNull errors then nullArg "errors"
+    if Seq.isEmpty errors then invalidArg "errors" "Requires at least a single validation error"
     if Array.isEmpty errors then invalidArg "errors" "at least a single validation error message should be given"
-    ValidationResult<'T> (Result.filter predicate.Invoke (Map.ofList [ "other", List.ofArray errors ]) this.Result)
+    ValidationResult<'T> (Result.filter predicate.Invoke (Map.ofList [ "[without tag]", List.ofArray errors ]) this.Result)
   /// Filters out the validated value with yet another specification.
   [<Extension>]
   static member Where (this : ValidationResult<'T>, otherSpec : Spec<'T>) =
@@ -1274,12 +1433,66 @@ type SpecExtensions =
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
   /// <param name="requirement">The requirement to add to the <paramref name="specification"/>.</param>
+  /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   /// <exception cref="ArgumentNullException">Thrown when the <paramref name="requirement"/> or <paramref name="message"/> is <c>null</c>.</exception>
   [<Extension>]
   static member Add (specification : Spec<'T>, requirement : Func<'T, bool>, message) =
     if isNull requirement then nullArg "requirement"
     if isNull message then nullArg "message"
     Spec.add (fun x -> requirement.Invoke (x), message) specification
+
+  /// <summary>
+  /// Adds a conditional requirement to the specification.
+  /// </summary>
+  /// <param name="specification">The instance that specifies how the model should look like.</param>
+  /// <param name="predicate">The predicate that determines whether or not the <paramref name="requirement"/> should be included in the <paramref name="specification"/>.</param>
+  /// <param name="requirement">The requirement that will be added to the <paramref name="specification"/> when the <paramref name="predicate"/> holds.</param>
+  /// <exception cref="ArgumentNullException">Thrown when the <paramref name="predicate"/> or <paramref name="requirement"/> is <c>null</c>.</exception>
+  [<Extension>]
+  static member Conditional (specification : Spec<'T>, predicate : Func<'T, bool>, requirement : Func<'T, ValueTuple<bool, string>>) =
+    if isNull predicate then nullArg "predicate"
+    if isNull requirement then nullArg "requirement"
+    Spec.conditional predicate.Invoke (fun x -> requirement.Invoke(x).ToTuple()) specification
+
+  /// <summary>
+  /// Adds a conditional requirement to the specification.
+  /// </summary>
+  /// <param name="specification">The instance that specifies how the model should look like.</param>
+  /// <param name="predicate">The predicate that determines whether or not the <paramref name="requirement"/> should be included in the <paramref name="specification"/>.</param>
+  /// <param name="dependent">The dependent specification that will be added to the <paramref name="specification"/> when the <paramref name="predicate"/> holds.</param>
+  /// <exception cref="ArgumentNullException">Thrown when the <paramref name="predicate"/>, or <paramref name="message"/> is <c>null</c>.</exception>
+  [<Extension>]
+  static member Where (specification : Spec<'T>, predicate : Func<'T, bool>, dependent : Spec<'T>) =
+    if isNull predicate then nullArg "predicate"
+    Spec.filter predicate.Invoke dependent specification
+
+  /// <summary>
+  /// Adds a conditional requirement to the specification.
+  /// </summary>
+  /// <param name="specification">The instance that specifies how the model should look like.</param>
+  /// <param name="selector">The selection function to determine the dependent value.</param>
+  /// <param name="predicate">The predicate that determines whether or not the <paramref name="requirement"/> should be included in the <paramref name="specification"/>.</param>
+  /// <param name="dependent">The dependent specification that will be added to the <paramref name="specification"/> when the <paramref name="predicate"/> holds.</param>
+  /// <param name="message">The error message to show when this requirement doesn't hold.</param>
+  /// <exception cref="ArgumentNullException">Thrown when the <paramref name="selector"/>, <paramref name="predicate"/>, or <paramref name="message"/> is <c>null</c>.</exception>
+  [<Extension>]
+  static member Where (specification : Spec<'T>, selector : Func<'T, 'TResult>, predicate : Func<'TResult, bool>, dependent : Spec<'TResult>) =
+    if isNull selector then nullArg "selector"
+    if isNull predicate then nullArg "predicate"
+    Spec.filterOf selector.Invoke predicate.Invoke dependent specification
+
+  /// <summary>
+  /// Adds a conditional requirement to the specification that is the result of the specified selection and is not `default`.
+  /// </summary>
+  /// <param name="specification">The instance that specifies how the model should look like.</param>
+  /// <param name="selector">The selection function to determine the dependent value.</param>
+  /// <param name="dependent">The dependent specification that will be added to the <paramref name="specification"/> when the <paramref name="predicate"/> holds.</param>
+  /// <param name="message">The error message to show when this requirement doesn't hold.</param>
+  /// <exception cref="ArgumentNullException">Thrown when the <paramref name="selector"/>, or <paramref name="message"/> is <c>null</c>.</exception>
+  [<Extension>]
+  static member Where (specification : Spec<'T>, selector : Func<'T, 'TResult>, dependent : Spec<'TResult>) =
+    if isNull selector then nullArg "selector"
+    Spec.filterT selector.Invoke dependent specification
 
   /// <summary>
   /// Adds another specification on which the current specification depends on.
@@ -1299,6 +1512,18 @@ type SpecExtensions =
   [<Extension>]
   static member Merge (specification1 : Spec<'T>, specification2 : Spec<'T>) =
     Spec.merge specification1 specification2
+
+  /// <summary>
+  /// Adds a dependent specification that will validate a subset of a resulting value of the original specifiation.
+  /// </summary>
+  /// <param name="specification">The specification that specifies how the model should look like.</param>
+  /// <param name="selector">The function to select a sub-value of the value which this <paramref name="specification"/> validates.</param>
+  /// <param name="dependent">The sub-specification that will validate the result of the <paramref name="selector"/>.</param>
+  /// <exception cref="ArgumentNullException">Thrown when the <paramref name="selector"/> is <c>null</c>.</exception>
+  [<Extension>]
+  static member Subset (specification : Spec<'T>, selector : Func<'T, 'TResult>, dependent : Spec<'TResult>) =
+    if isNull selector then nullArg "selector"
+    Spec.subset selector.Invoke dependent specification
 
   /// <summary>
   /// Adds a requirement for the result of the specified mapping, 
@@ -1411,6 +1636,7 @@ type SpecExtensions =
   /// <summary>
   /// Adds a requirement to check if the string is a not-whitespace string.
   /// </summary>
+  /// <param name="specification">The instance that specifies how the model should look like.</param>
   /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   [<Extension>]
   static member NotWhiteSpace (specification : Spec<string>, message) =
@@ -1433,11 +1659,12 @@ type SpecExtensions =
   /// <summary>
   /// Adds a requirement to check if the string is a not-null, not-empty string.
   /// </summary>
+  /// <param name="specification">The instance that specifies how the model should look like.</param>
   /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   [<Extension>]
-  static member NotNullOrEmpty (spec : Spec<string>, message) =
+  static member NotNullOrEmpty (specification : Spec<string>, message) =
     if isNull message then nullArg "message"
-    Spec.notNullOrEmpty message spec
+    Spec.notNullOrEmpty message specification
 
   /// <summary>
   /// Adds a requirement for the result of the specified mapping, 
@@ -1456,6 +1683,7 @@ type SpecExtensions =
   /// <summary>
   /// Adds a requirement to check if the string is a not-null, not-empty, not-whitespace string.
   /// </summary>
+  /// <param name="specification">The instance that specifies how the model should look like.</param>
   /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   [<Extension>]
   static member NotNullOrWhiteSpace (specification, message) =
@@ -1465,12 +1693,13 @@ type SpecExtensions =
   /// <summary>
   /// Adds a requirement to check if the string starts with the specified header.
   /// </summary>
+  /// <param name="specification">The instance that specifies how the model should look like.</param>
   /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   [<Extension>]
-  static member StartsWith (spec, header, message) =
+  static member StartsWith (specification, header, message) =
     if isNull header then nullArg "header"
     if isNull message then nullArg "message"
-    Spec.startsWith header message spec
+    Spec.startsWith header message specification
 
   /// <summary>
   /// Adds a requirement for the result of the specified mapping,
@@ -2029,6 +2258,56 @@ type SpecExtensions =
     if isNull subStrings then nullArg "subStrings"
     if isNull message then nullArg "message"
     Spec.stringContainsAll subStrings message specification
+
+  /// <summary>
+  /// Adds a requirement for the resulting value of the specified mapping 
+  /// that defines that the given value should be defined in the given enumeration.
+  /// </summary>
+  /// <param name="specification">The instance that specifies how the model should look like.</param>
+  /// <param name="selector">The function to select the enumeration value from another value.</param>
+  /// <param name="message">The error message to show when this requirement doesn't hold.</param>
+  [<Extension>]
+  static member InEnum<'T, 'TEnum when 'TEnum : enum<int32>> (specification : Spec<'T>, selector : Func<'T, 'TEnum>, message) =
+    if isNull selector then nullArg "selector"
+    if isNull message then nullArg "message"
+    Spec.inEnumOfT<'T, 'TEnum> selector.Invoke message specification
+
+  /// <summary>
+  /// Adds a requirement for the resulting value of the specified mapping 
+  /// that defines that the given value should be defined in the given enumeration.
+  /// </summary>
+  /// <param name="specification">The instance that specifies how the model should look like.</param>
+  /// <param name="selector">The function to select the enumeration value from another value.</param>
+  /// <param name="message">The error message to show when this requirement doesn't hold.</param>
+  [<Extension>]
+  static member InEnum<'TEnum when 'TEnum : enum<int32>> (specification : Spec<'TEnum>, message) =
+    if isNull message then nullArg "message"
+    Spec.inEnumT<'TEnum> message specification
+
+  /// <summary>
+  /// Adds a requirement for the resulting value of the specified mapping 
+  /// that defines that the given value should be defined in the given enumeration.
+  /// </summary>
+  /// <param name="specification">The instance that specifies how the model should look like.</param>
+  /// <param name="enumType">The type of the enumeration.</param>
+  /// <param name="message">The error message to show when this requirement doesn't hold.</param>
+  [<Extension>]
+  static member InEnum (specification : Spec<'T>, selector : Func<'T, 'TEnum>, enumType : Type, message) =
+    if isNull selector then nullArg "selector"
+    if isNull message then nullArg "message"
+    Spec.inEnumOf selector.Invoke enumType message specification
+
+  /// <summary>
+  /// Adds a requirement for the resulting value of the specified mapping 
+  /// that defines that the given value should be defined in the given enumeration.
+  /// </summary>
+  /// <param name="specification">The instance that specifies how the model should look like.</param>
+  /// <param name="enumType">The type of the enumeration.</param>
+  /// <param name="message">The error message to show when this requirement doesn't hold.</param>
+  [<Extension>]
+  static member InEnum (specification : Spec<'TEnum>, enumType : Type, message) =
+    if isNull message then nullArg "message"
+    Spec.inEnum enumType message specification
 
   /// <summary>
   /// Adds a requirement for the resulting sequence of the specified mapping,

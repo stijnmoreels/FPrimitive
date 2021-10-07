@@ -166,7 +166,7 @@ type Union =
     && FSharpType.GetUnionCases (typeof<'T>, bindingFlags)
        |> Array.exists (fun c -> c.Name = s)
   /// Converts a string to a discriminated union entry with optional args during creation.
-  static member ofString (s : string, [<Optional; DefaultParameterValue(BindingFlags.Default)>] bindingFlags : BindingFlags, [<ParamArray>] args) =
+  static member ofString<'T, 'TArg> (s : string, [<Optional; DefaultParameterValue(BindingFlags.Default)>] bindingFlags : BindingFlags, [<ParamArray>] args) =
     try if FSharpType.IsUnion (typeof<'T>, bindingFlags)
         then let args = Array.map box<'TArg> args |> Array.ofSeq
              FSharpType.GetUnionCases (typeof<'T>, bindingFlags)
@@ -177,24 +177,26 @@ type Union =
         else None
     with _ -> None
   /// Converts a string to a discriminated union entry with optional args during creation.
-  static member OfString (s : string, [<ParamArray>] args, [<Optional>] bindingFlags : BindingFlags option) =
-    Union.ofString (s, args, bindingFlags) |> Maybe.OfOption
+  static member OfString<'T, 'TArg> (s : string, [<Optional>] bindingFlags : BindingFlags option, [<ParamArray>] args) =
+    Union.ofString<'T, 'TArg> (s, defaultArg bindingFlags BindingFlags.Default, args) |> Maybe.OfOption
   /// Validates a string to a discriminated union entry with optional args during creation.
   [<CompiledName("Create")>]
-  static member create (s : string, [<Optional; DefaultParameterValue(BindingFlags.Default)>] bindingFlags : BindingFlags, [<ParamArray>] args) =
+  static member create<'T, 'TArg> (s : string, [<Optional; DefaultParameterValue(BindingFlags.Default)>] bindingFlags : BindingFlags, [<ParamArray>] args) =
     let message = "cannot create union case because the input string doesn't represent a union case entry field"
     Spec.def<string>
-    |> Spec.verify (fun s -> Union.isUnionCase (s, bindingFlags)) message
-    |> Spec.createModelWith (fun x -> Union.ofString (x, bindingFlags, args) |> Option.toResult (Map.create "union" [message])) s
+    |> Spec.verify (fun s -> Union.isUnionCase<'T> (s, bindingFlags)) message
+    |> Spec.createModelWith (fun x -> 
+        Union.ofString<'T, 'TArg> (x, bindingFlags, args) 
+        |> Option.toResult (Map.create "union" [message])) s
   /// Validates a string to a discriminated union entry with optional args during creation.
-  static member create (s : string, [<Optional; DefaultParameterValue(BindingFlags.Default)>] bindingFlags : BindingFlags) =
-    Union.create (s, bindingFlags, Array.empty)
+  static member create<'T> (s : string, [<Optional; DefaultParameterValue(BindingFlags.Default)>] bindingFlags : BindingFlags) =
+    Union.create<'T, obj> (s, bindingFlags, Array.empty)
   /// Validates a string to a discriminated union entry with optional args during creation.
-  static member create (s : string, [<ParamArray>] args) =
-    Union.create (s, BindingFlags.Default, args)
+  static member create<'T, 'TArg> (s : string, [<ParamArray>] args) =
+    Union.create<'T, 'TArg> (s, BindingFlags.Default, args)
   /// Validates a string to a discriminated union entry with optional args during creation.
-  static member create (s : string) =
-    Union.create (s, BindingFlags.Default, Array.empty)
+  static member create<'T> (s : string) =
+    Union.create<'T, obj> (s, BindingFlags.Default, Array.empty)
 
 /// Model representing a sequence of elements with at least a single element.
 [<CompiledName("NonEmptyEnumerable")>]
