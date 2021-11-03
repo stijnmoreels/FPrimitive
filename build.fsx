@@ -1,5 +1,6 @@
 #load ".fake/build.fsx/intellisense.fsx"
 
+open System
 open Fake.Core
 open Fake.DotNet
 open Fake.IO
@@ -83,7 +84,7 @@ Target.create "Paket" <| fun _ ->
             ProjectUrl = Some project.GitHubUrl
             LicenseUrl = Some (project.GitHubUrl + "/blob/master/LICENSE.txt")
             IconUrl = Some "https://raw.githubusercontent.com/stijnmoreels/FPrimitive/master/docs/img/logo.png"
-            Copyright = Some "Copyright 2019"
+            Copyright = Some <| sprintf "Copyright %i" DateTimeOffset.UtcNow.Year
             Tags = [ "domain"; "model"; "secure"; "trust"; "boundaries"; "blocks"; "reusable"; "fsharp" ]
             Files = 
                 [ Include ("bin/Release/netstandard2.0/*.dll", "lib/netstandard2.0")
