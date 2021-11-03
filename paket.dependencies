@@ -1,7 +1,7 @@
 version 5.249.0
 source https://www.nuget.org/api/v2
 
-nuget FSharp.Core = 4.7.0
+nuget FSharp.Core
 nuget Newtonsoft.Json.Schema
 nuget System.ComponentModel.Annotations
 nuget System.Text.Json
@@ -41,7 +41,7 @@ group FakeBuild
     nuget Fake.DotNet.AssemblyInfoFile
     nuget Fake.DotNet.Paket
     nuget Fake.DotNet.Testing.Expecto 
-    nuget Fake.DotNet.FSFormatting = 5.20.3
+    nuget Fake.DotNet.FSFormatting
     nuget Fake.Api.GitHub
 
 group Formatting

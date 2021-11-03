@@ -20,9 +20,9 @@ files
     bin/Release/netstandard2.0/*.dll ==> lib/netstandard2.0
     bin/Release/netstandard2.0/*.xml ==> lib/netstandard2.0
 dependencies
-    FSharp.Core >= 5.0.2
+    FSharp.Core >= 6.0
     Microsoft.Extensions.Logging >= 5.0
+    FSharp.Core >= 6.0
     FSharp.Core >= 5.0.2
-    FSharp.Core >= 5.0.2
-    FSharp.Core >= 5.0.2
+    FSharp.Core >= 6.0
     Microsoft.Extensions.Logging >= 5.0

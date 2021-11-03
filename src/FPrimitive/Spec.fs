@@ -115,11 +115,12 @@ module Spec =
   let notEmpty message spec =
     notEmptyOf id message spec
 
+  let private whitespaceRegex = Regex ("^\s+$", RegexOptions.Compiled) 
+
   /// Adds a requirement for the result of the specified mapping, 
   /// which defines that the result should not be a not-whitespace string.
   let notWhiteSpaceOf selector message spec =
-    let regex = Regex ("^\s+$")
-    add (fun x -> selector x |> regex.IsMatch |> not, message) spec
+    add (fun x -> selector x |> whitespaceRegex.IsMatch |> not, message) spec
 
   /// Adds a requirement to check if the string is a not-whitespace string.
   let notWhiteSpace message spec =
@@ -1187,8 +1188,7 @@ type ValidationResult<'T> internal (result : Result<'T, ErrorsByTag>) =
   internal new ([<ParamArray>] details : IReadOnlyDictionary<string, string array> []) = 
     if Seq.isEmpty details then invalidArg "details" "Requires at least a single validation error"
     let errors =
-      details |> Seq.map (Seq.map (fun (KeyValue (k, vs)) -> k, Seq.ofArray vs))
-              |> Seq.concat
+      details |> Seq.collect (fun dic -> Seq.map (fun (KeyValue (k, vs)) -> k, Seq.ofArray vs) dic)
               |> Map.ofSeqg
               |> Map.mapv List.ofSeq
     if Seq.isEmpty errors then invalidArg "details" "Requires at least a single validation error"
@@ -1357,7 +1357,7 @@ type ValidationResultExtensions =
   /// <summary>
   /// Filters out the validated value with yet another predicate and a series of validation error messages to create a fresh validation result in case the predicate doesn't hold.
   /// </summary>
-  /// <param name="result">The validation result to inspect.</param>
+  /// <param name="this">The validation result to inspect.</param>
   /// <param name="predicate">The filtering function that determines whether or not the validation result is considered valid.</param>
   /// <param name="errors">The validation error descriptions that will result in a fresh validation result when the <paramref name="predicate"/> doesn't hold.</param>
   /// <exception cref="ArgumentNullException">Thrown when the <paramref name="predicate"/> or <paramref name="errors"/> is <c>null</c>.</exception>
@@ -1458,9 +1458,9 @@ type SpecExtensions =
   /// Adds a conditional requirement to the specification.
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
-  /// <param name="predicate">The predicate that determines whether or not the <paramref name="requirement"/> should be included in the <paramref name="specification"/>.</param>
+  /// <param name="predicate">The predicate that determines whether or not the <paramref name="dependent"/> should be included in the <paramref name="specification"/>.</param>
   /// <param name="dependent">The dependent specification that will be added to the <paramref name="specification"/> when the <paramref name="predicate"/> holds.</param>
-  /// <exception cref="ArgumentNullException">Thrown when the <paramref name="predicate"/>, or <paramref name="message"/> is <c>null</c>.</exception>
+  /// <exception cref="ArgumentNullException">Thrown when the <paramref name="predicate"/> is <c>null</c>.</exception>
   [<Extension>]
   static member Where (specification : Spec<'T>, predicate : Func<'T, bool>, dependent : Spec<'T>) =
     if isNull predicate then nullArg "predicate"
@@ -1471,10 +1471,9 @@ type SpecExtensions =
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
   /// <param name="selector">The selection function to determine the dependent value.</param>
-  /// <param name="predicate">The predicate that determines whether or not the <paramref name="requirement"/> should be included in the <paramref name="specification"/>.</param>
+  /// <param name="predicate">The predicate that determines whether or not the <paramref name="dependent"/> should be included in the <paramref name="specification"/>.</param>
   /// <param name="dependent">The dependent specification that will be added to the <paramref name="specification"/> when the <paramref name="predicate"/> holds.</param>
-  /// <param name="message">The error message to show when this requirement doesn't hold.</param>
-  /// <exception cref="ArgumentNullException">Thrown when the <paramref name="selector"/>, <paramref name="predicate"/>, or <paramref name="message"/> is <c>null</c>.</exception>
+  /// <exception cref="ArgumentNullException">Thrown when the <paramref name="selector"/>, <paramref name="predicate"/> is <c>null</c>.</exception>
   [<Extension>]
   static member Where (specification : Spec<'T>, selector : Func<'T, 'TResult>, predicate : Func<'TResult, bool>, dependent : Spec<'TResult>) =
     if isNull selector then nullArg "selector"
@@ -1486,9 +1485,8 @@ type SpecExtensions =
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
   /// <param name="selector">The selection function to determine the dependent value.</param>
-  /// <param name="dependent">The dependent specification that will be added to the <paramref name="specification"/> when the <paramref name="predicate"/> holds.</param>
-  /// <param name="message">The error message to show when this requirement doesn't hold.</param>
-  /// <exception cref="ArgumentNullException">Thrown when the <paramref name="selector"/>, or <paramref name="message"/> is <c>null</c>.</exception>
+  /// <param name="dependent">The dependent specification that will be added to the <paramref name="specification"/> when the <paramref name="selector"/> holds.</param>
+  /// <exception cref="ArgumentNullException">Thrown when the <paramref name="selector"/> is <c>null</c>.</exception>
   [<Extension>]
   static member Where (specification : Spec<'T>, selector : Func<'T, 'TResult>, dependent : Spec<'TResult>) =
     if isNull selector then nullArg "selector"
@@ -1501,8 +1499,8 @@ type SpecExtensions =
   /// <param name="specification">The instance that specifies how the model should look like.</param>
   /// <param name="dependent">The specification that should run before the current <paramref name="specification"/>.</param>
   [<Extension>]
-  static member DependsOn (spec : Spec<'T>, dependent : Spec<'T>) =
-    Spec.dependsOn dependent spec
+  static member DependsOn (specification : Spec<'T>, dependent : Spec<'T>) =
+    Spec.dependsOn dependent specification
 
   /// <summary>
   /// Combines two specifications as dependents of a new specification which will run before any extra requirements that's been added after this point.
@@ -1548,9 +1546,9 @@ type SpecExtensions =
   /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   /// <exception cref="ArgumentNullException">Thrown when the <paramref name="message"/> is <c>null</c>.</exception>
   [<Extension>]
-  static member Equal<'T when 'T : equality> (spec : Spec<'T>, value, message) =
+  static member Equal<'T when 'T : equality> (specification : Spec<'T>, value, message) =
     if isNull message then nullArg "message"
-    Spec.equal value message spec
+    Spec.equal value message specification
 
   /// <summary>
   /// Adds a requirement for the result of the specified mapping, 
@@ -1558,6 +1556,7 @@ type SpecExtensions =
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
   /// <param name="selector">The function to select the another value from the validated type.</param>
+  /// <param name="value">The other value to compare with the current value in this specification.</param>
   /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   /// <exception cref="ArgumentNullException">Thrown when the <paramref name="selector"/> or the <paramref name="message"/> is <c>null</c>.</exception>
   [<Extension>]
@@ -1570,6 +1569,7 @@ type SpecExtensions =
   /// Adds a requirement to check no equality to a specified value.
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
+  /// <param name="value">The other value to compare with the current value in this specification.</param>
   /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   [<Extension>]
   static member NotEqual<'T when 'T : equality> (specification : Spec<'T>, value, message) = 
@@ -1582,6 +1582,7 @@ type SpecExtensions =
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
   /// <param name="selector">The function to select the another value from the validated type.</param>
+  /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   [<Extension>]
   static member NotNull (specification : Spec<'T>, selector : Func<'T, 'TResult>, message) =
     if isNull selector then nullArg "selector"
@@ -1591,20 +1592,22 @@ type SpecExtensions =
   /// <summary>
   /// Adds a requirement to check for not `null`.
   /// </summary>
+  /// <param name="specification">The instance that specifies how the model should look like.</param>
   /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   [<Extension>]
-  static member NotNull<'T when 'T : null and 'T : equality> (spec : Spec<'T>, message) =
+  static member NotNull<'T when 'T : null and 'T : equality> (specification : Spec<'T>, message) =
     if isNull message then nullArg "message"
-    Spec.notNull message spec
+    Spec.notNull message specification
 
   /// <summary>
   /// Adds a requirement to check for non-empty string.
   /// </summary>
+  /// <param name="specification">The instance that specifies how the model should look like.</param>
   /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   [<Extension>]
-  static member NotEmpty ((spec : Spec<string>), message) =
+  static member NotEmpty (specification : Spec<string>, message) =
     if isNull message then nullArg "message"
-    Spec.notEmpty message spec
+    Spec.notEmpty message specification
 
   /// <summary>
   /// Adds a requirement for the result of the specified mapping, 
@@ -1694,6 +1697,7 @@ type SpecExtensions =
   /// Adds a requirement to check if the string starts with the specified header.
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
+  /// <param name="header">The prefix string value that should be the beginning of the string.</param>
   /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   [<Extension>]
   static member StartsWith (specification, header, message) =
@@ -1707,6 +1711,7 @@ type SpecExtensions =
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
   /// <param name="selector">The function to select the another value from the validated type.</param>
+  /// <param name="header">The prefix string value that should be the beginning of the string.</param>
   /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   [<Extension>]
   static member StartsWith (specification : Spec<'T>, selector : Func<'T, string>, header, message) =
@@ -1721,6 +1726,7 @@ type SpecExtensions =
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
   /// <param name="selector">The function to select the another value from the validated type.</param>
+  /// <param name="trailer">The postfix string value that should be the beginning of the string.</param>
   /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   [<Extension>]
   static member EndsWith (specification : Spec<'T>, selector : Func<'T, string>, trailer, message) =
@@ -1732,6 +1738,9 @@ type SpecExtensions =
   /// <summary>
   /// Adds a requirement to check if the string ends with the specified trailer.
   /// </summary>
+  /// <param name="specification">The instance that specifies how the model should look like.</param>
+  /// <param name="trailer">The postfix string value that should be the beginning of the string.</param>
+  /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   [<Extension>]
   static member EndsWith (specification : Spec<string>, trailer, message) =
     if isNull message then nullArg "message"
@@ -1743,6 +1752,7 @@ type SpecExtensions =
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
   /// <param name="selector">The function to select the another value from the validated type.</param>
+  /// <param name="items">The specific items the value verified in this specification should contain.</param>
   /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   [<Extension>]
   static member SequenceEqual (specification : Spec<'T>, selector : Func<'T, IEnumerable<'TResult>>, items, message) =
@@ -1754,6 +1764,8 @@ type SpecExtensions =
   /// <summary>
   /// Adds a requirement to check if the sequence is equal (item-wise) to another sequence.
   /// </summary>
+  /// <param name="specification">The instance that specifies how the model should look like.</param>
+  /// <param name="items">The specific items the value verified in this specification should contain.</param>
   /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   [<Extension>]
   static member SequenceEqual (specification : Spec<IEnumerable<'T>>, items, message) =
@@ -1764,6 +1776,8 @@ type SpecExtensions =
   /// <summary>
   /// Adds a requirement to check if the sequence is equal (item-wise) to another sequence.
   /// </summary>
+  /// <param name="specification">The instance that specifies how the model should look like.</param>
+  /// <param name="items">The specific items the value verified in this specification should contain.</param>
   /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   [<Extension>]
   static member SequenceEqual (specification : Spec<IList<'T>>, items, message) =
@@ -1774,6 +1788,8 @@ type SpecExtensions =
   /// <summary>
   /// Adds a requirement to check if the sequence is equal (item-wise) to another sequence.
   /// </summary>
+  /// <param name="specification">The instance that specifies how the model should look like.</param>
+  /// <param name="items">The specific items the value verified in this specification should contain.</param>
   /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   [<Extension>]
   static member SequenceEqual (specification : Spec<ICollection<'T>>, items, message) =
@@ -1784,6 +1800,8 @@ type SpecExtensions =
   /// <summary>
   /// Adds a requirement to check if the sequence is equal (item-wise) to another sequence.
   /// </summary>
+  /// <param name="specification">The instance that specifies how the model should look like.</param>
+  /// <param name="items">The specific items the value verified in this specification should contain.</param>
   /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   [<Extension>]
   static member SequenceEqual (specification : Spec<'T array>, items, message) =
@@ -1808,6 +1826,7 @@ type SpecExtensions =
   /// <summary>
   /// Adds a requirement to check for non-empty sequences.
   /// </summary>
+  /// <param name="specification">The instance that specifies how the model should look like.</param>
   /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   [<Extension>]
   static member NonEmpty (specification : Spec<IEnumerable<'T>>, message) =
@@ -1817,6 +1836,7 @@ type SpecExtensions =
   /// <summary>
   /// Adds a requirement to check for non-empty sequences.
   /// </summary>
+  /// <param name="specification">The instance that specifies how the model should look like.</param>
   /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   [<Extension>]
   static member NonEmpty (specification : Spec<ICollection<'T>>, message) =
@@ -1826,6 +1846,7 @@ type SpecExtensions =
   /// <summary>
   /// Adds a requirement to check for non-empty sequences.
   /// </summary>
+  /// <param name="specification">The instance that specifies how the model should look like.</param>
   /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   [<Extension>]
   static member NonEmpty (specification : Spec<IList<'T>>, message) =
@@ -1835,6 +1856,7 @@ type SpecExtensions =
   /// <summary>
   /// Adds a requirement to check for non-empty sequences.
   /// </summary>
+  /// <param name="specification">The instance that specifies how the model should look like.</param>
   /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   [<Extension>]
   static member NonEmpty (specification : Spec<'T[]>, message) =
@@ -1844,6 +1866,7 @@ type SpecExtensions =
   /// <summary>
   /// Adds a requirement to check for non-empty sequences.
   /// </summary>
+  /// <param name="specification">The instance that specifies how the model should look like.</param>
   /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   [<Extension>]
   static member NonEmpty (specification : Spec<IDictionary<'TKey, 'TValue>>, message) =
@@ -1856,6 +1879,7 @@ type SpecExtensions =
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
   /// <param name="selector">The function to select the another value from the validated type.</param>
+  /// <param name="predicate">The function to which each item in the sequence has to match.</param>
   /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   [<Extension>]
   static member All (specification : Spec<'T>, selector : Func<'T, IEnumerable<'TResult>>, predicate : Func<'TResult, bool>, message) =
@@ -1866,6 +1890,8 @@ type SpecExtensions =
   /// <summary>
   /// Adds a requirement for the sequence to check that all the elements of the sequence satisfy the specified predicate.
   /// </summary>
+  /// <param name="specification">The instance that specifies how the model should look like.</param>
+  /// <param name="predicate">The function to which each item in the sequence has to match.</param>
   /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   [<Extension>]
   static member All (specification : Spec<IEnumerable<'T>>, predicate : Func<'T, bool>, message) =
@@ -1876,6 +1902,9 @@ type SpecExtensions =
   /// <summary>
   /// Adds a requirement for the sequence to check that all the elements of the sequence satisfy the specified predicate.
   /// </summary>
+  /// <param name="specification">The instance that specifies how the model should look like.</param>
+  /// <param name="predicate">The function to which each item in the sequence has to match.</param>
+  /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   [<Extension>]
   static member All (specification : Spec<ICollection<'T>>, predicate : Func<'T, bool>, message) =
     if isNull predicate then nullArg "predicate"
@@ -1886,6 +1915,8 @@ type SpecExtensions =
   /// Adds a requirement for the sequence to check that all the elements of the sequence satisfy the specified predicate.
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
+  /// <param name="predicate">The function to which each item in the sequence has to match.</param>
+  /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   [<Extension>]
   static member All (specification : Spec<IList<'T>>, predicate : Func<'T, bool>, message) =
     if isNull predicate then nullArg "predicate"
@@ -1896,6 +1927,7 @@ type SpecExtensions =
   /// Adds a requirement for the sequence to check that all the elements of the sequence satisfy the specified predicate.
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
+  /// <param name="predicate">The function to which each item in the sequence has to match.</param>
   /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   [<Extension>]
   static member All (specification : Spec<'T[]>, predicate : Func<'T, bool>, message) =
@@ -1907,8 +1939,8 @@ type SpecExtensions =
   /// Adds a requirement for the sequence to check that all the elements of the sequence satisfy the specified predicate.
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
+  /// <param name="predicate">The function to which each item in the sequence has to match.</param>
   /// <param name="message">The error message to show when this requirement doesn't hold.</param>
-  [<Extension>]
   static member All (specification : Spec<IDictionary<'TKey, 'TValue>>, predicate : Func<KeyValuePair<'TKey, 'TValue>, bool>, message) =
     if isNull predicate then nullArg "predicate"
     if isNull message then nullArg "message"
@@ -1919,6 +1951,8 @@ type SpecExtensions =
   /// which defines that none of the elements of the sequence should satisfy the specified predicate.
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
+  /// <param name="selector">The function to select the another value from the validated type.</param>
+  /// <param name="predicate">The function to which none item in the sequence has to match.</param>
   /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   [<Extension>]
   static member None (specification : Spec<'T>, selector : Func<'T, IEnumerable<'TResult>>, predicate : Func<'TResult, bool>, message) =
@@ -1931,6 +1965,7 @@ type SpecExtensions =
   /// Adds a requirement for the sequence to check that non of the elements of the sequence satisfy the specified predicate.
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
+  /// <param name="predicate">The function to which none item in the sequence has to match.</param>
   /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   [<Extension>]
   static member None (specification : Spec<IEnumerable<'T>>, predicate : Func<'T, bool>, message) =
@@ -1942,6 +1977,7 @@ type SpecExtensions =
   /// Adds a requirement for the sequence to check that non of the elements of the sequence satisfy the specified predicate.
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
+  /// <param name="predicate">The function to which none item in the sequence has to match.</param>
   /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   [<Extension>]
   static member None (specification : Spec<IList<'T>>, predicate : Func<'T, bool>, message) =
@@ -1953,6 +1989,7 @@ type SpecExtensions =
   /// Adds a requirement for the sequence to check that non of the elements of the sequence satisfy the specified predicate.
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
+  /// <param name="predicate">The function to which none item in the sequence has to match.</param>
   /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   [<Extension>]
   static member None (specification : Spec<ICollection<'T>>, predicate : Func<'T, bool>, message) =
@@ -1964,6 +2001,8 @@ type SpecExtensions =
   /// Adds a requirement for the sequence to check that non of the elements of the sequence satisfy the specified predicate.
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
+  /// <param name="predicate">The function to which none item in the sequence has to match.</param>
+  /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   [<Extension>]
   static member None (specification : Spec<'T[]>, predicate : Func<'T, bool>, message) =
     if isNull predicate then nullArg "predicate"
@@ -1974,6 +2013,7 @@ type SpecExtensions =
   /// which defines that none of the elements of the sequence should be equal to `null`.
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
+  /// <param name="selector">The function to select the another value from the validated type.</param>
   /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   /// <exception cref="ArgumentNullException">Thrown when the <paramref name="selector"/> or the <paramref name="message"/> is <c>null</c>.</exception>
   [<Extension>]
@@ -2028,6 +2068,7 @@ type SpecExtensions =
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
   /// <param name="selector">The function to select the another value from the validated type.</param>
+  /// <param name="item">The element that should be in the sequence.</param>
   /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   [<Extension>]
   static member Contains (specification : Spec<'T>, selector : Func<'T, IEnumerable<'TResult>>, item, message) =
@@ -2039,16 +2080,18 @@ type SpecExtensions =
   /// Adds a requirement for the sequence to verify if a given item is present in the sequence.
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
+  /// <param name="item">The element that should be in the sequence.</param>
   /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   [<Extension>]
-  static member Contains (pecification : Spec<IEnumerable<'T>>, item, message) =
+  static member Contains (specification : Spec<IEnumerable<'T>>, item, message) =
     if isNull message then nullArg "message"
-    Spec.contains item message pecification
+    Spec.contains item message specification
 
   /// <summary>
   /// Adds a requirement for the sequence to verify if a given item is present in the sequence.
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
+  /// <param name="item">The element that should be in the sequence.</param>
   /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   [<Extension>]
   static member Contains (specification : Spec<IList<'T>>, item, message) =
@@ -2059,6 +2102,8 @@ type SpecExtensions =
   /// Adds a requirement for the sequence to verify if a given item is present in the sequence.
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
+  /// <param name="item">The element that should be in the sequence.</param>
+  /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   [<Extension>]
   static member Contains (specification : Spec<ICollection<'T>>, item, message) =
     if isNull message then nullArg "message"
@@ -2068,6 +2113,7 @@ type SpecExtensions =
   /// Adds a requirement for the sequence to verify if a given item is present in the sequence.
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
+  /// <param name="item">The element that should be in the sequence.</param>
   /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   [<Extension>]
   static member Contains (specification : Spec<'T[]>, item, message) =
@@ -2080,6 +2126,7 @@ type SpecExtensions =
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
   /// <param name="selector">The function to select the another value from the validated type.</param>
+  /// <param name="item">The element that should not be in the sequence.</param>
   /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   [<Extension>]
   static member NotContains (specification : Spec<'T>, selector : Func<'T, IEnumerable<'TResult>>, item, message) =
@@ -2091,6 +2138,7 @@ type SpecExtensions =
   /// Adds a requirement for the sequence to verify if a given item is not present in the sequence.
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
+  /// <param name="item">The element that should not be in the sequence.</param>
   /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   [<Extension>]
   static member NotContains (specification : Spec<IEnumerable<'T>>, item, message) =
@@ -2101,6 +2149,7 @@ type SpecExtensions =
   /// Adds a requirement for the sequence to verify if a given item is not present in the sequence.
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
+  /// <param name="item">The element that should not be in the sequence.</param>
   /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   [<Extension>]
   static member NotContains (specification : Spec<IList<'T>>, item, message) =
@@ -2111,6 +2160,7 @@ type SpecExtensions =
   /// Adds a requirement for the sequence to verify if a given item is not present in the sequence.
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
+  /// <param name="item">The element that should not be in the sequence.</param>
   /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   [<Extension>]
   static member NotContains (specification : Spec<ICollection<'T>>, item, message) =
@@ -2121,6 +2171,7 @@ type SpecExtensions =
   /// Adds a requirement for the sequence to verify if a given item is not present in the sequence.
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
+  /// <param name="item">The element that should not be in the sequence.</param>
   /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   [<Extension>]
   static member NotContains (specification : Spec<'T[]>, item, message) =
@@ -2133,6 +2184,7 @@ type SpecExtensions =
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
   /// <param name="selector">The function to select the another value from the validated type.</param>
+  /// <param name="items">The elements that should all be in the sequence.</param>
   /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   [<Extension>]
   static member ContainsAll (specification : Spec<'T>, selector : Func<'T, IEnumerable<'TResult>>, items, message) =
@@ -2145,6 +2197,7 @@ type SpecExtensions =
   /// Adds a requirement for the sequence to verify if a given set of items are all present in the sequence.
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
+  /// <param name="items">The elements that should all be in the sequence.</param>
   /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   [<Extension>]
   static member ContainsAll (specification : Spec<IEnumerable<'T>>, items, message) =
@@ -2156,6 +2209,7 @@ type SpecExtensions =
   /// Adds a requirement for the sequence to verify if a given set of items are all present in the sequence.
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
+  /// <param name="items">The elements that should all be in the sequence.</param>
   /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   [<Extension>]
   static member ContainsAll (specification : Spec<ICollection<'T>>, items, message) =
@@ -2167,6 +2221,7 @@ type SpecExtensions =
   /// Adds a requirement for the sequence to verify if a given set of items are all present in the sequence.
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
+  /// <param name="items">The elements that should all be in the sequence.</param>
   /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   [<Extension>]
   static member ContainsAll (specification : Spec<IList<'T>>, items, message) =
@@ -2178,6 +2233,7 @@ type SpecExtensions =
   /// Adds a requirement for the sequence to verify if a given set of items are all present in the sequence.
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
+  /// <param name="items">The elements that should all be in the sequence.</param>
   /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   [<Extension>]
   static member ContainsAll (specification : Spec<'T array>, items, message) =
@@ -2190,6 +2246,8 @@ type SpecExtensions =
   /// which defines that the given substring is present in the string.
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
+  /// <param name="selector">The function to select the another value from the validated type.</param>
+  /// <param name="subString">The section that should be in the string.</param>
   /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   [<Extension>]
   static member Contains (specification : Spec<'T>, selector : Func<'T, string>, subString, message) =
@@ -2202,6 +2260,7 @@ type SpecExtensions =
   /// Adds a requirement for the string to verify if the given substring is present in the string.
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
+  /// <param name="subString">The section that should be in the string.</param>
   /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   [<Extension>]
   static member Contains (specification : Spec<string>, subString, message) =
@@ -2527,6 +2586,7 @@ type SpecExtensions =
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
   /// <param name="selector">The function to select the another value from the validated type.</param>
+  /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   [<Extension>]
   static member Single (specification : Spec<'T>, selector : Func<'T, IEnumerable<'TResult>>, predicate : Func<'TResult, bool>, message) =
     if isNull selector then nullArg "selector"
@@ -2758,6 +2818,7 @@ type SpecExtensions =
   /// Adds a requirement for the sequence to check if the length matches the specified length.
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
+  /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   [<Extension>]
   static member Length (specification : Spec<'T[]>, length, message) = 
     if isNull message then nullArg "message"
@@ -3030,6 +3091,7 @@ type SpecExtensions =
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
   /// <param name="selector">The function to select the another value from the validated type.</param>
+  /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   [<Extension>]
   static member GreaterThan (specification : Spec<'T>, selector : Func<'T, 'TResult>, limit, message) =
     if isNull message then nullArg "message"
@@ -3039,6 +3101,7 @@ type SpecExtensions =
   /// Adds a requirement to check if the value is greater than (limit &lt; value) the specified limit.
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
+  /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   [<Extension>]
   static member GreaterThan (spec : Spec<'T>, limit, message) =
     if isNull message then nullArg "message"
@@ -3050,6 +3113,7 @@ type SpecExtensions =
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
   /// <param name="selector">The function to select the another value from the validated type.</param>
+  /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   /// <exception cref="ArgumentNullException">Thrown when the <paramref name="selector"/> or the <paramref name="message"/> is <c>null</c>.</exception>
   [<Extension>]
   static member LessThanOrEqual (spec : Spec<'T>, selector : Func<'T, 'TResult>, limit, message) =
@@ -3061,6 +3125,7 @@ type SpecExtensions =
   /// Adds a requirement to check if the value is less than or equal to (limit &gt;= value) to the specified limit.
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
+  /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   [<Extension>]
   static member LessThanOrEqual (spec : Spec<'T>, limit, message) =
     if isNull message then nullArg "message"
@@ -3071,6 +3136,7 @@ type SpecExtensions =
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
   /// <param name="selector">The function to select the another value from the validated type.</param>
+  /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   [<Extension>]
   static member GreaterThanOrEqual (spec : Spec<'T>, selector : Func<'T, 'TResult>, limit, message) =
     if isNull message then nullArg "message"
@@ -3080,6 +3146,7 @@ type SpecExtensions =
   /// Adds a requirement to check if the value is greater than or equal to (limit &lt;= value) the specified limit.
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
+  /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   [<Extension>]
   static member GreaterThanOrEqual (spec : Spec<'T>, limit, message) =
     if isNull message then nullArg "message"
@@ -3089,6 +3156,7 @@ type SpecExtensions =
   /// Adds a requirement to check if the value is inclusive between (min &lt;= value &amp;&amp; value &lt;= max) the specified range.
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
+  /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   [<Extension>]
   static member InclusiveBetween (spec : Spec<'T>, min, max, message) =
     if isNull message then nullArg "message"
@@ -3099,6 +3167,7 @@ type SpecExtensions =
   /// which defines that the result should be inclusive between (min &lt;= value &amp;&amp; value &lt;= max) the specified range.
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
+  /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   /// <exception cref="ArgumentNullException">Thrown when the <paramref name="selector"/> or the <paramref name="message"/> is <c>null</c>.</exception>
   [<Extension>]
   static member InclusiveBetween (spec : Spec<'T>, selector : Func<'T, 'TResult>, min, max, message) =
@@ -3110,6 +3179,7 @@ type SpecExtensions =
   /// Adds a requirement to check if the value is exclusive between (min &lt; value &amp;&amp; value &lt; max) the specified range.
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
+  /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   [<Extension>]
   static member ExclusiveBetween (spec : Spec<'T>, min, max, message) =
     if isNull message then nullArg "message"
@@ -3121,6 +3191,7 @@ type SpecExtensions =
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
   /// <param name="selector">The function to select the another value from the validated type.</param>
+  /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   /// <exception cref="ArgumentNullException">Thrown when the <paramref name="selector"/> or the <paramref name="message"/> is <c>null</c>.</exception>
   [<Extension>]
   static member ExclusiveBetween (spec : Spec<'T>, selector : Func<'T, 'TResult>, min, max, message) =
@@ -3144,6 +3215,7 @@ type SpecExtensions =
   /// Adds a requirement to check if the value is a match to the specified regular expression pattern.
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
+  /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   [<Extension; Obsolete("Use 'Matches' instead")>]
   static member Regex ((spec : Spec<string>), pattern, message) =
     if isNull message then nullArg "message"
@@ -3155,6 +3227,7 @@ type SpecExtensions =
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
   /// <param name="selector">The function to select the another value from the validated type.</param>
+  /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   /// <exception cref="ArgumentNullException">Thrown when the <paramref name="selector"/> or the <paramref name="message"/> is <c>null</c>.</exception>
   [<Extension>]
   static member Regex (specification : Spec<'T>, selector : Func<'T, string>, expr : Regex, message) =
@@ -3166,6 +3239,7 @@ type SpecExtensions =
   /// Adds a requirement to check if the value is a match to the specified regular expression pattern.
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
+  /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   [<Extension>]
   static member Regex ((spec : Spec<string>), expr : Regex, message) =
     if isNull message then nullArg "message"
@@ -3177,6 +3251,7 @@ type SpecExtensions =
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
   /// <param name="selector">The function to select the another value from the validated type.</param>
+  /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   /// <exception cref="ArgumentNullException">Thrown when the <paramref name="selector"/> or the <paramref name="message"/> is <c>null</c>.</exception>
   [<Extension>]
   static member Matches (specification : Spec<'T>, selector : Func<'T, string>, pattern, message) =
@@ -3188,6 +3263,7 @@ type SpecExtensions =
   /// Adds a requirement to check if the value is a match to the specified regular expression pattern.
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
+ /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   /// <exception cref="ArgumentNullException">Thrown when the <paramref name="message"/> is <c>null</c>.</exception>
   [<Extension>]
   static member Matches ((spec : Spec<string>), pattern, message) =
@@ -3200,21 +3276,23 @@ type SpecExtensions =
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
   /// <param name="selector">The function to select the another value from the validated type.</param>
+  /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   [<Extension>]
-  static member Alphabetical (spec : Spec<'T>, selector : Func<'T, string>, message) =
+  static member Alphabetical (specification : Spec<'T>, selector : Func<'T, string>, message) =
     if isNull selector then nullArg "selector"
     if isNull message then nullArg "message"
-    Spec.alphabeticalOf selector.Invoke message spec
+    Spec.alphabeticalOf selector.Invoke message specification
 
   /// <summary>
   /// Adds a requirement to check for strings containing only charaters in the alphabet.
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
+  /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   /// <exception cref="ArgumentNullException">Thrown when the <paramref name="message"/> is <c>null</c>.</exception>
   [<Extension>]
-  static member Alphabetical (spec, message) =
+  static member Alphabetical (specification, message) =
     if isNull message then nullArg "message"
-    Spec.alphabetical message spec
+    Spec.alphabetical message specification
 
   /// <summary>
   /// Adds a requirement for the result of the specified mapping,
@@ -3222,44 +3300,49 @@ type SpecExtensions =
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
   /// <param name="selector">The function to select the another value from the validated type.</param>
+  /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   /// <exception cref="ArgumentNullException">Thrown when the <paramref name="selector"/> or the <paramref name="message"/> is <c>null</c>.</exception>
   [<Extension>]
-  static member Alphanum (spec : Spec<'T>, selector : Func<'T, string>, message) =
+  static member Alphanum (specification : Spec<'T>, selector : Func<'T, string>, message) =
     if isNull selector then nullArg "selector"
     if isNull message then nullArg "message"
-    Spec.alphanumOf selector.Invoke message spec
+    Spec.alphanumOf selector.Invoke message specification
 
   /// <summary>
   /// Adds a requirement to check for an alphanumerical value.
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
+  /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   /// <exception cref="ArgumentNullException">Thrown when the <paramref name="message"/> is <c>null</c>.</exception>
   [<Extension>]
-  static member Alphanum (spec, message) =
+  static member Alphanum (specification, message) =
     if isNull message then nullArg "message"
-    Spec.alphanum message spec
+    Spec.alphanum message specification
 
   /// <summary>
   /// Adds a requirement for the result of the specified mapping,
   /// which defines that the result should be an alphanumerical value or special charaters.
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
+  /// <param name="selector">The selection function that will select another value from the untrusted value.</param>
+  /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   /// <exception cref="ArgumentNullException">Thrown when the <paramref name="selector"/> or the <paramref name="message"/> is <c>null</c>.</exception>
   [<Extension>]
-  static member AlphanumSpecial (spec : Spec<'T>, selector : Func<'T, string>, message) =
+  static member AlphanumSpecial (specification : Spec<'T>, selector : Func<'T, string>, message) =
     if isNull selector then nullArg "selector"
     if isNull message then nullArg "message"
-    Spec.alphanumSpecialOf selector.Invoke message spec
+    Spec.alphanumSpecialOf selector.Invoke message specification
 
   /// <summary>
   /// Adds a requirement to check for alphanumerical values.
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
+  /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   /// <exception cref="ArgumentNullException">Thrown when the <paramref name="message"/> is <c>null</c>.</exception>
   [<Extension>]
-  static member AlphanumSpecial (spec, message) =
+  static member AlphanumSpecial (specification, message) =
     if isNull message then nullArg "message"
-    Spec.alphanumSpecial message spec
+    Spec.alphanumSpecial message specification
   
   /// <summary>
   /// Adds a requirement for the result of the specified mapping, 
@@ -3267,6 +3350,8 @@ type SpecExtensions =
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
   /// <param name="selector">The function to select the another value from the validated type.</param>
+  /// <param name="expectedType">The expected type of the untrusted value.</param>
+  /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   /// <exception cref="ArgumentNullException">Thrown when the <paramref name="message"/> is <c>null</c>.</exception>
   [<Extension>]
   static member IsType (specification : Spec<'T>, selector : Func<'T, 'TResult>, expectedType, message) =
@@ -3278,32 +3363,37 @@ type SpecExtensions =
   /// Adds a requirement to check if the value is an instance of the specified type.
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
+  /// <param name="expectedType">The expected type of the untrusted value.</param>
+  /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   /// <exception cref="ArgumentNullException">Thrown when the <paramref name="message"/> is <c>null</c>.</exception>
   [<Extension>]
-  static member IsType (spec : Spec<'T>, expectedType, message) =
+  static member IsType (specification : Spec<'T>, expectedType, message) =
     if isNull message then nullArg "message"
-    Spec.isType expectedType message spec
+    Spec.isType expectedType message specification
 
   /// <summary>
   /// Adds a requirement for the result of the specified mapping, 
   /// which defines that the result should an instance of the specified type `T`.
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
+  /// <param name="selector">The selection function that will select another value from the untrusted value which should have the <typeparamref name="TExpected"/> type.</param>
+  /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   /// <exception cref="ArgumentNullException">Thrown when the <paramref name="message"/> is <c>null</c>.</exception>
   [<Extension>]
-  static member IsType<'T, 'TResult, 'TExpected> (spec : Spec<'T>, selector : Func<'T, 'TResult>, message) =
+  static member IsType<'T, 'TResult, 'TExpected> (specification : Spec<'T>, selector : Func<'T, 'TResult>, message) =
     if isNull selector then nullArg "selector"
     if isNull message then nullArg "message"
-    Spec.isTypeOfT<'T, 'TResult, 'TExpected> selector.Invoke message spec
+    Spec.isTypeOfT<'T, 'TResult, 'TExpected> selector.Invoke message specification
 
   /// <summary>
   /// Adds a requirement to check if the value is an instance of the specified type `T`.
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
+  /// <param name="message">The error message to show when this requirement doesn't hold.</param>
   [<Extension>]
-  static member IsType<'T, 'TExpected> (spec : Spec<'T>, message) =
+  static member IsType<'T, 'TExpected> (specification : Spec<'T>, message) =
     if isNull message then nullArg "message"
-    Spec.isTypeT<'T, 'TExpected> message spec
+    Spec.isTypeT<'T, 'TExpected> message specification
 
   /// <summary>
   /// Change the way the validation of requirements should happen.
@@ -3329,6 +3419,7 @@ type SpecExtensions =
   /// Maps the to-be-validated value before the requirements are verified, therefore controlling the input value of this specification and further added requirements.
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should be created.</param>
+  /// <param name="preSelector">The selection function that will select another value from the untrusted value which results in a different specification.</param>
   /// <exception cref="ArgumentNullException">Thrown when the <paramref name="preSelector"/> is <c>null</c>.</exception>
   [<Extension>]
   static member PreSelect (specification : Spec<'TAfter>, preSelector : Func<'TBefore, 'TAfter>) =
@@ -3339,6 +3430,7 @@ type SpecExtensions =
   /// Adds a pre-valildation function to all the requirements of this specification.
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
+  /// <param name="preValidator">The validation function that will pre-validate the untrusted value before the specification validaton.</param>
   /// <exception cref="ArgumentNullException">Thrown when the <paramref name="preValidator"/> is <c>null</c>.</exception>
   [<Extension>]
   static member PreValidate (specification : Spec<'TAfter>, preValidator : Func<'TBefore, ValidationResult<'TAfter>>) =
@@ -3375,8 +3467,8 @@ type SpecExtensions =
   /// <param name="specification">The instance that specifies how the model should look like.</param>
   /// <param name="untrusted">The untrusted value that should be tried to create into a model according to the given <paramref name="specification"/></param>
   [<Extension>]
-  static member Validate (spec : Spec<'T>, untrusted) =
-    ValidationResult<'T> (result=Spec.validate untrusted spec)
+  static member Validate (specification : Spec<'T>, untrusted) =
+    ValidationResult<'T> (result=Spec.validate untrusted specification)
 
   /// <summary>
   /// Validate the specified value to the domain <paramref name="specification"/>,
@@ -3384,16 +3476,13 @@ type SpecExtensions =
   /// </summary>
   /// <param name="specification">The instance that specifies how the model should look like.</param>
   /// <param name="untrusted">The untrusted value that should be tried to create into a model according to the given <paramref name="specification"/></param>
-  /// <param name="creator">
-  ///   The function that will create model after the <paramref name="untrusted"/> value is valid according to the given <paramref name="specification"/>
-  /// </param>
   /// <param name="message">The error message that the thrown exception of type <typeparamref name="TException"/> should have.</param>
-  /// <exception cref="ArgumentNullException">Thrown when the <paramref name="creator"/> or <paramref name="message"/> is <c>null</c>.</exception>
+  /// <exception cref="ArgumentNullException">Thrown when the <paramref name="message"/> is <c>null</c>.</exception>
   /// <exception cref="TException">Thrown when the <paramref name="untrusted"/> is not considered valid according to the given <paramref name="specification"/></exception>
   [<Extension>]
-  static member ValidateThrow<'T, 'TException when 'TException :> exn> (specification : Spec<'T>, value, message : string) : 'T =
+  static member ValidateThrow<'T, 'TException when 'TException :> exn> (specification : Spec<'T>, untrusted, message : string) : 'T =
     if isNull message then nullArg "message" 
-    Spec.validate value specification
+    Spec.validate untrusted specification
     |> Result.getOrElse (fun _ -> 
       raise (Activator.CreateInstance(typeof<'TException>, [| message :> obj |]) :?> 'TException))
 
@@ -3449,6 +3538,7 @@ type SpecExtensions =
   /// <param name="specification">The instance that specifies how the model should be created.</param>
   /// <param name="untrusted">The untrusted value that should be tried to create into a model according to the given <paramref name="specification"/></param>
   /// <param name="creator">The function that will create model after the <paramref name="untrusted"/> value is valid according to the given <paramref name="specification"/></param>
+  /// <param name="message">The error message that the thrown exception should have.</param>
   /// <exception cref="ArgumentNullException">Thrown when the <paramref name="creator"/> or <paramref name="message"/> is <c>null</c>.</exception>
   /// <exception cref="TException">Thrown when the <paramref name="untrusted"/> is not considered valid according to the given <paramref name="specification"/></exception>
   [<Extension>]
@@ -3468,6 +3558,7 @@ type SpecExtensions =
   /// <param name="specification">The instance that specifies how the model should be created.</param>
   /// <param name="untrusted">The untrusted value that should be tried to create into a model according to the given <paramref name="specification"/></param>
   /// <param name="creator">The function that will create model after the <paramref name="untrusted"/> value is valid according to the given <paramref name="specification"/></param>
+  /// <param name="message">The error message that the thrown exception should have.</param>
   /// <exception cref="ArgumentNullException">Thrown when the <paramref name="creator"/> or <paramref name="message"/> is <c>null</c>.</exception>
   /// <exception cref="ValidationFailureException">Thrown when the <paramref name="untrusted"/> is not valid according to the given <paramref name="specification"/></exception>
   [<Extension>]
