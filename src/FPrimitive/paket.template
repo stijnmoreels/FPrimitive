@@ -4,7 +4,7 @@ version 3.1.0
 title FPrimitive
 summary .NET project to help developers build a correct and more secure domain model.
 description .NET project to help developers build a correct and more secure domain model by providing building blocks, standard types and trust boundaries.
-copyright Copyright 2019
+copyright Copyright 2021
 authors Stijn Moreels
 owners Stijn Moreels
 tags domain,model,secure,trust,boundaries,blocks,reusable,fsharp
@@ -21,8 +21,4 @@ files
     bin/Release/netstandard2.0/*.xml ==> lib/netstandard2.0
 dependencies
     FSharp.Core >= 6.0
-    Microsoft.Extensions.Logging >= 5.0
-    FSharp.Core >= 6.0
-    FSharp.Core >= 5.0.2
-    FSharp.Core >= 6.0
-    Microsoft.Extensions.Logging >= 5.0
+    Microsoft.Extensions.Logging >= 3.1.20
