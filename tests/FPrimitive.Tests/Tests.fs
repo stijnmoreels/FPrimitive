@@ -19,6 +19,8 @@ module Extensions =
       |[|case|] -> Some(FSharpValue.MakeUnion(case,[||]) :?> 'a)
       |_ -> None
 
+
+
 type HttpUri =
   private HttpUri of Uri with
     static member create x = specModel (Uri >> HttpUri) x {
@@ -667,7 +669,7 @@ module Tests =
         |> Gen.map (fun i -> i, sprintf "#%i %s" i name)
         |> Arb.fromGen
         |> Prop.forAll <| fun t ->
-             let specTop10 = spec { inclusiveBetween 1 10 "should be between 1-1(inclusive)" }
+             let specTop10 = spec { inclusiveBetween 1 10 "should be between 1-10 (inclusive)" }
              let specFinalist = spec { notNullOrWhiteSpace "should not be blank" }
              let s = specInvariant specTop10 specFinalist { 
                  add (fun (top10, finalist) -> finalist.StartsWith (sprintf "#%i"top10), sprintf "should start with %i" top10) }

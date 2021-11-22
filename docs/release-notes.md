@@ -34,3 +34,6 @@
 * Sanitization blocks for transformations before validation
 * `Outcome` type for C# devs
 * Extra spec requirements: `containsAll`, `seqEqual`, `structure`...
+
+#### 3.1.0-preview-1
+* Specifications with enumerations
