@@ -13,8 +13,8 @@ open System.Security.Principal
 /// Represents an access-controlled function.
 type Access<'T, 'TResult> = 
   internal
-      /// Gets the function that is decorated with access-controlled functionality.
-    { Capability : 'T -> Result<'TResult, string list>
+    { /// Gets the function that is decorated with access-controlled functionality.
+      Capability : 'T -> Result<'TResult, string list>
       /// Gets the function that revokes the access-controlled function from being further used.
       Revokable : (unit -> unit) option }
 
@@ -142,12 +142,12 @@ module Access =
     let func = ref (Func<_, _> acc.Capability)
     { acc with
         Capability = fun x ->
-          let cnt = Interlocked.Exchange (count, !count - 1)
+          let cnt = Interlocked.Exchange (count, count.Value - 1)
           if cnt <= 1 then 
             let func = Interlocked.Exchange (func, null)
             if func = null then Error [ "access failure: function is already evaluated twice" ]
             else func.Invoke x
-          else (!func).Invoke x }
+          else func.Value.Invoke x }
 
   /// Let the access-controlled function only evaluate two times.
   let twice acc = times 2 acc
@@ -156,7 +156,7 @@ module Access =
   let revokable acc =
       let allow = ref (true :> obj)
       let capability x =
-          if !allow :?> bool then (acc.Capability x)
+          if allow.Value :?> bool then (acc.Capability x)
           else Error [ "access failure: cannot access function because it was revoked" ]
       { Capability = capability
         Revokable = Some (fun () -> Interlocked.Exchange (allow, false) |> ignore) }

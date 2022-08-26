@@ -559,8 +559,8 @@ module Tests =
             |> fun r -> Result.isOk r <=> Result.isOk (f x)
       
       testProperty "optional" <| fun filter x ->
-          let (Ok value) = Spec.optional filter Ok x
-          value <=> filter x
+          let result = Spec.optional filter Ok x
+          Expect.wantOk result "should get 'Ok' from optional spec" <=> filter x
 
       testProperty "create model if" <| fun (f : PositiveInt -> NegativeInt option) (x : PositiveInt) ->
           let r =

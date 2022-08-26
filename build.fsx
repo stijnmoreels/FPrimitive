@@ -1,3 +1,10 @@
+#r "paket:
+nuget Fake.Core.Target
+nuget Fake.Core.ReleaseNotes
+nuget Fake.Dotnet.AssemblyInfoFile
+nuget Fake.DotNet.Cli
+nuget Fake.DotNet.Paket
+nuget Fake.IO.FileSystem //"
 #load ".fake/build.fsx/intellisense.fsx"
 
 open System
@@ -69,33 +76,36 @@ Target.create "Tests" <| fun _ ->
 Target.create "Paket" <| fun _ ->
     let templateFile = "src" @@ project.Name @@ "paket.template"
     let referencesFile = "src" @@ project.Name @@ "paket.references"
-    // PaketTemplate.create (fun defaults ->
-    //     { defaults with 
-    //         TemplateFilePath = Some templateFile
-    //         TemplateType = File
-    //         Id = Some project.Name
-    //         Version = Some releaseNotes.NugetVersion
-    //         Description = project.Description
-    //         Title = Some project.Name
-    //         Authors = project.Authors
-    //         Owners = project.Authors
-    //         ReleaseNotes = releaseNotes.Notes
-    //         Summary = [ project.Summary ]
-    //         ProjectUrl = Some project.GitHubUrl
-    //         LicenseUrl = Some (project.GitHubUrl + "/blob/master/LICENSE.txt")
-    //         IconUrl = Some "https://raw.githubusercontent.com/stijnmoreels/FPrimitive/master/docs/img/logo.png"
-    //         Copyright = Some <| sprintf "Copyright %i" DateTimeOffset.UtcNow.Year
-    //         Tags = [ "domain"; "model"; "secure"; "trust"; "boundaries"; "blocks"; "reusable"; "fsharp" ]
-    //         Files = 
-    //             [ Include ("bin/Release/netstandard2.0/*.dll", "lib/netstandard2.0")
-    //               Include ("bin/Release/netstandard2.0/*.xml", "lib/netstandard2.0") ]
-    //         Dependencies = 
-    //             Paket.getDependenciesForReferencesFile referencesFile
-    //             |> Array.map (fun (package, version) -> PaketDependency (package, GreaterOrEqual (Version version)))
-    //             |> List.ofArray })
+    PaketTemplate.create (fun defaults ->
+        { defaults with 
+            TemplateFilePath = Some templateFile
+            TemplateType = File
+            Id = Some project.Name
+            Version = Some releaseNotes.NugetVersion
+            Description = project.Description
+            Title = Some project.Name
+            Authors = project.Authors
+            Owners = project.Authors
+            ReleaseNotes = releaseNotes.Notes
+            Summary = [ project.Summary ]
+            ProjectUrl = Some project.GitHubUrl
+            LicenseUrl = Some (project.GitHubUrl + "/blob/master/LICENSE.txt")
+            IconUrl = Some "https://raw.githubusercontent.com/stijnmoreels/FPrimitive/master/docs/img/logo.png"
+            Copyright = Some $"Copyright {DateTimeOffset.UtcNow.Year}"
+            Tags = [ "domain"; "model"; "secure"; "trust"; "boundaries"; "blocks"; "reusable"; "fsharp" ]
+            Files = 
+                [ Include ("bin/Release/netstandard2.1/*.dll", "lib/netstandard2.1")
+                  Include ("bin/Release/netstandard2.1/*.xml", "lib/netstandard2.1")
+                  Include ("bin/Release/net6.0/*.dll", "lib/net6.0")
+                  Include ("bin/Release/net6.0/*.xml", "lib/net6.0") ]
+            Dependencies = 
+                Paket.getDependenciesForReferencesFile referencesFile
+                |> Array.map (fun (package, version) -> PaketDependency (package, GreaterOrEqual (Version version)))
+                |> List.ofArray })
 
     Paket.pack (fun defaults ->
         { defaults with
+            ToolPath = "./.paket/paket.exe"
             OutputPath = "bin"
             WorkingDir = "."
             TemplateFile = templateFile })

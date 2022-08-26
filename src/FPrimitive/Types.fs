@@ -93,7 +93,7 @@ type ErrorMessage =
     /// <summary>
     /// Creates a new instance of the <see cref="ErrorMessage"/> class.
     /// </summary>
-    /// <param name="requiredFromuser">The explanation of what's required from the user (ex: 'Requires a valid input for person's firstname')</param>
+    /// <param name="requiredFromUser">The explanation of what's required from the user (ex: 'Requires a valid input for person's firstname').</param>
     /// <param name="sharedWithUser">The collection of values that will be shared with the user, be careful of what's in here.</param>
     /// <param name="errorSolving">The explanation of how the user can solve the error.</param>
     /// <exception cref="ArgumentException">Thrown when the <paramref name="requiredFromUser"/> or <paramref name="errorSolving"/> is blank, or the <paramref name="requiredFromUser"/> doesn't conform with the expected format.</exception>
@@ -136,7 +136,7 @@ type SecureApplicationException =
   /// <summary>
   /// Initializes a new instance of the <see cref="SecureApplicationException" /> class.
   /// </summary>
-  /// <param name="requiredFromuser">The explanation of what's required from the user (ex: 'Requires a valid input for person's firstname')</param>
+  /// <param name="requiredFromUser">The explanation of what's required from the user (ex: 'Requires a valid input for person's firstname')</param>
   /// <param name="sharedWithUser">The collection of values that will be shared with the user, be careful of what's in here.</param>
   /// <param name="errorSolving">The explanation of how the user can solve the error.</param>
   /// <param name="innerException">The exception that is the cause of the current exception.</param>
@@ -148,7 +148,7 @@ type SecureApplicationException =
   /// <summary>
   /// Initializes a new instance of the <see cref="SecureApplicationException" /> class.
   /// </summary>
-  /// <param name="requiredFromuser">The explanation of what's required from the user (ex: 'Requires a valid input for person's firstname')</param>
+  /// <param name="requiredFromUser">The explanation of what's required from the user (ex: 'Requires a valid input for person's firstname')</param>
   /// <param name="sharedWithUser">The collection of values that will be shared with the user, be careful of what's in here.</param>
   /// <param name="errorSolving">The explanation of how the user can solve the error.</param>
   /// <exception cref="ArgumentException">Thrown when the <paramref name="requiredFromUser"/> or <paramref name="errorSolving"/> is blank, or the <paramref name="requiredFromUser"/> doesn't conform with the expected format.</exception>
