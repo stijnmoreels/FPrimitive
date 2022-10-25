@@ -1216,6 +1216,9 @@ type ValidationResult<'T> internal (result : Result<'T, ErrorsByTag>) =
 
   static member op_Implicit (result : Result<'T, string list>) = 
     ValidationResult<'T> (Result.mapError Map.others result)
+
+  static member op_Implicit (result : Result<'T, ErrorsByTag>) =
+    ValidationResult<'T> (result)
   
   static member op_Implicit (result : ValidationResult<'T>) = 
     result.Result

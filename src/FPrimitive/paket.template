@@ -22,9 +22,5 @@ files
     bin/Release/net6.0/*.dll ==> lib/net6.0
     bin/Release/net6.0/*.xml ==> lib/net6.0
 dependencies
-    FSharp.Core >= 6.0.4
-    Microsoft.Extensions.Logging >= 6.0
-    FSharp.Core >= 6.0.4
-    FSharp.Core >= 6.0.4
-    FSharp.Core >= 6.0.4
+    FSharp.Core >= 6.0.6
     Microsoft.Extensions.Logging >= 6.0
