@@ -101,6 +101,7 @@ Target.create "Paket" <| fun _ ->
             Dependencies = 
                 Paket.getDependenciesForReferencesFile referencesFile
                 |> Array.map (fun (package, version) -> PaketDependency (package, GreaterOrEqual (Version version)))
+                |> Array.distinct
                 |> List.ofArray })
 
     Paket.pack (fun defaults ->
