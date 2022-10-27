@@ -99,10 +99,8 @@ Target.create "Paket" <| fun _ ->
                   Include ("bin/Release/net6.0/*.dll", "lib/net6.0")
                   Include ("bin/Release/net6.0/*.xml", "lib/net6.0") ]
             Dependencies = 
-                Paket.getDependenciesForReferencesFile referencesFile
-                |> Array.map (fun (package, version) -> PaketDependency (package, GreaterOrEqual (Version version)))
-                |> Array.distinct
-                |> List.ofArray })
+                [ PaketDependency ("FSharp.Core", GreaterOrEqual (Version "6.0.6") )
+                  PaketDependency ("Microsoft.Extensions.Logging", GreaterOrEqual (Version "6.0")) ] })
 
     Paket.pack (fun defaults ->
         { defaults with
