@@ -45,3 +45,6 @@
 * Update project towards .NET 6
 * Add missing XML code docs on all specification types
 * Fix implicit operator for C# `ValidationResult` with F# `Result` type for easier interop
+
+#### 3.2.1
+* Revert wrong renaming of C#-specific `Spec`
