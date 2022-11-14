@@ -1288,7 +1288,7 @@ type ValidationResult private () =
     ValidationResult<'T> (result = Spec.error tag message)
 
 /// Representation of a domain specification that contains the validation for the model.
-type specification =
+type Spec =
   /// Start defininig a specification for a type.
   static member Of<'T>() = Spec.def<'T>
   /// Start defininig a specification for a type.
