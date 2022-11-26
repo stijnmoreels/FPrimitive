@@ -13,32 +13,58 @@ module Sanitize =
   [<CompiledName("EmptyWhenNull")>]
   let empty_when_null input =
     if isNull input then String.Empty else input
-  /// Only allow the matches in the given input for the given regular expression.
-  [<CompiledName("WhiteRegex")>]
-  let whiteregex (regex : Regex) input =
+     /// Only allow the matches in the given input for the given regular expression.
+  [<CompiledName("AllowRegex")>]
+  let allowregex (regex : Regex) input =
     let input = empty_when_null input
     let matches = regex.Matches input
     let values = seq { for m in matches do yield m.Value }
     String.Join (String.Empty, Seq.toArray values)
+  /// Only allow the matches in the given input for the given regular expression.
+  [<CompiledName("WhiteRegex")>]
+  [<Obsolete("Use 'allowregex' instead for a more inclusive code base ♥")>]
+  let whiteregex (regex : Regex) input =
+    allowregex regex input
+   /// Only allow the matches in the given input for the given regular expression pattern.
+  [<CompiledName("AllowMatch")>]
+  let allowmatch pattern input =
+    allowregex (Regex pattern) input
   /// Only allow the matches in the given input for the given regular expression pattern.
   [<CompiledName("WhiteMatch")>]
+    [<Obsolete("Use 'allowmatch' instead for a more inclusive code base ♥")>]
   let whitematch pattern input =
-    whiteregex (Regex pattern) input
+    allowmatch pattern input
+  /// Only allow the matches in the input for the given text regular expression patterns.
+  /// For example: `allowlist ["foo"; "bar[0-9]+"] input`
+  [<CompiledName("AllowList")>]
+  let allowlist (valuePatterns : string seq) input =
+    let pattern = sprintf "(%s)"  <| String.Join ("|", valuePatterns)
+    allowregex (Regex pattern) input
   /// Only allow the matches in the input for the given text regular expression patterns.
   /// For example: `whitelist ["foo"; "bar[0-9]+"] input`
   [<CompiledName("WhiteList")>]
+  [<Obsolete("Use 'allowlist' instead for a more inclusive code base ♥")>]
   let whitelist (valuePatterns : string seq) input =
-    let pattern = sprintf "(%s)"  <| String.Join ("|", valuePatterns)
-    whiteregex (Regex pattern) input
+    allowlist valuePatterns input
   /// Removes all the matches in the given input for the given regular expression.
-  [<CompiledName("BlackRegex")>]
-  let blackregex (regex : Regex) input =
+  [<CompiledName("DenyRegex")>]
+  let denyregex (regex : Regex) input =
     let input = empty_when_null input
     regex.Replace (input, replacement=String.Empty)
+  /// Removes all the matches in the given input for the given regular expression.
+  [<CompiledName("BlackRegex")>]
+  [<Obsolete("Use 'denyregex' instead for a more inclusive code base ♥")>]
+  let blackregex (regex : Regex) input =
+    denyregex regex
+  /// Removes all the matches in the given input for the given regular expression pattern.
+  [<CompiledName("DenyMatch")>]
+  let denymatch regex_pattern input = 
+    denyregex (Regex regex_pattern) input
   /// Removes all the matches in the given input for the given regular expression pattern.
   [<CompiledName("BlackMatch")>]
+  [<Obsolete("Use 'denymatch' instead for a more inclusive code base ♥")>]
   let blackmatch regex_pattern input = 
-    blackregex (Regex regex_pattern) input
+    denymatch regex_pattern input
   /// Replaces the given input with the given key/value sequence where key: value to be replaced, and value: is the replacement for that value.
   [<CompiledName("Replaces")>]
   let replaces replacementByValue input =
@@ -46,14 +72,20 @@ module Sanitize =
     Seq.fold (fun (acc : string) (v : string, rep : string) -> acc.Replace (v, rep)) input replacementByValue
   /// Removes all the matches in the given input for gien the text regular expression patterns.
   /// For example: `blacklist ["foo"; "bar[0-9]+"] input`
-  [<CompiledName("BlackList")>]
-  let blacklist (values : string seq) (input : string) =
+  [<CompiledName("DenyList")>]
+  let denylist (values : string seq) (input : string) =
     let pattern = sprintf "(%s)" <| String.Join ("|", values)
-    blackmatch pattern input
+    denymatch pattern input
+  /// Removes all the matches in the given input for gien the text regular expression patterns.
+  /// For example: `blacklist ["foo"; "bar[0-9]+"] input`
+  [<CompiledName("BlackList")>]
+  [<Obsolete("Use 'denylist' instead for a more inclusive code base ♥")>]
+  let blacklist (values : string seq) (input : string) =
+    denylist values input
   /// Removes all the matches in the given input for gien the text regular expression patterns.
   /// A.k.a. `blacklist`
   [<CompiledName("Removes")>]
-  let removes values input = blacklist values input
+  let removes values input = denylist values input
   /// Replace the given value for a given replacement in the given input.
   [<CompiledName("Replace")>]
   let replace value (replacement : string) (input : string) =
@@ -175,40 +207,81 @@ type SanitizeExtensions private () =
   /// Filters out only ASCII characters in the given input.
   [<Extension>] static member ASCII (input) = Sanitize.ascii input
   /// Only allow the matches in the given input for the given regular expression.
-  [<Extension>] 
+  [<Extension>]
+  [<Obsolete("Use 'AllowRegex' instead for a more inclusive code base ♥")>]
   static member WhiteRegex (input, regex) = 
     if isNull regex then nullArg "regex"
-    Sanitize.whiteregex regex input
+    Sanitize.allowregex regex input
+  /// Only allow the matches in the given input for the given regular expression.
+  [<Extension>]
+  static member AllowRegex (input, regex) = 
+    if isNull regex then nullArg "regex"
+    Sanitize.allowregex regex input
   /// Only allow the matches in the input for the given text regular expression patterns.
   /// For example: `whitelist ["foo"; "bar[0-9]+"] input`
-  [<Extension>] 
+  [<Extension>]
+  [<Obsolete("Use 'AllowList' instead for a more inclusive code base ♥")>]
   static member WhiteList (input, [<ParamArray>] values : string array) = 
     if isNull values then nullArg "values"
     if Seq.exists isNull values then invalidArg "values" "cannot have a 'null' value in white list"
-    Sanitize.whitelist values input
+    Sanitize.allowlist values input
+  /// Only allow the matches in the input for the given text regular expression patterns.
+  /// For example: `whitelist ["foo"; "bar[0-9]+"] input`
+  [<Extension>]
+  static member AllowList (input, [<ParamArray>] values : string array) = 
+    if isNull values then nullArg "values"
+    if Seq.exists isNull values then invalidArg "values" "cannot have a 'null' value in white list"
+    Sanitize.allowlist values input
   /// Only allow the matches in the given input for the given regular expression pattern.
   [<Extension>]
+  [<Obsolete("Use 'AllowMatch' instead for a more inclusive code base ♥")>]
   static member WhiteMatch (input, pattern) =
     if isNull pattern then nullArg "pattern"
-    Sanitize.whitematch pattern input
+    Sanitize.allowmatch pattern input
+   /// Only allow the matches in the given input for the given regular expression pattern.
+  [<Extension>]
+  static member AllowMatch (input, pattern) =
+    if isNull pattern then nullArg "pattern"
+    Sanitize.allowmatch pattern input
   /// Removes all the matches in the given input for the given regular expression.
-  [<Extension>] 
+  [<Extension>]
+  [<Obsolete("Use 'DenyRegex' instead for a more inclusive code base ♥")>]
   static member BlackRegex (input,  regex) = 
     if isNull regex then nullArg "regex"
-    Sanitize.blackregex regex input
+    Sanitize.denyregex regex input
+  /// Removes all the matches in the given input for the given regular expression.
+  [<Extension>]
+  static member DenyRegex (input,  regex) = 
+    if isNull regex then nullArg "regex"
+    Sanitize.denyregex regex input
   /// Removes all the matches in the given input for gien the text regular expression patterns.
   /// For example: `blacklist ["foo"; "bar[0-9]+"] input`
-  [<Extension>] 
+  [<Extension>]
+  [<Obsolete("Use 'DenyList' instead for a more inclusive code base ♥")>]
   static member BlackList (input, [<ParamArray>] values : string array) = 
     if isNull input then nullArg "input"
     if isNull values then nullArg "values"
     if Seq.exists isNull values then invalidArg "values" "cannot have a 'null' value in black list"
-    Sanitize.blacklist values input
+    Sanitize.denylist values input
+  /// Removes all the matches in the given input for gien the text regular expression patterns.
+  /// For example: `denylist ["foo"; "bar[0-9]+"] input`
+  [<Extension>]
+  static member DenyList (input, [<ParamArray>] values : string array) = 
+    if isNull input then nullArg "input"
+    if isNull values then nullArg "values"
+    if Seq.exists isNull values then invalidArg "values" "cannot have a 'null' value in black list"
+    Sanitize.denylist values input
   /// Removes all the matches in the given input for the given regular expression pattern.
-  [<Extension>] 
+  [<Extension>]
+  [<Obsolete("Use 'DenyMatch' instead for a more inclusive code base ♥")>]
   static member BlackMatch (input, pattern) = 
     if isNull pattern then nullArg "pattern"
-    Sanitize.blackmatch pattern input
+    Sanitize.denymatch pattern input
+  /// Removes all the matches in the given input for the given regular expression pattern.
+  [<Extension>]
+  static member DenyMatch (input, pattern) = 
+    if isNull pattern then nullArg "pattern"
+    Sanitize.denymatch pattern input
   /// Replaces the given input with the given key/value sequence where key: value to be replaced, and value: is the replacement for that value.
   [<Extension>] 
   static member Replaces (input, replacements : IDictionary<string, string>) = 
@@ -226,7 +299,7 @@ type SanitizeExtensions private () =
   /// Replace all matches in the given input for the regular expression pattern.
   [<Extension>] static member RegexReplace (input, pattern, replacement : string) = Regex.Replace (input, pattern, replacement)
   /// Removes all the matches in the given input for gien the text regular expression patterns.
-  /// A.k.a. `blacklist`
+  /// A.k.a. `denylist`
   [<Extension>] 
   static member Removes (input, [<ParamArray>] values : string array) = 
     if isNull values then nullArg "values"
