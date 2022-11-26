@@ -12,7 +12,7 @@ open Microsoft.FSharp.Reflection
 
 [<AutoOpen>]
 module Extensions =
-  let (<=>) x y = x = y
+  let (<=>) x y = x = y |@ $"{x} = {y}"
 
   let fromString<'a> (s:string) =
       match FSharpType.GetUnionCases typeof<'a> |> Array.filter (fun case -> case.Name = s) with
@@ -179,6 +179,17 @@ type Order =
   { Amount : int
     ArticleNumber : string }
 
+module Expect =
+  let resultEqual y r =
+    match r with
+    | Ok x -> true <=> y
+    | Error _ -> false <=> y
+
+  let result f exp r =
+    match r with
+    | Ok act -> act <=> exp .&. (f exp)
+    | Error _ -> f exp <=> false
+
 module Tests =
   let toProp = function
     | Ok _ -> true.ToProperty()
@@ -190,32 +201,35 @@ module Tests =
   [<Tests>]
   let specTests =
     testList "spec tests" [
-      testSpec "add" <| fun (NegativeInt x) ->
-        Spec.def |> Spec.add (fun x -> x < 0, "should be lesser than zero")
-                 |> Spec.validate x
+      testProperty "add" <| fun f x ->
+        Spec.def |> Spec.add f |> Spec.validate x 
+        |> Expect.result (f >> fst) x
       
-      testSpec "verify" <| fun (PositiveInt x) ->
-        Spec.def |> Spec.verify (fun x -> x > 0) "should be greater than zero"
-                 |> Spec.validate x
-      
-      testSpec "conditional" <| fun (x : int) ->
-        Spec.def |> Spec.conditional (fun y -> y < 0) (fun y -> y < 0, "should be less than zero")
-                 |> Spec.conditional (fun y -> y > 0) (fun y -> y > 0, "should be greater than zero")
-                 |> Spec.validate x
+      testProperty "verify" <| fun f msg x ->
+        Spec. def |> Spec.verify f msg |> Spec.validate x
+        |> Expect.result f x
 
-      testSpec "filter" <| fun (x : int) ->
-        Spec.def |> Spec.filter ((>) -5) (spec { lessThan -3 "should be less than -3" })
-                 |> Spec.filter ((<) 5) (spec { greaterThan 3 "should be greater than 3" })
-                 |> Spec. validate x
+      testProperty "conditional" <| fun f g x ->
+        Spec.def |> Spec.conditional f g |> Spec.validate x
+        |> Expect.result (fun x -> (f x && fst (g x)) || not (f x)) x
 
-      testSpec "filtering" <| fun (x : int) ->
+      testProperty "filter" <| fun f g x msg ->
+        Spec.def |> Spec.filter f (spec { verify g msg }) |> Spec.validate x
+        |> Expect.result (fun x -> (f x && g x) || not (f x)) x
+
+      testProperty "filter (example)" <| fun (x : int) ->
         Spec.def 
         |> Spec.filter (fun x -> x < -3) (Spec.def
             |> Spec.lessThan -1 "should be less than -1" 
             |> Spec.lessThan -2 "should be less than -2")
         |> Spec.validate x
+        |> (=) (Ok x)
 
-      testProperty "subset" <| fun (PositiveInt amout, articleNumber : Guid) ->
+      testProperty "subset" <| fun f g msg x ->
+        Spec.def |> Spec.subset f (spec { verify g msg  }) |> Spec.validate x
+        |> Expect.result (f >> g) x
+
+      testProperty "subset (example)" <| fun (PositiveInt amout, articleNumber : Guid) ->
         Spec.def<Order> 
         |> Spec.subset (fun x -> x.Amount) (specTag "amount" {
             greaterThan 0 "amount should be greater than zero" })
@@ -224,42 +238,90 @@ module Tests =
         |> Spec.validate { Amount = amout; ArticleNumber = articleNumber.ToString() }
         |> toProp
 
-      testSpec "equal" <| fun x ->
-        Spec.def |> Spec.equal x "should be equal"
-                 |> Spec.validate x
-      
-      testSpec "equal of" <| fun (NegativeInt x) -> specResult x {
-        equalOf abs (abs x) "negative + absolute value should be greater than zero" }
-      
-      testProperty "not equal" <| fun x y ->
+      testProperty "equal (Ok)" <| fun x msg ->
+        let r = Spec.def |> Spec.equal x msg |> Spec.validate x
+        Expect.equal r (Ok x) "should be equal to itself"
+
+      testProperty "equal (Error)" <| fun x y msg ->
         x <> y ==> lazy
-        Spec.def
-        |> Spec.notEqual y "should not be equal"
-        |> Spec.validate x
-        |> toProp
-      
-      testSpec "not equal of" <| fun (NegativeInt x) -> specResult x { 
-        notEqualOf abs x "absolute of negative is not negative" }
-      
-      testSpec "not null" <| fun (NonNull x) ->
-        Spec.def<string>
-        |> Spec.notNull "should not be null"
-        |> Spec.validate x
-      
-      testSpec "not null of" <| fun (NonNull x) -> specResult (Some x) { 
-        notNullOf Option.get "should not be null" }
+        let r = Spec.def |> Spec.equal x msg |> Spec.validate y
+        Expect.isError r "equal should fail if it is not equal"
 
-      testSpec "not empty string" <| fun (NonEmptyString x) ->
-        Spec.def |> Spec.notNull "should not be null"
-                 |> Spec.notEmpty "should not be empty"
-                 |> Spec.validate x
-      
-      testSpec "not null or empty" <| fun (NonEmptyString x) -> specResult x { 
-        notNullOrEmpty "should not be whitespace" }
+      testProperty "equal of (Ok)" <| fun f x msg ->
+        let r = Spec.def |> Spec.equalOf f (f x) msg |> Spec.validate x
+        Expect.equal r (Ok x) "should be equal to itself via mapping"
 
-      testProperty "not white space string" <| fun (NonEmptyString x) ->
-        String.IsNullOrWhiteSpace x |> not ==> lazy
-        specResult x { notWhiteSpace "should not be whitespace" } |> toProp
+      testProperty "equal of (Error)" <| fun f x y msg ->
+        (f x <> y) ==> lazy
+        let r = Spec.def |> Spec.equalOf f y msg |> Spec.validate x
+        Expect.isError r "equal should fail if it is not equal via mapping"
+      
+      testProperty "equal is inverse of not equal" <| fun x msg1 msg2 ->
+        let eq = Spec.def |> Spec.equal x msg1 |> Spec.validate x
+        let ne = Spec.def |> Spec.notEqual x msg2 |> Spec.validate x
+        eq <> ne
+
+      testProperty "not equal (Ok)" <| fun x y msg ->
+        x <> y ==> lazy
+        let r = Spec.def |> Spec.notEqual y msg |> Spec.validate x
+        Expect.equal r (Ok x) "not equal should pass when the input is diff than the configured value"
+      
+      testProperty "not equal (Error)" <| fun x msg ->
+        let r = Spec.def |> Spec.notEqual x msg |> Spec.validate x
+        Expect.isError r "not equal should always fail if the input is the same as the configured value"
+
+      testProperty "not equal of (Ok)" <| fun f x y msg ->
+        f x <> y ==> lazy
+        let r = Spec.def |> Spec.notEqualOf f y msg |> Spec.validate x
+        Expect.equal r (Ok x) "not equal should pass when the input is diff than configured value via mapping"
+
+      testProperty "not equal of (Error)" <| fun f x msg ->
+        let r = Spec.def |> Spec.notEqualOf f (f x) msg |> Spec.validate x
+        Expect.isError r "not equal should always fail if the input is the same as the configured value via mapping"
+
+      testProperty "not null (Ok)" <| fun (NonNull x) msg ->
+        let r = Spec.def |> Spec.notNull msg |> Spec.validate x
+        Expect.equal (Ok x) r "non null type should always pass the not-null spec"
+
+      testProperty "not null (Error)" <| fun msg ->
+        let r = Spec.def |> Spec.notNull msg |> Spec.validate null
+        Expect.isError r "null value should alwasy fail the not-null spec"
+      
+      testProperty "not null of (Ok)" <| fun (f : obj -> NonNull<obj>) x msg ->
+        let r = Spec.def |> Spec.notNullOf (f >> fun (NonNull x) -> x) msg |> Spec.validate x
+        Expect.equal r (Ok x) "non null via mapping should always pass the not-null spec"
+
+      testProperty "not null of (Error)" <| fun x msg ->
+        let r = Spec.def |> Spec.notNullOf (fun _ -> null) msg |> Spec.validate x
+        Expect.isError r "null via mapping should always fail the not-null spec"
+
+      testProperty "not empty string (Ok)" <| fun (NonEmptyString x) msg ->
+        let r = Spec.def |> Spec.notEmpty msg |> Spec.validate x
+        Expect.equal r (Ok x) "non empty string type should alwasy pass the not-empty spec"
+
+      testProperty "not empty string (Error)" <| fun msg ->
+        let r = Spec.def |> Spec.notEmpty msg |> Spec.validate ""
+        Expect.isError r "empty string should always fail the not-empty spec"
+
+      testProperty "not null or empty (Ok)" <| fun (NonEmptyString x) msg ->
+        let r = Spec.def |> Spec.notNullOrEmpty msg |> Spec.validate x
+        Expect.equal r (Ok x) "non empty string type should always pass the not-null-or-empty spec"
+
+      testProperty "not null or empty (Error)" <| fun msg ->
+        Expect.all [ null; "" ] (fun x -> Spec.def |> Spec.notNullOrEmpty msg |> Spec.validate x |> Result.isError)
+          "null and empty string should always fail the not-null-or-empty spec"
+
+      testProperty "not whitespace (Ok)" <| fun x msg ->
+        not <| String.IsNullOrWhiteSpace x ==> lazy
+        let r = Spec.def |> Spec.notWhiteSpace msg |> Spec.validate x
+        Expect.equal r (Ok x) "any string that is not solely whitespace should pass the not-whitespace spec"
+     
+      testProperty "not whitespace (Error)" <| fun (PositiveInt max) msg ->
+        Gen.choose (1, max) |> Gen.map (fun l -> Seq.init l (fun _ -> " ") |> String.Concat)
+        |> Arb.fromGen
+        |> Prop.forAll <| fun x ->
+          let r = Spec.def |> Spec.notWhiteSpace msg |> Spec.validate x
+          Expect.isError r "only whitespace should always fail the not-whitespace spec"
 
       testProperty "not null or white space string" <| fun (NonEmptyString x) ->
         String.IsNullOrWhiteSpace x |> not ==> lazy
@@ -280,9 +342,9 @@ module Tests =
       testSpec "seq equal" <| fun (xs : int list) -> specResult xs { 
         seqEqual xs "sequence should be equal to other sequence" }
 
-      testSpec "non empty" <| fun x ->
-        Spec.def |> Spec.nonEmpty "should not be empty"
-                 |> Spec.validate [x]
+      testProperty "non empty" <| fun xs msg ->
+        Spec.def |> Spec.nonEmpty msg |> Spec.validate xs
+        |> Expect.result (List.length >> (<) 0) xs
       
       testSpec "non empty of" <| fun x ->
         Spec.def |> Spec.nonEmptyOf Option.get "should not be empty"
@@ -602,7 +664,7 @@ module Tests =
 
       testProperty "valid type for quick validation" <| fun x isValid ->
         let r = Valid<_>.createWith x (fun _ -> isValid) "should be valid when predicate holds"
-        Expect.isTrue (Result.isOk r <=> isValid) "should be valid when predicate holds" 
+        Expect.isTrue (Result.isOk r = isValid) "should be valid when predicate holds" 
 
       testProperty "merge" <| fun (NegativeInt x) ->
         let lessThan1 = spec { lessThan 1 "should be less than 1" }
@@ -936,21 +998,21 @@ module Tests =
       testProperty "empty when null" <| fun x ->
         let actual = Sanitize.empty_when_null x
         Expect.isNotNull actual "can never be 'null'"
-      testProperty "white regex+match" <| fun (NonNull pre_noise) (PositiveInt x) (NonNull post_noise) ->
+      testProperty "allow regex+match" <| fun (NonNull pre_noise) (PositiveInt x) (NonNull post_noise) ->
         (pre_noise <> string x && post_noise <> string x
         && not <| pre_noise.Contains (string x)
         && not <| post_noise.Contains (string x)) ==> lazy
         let input = sprintf "%s%i%s" pre_noise x post_noise
         let actual = Sanitize.whitematch (string x) input
         Expect.equal actual (string x) "should only allow matches"
-      testProperty "white list" <| fun (NonNull pre_noise) x (NonNull post_noise) ->
+      testProperty "allow list" <| fun (NonNull pre_noise) x (NonNull post_noise) ->
         (pre_noise <> string x && post_noise <> string x
          && not <| pre_noise.Contains (string x)
          && not <| post_noise.Contains (string x)) ==> lazy
         let input = sprintf "%s%i%s" pre_noise x post_noise
         let actual = Sanitize.whitelist [string x] input
         Expect.equal actual (string x) "should only allow in list"
-      testProperty "black regex+match" <| fun (PositiveInt pre_noise) (NonEmptyString x) (PositiveInt post_noise) ->
+      testProperty "deny regex+match" <| fun (PositiveInt pre_noise) (NonEmptyString x) (PositiveInt post_noise) ->
         (not <| x.Contains (string pre_noise) 
         && not <| x.Contains (string post_noise)
         && not <| (string pre_noise).Contains (string post_noise)
@@ -958,7 +1020,7 @@ module Tests =
         let input = sprintf "%i%s%i" pre_noise x post_noise
         let actual = Sanitize.blackmatch (sprintf "(%i|%i)" pre_noise post_noise) input
         Expect.equal actual x "should remove noise via match"
-      testProperty "black list" <| fun (PositiveInt pre_noise) (NonEmptyString x) (PositiveInt post_noise) ->
+      testProperty "deny list" <| fun (PositiveInt pre_noise) (NonEmptyString x) (PositiveInt post_noise) ->
         (not <| x.Contains (string pre_noise) 
          && not <| x.Contains (string post_noise)
          && not <| (string pre_noise).Contains (string post_noise)

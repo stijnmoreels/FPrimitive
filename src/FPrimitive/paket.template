@@ -1,6 +1,6 @@
 type file
 id FPrimitive
-version 3.1.0
+version 3.2.1
 title FPrimitive
 summary .NET project to help developers build a correct and more secure domain model.
 description .NET project to help developers build a correct and more secure domain model by providing building blocks, standard types and trust boundaries.
@@ -11,11 +11,7 @@ tags domain,model,secure,trust,boundaries,blocks,reusable,fsharp
 projectUrl https://github.com/stijnmoreels/FPrimitive
 iconUrl https://raw.githubusercontent.com/stijnmoreels/FPrimitive/master/docs/img/logo.png
 licenseUrl https://github.com/stijnmoreels/FPrimitive/blob/master/LICENSE.txt
-releaseNotes
-    Provide `Union` to determine validation based on DU's
-    Provide `ErrorMessage` as a means to make more security-safe error messages
-    Provide asynchronous `WriteOnce` models
-    Provide `String` operations on specifications
+releaseNotes Revert wrong renaming of C#-specific `Spec`
 files
     bin/Release/netstandard2.1/*.dll ==> lib/netstandard2.1
     bin/Release/netstandard2.1/*.xml ==> lib/netstandard2.1
