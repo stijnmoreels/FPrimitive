@@ -71,7 +71,7 @@ module Sanitize =
     let input = empty_when_null input
     Seq.fold (fun (acc : string) (v : string, rep : string) -> acc.Replace (v, rep)) input replacementByValue
   /// Removes all the matches in the given input for gien the text regular expression patterns.
-  /// For example: `blacklist ["foo"; "bar[0-9]+"] input`
+  /// For example: `denylist ["foo"; "bar[0-9]+"] input`
   [<CompiledName("DenyList")>]
   let denylist (values : string seq) (input : string) =
     let pattern = sprintf "(%s)" <| String.Join ("|", values)
@@ -83,7 +83,7 @@ module Sanitize =
   let blacklist (values : string seq) (input : string) =
     denylist values input
   /// Removes all the matches in the given input for gien the text regular expression patterns.
-  /// A.k.a. `blacklist`
+  /// A.k.a. `denylist`
   [<CompiledName("Removes")>]
   let removes values input = denylist values input
   /// Replace the given value for a given replacement in the given input.
@@ -226,7 +226,7 @@ type SanitizeExtensions private () =
     if Seq.exists isNull values then invalidArg "values" "cannot have a 'null' value in white list"
     Sanitize.allowlist values input
   /// Only allow the matches in the input for the given text regular expression patterns.
-  /// For example: `whitelist ["foo"; "bar[0-9]+"] input`
+  /// For example: `denylist ["foo"; "bar[0-9]+"] input`
   [<Extension>]
   static member AllowList (input, [<ParamArray>] values : string array) = 
     if isNull values then nullArg "values"
