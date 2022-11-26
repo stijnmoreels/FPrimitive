@@ -48,3 +48,6 @@
 
 #### 3.2.1
 * Revert wrong renaming of C#-specific `Spec`
+
+#### 3.2.2
+* Update `Sanitize` for a more inclusive code base ♥
