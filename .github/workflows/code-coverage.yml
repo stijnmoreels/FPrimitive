@@ -24,6 +24,9 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
+    - name: Paket install
+      run: dotnet paket install
+
     - name: Coverlet coverage test
       uses: b3b00/coverlet-action@1.2.4
       with:
