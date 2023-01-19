@@ -3,3 +3,4 @@ group Test
     Expecto.BenchmarkDotNet
     Expecto.FsCheck
     Fare
+    Microsoft.NET.Test.Sdk
