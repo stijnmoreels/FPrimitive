@@ -1,6 +1,7 @@
 ﻿namespace FPrimitive
 
 open System
+open System.Diagnostics.CodeAnalysis
 
 /// Representation of an untrusted value that should be validated first before it can be used. 
 [<Struct; NoEquality; NoComparison>]
@@ -30,9 +31,13 @@ type Untrust<'T> (value : 'T) =
       if validator.Invoke value 
       then output <- value; true
       else output <- Unchecked.defaultof<'T>; false
+    [<ExcludeFromCodeCoverage>]
     static member op_Implicit (x : byte) = Untrust x
+    [<ExcludeFromCodeCoverage>]
     static member op_Implicit (x : int) = Untrust x
+    [<ExcludeFromCodeCoverage>]
     static member op_Implicit (x : byte[]) = Untrust x
+    [<ExcludeFromCodeCoverage>]
     static member op_Implicit (x : string) = Untrust x
     override __.ToString () = sprintf "Untrust: %A" value
 
