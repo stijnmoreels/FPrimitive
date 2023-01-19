@@ -16,6 +16,7 @@ module Sanitize =
   /// Switch to an empty string when the input is 'null'.
   [<CompiledName("EmptyWhenNull")>]
   [<Obsolete("Use 'ofNull' instead")>]
+  [<ExcludeFromCodeCoverage>]
   let empty_when_null input =
     if isNull input then String.Empty else input
      /// Only allow the matches in the given input for the given regular expression.
@@ -28,6 +29,7 @@ module Sanitize =
   /// Only allow the matches in the given input for the given regular expression.
   [<CompiledName("WhiteRegex")>]
   [<Obsolete("Use 'allowregex' instead for a more inclusive code base ♥")>]
+  [<ExcludeFromCodeCoverage>]
   let whiteregex (regex : Regex) input =
     allowregex regex input
    /// Only allow the matches in the given input for the given regular expression pattern.
@@ -36,7 +38,8 @@ module Sanitize =
     allowregex (Regex pattern) input
   /// Only allow the matches in the given input for the given regular expression pattern.
   [<CompiledName("WhiteMatch")>]
-    [<Obsolete("Use 'allowmatch' instead for a more inclusive code base ♥")>]
+  [<Obsolete("Use 'allowmatch' instead for a more inclusive code base ♥")>]
+  [<ExcludeFromCodeCoverage>]
   let whitematch pattern input =
     allowmatch pattern input
   /// Only allow the matches in the input for the given text regular expression patterns.
@@ -49,6 +52,7 @@ module Sanitize =
   /// For example: `whitelist ["foo"; "bar[0-9]+"] input`
   [<CompiledName("WhiteList")>]
   [<Obsolete("Use 'allowlist' instead for a more inclusive code base ♥")>]
+  [<ExcludeFromCodeCoverage>]
   let whitelist (valuePatterns : string seq) input =
     allowlist valuePatterns input
   /// Removes all the matches in the given input for the given regular expression.
@@ -59,6 +63,7 @@ module Sanitize =
   /// Removes all the matches in the given input for the given regular expression.
   [<CompiledName("BlackRegex")>]
   [<Obsolete("Use 'denyregex' instead for a more inclusive code base ♥")>]
+  [<ExcludeFromCodeCoverage>]
   let blackregex (regex : Regex) input =
     denyregex regex input
   /// Removes all the matches in the given input for the given regular expression pattern.
@@ -68,6 +73,7 @@ module Sanitize =
   /// Removes all the matches in the given input for the given regular expression pattern.
   [<CompiledName("BlackMatch")>]
   [<Obsolete("Use 'denymatch' instead for a more inclusive code base ♥")>]
+  [<ExcludeFromCodeCoverage>]
   let blackmatch regex_pattern input = 
     denymatch regex_pattern input
   /// Replaces the given input with the given key/value sequence where key: value to be replaced, and value: is the replacement for that value.

@@ -378,6 +378,11 @@ module Tests =
         |> Prop.forAll <| fun xs -> 
           specResult xs { contains x "should contain element" } |> toProp
 
+      testProperty "not contains of" <| fun x y msg ->
+        Spec.def |> Spec.notContainsOf id x msg
+        |> Spec.validate y
+        |> Expect.result (not << Array.contains x) y
+
       testProperty "contains all" <| fun xs ys ->
         Gen.shuffle (Array.append xs ys)
         |> Arb.fromGen
@@ -1009,52 +1014,40 @@ module Tests =
   let sanitize_tests =
     testList "sanitize" [
       testProperty "empty when null" <| fun x ->
-        let actual = Sanitize.empty_when_null x
+        let actual = Sanitize.ofNull x
         Expect.isNotNull actual "can never be 'null'"
       testProperty "allow regex+match" <| fun (NonNull pre_noise) (PositiveInt x) (NonNull post_noise) ->
         (pre_noise <> string x && post_noise <> string x
         && not <| pre_noise.Contains (string x)
         && not <| post_noise.Contains (string x)) ==> lazy
         let input = sprintf "%s%i%s" pre_noise x post_noise
-        Sanitize.whitematch (string x) input
-        |> fun x -> Expect.equal x (string x) "should only allow matches"
-        Sanitize.allowmatch (string x) input
-        |> fun x -> Expect.equal x (string x) "should only allow matches"
-        Sanitize.whiteregex (Regex <| string x) input
-        |> fun x -> Expect.equal x (string x) "should only allow matches"
-        Sanitize.allowregex (Regex <| string x) input
-        |> fun x -> Expect.equal x (string x) "should only allow matches"
+        let actualMatch = Sanitize.allowmatch (string x) input
+        Expect.equal actualMatch (string x) "should only allow matches"
+        let actualRegex = Sanitize.allowregex (Regex <| string x) input
+        Expect.equal actualRegex (string x) "should only allow matches"
       testProperty "allow list" <| fun (NonNull pre_noise) x (NonNull post_noise) ->
         (pre_noise <> string x && post_noise <> string x
          && not <| pre_noise.Contains (string x)
          && not <| post_noise.Contains (string x)) ==> lazy
         let input = sprintf "%s%i%s" pre_noise x post_noise
-        Sanitize.whitelist [string x] input
-        |> fun x -> Expect.equal x (string x) "should only allow in list"
-        Sanitize.allowlist [string x] input
-        |> fun x -> Expect.equal x (string x) "should only allow in list"
+        let actual = Sanitize.allowlist [string x] input
+        Expect.equal actual (string x) "should only allow in list"
       testProperty "deny regex+match" <| fun (PositiveInt pre_noise) (NonEmptyString x) (PositiveInt post_noise) ->
         (not <| x.Contains (string pre_noise) 
         && not <| x.Contains (string post_noise)
         && not <| (string pre_noise).Contains (string post_noise)
         && not <| (string post_noise).Contains (string pre_noise)) ==> lazy
         let input = sprintf "%i%s%i" pre_noise x post_noise
-        Sanitize.blackmatch (sprintf "(%i|%i)" pre_noise post_noise) input
-        |> fun r -> Expect.equal r x "should remove noise via match"
-        Sanitize.denymatch (sprintf "(%i|%i)" pre_noise post_noise) input
-        |> fun r -> Expect.equal r x "should remove noise via match"
-        Sanitize.blackregex (Regex <| sprintf "(%i|%i)" pre_noise post_noise) input
-        |> fun r -> Expect.equal r x "should remove noise via match"
-        Sanitize.denyregex (Regex <| sprintf "(%i|%i)" pre_noise post_noise) input
-        |> fun r -> Expect.equal r x "should remove noise via match"
+        let actualMatch = Sanitize.denymatch (sprintf "(%i|%i)" pre_noise post_noise) input
+        Expect.equal actualMatch x "should remove noise via match"
+        let actualRegex = Sanitize.denyregex (Regex <| sprintf "(%i|%i)" pre_noise post_noise) input
+        Expect.equal actualRegex x "should remove noise via match"
       testProperty "deny list" <| fun (PositiveInt pre_noise) (NonEmptyString x) (PositiveInt post_noise) ->
         (not <| x.Contains (string pre_noise) 
          && not <| x.Contains (string post_noise)
          && not <| (string pre_noise).Contains (string post_noise)
          && not <| (string post_noise).Contains (string pre_noise)) ==> lazy
         let input = sprintf "%i_%s_%i" pre_noise x post_noise
-        let actual_depre = Sanitize.blacklist [string pre_noise; string post_noise] input
-        Expect.equal actual_depre (sprintf "_%s_" x) "should remove noise via list"
         let actual = Sanitize.denylist [string pre_noise; string post_noise] input
         Expect.equal actual (sprintf "_%s_" x) "should remove noise via list"
       testProperty "replace(s)" <| fun (NonEmptyString target) (NonEmptyString value) (NonEmptyString replacement) ->

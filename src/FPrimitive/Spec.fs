@@ -61,6 +61,8 @@ module Spec =
   let def<'a> : Spec<'a> = tag "[without tag]"
 
   /// Starts defining a specification for a type, adding a logger while doing so.
+  [<Obsolete("Removing logging capabilities in future release")>]
+  [<ExcludeFromCodeCoverage>]
   let defl<'a> logger : Spec<'a> = create "[without tag]" logger
 
   /// Creates an validation error from a tag and message.
@@ -75,6 +77,8 @@ module Spec =
     { specification with Requirements = (fun x -> if predicate x then requirement x else true, "") :: specification.Requirements }
 
   /// Adds a logger to the specification.
+  [<Obsolete("Removing logging capabilities in future release")>]
+  [<ExcludeFromCodeCoverage>]
   let logger instance specification = { specification with Logger = instance }
 
   /// Adds a custom requirement to the specification.
@@ -755,6 +759,7 @@ module Spec =
       Logger = spec1.Logger }
 
 /// Computation expression builder for the domain specification `Spec<_>`.
+[<ExcludeFromCodeCoverage>]
 type SpecBuilder<'a, 'b> internal (validate : Spec<'a> -> 'b, ?start) =
   let start = Option.defaultValue Spec.def<'a> start
   /// Adds a custom requirement to the specification.
@@ -1291,6 +1296,7 @@ type ValidationResult private () =
     ValidationResult<'T> (result = Spec.error tag message)
 
 /// Representation of a domain specification that contains the validation for the model.
+[<ExcludeFromCodeCoverage>]
 type Spec =
   /// Start defininig a specification for a type.
   static member Of<'T>() = Spec.def<'T>
@@ -1422,6 +1428,7 @@ exception ValidationFailureException of string
 /// Extensions on the `Spec<_>` type to use in C# context.
 [<Extension>]
 [<CompilerMessage("Not designed for F#", 1001, IsHidden = true)>]
+[<ExcludeFromCodeCoverage>]
 type SpecExtensions =
   /// <summary>
   /// Adds a custom requirement to the specification.
