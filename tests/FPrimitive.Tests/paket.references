@@ -4,3 +4,4 @@ group Test
     Expecto.FsCheck
     Fare
     Microsoft.NET.Test.Sdk
+    YoloDev.Expecto.TestSdk
