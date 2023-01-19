@@ -27,7 +27,7 @@ jobs:
     - name: Coverlet coverage test
       uses: b3b00/coverlet-action@1.2.4
       with:
-        testProject: 'tests/FPrimitive.Tests.fsproj'
+        testProject: 'tests/FPrimitive.Tests/FPrimitive.Tests.fsproj'
         threshold: 80
         output: 'coverage.xml'
         outputFormat: 'opencover'
