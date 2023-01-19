@@ -3,6 +3,7 @@
 open System
 open System.Collections.Generic
 open System.Diagnostics
+open System.Diagnostics.CodeAnalysis
 open System.Runtime.CompilerServices
 open System.Runtime.InteropServices
 open System.Text.RegularExpressions
@@ -1158,6 +1159,7 @@ exception InvalidValidationResultException of string
 [<Struct; NoEquality; NoComparison>]
 [<CompilerMessage("Not designed for F#", 1001, IsHidden = true)>]
 [<DebuggerDisplay("{IsValid ? \"Success: \" + Value : \"Failure: \" + System.String.Join(\", \", Errors)}")>]
+[<ExcludeFromCodeCoverage>]
 type ValidationResult<'T> internal (result : Result<'T, ErrorsByTag>) =
   /// <summary>
   /// Initializes a new instance of the <see cref="ValidationResult"/> class with a successful validation result.
@@ -1255,6 +1257,7 @@ type ValidationResult<'T> internal (result : Result<'T, ErrorsByTag>) =
 
 /// Result type when a value is validated against a domain specification `Spec<_>`.
 [<CompilerMessage("Not designed for F#", 1001, IsHidden = true)>]
+[<ExcludeFromCodeCoverage>]
 type ValidationResult private () =
   /// Combines validation results into a new validation result.
   static member Combine<'TFirst, 'TSecond, 'TResult> 
@@ -1324,6 +1327,7 @@ type Requirement<'T> = delegate of 'T -> bool * string
 /// Extensions on the `ValidationResult<_>` type to use in C# context.
 [<Extension>]
 [<CompilerMessage("Not designed for F#", 1001, IsHidden = true)>]
+[<ExcludeFromCodeCoverage>]
 type ValidationResultExtensions =
   /// <summary>
   /// Projects the validated result to another value.
