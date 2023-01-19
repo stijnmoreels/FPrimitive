@@ -42,6 +42,8 @@ type Spec<'T> =
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module Spec =
   /// Creates a specification with a name and logger.
+  [<ExcludeFromCodeCoverage>]
+  [<Obsolete("Removing logging capabilities in future releases")>]
   let create name logger = 
      { Tag = name
        Requirements = [] 
