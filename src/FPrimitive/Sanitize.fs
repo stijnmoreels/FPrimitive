@@ -2,6 +2,7 @@
 
 open System
 open System.Collections.Generic
+open System.Diagnostics.CodeAnalysis
 open System.Text
 open System.Text.RegularExpressions
 open System.Runtime.CompilerServices
@@ -10,7 +11,11 @@ open System.Net
 /// Sanitization operations on a string, filtering the untrusted user-input before any parsing, syntax, deserialization, or validation.
 module Sanitize =
   /// Switch to an empty string when the input is 'null'.
+  [<CompiledName("OfNull")>]
+  let ofNull x = if isNull x then "" else x
+  /// Switch to an empty string when the input is 'null'.
   [<CompiledName("EmptyWhenNull")>]
+  [<Obsolete("Use 'ofNull' instead")>]
   let empty_when_null input =
     if isNull input then String.Empty else input
      /// Only allow the matches in the given input for the given regular expression.
@@ -55,7 +60,7 @@ module Sanitize =
   [<CompiledName("BlackRegex")>]
   [<Obsolete("Use 'denyregex' instead for a more inclusive code base ♥")>]
   let blackregex (regex : Regex) input =
-    denyregex regex
+    denyregex regex input
   /// Removes all the matches in the given input for the given regular expression pattern.
   [<CompiledName("DenyMatch")>]
   let denymatch regex_pattern input = 
@@ -158,6 +163,11 @@ module Sanitize =
     let input = empty_when_null input
     if input.EndsWith (value : string) then input
     else sprintf "%s%s" input value
+  /// Filters out only European characters in the given input.
+  [<CompiledName("European")>]
+  let european (input : string) =
+    let input = ofNull input
+    Regex.Replace (input, "[^A-Za-zÁáĂăÂâÅåÄäǞǟÃãĄąĀāÆæĆćĈĉĊċÇçĎďḐḑĐđÐðÉéÊêĚěËëĖėĘęĒēĞğĜĝĠġĢģĤĥĦħİıÍíÌìÎîÏïĨĩĮįĪīĲĳĴĵĶķĹĺĻļŁłĿŀŃńŇňÑñŅņŊŋÓóÒòÔôÖöȪȫŐőÕõȮȯØøǪǫŌōỌọOEoeĸŘřŔŕŖŗſŚśŜŝŠšŞşṢṣȘșẞßŤťŢţȚțŦŧÚúÙùŬŭÛûŮůÜüŰűŨũŲųŪūŴŵÝýŶŷŸÿȲȳŹźŽžŻżÞþªº]+", String.Empty)
   /// Filters out only ASCII characters in the given input.
   [<CompiledName("ASCII")>]
   let ascii (input : string) =
@@ -197,9 +207,35 @@ module Sanitize =
     let input = empty_when_null input
     input.PadRight (l, ch)
 
+type SanitizeBuilder (input : string option) =
+  [<CustomOperation("allowregex")>]
+  member __.AllowRegex (state, regex) = Option.map (Sanitize.allowregex regex) state
+  [<CustomOperation("allowlist")>]
+  member __.AllowList (state, [<ParamArray>] list : string array) = Option.map (Sanitize.allowlist list) state
+
+  [<CustomOperation("removes_ws")>]
+  member __.RemovesWhiteSpace (state) = Option.map Sanitize.remove_ws state
+  [<CustomOperation("max")>]
+  member __.Truncate (state, length) = Option.map (Sanitize.max length) state
+  [<CustomOperation("ascii")>]
+  member __.Ascii (state) = Option.map Sanitize.ascii state
+  member __.Yield (_) = input
+  member __.Run (x) : string = Option.toObj x
+
+[<AutoOpen>]
+module SanitizeExporure =
+  let sanitize x = SanitizeBuilder (Option.ofObj x)
+
+  let test = sanitize "some input" { 
+    ascii; max 10; allowlist "bar[0-9]"
+    removes_ws }
+
 /// Sanitization operations on a string, filtering the untrusted user-input before any parsing, syntax, deserialization, or validation.
 [<Extension>]
+[<ExcludeFromCodeCoverage>]
 type SanitizeExtensions private () =
+  /// Switch to an empty string when the input is 'null'.
+  [<Extension>] static member OfNull (input) = Sanitize.ofNull input
   /// Switch to an empty string when the input is 'null'.
   [<Extension>] static member EmptyWhenNull (input) = Sanitize.empty_when_null input
   /// Substring the given input to a maximum length.
