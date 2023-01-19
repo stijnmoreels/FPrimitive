@@ -1071,3 +1071,16 @@ module Tests =
         Expect.equal actual input (sprintf "should allow all ASCII characters, left: %A, right: %A" actual input)
     ]
   
+  [<Tests>]
+  let untrust_tests =
+    testList "untrust" [
+      testProperty "try get value" <| fun x f ->
+        let r = Untrust x |> Untrust.getWith f
+        f x = Option.isSome r
+      testProperty "try get value option" <| fun x f ->
+        let r = Untrust x |> Untrust.getWithOption f
+        r = f x
+      testProperty "try get value result" <| fun x f ->
+        let r = Untrust x |> Untrust.getWithResult f
+        r = f x
+    ]

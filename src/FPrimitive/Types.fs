@@ -12,7 +12,7 @@ open System.Threading.Tasks
 open Microsoft.FSharp.Reflection
 open System.Runtime.InteropServices
 open System.Reflection
-open System.Diagnostics
+open System.Diagnostics.CodeAnalysis
 open System.Text.RegularExpressions
 
 #nowarn "1001"
@@ -21,6 +21,8 @@ open System.Text.RegularExpressions
 type Try<'T> = Result<'T, exn>
 
 /// Operations on the result type with an exception as error.
+[<Obsolete("Remove unnecessary types in future release")>]
+[<ExcludeFromCodeCoverage>]
 module Try = 
   /// Create a `Try` alias by creating an exception for the error of the result.
   let forEx createException (result : Result<'T, 'TError>) : Try<'T> =
@@ -58,6 +60,8 @@ module Try =
 
 /// Model representation of a valididated 'T.
 [<Struct>]
+[<Obsolete("Remove unnecessary types in future release")>]
+[<ExcludeFromCodeCoverage>]
 type Valid<'T> =
   private Validated of 'T with
     /// Gets the inner validated value.
@@ -83,6 +87,8 @@ type Valid<'T> =
 
 /// Representation of a 'secure' structure of how an error can be reported.
 /// Explicitly stating what information will be shared with the user.
+[<Obsolete("Remove unnecessary types in future release")>]
+[<ExcludeFromCodeCoverage>]
 type ErrorMessage =
   private { /// Gets the type of information that the application require from the user.
             RequiredFromUser : string
@@ -118,6 +124,8 @@ type ErrorMessage =
 /// Represents a way of a 'secure' application exception 
 /// that explicitly states what information should be shared with the user.
 [<Serializable>]
+[<Obsolete("Remove unnecessary type in future release")>]
+[<ExcludeFromCodeCoverage>]
 type SecureApplicationException =
   inherit ApplicationException
   /// Initializes a new instance of the <see cref="SecureApplicationException" /> class.
@@ -200,6 +208,8 @@ type Union =
 
 /// Model representing a sequence of elements with at least a single element.
 [<CompiledName("NonEmptyEnumerable")>]
+[<Obsolete("Remove unnecessary type in future release")>]
+[<ExcludeFromCodeCoverage>]
 type NonEmptySeq<'T> =
   internal NonEmptySeq of values:seq<'T> with
     member private this.Values = match this with NonEmptySeq xs -> xs
@@ -240,6 +250,8 @@ type 'T nonEmptySeq = NonEmptySeq<'T>
 
 /// Model representing a sequence where each element is considered to be unique.
 [<CompiledName("UniqueEnumerable`2"); AllowNullLiteral(false)>]
+[<Obsolete("Remove unnecessary type in future release")>]
+[<ExcludeFromCodeCoverage>]
 type UniqueSeq<'T, 'TKey when 'TKey : equality> internal (values : 'T seq, selectKey) =
   member internal __.values = values
   member internal __.selectKey = selectKey
@@ -291,6 +303,8 @@ type UniqueSeq<'T, 'TKey when 'TKey : equality> internal (values : 'T seq, selec
 
 /// Model representing a sequence where each element is considered to be unique.
 [<CompiledName("UniqueEnumerable`1"); AllowNullLiteral(false)>]
+[<Obsolete("Remove unnecessary type in future release")>]
+[<ExcludeFromCodeCoverage>]
 type UniqueSeq<'T when 'T : equality> (values) = 
   inherit UniqueSeq<'T, 'T> (values, id)
   /// Tries to create a unique sequence model of the given sequence
@@ -326,6 +340,8 @@ type UniqueSeq<'T when 'T : equality> (values) =
 type 'T uniqueSeq when 'T : equality = UniqueSeq<'T>
 
 [<Extension>]
+[<Obsolete("Remove unnecessary type in future release")>]
+[<ExcludeFromCodeCoverage>]
 type SeqExtensions () =
   /// Tries to create a non-empty sequence model of a given sequence.
   [<Extension>]
@@ -347,6 +363,8 @@ type SeqExtensions () =
     UniqueSeq<'T, 'TKey>.Create (values, selectKey)
 
 /// Operations on sequence domain types.
+[<Obsolete("Remove unnecessary type in future release")>]
+[<ExcludeFromCodeCoverage>]
 module Seq =
   /// Tries to create a non-empty sequence model of a given sequence.
   let toNonEmpty xs = NonEmptySeq.create xs
@@ -588,6 +606,8 @@ type SetOnce<'T when 'T : not struct> (?valueName, ?defaultValue) =
       |> Option.iterNone (fun () -> raise (AlreadySetException (sprintf "The '%s' is already set and can't be setted more than once" valueName)))
 
 /// Representation of a value that can be disposed/removed any time.
+[<Obsolete("Remove unnecessary type in future release")>]
+[<ExcludeFromCodeCoverage>]
 type Disposable<'a> (value : 'a) =
   member val private RefValue = ref (value :> obj)
   /// Tries to read the possible disposed value.
@@ -611,6 +631,8 @@ type Disposable<'a> (value : 'a) =
       Interlocked.Exchange (this.RefValue, null) |> ignore
 
 /// Operations on the `Disposable<_>` type.
+[<Obsolete("Remove unnecessary type in future release")>]
+[<ExcludeFromCodeCoverage>]
 module Disposable =
   /// Creates a disposable resource from any value.
   let create (x : 'a) = new Disposable<'a> (x)
