@@ -213,6 +213,7 @@ module Sanitize =
     let input = empty_when_null input
     input.PadRight (l, ch)
 
+[<ExcludeFromCodeCoverage>]
 type SanitizeBuilder (input : string option) =
   [<CustomOperation("allowregex")>]
   member __.AllowRegex (state, regex) = Option.map (Sanitize.allowregex regex) state
@@ -231,10 +232,6 @@ type SanitizeBuilder (input : string option) =
 [<AutoOpen>]
 module SanitizeExporure =
   let sanitize x = SanitizeBuilder (Option.ofObj x)
-
-  let test = sanitize "some input" { 
-    ascii; max 10; allowlist "bar[0-9]"
-    removes_ws }
 
 /// Sanitization operations on a string, filtering the untrusted user-input before any parsing, syntax, deserialization, or validation.
 [<Extension>]
