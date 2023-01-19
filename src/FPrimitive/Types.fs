@@ -18,6 +18,8 @@ open System.Text.RegularExpressions
 #nowarn "1001"
 
 /// Type alias for a result type with an exception as error.
+[<Obsolete("Remove unnecessary type in future rel")>]
+[<ExcludeFromCodeCoverage>]
 type Try<'T> = Result<'T, exn>
 
 /// Operations on the result type with an exception as error.
@@ -246,6 +248,8 @@ type NonEmptySeq<'T> =
       Enumerable.Zip (this.Values, other.Values, zipper) |> NonEmptySeq
 
 /// Model representing a sequence of elements with at least a single element.
+[<Obsolete("Remove unnecessary type in future rel")>]
+[<ExcludeFromCodeCoverage>]
 type 'T nonEmptySeq = NonEmptySeq<'T>
 
 /// Model representing a sequence where each element is considered to be unique.
@@ -337,6 +341,8 @@ type UniqueSeq<'T when 'T : equality> (values) =
     UniqueSeq<'T> (Enumerable.Where (values, predicate))
 
 /// Model representing a sequence where each element is considered to be unique.
+[<Obsolete("Remove unnecessary type in future rel")>]
+[<ExcludeFromCodeCoverage>]
 type 'T uniqueSeq when 'T : equality = UniqueSeq<'T>
 
 [<Extension>]
@@ -415,9 +421,13 @@ module Seq =
   let zipNonEmpty (xs : NonEmptySeq<_>) ys f = xs.Zip (ys, f)
 
 /// Exception that gets thrown when a `ReadOnce<_>` instance was being read more than once.
+[<Obsolete("Remove unnecessary type in future rel")>]
+[<ExcludeFromCodeCoverage>]
 exception AlreadyReadException of string
 
 /// Representation of a value that can only be read once.
+[<Obsolete("Remove unnecessary type in future rel")>]
+[<ExcludeFromCodeCoverage>]
 type ReadOnce<'T> (value : 'T) =
   member val private Value = ref (value :> obj)
   /// Tries to read the read-once value.
@@ -440,9 +450,13 @@ type ReadOnce<'T> (value : 'T) =
      this.tryGetValue () |> Maybe.OfOption
 
 /// Representation of a value that can only be read once.
+[<Obsolete("Remove unnecessary type in future rel")>]
+[<ExcludeFromCodeCoverage>]
 type 'T readOnce = ReadOnce<'T>
 
 /// Representation of a value that can only be read once.
+[<Obsolete("Remove unnecessary type in future rel")>]
+[<ExcludeFromCodeCoverage>]
 module ReadOnce =
   /// Tries to read the read-once value.
   let tryGetValue (x : ReadOnce<_>) = x.tryGetValue ()
@@ -458,6 +472,8 @@ module ReadOnce =
                 return Some result
     | None -> return None }
 
+[<Obsolete("Remove unnecessary type in future rel")>]
+[<ExcludeFromCodeCoverage>]
 type ReadOnceExtensions =
   ///Tries to reads the read-once function or return `Maybe<>.Nothing`.
   static member TryEvalFunction (readOnce : ReadOnce<Func<'T, 'TResult>>) (x : 'T) =
@@ -473,9 +489,13 @@ type ReadOnceExtensions =
     |> Async.StartAsTask
 
 /// Exception that gets thrown when a `Write<_>` instance was being written more than once.
+[<Obsolete("Remove unnecessary type in future rel")>]
+[<ExcludeFromCodeCoverage>]
 exception AlreadyWrittenException of string
 
 /// Representation of a value that can only be written once.
+[<Obsolete("Remove unnecessary type in future rel")>]
+[<ExcludeFromCodeCoverage>]
 type WriteOnce<'T, 'TResult> (write : 'T -> 'TResult) =
   /// Creates a representation of a value that can only be written once.
   new (writeFunc : Func<'T, 'TResult>) = WriteOnce<'T, 'TResult> (write=writeFunc.Invoke)
@@ -501,6 +521,8 @@ type WriteOnce<'T, 'TResult> (write : 'T -> 'TResult) =
     | None -> raise (AlreadyWrittenException (sprintf "The value of type %s has already been written" typeof<'T>.Name))
 
 /// Representation of a value that can only be written once.
+[<Obsolete("Remove unnecessary type in future rel")>]
+[<ExcludeFromCodeCoverage>]
 type WriteOnce<'T> (write : 'T -> unit) =
   inherit WriteOnce<'T, unit> (write=write)
   /// Creates a representation of a value that can only be written once.
@@ -513,6 +535,8 @@ type WriteOnce<'T> (write : 'T -> unit) =
     else false
 
 /// Representation of a value that can only be written once.
+[<Obsolete("Remove unnecessary type in future rel")>]
+[<ExcludeFromCodeCoverage>]
 type WriteOnceAsync<'T, 'TResult> (write : 'T -> Async<'TResult>) =
   /// Creates a representation of a value that can only be written once.
   new (writeFunc : Func<'T, Task<'TResult>>) = WriteOnceAsync<'T, 'TResult> (write=fun x -> writeFunc.Invoke x |> Async.AwaitTask)
@@ -542,6 +566,8 @@ type WriteOnceAsync<'T, 'TResult> (write : 'T -> Async<'TResult>) =
     |> Async.StartAsTask
 
 /// Representation of a value that can only be written once.
+[<Obsolete("Remove unnecessary type in future rel")>]
+[<ExcludeFromCodeCoverage>]
 type WriteOnceAsync<'T> (write : 'T -> Async<unit>) =
   inherit WriteOnceAsync<'T, unit> (write=write)
   /// Creates a representation of a value that can only be written once.
@@ -559,6 +585,8 @@ type WriteOnceAsync<'T> (write : 'T -> Async<unit>) =
     this.trySetValueAsync value |> Async.StartAsTask
 
 /// Representation of a function that can be written once.
+[<Obsolete("Remove unnecessary type in future rel")>]
+[<ExcludeFromCodeCoverage>]
 module WriteOnce =
   /// Creates a representation of a value that can only be written once.
   let create f = WriteOnce<_> (write=f)
@@ -581,6 +609,8 @@ module WriteOnce =
 exception AlreadySetException of string
 
 /// Represents a model that can set a value once.
+[<Obsolete("Remove unnecessary type in future rel")>]
+[<ExcludeFromCodeCoverage>]
 type SetOnce<'T when 'T : not struct> (?valueName, ?defaultValue) =
   let valueName = defaultArg valueName "set-once value"
   member val private value = defaultArg defaultValue Unchecked.defaultof<'T> with get, set
