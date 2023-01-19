@@ -27,6 +27,8 @@ group Test
     nuget Xunit.Runner.VisualStudio
     nuget Microsoft.NET.Test.Sdk
     nuget YoloDev.Expecto.TestSdk
+    nuget coverlet.collector
+    nuget coverlet.msbuild
 
 // [ FAKE GROUP ]
 group FakeBuild
