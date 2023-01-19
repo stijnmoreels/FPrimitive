@@ -3,3 +3,7 @@ group Test
     Expecto.BenchmarkDotNet
     Expecto.FsCheck
     Fare
+    Microsoft.NET.Test.Sdk
+    YoloDev.Expecto.TestSdk
+    coverlet.collector
+    coverlet.msbuild
