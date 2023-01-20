@@ -168,6 +168,8 @@ type SecureApplicationException =
     { inherit ApplicationException (string msg) }
 
 /// Model with operations related to discriminated unions.
+[<ExcludeFromCodeCoverage>]
+[<Obsolete("Remove unnecessary types in future releases")>]
 type Union =
   /// Determines if the given string is a union case entry of the given type.
   [<CompiledName("IsUnionCase")>]
