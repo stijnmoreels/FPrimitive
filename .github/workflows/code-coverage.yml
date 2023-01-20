@@ -28,6 +28,9 @@ jobs:
       run: dotnet tool restore && dotnet paket install
 
     - name: Coverlet coverage test
+      run: dotnet test -c Debug -p:coverletOutput=coverage.xml -p:CollectCoverage=true -p:CoverletOutputFormat=opencover -p:ExcludeByFile\"**/Types.fs\" -p:Exclude=\"\" tests/FPrimitive.Tests/FPrimitive.Tests.fsproj
+
+    - name: Coverlet coverage test
       uses: b3b00/coverlet-action@1.2.4
       with:
         testProject: 'tests/FPrimitive.Tests/FPrimitive.Tests.fsproj'
