@@ -1116,10 +1116,12 @@ module SpecExposure =
   /// Computation builder to create an `Spec<_>` instance.
   let spec<'a> = new SpecBuilder<'a, Spec<'a>> (id)
   /// Computation builder to create a specification with a embedded logger.
+  [<Obsolete("Removing logging capabilities in future releases")>]
   let specLog<'a> logger = new SpecBuilder<'a, Spec<'a>> (id, Spec.defl<'a> logger)
   /// Computation builder to create a specification with a embedded model tag.
   let specTag<'a> tag = new SpecBuilder<'a, Spec<'a>> (id, Spec.tag tag)
   /// Computation builder to create a specification with a embedded model tag and logger.
+  [<Obsolete("Removing logging capabilities in future releases")>]
   let specWith<'a> tag logger = new SpecBuilder<'a, Spec<'a>> (id, Spec.create tag logger)
   /// Computation builder to build an `Spec<_>` instance that gets validated to a `Result<_, string list>` when runned.
   let specResult<'a> value = new SpecBuilder<'a, Result<'a, ErrorsByTag>> (Spec.validate value)
@@ -1139,6 +1141,7 @@ module SpecExposure =
   let specModelIf<'a, 'b> filter createModel value = new SpecBuilder<'a, Result<'b option, ErrorsByTag>> (Spec.createModelIf filter createModel value)
 
 /// Extra operations on the `Result<_, _>` type with `Map<_, _>` as error type.
+[<ExcludeFromCodeCoverage>]
 module Result =
   /// Lifts a two argument function to work with result types.
   let lift2Map f xResult yResult =
@@ -1210,8 +1213,10 @@ type ValidationResult<'T> internal (result : Result<'T, ErrorsByTag>) =
   /// Gets a value indicating whether the validation succeeded.
   member __.IsValid = Result.isOk result
   /// Gets the series of validation errors that describe to what domain requirements the validated value doesn't satisfy.
+  [<ExcludeFromCodeCoverage>]
   member __.Errors : string array = Result.either (fun _ -> Array.empty) (Map.values >> List.concat >> Array.ofList) result
   /// Gets the series of validation error details that describe what domain requirements for each validated property value doesn't satisfy.
+  [<ExcludeFromCodeCoverage>]
   member __.Details : IReadOnlyDictionary<string, string array> = Result.either (fun _ -> readOnlyDict []) (Map.mapv Array.ofList >> Map.toReadOnlyDict) result
 
   /// Creates a successful validation result with a specified value.

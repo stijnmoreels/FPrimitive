@@ -220,6 +220,14 @@ module Tests =
         Spec.def |> Spec.filter f (spec { verify g msg }) |> Spec.validate x
         |> Expect.result (fun x -> (f x && g x) || not (f x)) x
 
+      testProperty "filter of" <| fun f g x msg ->
+        Spec.def |> Spec.filterOf id f (spec { verify g msg }) |> Spec.validate x
+        |> Expect.result (fun x -> (f x && g x) || not (f x)) x
+
+      testProperty "filter T" <| fun f g x msg ->
+        Spec.def |> Spec.filterT f (spec { verify g msg }) |> Spec.validate x
+        |> Expect.result (fun x -> (f x && g x) || not (f x)) x
+
       testProperty "filter (example)" <| fun (x : int) ->
         Spec.def 
         |> Spec.filter (fun x -> x < -3) (Spec.def
@@ -407,6 +415,14 @@ module Tests =
 
       testProperty "in enum" <| fun (d : Direction) ->
         let r = specResult d { inEnum typeof<Direction> "should be defined in the 'Direction' enum" }
+        Result.isOk r <=> Enum.IsDefined (typeof<Direction>, d)
+
+      testProperty "in enum T" <| fun (d : Direction) ->
+        let r = Spec.def |> Spec.inEnumT<Direction> "should be defined in the 'Direction' enum" |> Spec.validate d
+        Result.isOk r <=> Enum.IsDefined (typeof<Direction>, d)
+
+      testProperty "in enum T of" <| fun (d : Direction) ->
+        let r = Spec.def |> Spec.inEnumOfT id "should be defined in the 'Direction' enum" |> Spec.validate d
         Result.isOk r <=> Enum.IsDefined (typeof<Direction>, d)
 
       testProperty "exists" <| fun (PositiveInt x) (xs : NegativeInt list) ->
