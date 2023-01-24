@@ -845,19 +845,19 @@ module Tests =
         Sanitize.lpad l str = str.PadLeft l
       
       testProperty "right padding" <| fun (NonNull str) (PositiveInt l) ->
-        Sanitize.rpad l str = str.PadRight l
+        sanitize str { rpad l } = str.PadRight l
       
       testProperty "left padding char" <| fun (NonNull str) (PositiveInt l) ch ->
-        Sanitize.lpad_char l ch str = str.PadLeft (l, ch)
+        sanitize str { lpad_char l ch } = str.PadLeft (l, ch)
       
       testProperty "right padding char" <| fun (NonNull str) (PositiveInt l) ch ->
-        Sanitize.rpad_char l ch str = str.PadRight (l, ch) = sanitize str { rpad_char l ch }
+        sanitize str { rpad_char l ch } = str.PadRight (l, ch)
       
       testProperty "upper" <| fun (NonNull str) ->
-        Sanitize.upper str = str.ToUpper ()
+        sanitize str { upper } = str.ToUpper ()
       
       testProperty "lower" <| fun (NonNull str) ->
-        Sanitize.lower str = str.ToLower ()
+        sanitize str { lower } = str.ToLower ()
       
       testProperty "html encode" <| fun (NonNull str) ->
         Sanitize.htmlEncode str = System.Net.WebUtility.HtmlEncode str

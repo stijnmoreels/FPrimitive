@@ -218,9 +218,21 @@ type SanitizeBuilder (input : string option) =
   /// Replaces the given input with the given key/value sequence where key: value to be replaced, and value: is the replacement for that value.
   [<CustomOperation("replaces")>]
   member __.Replaces (state, replacementByValue) = Option.map (Sanitize.replaces replacementByValue) state
+  /// Transforms the input to a lower-case representation.
+  [<CustomOperation("lower")>]
+  member __.Lower (state) = Option.map (Sanitize.lower) state
+  /// Transforms the input to a upper-case representation.
+  [<CustomOperation("upper")>]
+  member __.Upper (state) = Option.map (Sanitize.upper) state
   /// Left-padding the input to a specified length with a specified character.
   [<CustomOperation("lpad_char")>] 
   member __.PadLeft (state, length, ch) = Option.map (Sanitize.lpad_char length ch) state
+  /// Right-padding the input to a specified length.
+  [<CustomOperation("rpad")>]
+  member __.PadRight (state, length) = Option.map (Sanitize.rpad length) state
+  /// Right-padding the input to a specified length with a specified character.
+  [<CustomOperation("rpad_char")>]
+  member __.PadRight (state, length, ch) = Option.map (Sanitize.rpad_char length ch) state
   [<CustomOperation("removes_ws")>]
   member __.RemovesWhiteSpace (state) = Option.map Sanitize.remove_ws state
   [<CustomOperation("max")>]
