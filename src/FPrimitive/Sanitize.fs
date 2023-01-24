@@ -19,10 +19,9 @@ module Sanitize =
   [<ExcludeFromCodeCoverage>]
   let empty_when_null input =
     if isNull input then String.Empty else input
-     /// Only allow the matches in the given input for the given regular expression.
+  /// Only allow the matches in the given input for the given regular expression.
   [<CompiledName("AllowRegex")>]
   let allowregex (regex : Regex) input =
-    let input = empty_when_null input
     let matches = regex.Matches input
     let values = seq { for m in matches do yield m.Value }
     String.Join (String.Empty, Seq.toArray values)
@@ -58,7 +57,6 @@ module Sanitize =
   /// Removes all the matches in the given input for the given regular expression.
   [<CompiledName("DenyRegex")>]
   let denyregex (regex : Regex) input =
-    let input = empty_when_null input
     regex.Replace (input, replacement=String.Empty)
   /// Removes all the matches in the given input for the given regular expression.
   [<CompiledName("BlackRegex")>]
@@ -79,7 +77,6 @@ module Sanitize =
   /// Replaces the given input with the given key/value sequence where key: value to be replaced, and value: is the replacement for that value.
   [<CompiledName("Replaces")>]
   let replaces replacementByValue input =
-    let input = empty_when_null input
     Seq.fold (fun (acc : string) (v : string, rep : string) -> acc.Replace (v, rep)) input replacementByValue
   /// Removes all the matches in the given input for gien the text regular expression patterns.
   /// For example: `denylist ["foo"; "bar[0-9]+"] input`
@@ -134,39 +131,32 @@ module Sanitize =
   /// Removes all leading occurences of a set of specified charachters in the given input.
   [<CompiledName("TrimStart")>]
   let ltrim values (input : string) =
-    let input = empty_when_null input
     input.TrimStart (Seq.toArray values)
   /// Removes all trailing occurences of a set of specified charachters in the given input.
   [<CompiledName("TrimEnd")>]
   let rtrim values (input : string) =
-    let input = empty_when_null input
     input.TrimEnd (Seq.toArray values)
   /// Removes all leading and trailing occurences of a set of specified charachters in the given input.
   [<CompiledName("Trim")>]
   let trim values (input : string) =
-    let input = empty_when_null input
     input.Trim (values : char array)
   /// Removes all leading and trailing white space characters in the given input.
   [<CompiledName("Trim")>]
   let trim_ws (input : string) =
-    let input = empty_when_null input
     input.Trim ()
   /// Substring the given input to a maximum length.
   [<CompiledName("Max")>]
   let max length (input : string) =
-    let input = empty_when_null input
     if length > input.Length then input
     else input.Substring (0, length)
   /// Adds header if the input doesn't start with one.
   [<CompiledName("Header")>]
   let header value (input : string) =
-    let input = empty_when_null input
     if input.StartsWith (value  : string) then input
     else sprintf "%s%s" value input
   /// Adds trailer if the input doesn't end with one.
   [<CompiledName("Trailer")>]
   let trailer value (input : string) =
-    let input = empty_when_null input
     if input.EndsWith (value : string) then input
     else sprintf "%s%s" input value
   /// Filters out only European characters in the given input.
@@ -177,7 +167,6 @@ module Sanitize =
   /// Filters out only ASCII characters in the given input.
   [<CompiledName("ASCII")>]
   let ascii (input : string) =
-    let input = empty_when_null input
     Regex.Replace (input, @"[^\x00-\x7F]", String.Empty);
   /// Converts a string to a HTML-encoded string.
   let htmlEncode (input : string) =
@@ -185,41 +174,53 @@ module Sanitize =
   /// Transforms the input to a lower-case representation.
   [<CompiledName("ToLower")>]
   let lower (input : string) =
-    let input = empty_when_null input
     input.ToLower ()
   /// Transforms the input to a upper-case representation.
   [<CompiledName("ToUpper")>]
   let upper (input : string) =
-    let input = empty_when_null input
     input.ToUpper ()
   /// Left-padding the input to a specified length with spaces.
   [<CompiledName("PadLeft")>]
-  let lpad l input =
-    let input = empty_when_null input
+  let lpad l (input : string) =
     input.PadLeft l
   /// Left-padding the input to a specified length with a specified character.
   [<CompiledName("PadLeft")>]
-  let lpad_char l ch input =
-    let input = empty_when_null input
+  let lpad_char l ch (input : string) =
     input.PadLeft (l, ch)
   /// Right-padding the input to a specified length.
   [<CompiledName("PadRight")>]
-  let rpad l input =
-    let input = empty_when_null input
+  let rpad l (input : string) =
     input.PadRight l
   /// Right-padding the input to a specified length with a specified character.
   [<CompiledName("PadRight")>]
-  let rpad_char l ch input =
-    let input = empty_when_null input
+  let rpad_char l ch (input : string) =
     input.PadRight (l, ch)
 
+/// Composition builder for the `Sanitize` module.
 [<ExcludeFromCodeCoverage>]
 type SanitizeBuilder (input : string option) =
-  [<CustomOperation("allowregex")>]
+  /// Only allow the matches in the given input for the given regular expression.
+  [<CustomOperation("allowregex")>] 
   member __.AllowRegex (state, regex) = Option.map (Sanitize.allowregex regex) state
-  [<CustomOperation("allowlist")>]
+  /// Only allow the matches in the given input for the given regular expression pattern.
+  [<CustomOperation("allowmatch")>]
+  member __.AllowMatch (state, pattern) = Option.map (Sanitize.allowmatch pattern) state
+  /// Only allow the matches in the input for the given text regular expression patterns.
+  /// For example: `allowlist ["foo"; "bar[0-9]+"] input`
+  [<CustomOperation("allowlist")>] 
   member __.AllowList (state, [<ParamArray>] list : string array) = Option.map (Sanitize.allowlist list) state
-
+  /// Removes all the matches in the given input for the given regular expression.
+  [<CustomOperation("denyregex")>]
+  member __.DenyRegex (state, regex) = Option.map (Sanitize.denyregex regex) state
+  /// Removes all the matches in the given input for the given regular expression.
+  [<CustomOperation("denymatch")>]
+  member __.DenyMatch (state, pattern) = Option.map (Sanitize.denymatch pattern) state
+  /// Replaces the given input with the given key/value sequence where key: value to be replaced, and value: is the replacement for that value.
+  [<CustomOperation("replaces")>]
+  member __.Replaces (state, replacementByValue) = Option.map (Sanitize.replaces replacementByValue) state
+  /// Left-padding the input to a specified length with a specified character.
+  [<CustomOperation("lpad_char")>] 
+  member __.PadLeft (state, length, ch) = Option.map (Sanitize.lpad_char length ch) state
   [<CustomOperation("removes_ws")>]
   member __.RemovesWhiteSpace (state) = Option.map Sanitize.remove_ws state
   [<CustomOperation("max")>]
@@ -237,10 +238,14 @@ module SanitizeExporure =
 [<Extension>]
 [<ExcludeFromCodeCoverage>]
 type SanitizeExtensions private () =
+  /// Safe sanitization extension to only run sanitization on a non-null string input.
+  [<Extension>] 
+  static member Sanitize (input : string, sanitization : Func<string, string>) = 
+    if isNull sanitization then nullArg "sanitization"
+    if isNull input then input 
+    else sanitization.Invoke input 
   /// Switch to an empty string when the input is 'null'.
   [<Extension>] static member OfNull (input) = Sanitize.ofNull input
-  /// Switch to an empty string when the input is 'null'.
-  [<Extension>] static member EmptyWhenNull (input) = Sanitize.empty_when_null input
   /// Substring the given input to a maximum length.
   [<Extension>] static member Max (input, length) = Sanitize.max length input
   /// Filters out only ASCII characters in the given input.

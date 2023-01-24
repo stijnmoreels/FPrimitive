@@ -13,8 +13,6 @@ type Untrust<'T> (value : 'T) =
     /// Tries to get the wrapped value out of the untrusted boundary by validating the value.
     member internal __.tryGetValue (validator : 'T -> 'TResult option) = validator value
     /// Tries to get the wrapped value out of the untrusted boundary by validating the value.
-    member internal __.tryGetValue (validator : 'T -> Result<'TResult, string list>) = validator value
-    /// Tries to get the wrapped value out of the untrusted boundary by validating the value.
     member internal __.tryGetValue (validator : 'T -> Result<'TResult, 'TError>) = validator value
     
     /// Tries to get the wrapped value out of the untrusted boundary by validating the value.

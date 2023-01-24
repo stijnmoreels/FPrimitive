@@ -9,6 +9,7 @@ open Expecto
 open FsCheck
 open FPrimitive
 open Microsoft.FSharp.Reflection
+open Fare
 
 [<AutoOpen>]
 module Extensions =
@@ -19,161 +20,7 @@ module Extensions =
       |[|case|] -> Some(FSharpValue.MakeUnion(case,[||]) :?> 'a)
       |_ -> None
 
-
-
-type HttpUri =
-  private HttpUri of Uri with
-    static member create x = specModel (Uri >> HttpUri) x {
-      notNull "cannot create HTTP Uri from 'null'"
-      verify (fun x -> Uri.IsWellFormedUriString (x, UriKind.Absolute)) "URI is not in a well formed format"
-      verify (fun x -> x.StartsWith Uri.UriSchemeHttp || x.StartsWith Uri.UriSchemeHttps) "URI should have a 'http' or 'https' scheme" }
-
-type Author =
-  private Author of string with
-    static member create x = 
-      let name = @"[A-Z]{1}[a-z]*\.?"
-      let pattern = sprintf "^(%s)( %s)*$" name name
-      specModel Author x {
-        notNullOrWhiteSpace "author name should not be blank"
-        greaterThanOrEqualOf String.length 1 "author name should at least be a single character"
-        matches pattern (sprintf "author name should match regular expression: %s" pattern) }
-
-type ISBN13 =
-  private ISBN13 of string with
-    static member create x = 
-      let pattern = "^[0-9]+$"
-      let checksum (code : string) =
-        let digits = code.ToCharArray() |> Seq.map (string >> int)
-        let sum = 
-          Seq.take 12 digits 
-          |> Seq.mapi (fun i n -> if i % 2 <> 0 then n * 3 else n)
-          |> Seq.sum
-        let rem = sum % 10
-        let checksum = if rem <> 0 then 10 - rem else rem
-        checksum = Seq.last digits
-      specModel ISBN13 x {
-        notNullOrWhiteSpace "ISBN13 number should not be blank"
-        equalOf String.length 13 "ISBN13 number should be 13 characters"
-        matches pattern (sprintf "ISBN13 number should match regular expression: %s" pattern)
-        startsWith "987" "ISBN13 number should start with '987'"
-        verify checksum "ISBN13 checksum was invalid" } 
-
-type Int1000 =
-  private Int1000 of int with
-    static member create x = specModel Int1000 x {
-      inclusiveBetween 1 1000 "integer number must be between 1-1000" }
-
-type Rating =
-  | Unforgettable
-  | VeryGood 
-  | Okay 
-  | AlmostRight
-  | Garbage with
-    static member create s = 
-      Union.create<Rating> s
-
-type Book =
-  { Author : Author
-    ISBN13 : ISBN13
-    Pages : Int1000
-    Rating : Rating option } with
-    static member create author isbn13 pages rating = result {
-      let! author = Author.create author
-      let! isbn13 = ISBN13.create isbn13
-      let! pages = Int1000.create pages
-      let! rating = Spec.optional Option.ofObj Rating.create rating
-      return { Author = author; ISBN13 = isbn13; Pages = pages; Rating = rating } }
-
-type Point =
-  { Min : int
-    Max : int } with
-      static member create min max = result {
-        let! min = specResult min { exclusiveBetween 0 10 "minimum should be between 0-10 exlusive" }
-        let! max = specResult max { exclusiveBetween 11 20 "maximum should be between 11-20 exclusive" }
-        return! if min < max then Ok { Min = min; Max = max }
-                else Spec.error "min" "minimum should be less than maximum" }
-      
-      static member create2 min max =
-        let minS = spec { exclusiveBetween 0 10 "minimum should be between 0-10 exlusive" }
-        let maxS = spec { exclusiveBetween 11 20 "maximum should be between 11-20 exclusive" }
-        specInvariant minS maxS {
-          add (fun (min, max) -> min < max, "minimum should be less than maximum") }
-        |> Spec.createModel (fun (min, max) -> { Min = min; Max = max }) (min, max)
-
-type Text = 
-  private Text of string with 
-    static member create (s) =
-      Spec.def
-      |> Spec.notNull "should not be null"
-      |> Spec.notEmpty "should not be empty"
-      |> Spec.notWhiteSpace "should not be blank"
-      |> Spec.createModel Text s
-
-    static member create2 (s) = specModel Text s { 
-      notNull "should not be null"
-      notEmpty "should not be empty" }
-
-type String100 =
-  private String100 of string with
-    static member create s = specModel String100 s {
-      notNullOrWhiteSpace "string100 should not be empty"
-      stringLengthBetween 1 100 "string100 should have a length of max 100 characters" }
-
-type Sex =
-  | Male
-  | Female
-  | Between
-  | Both
-  | Neither
-  | ItsComplicated
-  | MindYourOwnBusiness
-  | DontKnow
-  | Other with
-  static member create str =
-    Union.create<Sex> str
-
-type Person = 
-  { FirstName : Text
-    LastName : Text } with
-      static member create first last = result {
-        let! first = Text.create first
-        let! last = Text.create last
-        return { FirstName = first; LastName = last } }
-
-type PartyId = 
-  private PartyId of string with
-    static member create x = specModel PartyId x {
-      notNullOrWhiteSpace "party ID cannot be null or blank"
-      matches "^#" "party ID should start with hashtag '#'"
-      cascade FirstFailure }
-
-type Agreement =
-  private Agreement of string with
-    static member create x = specModel Agreement x {
-      notNullOrWhiteSpace "agreement cannot be blank" }
-    static member createIf x =
-      Spec.def<string>
-      |> Spec.notNullOrWhiteSpace "agreement cannot be blank"
-      |> Spec.createModelIf Option.ofObj Agreement x
-
-open Microsoft.FSharp.Core.Result.Operators
-open Fare
-
-type Party =
-  private { Ids : PartyId uniqueSeq } with
-    static member create xs = result {
-        let! uniqueIds = 
-            NonEmptySeq.create xs
-            >>= Result.traverseSeqMap PartyId.create
-            >>= UniqueSeq<PartyId>.create
-        return { Ids = uniqueIds } }
-
 type Direction = Left = 1 | Right = 2 | Forward = 4 | Backward = 8
-
-type Reliability =
-  { RetryCount : int
-    RetryInterval : TimeSpan 
-    Timeout : TimeSpan }
 
 type Order =
   { Amount : int
@@ -226,7 +73,7 @@ module Tests =
 
       testProperty "filter T" <| fun f g x msg ->
         Spec.def |> Spec.filterT f (spec { verify g msg }) |> Spec.validate x
-        |> Expect.result (fun x -> (f x && g x) || not (f x)) x
+        |> Expect.result (fun x -> g (f x) || f x = Unchecked.defaultof<_>) x
 
       testProperty "filter (example)" <| fun (x : int) ->
         Spec.def 
@@ -696,10 +543,6 @@ module Tests =
             equal 0 "@int should be equal to zero" }) }
         r = Spec.error "child.int" "@int should be equal to zero"
 
-      testProperty "valid type for quick validation" <| fun x isValid ->
-        let r = Valid<_>.createWith x (fun _ -> isValid) "should be valid when predicate holds"
-        Expect.isTrue (Result.isOk r = isValid) "should be valid when predicate holds" 
-
       testProperty "merge" <| fun (NegativeInt x) ->
         let lessThan1 = spec { lessThan 1 "should be less than 1" }
         let notEqual0 = spec { notEqual 0 "should not be equal to zero" }
@@ -778,6 +621,38 @@ module Tests =
         Spec.invariant3 x_spec y_spec z_spec
         |> Spec.add (fun (x, y, z) -> x < y && z <> null, "negative int should be less than positive int & non-empty string should not be 'null'")
         |> Spec.validate (x, y , z) |> toProp
+
+      testProperty "tags are made from strings starting with '@'" <| fun (PositiveInt x) ->
+        Gen.subListOf [ yield! ['a'..'z']; yield! ['A'..'Z'] ]
+        |> Gen.filter (fun xs -> xs.Length > 0)
+        |> Gen.map (fun xs -> String.Join ("", xs))
+        |> Gen.three
+        |> Arb.fromGen
+        |> Prop.forAll <| fun (name, tag1, tag2) ->
+            let r = specResult x { 
+              tag name
+              cascade Continue
+              startsWithOf string "-" (sprintf "the @%s should start with a '-'" tag1)
+              endsWithOf string "." (sprintf "ths @%s should end with a '.'" tag1)
+              lessThanOf (string >> String.length) 0 (sprintf "the length of the @%s should be -1" tag2)
+              inclusiveBetween -1 -100 "should be between -1 <-> -100" }
+            
+            Expect.isError r "validation should fail"
+            let errMap = Result.either (fun _ -> Map.empty) id r
+            Expect.hasLength errMap 3 "valiation error map should have 3 entries"
+            Expect.equal 
+              (Map.tryFind (sprintf "%s.%s" name tag1) errMap) 
+              (Some [ sprintf "the @%s should start with a '-'" tag1
+                      sprintf "ths @%s should end with a '.'" tag1 ])
+              "validation error map should have 2 entries for tag1 with the same 'name.tag' key"
+            Expect.equal
+              (Map.tryFind (sprintf "%s.%s" name tag2) errMap)
+              (Some [ sprintf "the length of the @%s should be -1" tag2 ])
+              "validation error map should have 1 entry with for tag2"
+            Expect.equal 
+              (Map.tryFind name errMap) 
+              (Some [ "should be between -1 <-> -100" ]) 
+              "validation error map should have 1 entry with the 'name' as key"
     ]
 
   [<Tests>]
@@ -898,59 +773,116 @@ module Tests =
         Expect.notEqual (Access.evalUnit acc) (Ok None) "should block evaluation during expected time range"
     ]
 
-  type Critical =
-    { Config : string readOnce }
-
-  type Temp =
-    { Value : Disposable<string> }
-
   [<Tests>]
-  let typeTests =
-    testList "types" [
-      testCase "read once" <| fun _ ->
-        let cri = { Config = ReadOnce "secret" }
-        let value = ReadOnce.tryGetValue cri.Config
-        Expect.equal value (Some "secret") "read once type should evaluate once"
-        let value = ReadOnce.tryGetValue cri.Config
-        Expect.equal value None "read once type should not evaluate twice"
-      testCase "read once throw" <| fun _ ->
-        let cri = { Config = ReadOnce "connection string" }
-        Expect.equal (cri.Config.GetValue ()) "connection string" "read once type should evaluate once"
-        Expect.throwsT<AlreadyReadException> (cri.Config.GetValue >> ignore) "read once type should throw after single read"
-      testCase "read once func" <| fun () ->
-        let cri = ReadOnce (fun () -> "secret")
-        let value = ReadOnce.tryEvalFunc cri ()
-        Expect.equal value (Some "secret") "read once type should evaluate once"
-        let value = ReadOnce.tryEvalFunc cri ()
-        Expect.equal value None "read once type should not evaluate twice"
-      testCaseAsync "read once func async" <| async {
-        let cri = ReadOnce (fun () -> async.Return 1)
-        let! value = ReadOnce.tryEvalFuncAsync cri ()
-        Expect.equal value (Some 1) "read once type should evaluate once"
-        let! value = ReadOnce.tryEvalFuncAsync cri ()
-        Expect.equal value None "read once type should not evaluate twice" }
-      testCase "write once" <| fun _ ->
-        let printOnce = WriteOnce.create <| fun name -> printfn "hello %s!" name
-        let value = WriteOnce.trySetValue "Elsa" printOnce
-        Expect.isTrue value "write once should evaluate once"
-        let value = WriteOnce.trySetValue "Hanna" printOnce
-        Expect.isFalse value "write once should not evaluate twice"
-
-      testCase "write once throw" <| fun _ ->
-        let printOnce = WriteOnce.create <| fun name -> printfn "hello %s!" name
-        let value = WriteOnce.trySetValue "Elsa" printOnce
-        Expect.isTrue value "write once should evaluate once"
-        Expect.throwsT<AlreadyWrittenException> (fun () -> printOnce.SetValue "Hanna") "write once type should throw after single write"
-
-      testCase "disposable" <| fun _ ->
-        let temp = { Value = Disposable.create "something to remove" }
-        using temp.Value (fun v ->
-          let value = Disposable.tryGetValue v
-          Expect.equal value (Some "something to remove") "disposable type should evaluate when not disposed")
-        
-        let value = Disposable.tryGetValue temp.Value
-        Expect.equal value None "disposable type should not evaluate after disposal"
-
+  let sanitize_tests =
+    testList "sanitize" [
+      testProperty "empty when null" <| fun x ->
+        let actual = Sanitize.ofNull x
+        Expect.isNotNull actual "can never be 'null'"
+      
+      testProperty "allow regex+match" <| fun (NonNull pre_noise) (PositiveInt x) (NonNull post_noise) ->
+        (pre_noise <> string x && post_noise <> string x
+        && not <| pre_noise.Contains (string x)
+        && not <| post_noise.Contains (string x)) ==> lazy
+        let input = sprintf "%s%i%s" pre_noise x post_noise
+        let actualMatch = Sanitize.allowmatch (string x) input
+        Expect.equal actualMatch (string x) "should only allow matches"
+        let actualRegex = Sanitize.allowregex (Regex <| string x) input
+        Expect.equal actualRegex (string x) "should only allow matches"
+      
+      testProperty "allow list" <| fun (NonNull pre_noise) x (NonNull post_noise) ->
+        (pre_noise <> string x && post_noise <> string x
+         && not <| pre_noise.Contains (string x)
+         && not <| post_noise.Contains (string x)) ==> lazy
+        let input = sprintf "%s%i%s" pre_noise x post_noise
+        let actual = Sanitize.allowlist [string x] input
+        Expect.equal actual (string x) "should only allow in list"
+     
+      testProperty "deny regex+match" <| fun (PositiveInt pre_noise) (NonEmptyString x) (PositiveInt post_noise) ->
+        (not <| x.Contains (string pre_noise) 
+        && not <| x.Contains (string post_noise)
+        && not <| (string pre_noise).Contains (string post_noise)
+        && not <| (string post_noise).Contains (string pre_noise)) ==> lazy
+        let input = sprintf "%i%s%i" pre_noise x post_noise
+        let actualMatch = Sanitize.denymatch (sprintf "(%i|%i)" pre_noise post_noise) input
+        Expect.equal actualMatch x "should remove noise via match"
+        let actualRegex = Sanitize.denyregex (Regex <| sprintf "(%i|%i)" pre_noise post_noise) input
+        Expect.equal actualRegex x "should remove noise via match"
+      
+      testProperty "deny list" <| fun (PositiveInt pre_noise) (NonEmptyString x) (PositiveInt post_noise) ->
+        (not <| x.Contains (string pre_noise) 
+         && not <| x.Contains (string post_noise)
+         && not <| (string pre_noise).Contains (string post_noise)
+         && not <| (string post_noise).Contains (string pre_noise)) ==> lazy
+        let input = sprintf "%i_%s_%i" pre_noise x post_noise
+        let actual = Sanitize.denylist [string pre_noise; string post_noise] input
+        Expect.equal actual (sprintf "_%s_" x) "should remove noise via list"
+      
+      testProperty "replace(s)" <| fun (NonEmptyString target) (NonEmptyString value) (NonEmptyString replacement) ->
+        (target <> value && target <> replacement
+         && not <| value.Contains target
+         && not <| target.Contains value ) ==> lazy
+        let input = sprintf "%s%s" target value
+        let actual = Sanitize.replace value replacement input
+        Expect.equal actual (sprintf "%s%s" target replacement) "should replace value with replacement"
+      
+      testProperty "max" <| fun (NonEmptyString x) (PositiveInt length) ->
+          (length <= x.Length) ==> lazy
+          let actual = Sanitize.max length x
+          Expect.isLessThanOrEqual actual.Length length "stripping max length should not less or equal to original length"
+      
+      testProperty "ascii" <| fun (PositiveInt x) ->
+        let input = sprintf "%i👍" x
+        let actual = Sanitize.ascii input
+        Expect.equal actual (string x) "should only get ASCII characters"
+      
+      testProperty "all ascii chars allowed" <| fun () ->
+        let input = Xeger("[\x00-\x7F]+").Generate()
+        let actual = Sanitize.ascii input
+        Expect.equal actual input (sprintf "should allow all ASCII characters, left: %A, right: %A" actual input)
+      
+      testProperty "left padding" <| fun (NonNull str) (PositiveInt l) ->
+        Sanitize.lpad l str = str.PadLeft l
+      
+      testProperty "right padding" <| fun (NonNull str) (PositiveInt l) ->
+        Sanitize.rpad l str = str.PadRight l
+      
+      testProperty "left padding char" <| fun (NonNull str) (PositiveInt l) ch ->
+        Sanitize.lpad_char l ch str = str.PadLeft (l, ch)
+      
+      testProperty "right padding char" <| fun (NonNull str) (PositiveInt l) ch ->
+        Sanitize.rpad_char l ch str = str.PadRight (l, ch) = sanitize str { rpad_char l ch }
+      
+      testProperty "upper" <| fun (NonNull str) ->
+        Sanitize.upper str = str.ToUpper ()
+      
+      testProperty "lower" <| fun (NonNull str) ->
+        Sanitize.lower str = str.ToLower ()
+      
+      testProperty "html encode" <| fun (NonNull str) ->
+        Sanitize.htmlEncode str = System.Net.WebUtility.HtmlEncode str
+    ]
+  
+  [<Tests>]
+  let untrust_tests =
+    testList "untrust" [
+      testPropertyWithConfig { FsCheckConfig.defaultConfig with replay = Some (1285759340, 297138853) } "try get value" <| fun (NonNull x) f ->
+        let u = Untrust x
+        let r = Untrust.getWith f u
+        let output = ref null
+        let getValue = u.TryGetValue (Func<_, _> (f), output)
+        f x = (r = Some x) |@ "fsharp" .&. (getValue = (output.Value = x)) |@ "csharp"
+      
+      testProperty "try get value option" <| fun x f ->
+        let u = Untrust x
+        let r = Untrust.getWithOption f u
+        r = f x .&. (u.TryGetValue (Func<_, Maybe<_>> (f >> Maybe.JustOrNothing)) = (Maybe.JustOrNothing (f x)))
+      
+      testProperty "try get value result" <| fun x f ->
+        let u = Untrust x
+        let r = Untrust.getWithResult f u
+        r = f x .&. (u.TryGetValue (Func<_, Outcome<_, _>> (f >> Outcome.OfFSharpResult)) = (Outcome.OfFSharpResult (f x)))
+      
       testCase "untrust validate bool" <| fun _ ->
         Expect.equal (Untrust.getWith (fun x -> x > 0) (Untrust 10)) (Some 10) "should get value when the predicate holds"
         Expect.equal (Untrust.getWith (fun x -> x <> "") (Untrust String.Empty)) None "should not get value when predicate fails"
@@ -966,137 +898,4 @@ module Tests =
         Expect.equal actual (Ok (NonZeroInt 1)) "should get value when predicate holds"
         let actual = Untrust.getWithResult (fun x -> if x <> null then Ok (NonNull x) else Spec.error "int" "should not be 'null'") (Untrust null)
         Expect.equal actual (Spec.error "int" "should not be 'null'") "should not get value when predicate fails"
-
-      testProperty "non-empty sequences are the same" <| fun (objs : NonEmptyArray<obj>) ->
-        let xs = Seq.toNonEmpty objs.Get
-        let ys = Seq.toNonEmpty objs.Get
-        Expect.equal xs ys "should be the same non-empty seq"
-
-      testCase "non-emtpy sequence with `None` is still correct" <| fun () ->
-        let xs = Seq.toNonEmpty [ None, Some 1, None, None ]
-        Expect.isOk xs "should accept `None` as a valid entry"
-
-      testProperty "unique sequences on elements are the same" <| fun (objs : NonEmptyArray<obj>) ->
-        let objs = Seq.distinct objs.Get
-        let xs = Seq.toUnique objs
-        let ys = Seq.toUnique objs
-        Expect.equal xs ys "should be the same unique seq"
-
-      testProperty "unique sequences on element keys are the same" <| fun (objs : NonEmptyArray<obj>) ->
-        let objs = Seq.distinctBy (fun x -> x.ToString ()) objs.Get
-        let xs = Seq.toUniqueBy (fun x -> x.ToString ()) objs
-        let ys = Seq.toUniqueBy (fun x -> x.ToString ()) objs
-        Expect.equal xs ys "should be the same unique seq"
-
-      testCase "unique sequence with `None` is still correct" <| fun () ->
-        let xs = Seq.toUnique [ None, Some 1, Some 2 ]
-        Expect.isOk xs "should accept `None` as a valid entry"
-
-
-      testProperty "tags are made from strings starting with '@'" <| fun (PositiveInt x) ->
-        Gen.subListOf [ yield! ['a'..'z']; yield! ['A'..'Z'] ]
-        |> Gen.filter (fun xs -> xs.Length > 0)
-        |> Gen.map (fun xs -> String.Join ("", xs))
-        |> Gen.three
-        |> Arb.fromGen
-        |> Prop.forAll <| fun (name, tag1, tag2) ->
-            let r = specResult x { 
-              tag name
-              cascade Continue
-              startsWithOf string "-" (sprintf "the @%s should start with a '-'" tag1)
-              endsWithOf string "." (sprintf "ths @%s should end with a '.'" tag1)
-              lessThanOf (string >> String.length) 0 (sprintf "the length of the @%s should be -1" tag2)
-              inclusiveBetween -1 -100 "should be between -1 <-> -100" }
-            
-            Expect.isError r "validation should fail"
-            let errMap = Result.either (fun _ -> Map.empty) id r
-            Expect.hasLength errMap 3 "valiation error map should have 3 entries"
-            Expect.equal 
-              (Map.tryFind (sprintf "%s.%s" name tag1) errMap) 
-              (Some [ sprintf "the @%s should start with a '-'" tag1
-                      sprintf "ths @%s should end with a '.'" tag1 ])
-              "validation error map should have 2 entries for tag1 with the same 'name.tag' key"
-            Expect.equal
-              (Map.tryFind (sprintf "%s.%s" name tag2) errMap)
-              (Some [ sprintf "the length of the @%s should be -1" tag2 ])
-              "validation error map should have 1 entry with for tag2"
-            Expect.equal 
-              (Map.tryFind name errMap) 
-              (Some [ "should be between -1 <-> -100" ]) 
-              "validation error map should have 1 entry with the 'name' as key"
-    ]
-
-  [<Tests>]
-  let sanitize_tests =
-    testList "sanitize" [
-      testProperty "empty when null" <| fun x ->
-        let actual = Sanitize.ofNull x
-        Expect.isNotNull actual "can never be 'null'"
-      testProperty "allow regex+match" <| fun (NonNull pre_noise) (PositiveInt x) (NonNull post_noise) ->
-        (pre_noise <> string x && post_noise <> string x
-        && not <| pre_noise.Contains (string x)
-        && not <| post_noise.Contains (string x)) ==> lazy
-        let input = sprintf "%s%i%s" pre_noise x post_noise
-        let actualMatch = Sanitize.allowmatch (string x) input
-        Expect.equal actualMatch (string x) "should only allow matches"
-        let actualRegex = Sanitize.allowregex (Regex <| string x) input
-        Expect.equal actualRegex (string x) "should only allow matches"
-      testProperty "allow list" <| fun (NonNull pre_noise) x (NonNull post_noise) ->
-        (pre_noise <> string x && post_noise <> string x
-         && not <| pre_noise.Contains (string x)
-         && not <| post_noise.Contains (string x)) ==> lazy
-        let input = sprintf "%s%i%s" pre_noise x post_noise
-        let actual = Sanitize.allowlist [string x] input
-        Expect.equal actual (string x) "should only allow in list"
-      testProperty "deny regex+match" <| fun (PositiveInt pre_noise) (NonEmptyString x) (PositiveInt post_noise) ->
-        (not <| x.Contains (string pre_noise) 
-        && not <| x.Contains (string post_noise)
-        && not <| (string pre_noise).Contains (string post_noise)
-        && not <| (string post_noise).Contains (string pre_noise)) ==> lazy
-        let input = sprintf "%i%s%i" pre_noise x post_noise
-        let actualMatch = Sanitize.denymatch (sprintf "(%i|%i)" pre_noise post_noise) input
-        Expect.equal actualMatch x "should remove noise via match"
-        let actualRegex = Sanitize.denyregex (Regex <| sprintf "(%i|%i)" pre_noise post_noise) input
-        Expect.equal actualRegex x "should remove noise via match"
-      testProperty "deny list" <| fun (PositiveInt pre_noise) (NonEmptyString x) (PositiveInt post_noise) ->
-        (not <| x.Contains (string pre_noise) 
-         && not <| x.Contains (string post_noise)
-         && not <| (string pre_noise).Contains (string post_noise)
-         && not <| (string post_noise).Contains (string pre_noise)) ==> lazy
-        let input = sprintf "%i_%s_%i" pre_noise x post_noise
-        let actual = Sanitize.denylist [string pre_noise; string post_noise] input
-        Expect.equal actual (sprintf "_%s_" x) "should remove noise via list"
-      testProperty "replace(s)" <| fun (NonEmptyString target) (NonEmptyString value) (NonEmptyString replacement) ->
-        (target <> value && target <> replacement
-         && not <| value.Contains target
-         && not <| target.Contains value ) ==> lazy
-        let input = sprintf "%s%s" target value
-        let actual = Sanitize.replace value replacement input
-        Expect.equal actual (sprintf "%s%s" target replacement) "should replace value with replacement"
-      testProperty "max" <| fun (NonEmptyString x) (PositiveInt length) ->
-          (length <= x.Length) ==> lazy
-          let actual = Sanitize.max length x
-          Expect.isLessThanOrEqual actual.Length length "stripping max length should not less or equal to original length"
-      testProperty "ascii" <| fun (PositiveInt x) ->
-        let input = sprintf "%i👍" x
-        let actual = Sanitize.ascii input
-        Expect.equal actual (string x) "should only get ASCII characters"
-      testProperty "all ascii chars allowed" <| fun () ->
-        let input = Xeger("[\x00-\x7F]+").Generate()
-        let actual = Sanitize.ascii input
-        Expect.equal actual input (sprintf "should allow all ASCII characters, left: %A, right: %A" actual input)
-    ]
-  
-  [<Tests>]
-  let untrust_tests =
-    testList "untrust" [
-      testProperty "try get value" <| fun x f ->
-        let r = Untrust x |> Untrust.getWith f
-        f x = Option.isSome r
-      testProperty "try get value option" <| fun x f ->
-        let r = Untrust x |> Untrust.getWithOption f
-        r = f x
-      testProperty "try get value result" <| fun x f ->
-        let r = Untrust x |> Untrust.getWithResult f
-        r = f x
     ]
