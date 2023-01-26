@@ -785,9 +785,9 @@ module Tests =
         && not <| pre_noise.Contains (string x)
         && not <| post_noise.Contains (string x)) ==> lazy
         let input = sprintf "%s%i%s" pre_noise x post_noise
-        let actualMatch = Sanitize.allowmatch (string x) input
+        let actualMatch = sanitize input { allowmatch (string x) }
         Expect.equal actualMatch (string x) "should only allow matches"
-        let actualRegex = Sanitize.allowregex (Regex <| string x) input
+        let actualRegex = sanitize input  { allowregex (Regex <| string x) }
         Expect.equal actualRegex (string x) "should only allow matches"
       
       testProperty "allow list" <| fun (NonNull pre_noise) x (NonNull post_noise) ->
@@ -795,19 +795,18 @@ module Tests =
          && not <| pre_noise.Contains (string x)
          && not <| post_noise.Contains (string x)) ==> lazy
         let input = sprintf "%s%i%s" pre_noise x post_noise
-        let actual = Sanitize.allowlist [string x] input
-        Expect.equal actual (string x) "should only allow in list"
-     
-      testProperty "deny regex+match" <| fun (PositiveInt pre_noise) (NonEmptyString x) (PositiveInt post_noise) ->
-        (not <| x.Contains (string pre_noise) 
-        && not <| x.Contains (string post_noise)
-        && not <| (string pre_noise).Contains (string post_noise)
-        && not <| (string post_noise).Contains (string pre_noise)) ==> lazy
-        let input = sprintf "%i%s%i" pre_noise x post_noise
-        let actualMatch = Sanitize.denymatch (sprintf "(%i|%i)" pre_noise post_noise) input
-        Expect.equal actualMatch x "should remove noise via match"
-        let actualRegex = Sanitize.denyregex (Regex <| sprintf "(%i|%i)" pre_noise post_noise) input
-        Expect.equal actualRegex x "should remove noise via match"
+        let actualParams = sanitize input { allowparams (string x) }
+        Expect.equal actualParams (string x) "should only allow in list via params"
+        let actualList = sanitize input { allowlist [ string x ] }
+        Expect.equal actualList (string x) "should only allow in list via list"
+
+      testProperty "deny regex+match" <| fun (PositiveInt pre_noise) (PositiveInt post_noise) ->
+        withGen (Gen.elements ['a'..'z'] |> Gen.map string) <| fun x ->
+          let input = sprintf "%i%s%i" pre_noise x post_noise
+          let actualMatch = sanitize input { denymatch "[0-9]+" }
+          Expect.equal actualMatch x "should remove noise via match"
+          let actualRegex = sanitize input { denyregex (Regex "[0-9]+") }
+          Expect.equal actualRegex x "should remove noise via match"
       
       testProperty "deny list" <| fun (PositiveInt pre_noise) (NonEmptyString x) (PositiveInt post_noise) ->
         (not <| x.Contains (string pre_noise) 
@@ -815,30 +814,39 @@ module Tests =
          && not <| (string pre_noise).Contains (string post_noise)
          && not <| (string post_noise).Contains (string pre_noise)) ==> lazy
         let input = sprintf "%i_%s_%i" pre_noise x post_noise
-        let actual = Sanitize.denylist [string pre_noise; string post_noise] input
-        Expect.equal actual (sprintf "_%s_" x) "should remove noise via list"
+        let actualParams = sanitize input { denyparams (string pre_noise) (string post_noise) }
+        Expect.equal actualParams (sprintf "_%s_" x) "should remove noise via params"
+        let actualList = sanitize input { denylist [string pre_noise; string post_noise] }
+        Expect.equal actualList (sprintf "_%s_" x) "should remove noise via list"
       
-      testProperty "replace(s)" <| fun (NonEmptyString target) (NonEmptyString value) (NonEmptyString replacement) ->
+      testProperty "replace" <| fun (NonEmptyString target) (NonEmptyString value) (NonEmptyString replacement) ->
         (target <> value && target <> replacement
          && not <| value.Contains target
          && not <| target.Contains value ) ==> lazy
         let input = sprintf "%s%s" target value
-        let actual = Sanitize.replace value replacement input
+        let actual = sanitize input { replace value replacement }
         Expect.equal actual (sprintf "%s%s" target replacement) "should replace value with replacement"
       
+      testProperty "replaces" <| fun (NonEmptyString str) (NonEmptyString key) (NonEmptyString value) ->
+        let expected = str.Replace (key, value)
+        let actualFromComp = sanitize str { replaces [ key, value ] }
+        Expect.equal actualFromComp expected "sanitize replaces should be same as string.replace via composition"
+        let actualFromExtension = str.Replaces (dict [ key, value ])
+        Expect.equal actualFromExtension expected "sanitize replaces should be same as string.replace via extension"
+
       testProperty "max" <| fun (NonEmptyString x) (PositiveInt length) ->
           (length <= x.Length) ==> lazy
-          let actual = Sanitize.max length x
+          let actual = sanitize x { max length }
           Expect.isLessThanOrEqual actual.Length length "stripping max length should not less or equal to original length"
       
       testProperty "ascii" <| fun (PositiveInt x) ->
         let input = sprintf "%i👍" x
-        let actual = Sanitize.ascii input
+        let actual = sanitize input { ascii }
         Expect.equal actual (string x) "should only get ASCII characters"
       
       testProperty "all ascii chars allowed" <| fun () ->
         let input = Xeger("[\x00-\x7F]+").Generate()
-        let actual = Sanitize.ascii input
+        let actual = sanitize input { ascii }
         Expect.equal actual input (sprintf "should allow all ASCII characters, left: %A, right: %A" actual input)
       
       testProperty "left padding" <| fun (NonNull str) (PositiveInt l) ->
@@ -861,12 +869,25 @@ module Tests =
       
       testProperty "html encode" <| fun (NonNull str) ->
         Sanitize.htmlEncode str = System.Net.WebUtility.HtmlEncode str
+
+      testProperty "header" <| fun (NonNull str) (NonEmptyString value) ->
+        let result = sanitize str { header value }
+        Expect.stringStarts result value "sanitize header with value should always start with value"
+
+      testProperty "trailer" <| fun (NonNull str) (NonEmptyString value) ->
+        let result = sanitize str { trailer value }
+        Expect.stringEnds result value "sanitize trailer with value should always ends with value"
+
+      testProperty "european" <| fun (NonNull str) ->
+        let allowed = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÁáĂăÂâÅåÄäǞǟÃãĄąĀāÆæĆćĈĉĊċÇçĎďḐḑĐđÐðÉéÊêĚěËëĖėĘęĒēĞğĜĝĠġĢģĤĥĦħİıÍíÌìÎîÏïĨĩĮįĪīĲĳĴĵĶķĹĺĻļŁłĿŀŃńŇňÑñŅņŊŋÓóÒòÔôÖöȪȫŐőÕõȮȯØøǪǫŌōỌọOEoeĸŘřŔŕŖŗſŚśŜŝŠšŞşṢṣȘșẞßŤťŢţȚțŦŧÚúÙùŬŭÛûŮůÜüŰűŨũŲųŪūŴŵÝýŶŷŸÿȲȳŹźŽžŻżÞþªº"
+        let result = sanitize str { european }
+        Expect.all result allowed.Contains "european sanitize should only contain european characters"
     ]
   
   [<Tests>]
   let untrust_tests =
     testList "untrust" [
-      testPropertyWithConfig { FsCheckConfig.defaultConfig with replay = Some (1285759340, 297138853) } "try get value" <| fun (NonNull x) f ->
+      testProperty "try get value" <| fun (NonNull x) f ->
         let u = Untrust x
         let r = Untrust.getWith f u
         let output = ref null
@@ -898,4 +919,15 @@ module Tests =
         Expect.equal actual (Ok (NonZeroInt 1)) "should get value when predicate holds"
         let actual = Untrust.getWithResult (fun x -> if x <> null then Ok (NonNull x) else Spec.error "int" "should not be 'null'") (Untrust null)
         Expect.equal actual (Spec.error "int" "should not be 'null'") "should not get value when predicate fails"
+
+      testProperty "try get value w/o validator fails" <| fun x ->
+        let u = Untrust x
+        let output = ref null
+        Expect.throwsT<ArgumentNullException> (fun () -> u.TryGetValue (validator=null, output=output) |> ignore) "try get value without validator should throw"
+        Expect.throwsT<ArgumentNullException> (fun () -> u.TryGetValue (validator=(null :> Func<_, Maybe<_>>)) |> ignore) "try get maybe value without validator should throw"
+        Expect.throwsT<ArgumentNullException> (fun () -> u.TryGetValue (validator=(null :> Func<_, Outcome<_, _>>)) |> ignore) "try get outcome value without validator should throw"
+
+      testProperty "to string contains value" <| fun x ->
+        let u = Untrust x |> string
+        Expect.stringContains u (sprintf "%A" x) "untrusted string should contain original value"
     ]

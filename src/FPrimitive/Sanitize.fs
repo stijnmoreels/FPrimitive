@@ -91,7 +91,6 @@ module Sanitize =
   let blacklist (values : string seq) (input : string) =
     denylist values input
   /// Removes all the matches in the given input for gien the text regular expression patterns.
-  /// A.k.a. `denylist`
   [<CompiledName("Removes")>]
   let removes values input = denylist values input
   /// Replace the given value for a given replacement in the given input.
@@ -153,12 +152,12 @@ module Sanitize =
   [<CompiledName("Header")>]
   let header value (input : string) =
     if input.StartsWith (value  : string) then input
-    else sprintf "%s%s" value input
+    else value + input
   /// Adds trailer if the input doesn't end with one.
   [<CompiledName("Trailer")>]
   let trailer value (input : string) =
     if input.EndsWith (value : string) then input
-    else sprintf "%s%s" input value
+    else input + value
   /// Filters out only European characters in the given input.
   [<CompiledName("European")>]
   let european (input : string) =
@@ -197,7 +196,6 @@ module Sanitize =
     input.PadRight (l, ch)
 
 /// Composition builder for the `Sanitize` module.
-[<ExcludeFromCodeCoverage>]
 type SanitizeBuilder (input : string option) =
   /// Only allow the matches in the given input for the given regular expression.
   [<CustomOperation("allowregex")>] 
@@ -207,17 +205,82 @@ type SanitizeBuilder (input : string option) =
   member __.AllowMatch (state, pattern) = Option.map (Sanitize.allowmatch pattern) state
   /// Only allow the matches in the input for the given text regular expression patterns.
   /// For example: `allowlist ["foo"; "bar[0-9]+"] input`
+  [<CustomOperation("allowparams")>] 
+  member __.AllowParams (state, [<ParamArray>] list : string array) = Option.map (Sanitize.allowlist list) state
+  /// Only allow the matches in the input for the given text regular expression patterns.
+  /// For example: `allowlist ["foo"; "bar[0-9]+"] input`
   [<CustomOperation("allowlist")>] 
-  member __.AllowList (state, [<ParamArray>] list : string array) = Option.map (Sanitize.allowlist list) state
+  member __.AllowList (state, list : string list) = Option.map (Sanitize.allowlist list) state
   /// Removes all the matches in the given input for the given regular expression.
   [<CustomOperation("denyregex")>]
   member __.DenyRegex (state, regex) = Option.map (Sanitize.denyregex regex) state
   /// Removes all the matches in the given input for the given regular expression.
   [<CustomOperation("denymatch")>]
   member __.DenyMatch (state, pattern) = Option.map (Sanitize.denymatch pattern) state
+  /// Removes all the matches in the given input for gien the text regular expression patterns.
+  /// For example: `denylist ["foo"; "bar[0-9]+"] input`
+  [<CustomOperation("denyparams")>]
+  member __.DenyParams (state, [<ParamArray>] values : string array) = Option.map (Sanitize.denylist values) state
+  /// Removes all the matches in the given input for gien the text regular expression patterns.
+  /// For example: `denylist ["foo"; "bar[0-9]+"] input`
+  [<CustomOperation("denylist")>]
+  member __.DenyList (state, values : string list) = Option.map (Sanitize.denylist values) state
+  /// Removes all the matches in the given input for gien the text regular expression patterns.
+  [<CustomOperation("removes")>]
+  member __.Removes (state, values) = Option.map (Sanitize.removes values) state
+  /// Replace the given value for a given replacement in the given input.
+  [<CustomOperation("replace")>]
+  member __.Replace (state, value, replacement) = Option.map (Sanitize.replace value replacement) state
   /// Replaces the given input with the given key/value sequence where key: value to be replaced, and value: is the replacement for that value.
   [<CustomOperation("replaces")>]
   member __.Replaces (state, replacementByValue) = Option.map (Sanitize.replaces replacementByValue) state
+  /// Replace all matches in the given input for the regular expression pattern.
+  [<CustomOperation("regex_replace")>]
+  member __.RegexReplace (state, pattern, replacement) = Option.map (Sanitize.regex_replace pattern replacement) state
+  /// Removes all the spaces in the given input.
+  [<CustomOperation("remove_spaces")>]
+  member __.RemoveSpaces (state) = Option.map (Sanitize.remove_spaces) state
+  /// Removes all the white space characters in the given input.
+  [<CustomOperation("removes_ws")>]
+  member __.RemovesWhiteSpace (state) = Option.map Sanitize.remove_ws state
+  /// Escape all the HTML entity characters to their encoded representation.
+  /// For example '<' becomes '&lt;'.
+  [<CustomOperation("escape")>]
+  member __.Escape (state) = Option.map (Sanitize.escape) state
+  /// Unescape all the HTML entity charaters to their decoded representation.
+  /// For example '&lt;' becomes '<'.
+  [<CustomOperation("unescape")>]
+  member __.Unescape (state) = Option.map (Sanitize.unescape) state
+  /// Removes all leading occurences of a set of specified charachters in the given input.
+  [<CustomOperation("ltrim")>]
+  member __.LeftTrim (state, values) = Option.map (Sanitize.ltrim values) state
+  /// Removes all trailing occurences of a set of specified charachters in the given input.
+  [<CustomOperation("rtrim")>]
+  member __.RightTrim (state, values) = Option.map (Sanitize.rtrim values) state
+  /// Removes all leading and trailing occurences of a set of specified charachters in the given input.
+  [<CustomOperation("trim")>]
+  member __.Trim (state, values) = Option.map (Sanitize.trim values) state
+  /// Removes all leading and trailing white space characters in the given input.
+  [<CustomOperation("trim_ws")>]
+  member __.TrimWhiteSpace (state) = Option.map (Sanitize.trim_ws) state
+  /// Substring the given input to a maximum length.
+  [<CustomOperation("max")>]
+  member __.Truncate (state, length) = Option.map (Sanitize.max length) state
+  /// Adds header if the input doesn't start with one.
+  [<CustomOperation("header")>]
+  member __.Header (state, value) = Option.map (Sanitize.header value) state
+  /// Adds trailer if the input doesn't end with one.
+  [<CustomOperation("trailer")>]
+  member __.Trailer (state, value) = Option.map (Sanitize.trailer value) state
+  /// Filters out only European characters in the given input.
+  [<CustomOperation("european")>]
+  member __.European (state) = Option.map (Sanitize.european) state
+  /// Filters out only ASCII characters in the given input.
+  [<CustomOperation("ascii")>]
+  member __.Ascii (state) = Option.map Sanitize.ascii state
+  /// Converts a string to a HTML-encoded string.
+  [<CustomOperation("htmlEncode")>]
+  member __.HtmlEncode (state) = Option.map (Sanitize.htmlEncode) state
   /// Transforms the input to a lower-case representation.
   [<CustomOperation("lower")>]
   member __.Lower (state) = Option.map (Sanitize.lower) state
@@ -233,12 +296,6 @@ type SanitizeBuilder (input : string option) =
   /// Right-padding the input to a specified length with a specified character.
   [<CustomOperation("rpad_char")>]
   member __.PadRight (state, length, ch) = Option.map (Sanitize.rpad_char length ch) state
-  [<CustomOperation("removes_ws")>]
-  member __.RemovesWhiteSpace (state) = Option.map Sanitize.remove_ws state
-  [<CustomOperation("max")>]
-  member __.Truncate (state, length) = Option.map (Sanitize.max length) state
-  [<CustomOperation("ascii")>]
-  member __.Ascii (state) = Option.map Sanitize.ascii state
   member __.Yield (_) = input
   member __.Run (x) : string = Option.toObj x
 
