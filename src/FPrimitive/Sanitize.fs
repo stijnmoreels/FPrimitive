@@ -130,15 +130,15 @@ module Sanitize =
   /// Removes all leading occurences of a set of specified charachters in the given input.
   [<CompiledName("TrimStart")>]
   let ltrim values (input : string) =
-    input.TrimStart (Seq.toArray values)
+    input.TrimStart (Array.ofSeq values)
   /// Removes all trailing occurences of a set of specified charachters in the given input.
   [<CompiledName("TrimEnd")>]
   let rtrim values (input : string) =
-    input.TrimEnd (Seq.toArray values)
+    input.TrimEnd (Array.ofSeq values)
   /// Removes all leading and trailing occurences of a set of specified charachters in the given input.
   [<CompiledName("Trim")>]
   let trim values (input : string) =
-    input.Trim (values : char array)
+    input.Trim (Array.ofSeq values)
   /// Removes all leading and trailing white space characters in the given input.
   [<CompiledName("Trim")>]
   let trim_ws (input : string) =
@@ -151,7 +151,7 @@ module Sanitize =
   /// Adds header if the input doesn't start with one.
   [<CompiledName("Header")>]
   let header value (input : string) =
-    if input.StartsWith (value  : string) then input
+    if input.StartsWith (value : string) then input
     else value + input
   /// Adds trailer if the input doesn't end with one.
   [<CompiledName("Trailer")>]
@@ -241,7 +241,7 @@ type SanitizeBuilder (input : string option) =
   [<CustomOperation("remove_spaces")>]
   member __.RemoveSpaces (state) = Option.map (Sanitize.remove_spaces) state
   /// Removes all the white space characters in the given input.
-  [<CustomOperation("removes_ws")>]
+  [<CustomOperation("remove_ws")>]
   member __.RemovesWhiteSpace (state) = Option.map Sanitize.remove_ws state
   /// Escape all the HTML entity characters to their encoded representation.
   /// For example '<' becomes '&lt;'.

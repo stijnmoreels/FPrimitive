@@ -37,6 +37,34 @@ module Expect =
     | Ok act -> act <=> exp .&. (f exp)
     | Error _ -> f exp <=> false
 
+module List =
+  let union xs ys = List.filter (fun x -> List.contains x ys) xs
+
+module String =
+  let alphabet = (['a'..'z'] @ ['A'..'Z']) |> List.map string
+  let digit = [0..9]
+  let alphanumeric = alphabet @ List.map string digit
+  let blanks = 
+    [9; 10; 11; 12; 13; 32; 133; 160; 5760; 8192; 8193; 8194; 8195; 8196; 8197; 8198; 8199; 8200; 8201; 8202; 8232; 8233; 8239; 8287; 12288]
+    |> List.map Char.ConvertFromUtf32
+  let reduce xs = String.Join ("", (xs : string seq))
+  let chars xs = (xs : string).ToCharArray() |> List.ofArray |> List.map string
+  let containsNone xs str = List.union xs (chars str) = []
+
+module Gen =
+  let alphanumeric = 
+    String.alphanumeric
+    |> Gen.subListOf
+    |> Gen.map String.reduce
+  let alphabet =
+    String.alphabet
+    |> Gen.subListOf
+    |> Gen.map (List.map string >> String.reduce)
+
+  let sequenceShuffle gs = gen {
+    let! xs = Gen.collect id gs
+    return! Gen.shuffle xs |> Gen.map List.ofArray }
+
 module Tests =
   open System.Text.RegularExpressions
   let toProp = function
@@ -872,7 +900,7 @@ module Tests =
 
       testProperty "header" <| fun (NonNull str) (NonEmptyString value) ->
         let result = sanitize str { header value }
-        Expect.stringStarts result value "sanitize header with value should always start with value"
+        Expect.isTrue (result.StartsWith value) "sanitize header with value should always start with value"
 
       testProperty "trailer" <| fun (NonNull str) (NonEmptyString value) ->
         let result = sanitize str { trailer value }
@@ -882,8 +910,47 @@ module Tests =
         let allowed = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÁáĂăÂâÅåÄäǞǟÃãĄąĀāÆæĆćĈĉĊċÇçĎďḐḑĐđÐðÉéÊêĚěËëĖėĘęĒēĞğĜĝĠġĢģĤĥĦħİıÍíÌìÎîÏïĨĩĮįĪīĲĳĴĵĶķĹĺĻļŁłĿŀŃńŇňÑñŅņŊŋÓóÒòÔôÖöȪȫŐőÕõȮȯØøǪǫŌōỌọOEoeĸŘřŔŕŖŗſŚśŜŝŠšŞşṢṣȘșẞßŤťŢţȚțŦŧÚúÙùŬŭÛûŮůÜüŰűŨũŲųŪūŴŵÝýŶŷŸÿȲȳŹźŽžŻżÞþªº"
         let result = sanitize str { european }
         Expect.all result allowed.Contains "european sanitize should only contain european characters"
+    
+      testProperty "removes = denylist" <| fun (NonNull str) (values : string array) ->
+        withGen (Gen.subListOf ['a'..'z'] |> Gen.map (List.map string)) <| fun values ->
+          sanitize str { removes values } = sanitize str { denylist values}
+    
+      testProperty "regex replace" <| fun x (replacement : int) ->
+        let g = 
+          Gen.sequenceShuffle [ Gen.alphabet; Gen.constant x; Gen.constant (string replacement) ]
+          |> Gen.map String.reduce
+        withGen g <| fun str ->
+          sanitize str { regex_replace "[a-zA-Z]+" (string replacement) }
+          |> String.containsNone String.alphabet
+
+      testProperty "remove spaces" <| fun (NonNull str) ->
+        sanitize str { remove_spaces } |> String.forall ((<>) ' ')
+    
+      testProperty "remove ws" <| fun (NonNull str) ->
+        sanitize str { remove_ws } |> String.containsNone String.blanks
+
+      testProperty "escape" <| fun (NonNull str) ->
+        sanitize str { escape } |> String.containsNone [ "\""; "\'"; "<"; ">"; "/"; "\\"; "`" ]
+    
+      testProperty "ltrim" <| fun (NonNull str) ch ->
+        let result = sanitize str { ltrim [ ch ] }
+        not <| result.StartsWith ch
+
+      testProperty "rtrim" <| fun (NonNull str) ch ->
+        let result = sanitize str { rtrim [ ch ] }
+        not <| result.EndsWith ch
+
+      testProperty "trim" <| fun (NonNull str) ch ->
+        let result = sanitize str { trim [ ch ] }
+        not <| result.StartsWith ch |@ "starts with"
+        .&. (not <| result.EndsWith ch |@ "ends with")
+
+      testProperty "trim ws" <| fun (NonEmptyString str) ->
+        let result = sanitize str { trim_ws }
+        Seq.head result |> string |> String.containsNone String.blanks |@ "head"
+        .&. (Seq.last result |> string |> String.containsNone String.blanks |@ "last")
     ]
-  
+
   [<Tests>]
   let untrust_tests =
     testList "untrust" [
