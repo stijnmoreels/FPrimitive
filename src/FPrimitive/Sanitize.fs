@@ -299,13 +299,14 @@ type SanitizeBuilder (input : string option) =
   member __.Yield (_) = input
   member __.Run (x) : string = Option.toObj x
 
+/// Auto-open module for sanitization builder.
 [<AutoOpen>]
 module SanitizeExporure =
+  /// Builder value to start the sanitization if the input is not `null`.
   let sanitize x = SanitizeBuilder (Option.ofObj x)
 
 /// Sanitization operations on a string, filtering the untrusted user-input before any parsing, syntax, deserialization, or validation.
 [<Extension>]
-[<ExcludeFromCodeCoverage>]
 type SanitizeExtensions private () =
   /// Safe sanitization extension to only run sanitization on a non-null string input.
   [<Extension>] 

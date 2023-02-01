@@ -13,7 +13,7 @@ open Fare
 
 [<AutoOpen>]
 module Extensions =
-  let (<=>) x y = x = y |@ $"{x} = {y}"
+  let (<=>) x y = x = y |@ (sprintf "%A = %A" x y)
 
   let fromString<'a> (s:string) =
       match FSharpType.GetUnionCases typeof<'a> |> Array.filter (fun case -> case.Name = s) with
@@ -36,6 +36,14 @@ module Expect =
     match r with
     | Ok act -> act <=> exp .&. (f exp)
     | Error _ -> f exp <=> false
+
+  module Spec =
+    let equal s1 s2 x =
+      let r1 = Spec.validate x s1
+      let r2 = Spec.validate x s2
+      r1 <=> r2
+    let notEqual s1 s2 x =
+      Spec.validate x s1 <> Spec.validate x s2
 
 module List =
   let union xs ys = List.filter (fun x -> List.contains x ys) xs
@@ -260,6 +268,11 @@ module Tests =
         |> Arb.fromGen
         |> Prop.forAll <| fun xs -> 
           specResult xs { contains x "should contain element" } |> toProp
+
+      testProperty "not contains <> contains" <| fun x (xs : _ array) ->
+        Expect.Spec.notEqual 
+          (spec { notContains x "not contains" }) 
+          (spec { contains x "contains" }) xs
 
       testProperty "not contains of" <| fun x y msg ->
         Spec.def |> Spec.notContainsOf id x msg
@@ -678,9 +691,45 @@ module Tests =
               (Some [ sprintf "the length of the @%s should be -1" tag2 ])
               "validation error map should have 1 entry with for tag2"
             Expect.equal 
-              (Map.tryFind name errMap) 
+              (Map.tryFind name errMap)
               (Some [ "should be between -1 <-> -100" ]) 
               "validation error map should have 1 entry with the 'name' as key"
+
+      testProperty "spec option" <| fun x f msg ->
+        Expect.equal
+          (specOption x { verify f msg })
+          (Spec.def |> Spec.verify f msg |> Spec.validate x |> Result.toOption)
+          "spec option via builder should result in same result as via regular composition from module"
+    
+      testProperty "spec untrust" <| fun x f msg ->
+        Expect.equal
+          (specUntrust (Untrust x) { verify f msg })
+          (Spec.def |> Spec.verify f msg |> Spec.validate x)
+          "spec untrust via builder should result in same result as via regular composition from module"
+
+      testProperty "spec create model with" <| fun x f msg creator ->
+        Expect.equal
+          (specModelWith creator x { verify f msg })
+          (Spec.def |> Spec.verify f msg |> Spec.validate x |> Result.bind creator)
+          "spec model with via builder should result in same result as via regular composition from module"
+    
+      testProperty "spec create model if" <| fun x f msg filter creator ->
+        Expect.equal
+          (specModelIf filter creator x { verify f msg })
+          (Spec.def |> Spec.verify f msg |> Spec.createModelIf filter creator x)
+          "spec model if via builder should result in same result as via regular composition from module"
+    ]
+
+  [<Tests>]
+  let specCSharpTests =
+    testList "spec csharp" [
+      testProperty "preval-err" <| fun x f (NonNull msg) ->
+        let result =
+          Spec.Of<_>()
+              .Add(Func<_, _> f, msg)
+              .PreValidate(Func<_, _> (fun _ -> ValidationResult<_>.Failure (msg)))
+              .Validate(x)
+        Expect.isFalse result.IsValid "prevalidate on error should always result in error"
     ]
 
   [<Tests>]
@@ -701,11 +750,34 @@ module Tests =
   let accessTests =
     testList "access tests" [
       testCase "read once" <| fun _ ->
-       let acc = Access.func (fun () -> 1) |> Access.once
+       let acc = access { func (fun () -> 1); once }
        
        Expect.equal (Access.evalUnit acc) (Ok 1) "read once access should evaluate once"
        Expect.notEqual (Access.evalUnit acc) (Ok 1) "read once should dissallow access after read"
        Expect.notEqual (Access.evalUnit acc) (Ok 1) "read once should dissallow access after read"
+
+      testCase "read once Func 1" <| fun _ ->
+       let acc = Access.Function1 (Func<_> (fun () -> 1)) |> Access.once
+       
+       Expect.equal (Access.evalUnit acc) (Ok 1) "read once access should evaluate once"
+       Expect.notEqual (Access.evalUnit acc) (Ok 1) "read once should dissallow access after read"
+       Expect.notEqual (Access.evalUnit acc) (Ok 1) "read once should dissallow access after read"
+
+      testCase "read once Func 2" <| fun _ ->
+       let acc = Access.Function2 (Func<_, _> (fun () -> 1)) |> Access.once
+       
+       Expect.equal (Access.evalUnit acc) (Ok 1) "read once access should evaluate once"
+       Expect.notEqual (Access.evalUnit acc) (Ok 1) "read once should dissallow access after read"
+       Expect.notEqual (Access.evalUnit acc) (Ok 1) "read once should dissallow access after read"
+
+      testCase "read once Action" <| fun _ ->
+       let output = ref 0
+       let acc = Access.Action (Action< _> (fun () -> output.Value <- 1)) |> Access.once
+       
+       Expect.equal (Access.evalUnit acc) (Ok ()) "read once access should evaluate once"
+       Expect.equal 1 output.Value "read once access should evaluate once"
+       Expect.notEqual (Access.evalUnit acc) (Ok ()) "read once should dissallow access after read"
+       Expect.notEqual (Access.evalUnit acc) (Ok ()) "read once should dissallow access after read"
 
       testCase "read twice" <| fun _ ->
         let acc = Access.func (fun () -> true) |> Access.twice
@@ -862,11 +934,6 @@ module Tests =
         let actualFromExtension = str.Replaces (dict [ key, value ])
         Expect.equal actualFromExtension expected "sanitize replaces should be same as string.replace via extension"
 
-      testProperty "max" <| fun (NonEmptyString x) (PositiveInt length) ->
-          (length <= x.Length) ==> lazy
-          let actual = sanitize x { max length }
-          Expect.isLessThanOrEqual actual.Length length "stripping max length should not less or equal to original length"
-      
       testProperty "ascii" <| fun (PositiveInt x) ->
         let input = sprintf "%i👍" x
         let actual = sanitize input { ascii }
@@ -896,7 +963,7 @@ module Tests =
         sanitize str { lower } = str.ToLower ()
       
       testProperty "html encode" <| fun (NonNull str) ->
-        Sanitize.htmlEncode str = System.Net.WebUtility.HtmlEncode str
+        sanitize str { htmlEncode } = System.Net.WebUtility.HtmlEncode str
 
       testProperty "header" <| fun (NonNull str) (NonEmptyString value) ->
         let result = sanitize str { header value }
@@ -932,6 +999,9 @@ module Tests =
       testProperty "escape" <| fun (NonNull str) ->
         sanitize str { escape } |> String.containsNone [ "\""; "\'"; "<"; ">"; "/"; "\\"; "`" ]
     
+      testProperty "unescape" <| fun (NonNull str) ->
+        sanitize str { unescape } |> String.containsNone [ "&quot;"; "&#x27;"; "&lt;"; "&gt;"; "&#x2F;"; "&#x5C;"; "&#96;" ]
+
       testProperty "ltrim" <| fun (NonNull str) ch ->
         let result = sanitize str { ltrim [ ch ] }
         not <| result.StartsWith ch
@@ -949,6 +1019,11 @@ module Tests =
         let result = sanitize str { trim_ws }
         Seq.head result |> string |> String.containsNone String.blanks |@ "head"
         .&. (Seq.last result |> string |> String.containsNone String.blanks |@ "last")
+    
+      testProperty "max" <| fun (NonNull str) ->
+        let genLength = Gen.choose (String.length str, Int32.MaxValue)
+        withGen genLength <| fun l ->
+          sanitize str { max l } |> String.length <= l
     ]
 
   [<Tests>]
