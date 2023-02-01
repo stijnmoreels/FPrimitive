@@ -292,6 +292,11 @@ module Tests =
         (not <| x.Contains y) ==> lazy
         specResult x { stringNotContains y "should not contain substring" } |> toProp
 
+      testProperty "string contains <> string not contains" <| fun (NonNull x) (NonNull y) ->
+        Expect.Spec.notEqual
+          (spec { stringContains x "contains" })
+          (spec { stringNotContains x "not contains" }) y
+
       testProperty "string contains all" <| fun (NonEmptyString x) (xs : NonEmptyArray<NonEmptyString>) ->
         let xs = xs.Get |> Array.map (fun x -> x.Get) |> List.ofArray
         Gen.shuffle (x::xs)
@@ -1017,8 +1022,8 @@ module Tests =
 
       testProperty "trim ws" <| fun (NonEmptyString str) ->
         let result = sanitize str { trim_ws }
-        Seq.head result |> string |> String.containsNone String.blanks |@ "head"
-        .&. (Seq.last result |> string |> String.containsNone String.blanks |@ "last")
+        Seq.tryHead result |> Option.map (string >> String.containsNone String.blanks) |> Option.defaultValue true |@ "head"
+        .&. (Seq.tryLast result |> Option.map (string >> String.containsNone String.blanks) |> Option.defaultValue true |@ "last")
     
       testProperty "max" <| fun (NonNull str) ->
         let genLength = Gen.choose (String.length str, Int32.MaxValue)
