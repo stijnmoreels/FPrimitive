@@ -307,6 +307,7 @@ module SanitizeExporure =
 
 /// Sanitization operations on a string, filtering the untrusted user-input before any parsing, syntax, deserialization, or validation.
 [<Extension>]
+[<ExcludeFromCodeCoverage>]
 type SanitizeExtensions private () =
   /// Safe sanitization extension to only run sanitization on a non-null string input.
   [<Extension>] 
