@@ -7,6 +7,9 @@
   <ItemGroup>
     <None Include="paket.references" />
     <Compile Include="Tests.fs" />
+    <Compile Include="SpecTests.fs" />
+    <Compile Include="AccessTests.fs" />
+    <Compile Include="SanitizeTests.fs" />
     <Compile Include="RunTests.fs" />
   </ItemGroup>
   <ItemGroup>

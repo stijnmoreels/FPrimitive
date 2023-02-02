@@ -220,6 +220,7 @@ module Access =
           else Error [ sprintf "access failure: user '%s' must be in role '%s' to access this resource" currentUser.Identity.Name roleName ] }
 
 /// Computation expression to control the access of functions.
+[<ExcludeFromCodeCoverage>]
 type AccessBuilder<'a, 'b> () =
   member __.Yield (_) = 
     { Revokable = None
