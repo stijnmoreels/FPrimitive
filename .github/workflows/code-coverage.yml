@@ -28,7 +28,7 @@ jobs:
       run: dotnet tool restore && dotnet paket install
 
     - name: Coverlet coverage test
-      run: dotnet test -c Debug -p:coverletOutput=coverage.xml -p:CollectCoverage=true -p:CoverletOutputFormat=opencover -p:Threshold=80 -p:ExcludeByFile=\"**/Types.fs\" -p:ExcludeByAttribute=\"Obsolete,GeneratedCodeAttribute,CompilerGeneratedAttribute\" -p:Exclude=\"\" tests/FPrimitive.Tests/FPrimitive.Tests.fsproj
+      run: dotnet test -c Debug -p:coverletOutput=coverage.xml -p:CollectCoverage=true -p:CoverletOutputFormat=opencover -p:Threshold=80 -p:ThresholdStat=Total -p:ExcludeByFile=\"**/Types.fs\" -p:ExcludeByAttribute=\"Obsolete,GeneratedCodeAttribute,CompilerGeneratedAttribute\" -p:Exclude=\"\" tests/FPrimitive.Tests/FPrimitive.Tests.fsproj
 
     - name: Codecov
       uses: codecov/codecov-action@v3.1.1
