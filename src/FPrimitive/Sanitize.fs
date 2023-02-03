@@ -307,7 +307,6 @@ module SanitizeExporure =
 
 /// Sanitization operations on a string, filtering the untrusted user-input before any parsing, syntax, deserialization, or validation.
 [<Extension>]
-[<ExcludeFromCodeCoverage>]
 type SanitizeExtensions private () =
   /// Safe sanitization extension to only run sanitization on a non-null string input.
   [<Extension>] 
@@ -321,6 +320,8 @@ type SanitizeExtensions private () =
   [<Extension>] static member Max (input, length) = Sanitize.max length input
   /// Filters out only ASCII characters in the given input.
   [<Extension>] static member ASCII (input) = Sanitize.ascii input
+  /// Filters out only European characters in the given input.
+  [<Extension>] static member European (input) = Sanitize.european input
   /// Only allow the matches in the given input for the given regular expression.
   [<Extension>]
   [<Obsolete("Use 'AllowRegex' instead for a more inclusive code base ♥")>]
@@ -405,12 +406,6 @@ type SanitizeExtensions private () =
     then invalidArg "replacements" "requires non-null value/replacement pairs"
     let replacements = Seq.map (|KeyValue|) replacements
     Sanitize.replaces replacements input
-  /// Replace the given value for a given replacement in the given input.
-  [<Extension>]
-  static member Replace (input, value, replacement) =
-    if isNull value then nullArg "value"
-    if isNull replacement then nullArg "replacement"
-    Sanitize.replace value replacement input
   /// Replace all matches in the given input for the regular expression pattern.
   [<Extension>] static member RegexReplace (input, pattern, replacement : string) = Regex.Replace (input, pattern, replacement)
   /// Removes all the matches in the given input for gien the text regular expression patterns.

@@ -158,6 +158,13 @@ let accessTests =
       Expect.equal rUnit.Value 0 "accessing eval unit task ignore function should succeed"
       Expect.equal rValue.Value 0 "accessing eval task ignore function should succeed" }
 
+    testTask "eval outcome task id rule" {
+      let x = Access.Function1 (Func<_> (fun () -> task { return Outcome.Success 0 }))
+      let rUnit = x.EvalOutcomeAsync(Func<_, _> id).GetAwaiter().GetResult()
+      let rValue = x.EvalOutcomeAsync((), Func<_, _> id).GetAwaiter().GetResult()
+      Expect.equal rUnit.Value 0 "accessing eval outcome unit task ignore function should succeed"
+      Expect.equal rValue.Value 0 "accessing eval outcome task ignore function should succeed" }
+
     testCase "func w/o value fails" <| fun () -> 
       Expect.throwsT<ArgumentNullException> (fun () -> Access.Function1 null |> ignore) "access Function1 without value should fail"
       Expect.throwsT<ArgumentNullException> (fun () -> Access.Function2 null |> ignore) "access Function2 without value should fail"
@@ -188,13 +195,15 @@ let accessResultTests =
   testList "access result" [
     testProperty "success" <| fun (NonNull x) ->
       let r = AccessResult.Success x
-      r.Successful && r.Value = x && r.ToMaybe() = Maybe<_>(x) && r.ToOutcome() = Outcome<_, _>(value=x)
-    
+      r.Successful && r.Value = x && r.ToMaybe() = Maybe<_>(x) && AccessResult.op_Implicit r = Outcome<_, _>(value=x)
+      && r.Errors = Array.empty
+
     testProperty "failure" <| fun (NonNull (xs : NonNull<string> array)) ->
       let xs = Array.map (fun (NonNull x) -> x) xs
       let r = AccessResult<_>.Failure xs
+      Expect.throwsT<AccessFailureException> (fun () -> r.Value) "access result value should not be available on failure result"
       not r.Successful && r.Errors = xs && r.ToMaybe() = Maybe<_>.Nothing && r.ToOutcome() = Outcome<_, _>(error=xs)
-    
+
     testProperty "try get value" <| fun (NonNull x) ->
       let g = Gen.oneof [ 
         Gen.constant <| AccessResult.Success x
@@ -202,4 +211,9 @@ let accessResultTests =
       withGen g <| fun r ->
         let output = ref null
         r.TryGetValue (output) = r.Successful
+
+    testCase "failure creation fails" <| fun () ->
+      Expect.throwsT<ArgumentNullException> (fun () -> AccessResult<_>.Failure null |> ignore) "access result failure without errors value should fail"
+      Expect.throwsT<ArgumentException> (fun () -> AccessResult<_>.Failure [null] |> ignore) "access result failure without errors values should fail"
+
   ]

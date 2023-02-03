@@ -48,29 +48,28 @@ module Gen =
        && not <| pre_noise.Contains (string x)
        && not <| post_noise.Contains (string x)) ==> lazy
        let input = sprintf "%s%i%s" pre_noise x post_noise
-       let actualMatch = sanitize input { allowmatch (string x) }
-       Expect.equal actualMatch (string x) "should only allow matches"
-       let actualRegex = sanitize input  { allowregex (Regex <| string x) }
-       Expect.equal actualRegex (string x) "should only allow matches"
+       Expect.equal (sanitize input { allowmatch (string x) }) (string x) "should only allow matches"
+       Expect.equal (sanitize input  { allowregex (Regex <| string x) }) (string x) "should only allow regex"
+       Expect.equal (input.AllowMatch (string x)) (string x) "should only allow csharp matches"
+       Expect.equal (input.AllowRegex (Regex (string x))) (string x) "should only allow csharp regex"
      
      testProperty "allow list" <| fun (NonNull pre_noise) x (NonNull post_noise) ->
        (pre_noise <> string x && post_noise <> string x
         && not <| pre_noise.Contains (string x)
         && not <| post_noise.Contains (string x)) ==> lazy
        let input = sprintf "%s%i%s" pre_noise x post_noise
-       let actualParams = sanitize input { allowparams (string x) }
-       Expect.equal actualParams (string x) "should only allow in list via params"
-       let actualList = sanitize input { allowlist [ string x ] }
-       Expect.equal actualList (string x) "should only allow in list via list"
+       Expect.equal (sanitize input { allowparams (string x) }) (string x) "should only allow in list via params"
+       Expect.equal (sanitize input { allowlist [ string x ] }) (string x) "should only allow in list via list"
+       Expect.equal (input.AllowList (string x)) (string x) "should only allow in list via csharp params"
 
      testProperty "deny regex+match" <| fun (PositiveInt pre_noise) (PositiveInt post_noise) ->
        withGen (Gen.elements ['a'..'z'] |> Gen.map string) <| fun x ->
          let input = sprintf "%i%s%i" pre_noise x post_noise
-         let actualMatch = sanitize input { denymatch "[0-9]+" }
-         Expect.equal actualMatch x "should remove noise via match"
-         let actualRegex = sanitize input { denyregex (Regex "[0-9]+") }
-         Expect.equal actualRegex x "should remove noise via match"
-     
+         Expect.equal (sanitize input { denymatch "[0-9]+" }) x "should remove noise via match"
+         Expect.equal (sanitize input { denyregex (Regex "[0-9]+") }) x "should remove noise via regex"
+         Expect.equal (input.DenyMatch "[0-9]+") x "should csharp remove noise via match"
+         Expect.equal (input.DenyRegex (Regex "[0-9]+")) x "should csharp remove noise via regex"
+
      testProperty "deny list" <| fun (PositiveInt pre_noise) (NonEmptyString x) (PositiveInt post_noise) ->
        (not <| x.Contains (string pre_noise) 
         && not <| x.Contains (string post_noise)
@@ -81,6 +80,7 @@ module Gen =
        Expect.equal actualParams (sprintf "_%s_" x) "should remove noise via params"
        let actualList = sanitize input { denylist [string pre_noise; string post_noise] }
        Expect.equal actualList (sprintf "_%s_" x) "should remove noise via list"
+       Expect.equal (input.DenyList(string pre_noise, string post_noise)) (sprintf "_%s_" x) "should csharp remove noise via deny list"
      
      testProperty "replace" <| fun (NonEmptyString target) (NonEmptyString value) (NonEmptyString replacement) ->
        (target <> value && target <> replacement
@@ -92,10 +92,8 @@ module Gen =
      
      testProperty "replaces" <| fun (NonEmptyString str) (NonEmptyString key) (NonEmptyString value) ->
        let expected = str.Replace (key, value)
-       let actualFromComp = sanitize str { replaces [ key, value ] }
-       Expect.equal actualFromComp expected "sanitize replaces should be same as string.replace via composition"
-       let actualFromExtension = str.Replaces (dict [ key, value ])
-       Expect.equal actualFromExtension expected "sanitize replaces should be same as string.replace via extension"
+       Expect.equal (sanitize str { replaces [ key, value ] }) expected "sanitize replaces should be same as string.replace via composition"
+       Expect.equal (str.Replaces (dict [ key, value ])) expected "sanitize replaces should be same as string.replace via extension"
 
      testProperty "ascii" <| fun (PositiveInt x) ->
        let input = sprintf "%i👍" x
@@ -131,39 +129,53 @@ module Gen =
      testProperty "header" <| fun (NonNull str) (NonEmptyString value) ->
        let result = sanitize str { header value }
        Expect.isTrue (result.StartsWith value) "sanitize header with value should always start with value"
+       Expect.isTrue (str.Header(value).StartsWith(value)) "sanitize csharp header with value should always start with value" 
 
      testProperty "trailer" <| fun (NonNull str) (NonEmptyString value) ->
-       let result = sanitize str { trailer value }
-       Expect.stringEnds result value "sanitize trailer with value should always ends with value"
+       let gstr = Gen.oneof [ Gen.constant str; Gen.constant (str + value) ]
+       withGen gstr <| fun str ->
+         let result = sanitize str { trailer value }
+         Expect.stringEnds result value "sanitize fsharp trailer with value should always end with value"
+         Expect.stringEnds (str.Trailer(value)) value "sanitize csharp trailer with value should always end with value"
 
      testProperty "european" <| fun (NonNull str) ->
        let allowed = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÁáĂăÂâÅåÄäǞǟÃãĄąĀāÆæĆćĈĉĊċÇçĎďḐḑĐđÐðÉéÊêĚěËëĖėĘęĒēĞğĜĝĠġĢģĤĥĦħİıÍíÌìÎîÏïĨĩĮįĪīĲĳĴĵĶķĹĺĻļŁłĿŀŃńŇňÑñŅņŊŋÓóÒòÔôÖöȪȫŐőÕõȮȯØøǪǫŌōỌọOEoeĸŘřŔŕŖŗſŚśŜŝŠšŞşṢṣȘșẞßŤťŢţȚțŦŧÚúÙùŬŭÛûŮůÜüŰűŨũŲųŪūŴŵÝýŶŷŸÿȲȳŹźŽžŻżÞþªº"
        let result = sanitize str { european }
-       Expect.all result allowed.Contains "european sanitize should only contain european characters"
-   
+       Expect.all result allowed.Contains "european fsharp sanitize should only contain european characters"
+       Expect.all (str.European()) allowed.Contains "european csharp sanitize should only contain european characters"
+
      testProperty "removes = denylist" <| fun (NonNull str) (values : string array) ->
        withGen (Gen.subListOf ['a'..'z'] |> Gen.map (List.map string)) <| fun values ->
          sanitize str { removes values } = sanitize str { denylist values}
+         .&. (str.Removes(Array.ofList values) = str.DenyList(Array.ofList values))
    
      testProperty "regex replace" <| fun x (replacement : int) ->
        let g = 
          Gen.sequenceShuffle [ Gen.alphabet; Gen.constant x; Gen.constant (string replacement) ]
          |> Gen.map String.reduce
        withGen g <| fun str ->
-         sanitize str { regex_replace "[a-zA-Z]+" (string replacement) }
-         |> String.containsNone String.alphabet
+         let pattern = "[a-zA-Z]+"
+         sanitize str { regex_replace pattern (string replacement) } |> String.containsNone String.alphabet
+         .&. (str.RegexReplace(pattern, string replacement) |> String.containsNone String.alphabet)
 
      testProperty "remove spaces" <| fun (NonNull str) ->
-       sanitize str { remove_spaces } |> String.forall ((<>) ' ')
-   
+       let containsNoSpaces = String.forall ((<>) ' ')
+       sanitize str { remove_spaces } |> containsNoSpaces
+       .&. (str.RemoveSpaces() |> containsNoSpaces)
+
      testProperty "remove ws" <| fun (NonNull str) ->
        sanitize str { remove_ws } |> String.containsNone String.blanks
+       .&. (str.RemoveWhitespace() |> String.containsNone String.blanks)
 
      testProperty "escape" <| fun (NonNull str) ->
-       sanitize str { escape } |> String.containsNone [ "\""; "\'"; "<"; ">"; "/"; "\\"; "`" ]
+       let containsNoUnescapedChars = String.containsNone [ "\""; "\'"; "<"; ">"; "/"; "\\"; "`" ]
+       sanitize str { escape } |> containsNoUnescapedChars
+       .&. (str.Escape() |> containsNoUnescapedChars)
    
      testProperty "unescape" <| fun (NonNull str) ->
-       sanitize str { unescape } |> String.containsNone [ "&quot;"; "&#x27;"; "&lt;"; "&gt;"; "&#x2F;"; "&#x5C;"; "&#96;" ]
+       let containsNoEscapedChars = String.containsNone [ "&quot;"; "&#x27;"; "&lt;"; "&gt;"; "&#x2F;"; "&#x5C;"; "&#96;" ]
+       sanitize str { unescape } |> containsNoEscapedChars
+       .&. (str.Unescape() |> containsNoEscapedChars)
 
      testProperty "ltrim" <| fun (NonNull str) ch ->
        let result = sanitize str { ltrim [ ch ] }
@@ -180,11 +192,13 @@ module Gen =
 
      testProperty "trim ws" <| fun (NonEmptyString str) ->
        let result = sanitize str { trim_ws }
-       Seq.tryHead result |> Option.map (string >> String.containsNone String.blanks) |> Option.defaultValue true |@ "head"
-       .&. (Seq.tryLast result |> Option.map (string >> String.containsNone String.blanks) |> Option.defaultValue true |@ "last")
+       let containsNoBlanks = 
+         Option.map (string >> String.containsNone String.blanks) >> Option.defaultValue true
+       
+       Seq.tryHead result |> containsNoBlanks |@ "head"
+       .&. (Seq.tryLast result |> containsNoBlanks |@ "last")
    
-     testProperty "max" <| fun (NonNull str) ->
-       let genLength = Gen.choose (String.length str, Int32.MaxValue)
-       withGen genLength <| fun l ->
-         sanitize str { max l } |> String.length <= l
+     testProperty "max" <| fun (NonNull str) (PositiveInt l) ->
+       sanitize str { max l } |> String.length <= l
+       .&. (str.Max(l).Length <= l)
    ]

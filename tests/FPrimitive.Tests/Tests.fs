@@ -11,6 +11,8 @@ open FPrimitive
 open Microsoft.FSharp.Reflection
 open Fare
 
+#nowarn "0059"
+
 [<AutoOpen>]
 module Extensions =
   let (<=>) x y = x = y |@ (sprintf "%A = %A" x y)
@@ -19,8 +21,6 @@ module Extensions =
       match FSharpType.GetUnionCases typeof<'a> |> Array.filter (fun case -> case.Name = s) with
       |[|case|] -> Some(FSharpValue.MakeUnion(case,[||]) :?> 'a)
       |_ -> None
-
-
 
 [<AutoOpen>]
 module Tests =

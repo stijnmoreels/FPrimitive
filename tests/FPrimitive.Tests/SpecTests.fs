@@ -7,6 +7,9 @@ open FsCheck
 open System
 open Microsoft.FSharp.Core
 
+#nowarn "0059"
+#nowarn "1001"
+
 type Direction = Left = 1 | Right = 2 | Forward = 4 | Backward = 8
 
 let toProp = function
