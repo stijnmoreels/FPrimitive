@@ -1,12 +1,11 @@
+[![NuGet Badge](https://buildstats.info/nuget/fprimitive)](https://www.nuget.org/packages/fprimitive)
+[![codecov](https://codecov.io/gh/stijnmoreels/FPrimitive/branch/main/graph/badge.svg?token=QQ1FKUU3HP)](https://codecov.io/gh/stijnmoreels/FPrimitive)
+
 # FPrimitive
 
 FPrimitive is a .NET project to help developers build a correct and more secure domain model by providing building blocks, standard types and trust boundaries.
 
 <img src="/docs/img/logo.png" width=100 height=100 alt="logo" />
-
-## NuGet
-
-[![NuGet Badge](https://buildstats.info/nuget/fprimitive)](https://www.nuget.org/packages/fprimitive)
 
 ## Build Status
 
