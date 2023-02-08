@@ -12,6 +12,8 @@ open Microsoft.Extensions.Logging
 open Microsoft.Extensions.Logging.Abstractions
 open Microsoft.FSharp.Core
 
+#nowarn "0044"
+
 /// Representation on how the model should be validated.
 type CascadeMode = 
   /// Continue even when a validation requirement failed.
@@ -1176,6 +1178,16 @@ type ValidationResult<'T> (result : Result<'T, ErrorsByTag>) =
   /// <summary>
   /// Initializes a new instance of the <see cref="ValidationResult"/> class with a faulted validation errors.
   /// </summary>
+  /// <param name="details">The error descriptions of the faulted validation result.</param>
+  /// <exception cref="ArgumentException">Thrown when the <paramref name="details"/> doesn't contain any validation errors.</exception>
+  new (details : IReadOnlyDictionary<string, string array>) =
+    if isNull details then nullArg "details"
+    if Seq.isEmpty details then invalidArg "details" "Requires at least a single validation error"
+    let details = Map.ofReadOnlyDict details |> Map.mapv List.ofArray |> Map.toSeq
+    ValidationResult<'T> (Error <| ErrorsByTag details)
+  /// <summary>
+  /// Initializes a new instance of the <see cref="ValidationResult"/> class with a faulted validation errors.
+  /// </summary>
   /// <param name="errors">The error descriptions of the faulted validation result.</param>
   /// <exception cref="ArgumentException">Thrown when the <paramref name="errors"/> doesn't contain any validation errors.</exception>
   new (errors : string seq) = 
@@ -1270,18 +1282,21 @@ type ValidationResult private () =
     ( (validation1 : ValidationResult<'TFirst>), 
       (validation2 : ValidationResult<'TSecond>), 
       (resultSelector : Func<_, _, 'TResult>) ) =
-    if validation1.IsValid && validation2.IsValid
-    then ValidationResult<'TResult> (value=resultSelector.Invoke (validation1.Value, validation2.Value))
-    else ValidationResult<'TResult> (validation1.Details, validation2.Details)
+    let f = (Ok (fun x y -> resultSelector.Invoke (x, y)))
+    let result1 = validation1.Result
+    let result2 = validation2.Result
+    ValidationResult<_> (result=Result.applyMap (Result.applyMap f result1) result2)
   /// Combines validation results into a new validation result.
   static member Combine<'TFirst, 'TSecond, 'TThird, 'TResult>
     ( (validation1 : ValidationResult<'TFirst>),
       (validation2 : ValidationResult<'TSecond>),
       (validation3 : ValidationResult<'TThird>),
       (resultSelector : Func<'TFirst, 'TSecond, 'TThird, 'TResult>) ) =
-    if validation1.IsValid && validation2.IsValid && validation3.IsValid
-    then ValidationResult<'TResult> (value=resultSelector.Invoke (validation1.Value, validation2.Value, validation3.Value))
-    else ValidationResult<'TResult> (validation1.Details, validation2.Details, validation3.Details)
+    let f = (Ok (fun x y z -> resultSelector.Invoke (x, y, z)))
+    let result1 = validation1.Result
+    let result2 = validation2.Result
+    let result3 = validation3.Result
+    ValidationResult<_> (result=Result.applyMap (Result.applyMap (Result.applyMap f result1) result2) result3)
   /// Combines validation results into a new validation result.
   static member Combine<'TFirst, 'TSecond, 'TThird, 'TFourth, 'TResult>
     ( (validation1 : ValidationResult<'TFirst>),
@@ -1289,12 +1304,15 @@ type ValidationResult private () =
       (validation3 : ValidationResult<'TThird>),
       (validation4 : ValidationResult<'TFourth>),
       (resultSelector : Func<'TFirst, 'TSecond, 'TThird, 'TFourth, 'TResult>) ) =
-    if validation1.IsValid && validation2.IsValid && validation3.IsValid && validation4.IsValid
-    then ValidationResult<'TResult> (value=resultSelector.Invoke (validation1.Value, validation2.Value, validation3.Value, validation4.Value))
-    else ValidationResult<'TResult> (validation1.Details, validation2.Details, validation3.Details, validation4.Details)
+    let f = (Ok (fun a b c d -> resultSelector.Invoke (a, b, c, d)))
+    let result1 = validation1.Result
+    let result2 = validation2.Result
+    let result3 = validation3.Result
+    let result4 = validation4.Result
+    ValidationResult<_> (result=Result.applyMap (Result.applyMap (Result.applyMap (Result.applyMap f result1) result2) result3) result4)
   /// Creates an validation error for a given tag and a message.
   static member Error<'T> (tag, message) =
-    ValidationResult<'T> (result = Spec.error tag message)
+    ValidationResult<'T> (result=Spec.error tag message)
 
 /// Representation of a domain specification that contains the validation for the model.
 [<ExcludeFromCodeCoverage>]

@@ -307,7 +307,7 @@ module SanitizeExporure =
 
 /// Sanitization operations on a string, filtering the untrusted user-input before any parsing, syntax, deserialization, or validation.
 [<Extension>]
-type SanitizeExtensions private () =
+type SanitizeExtensions =
   /// Safe sanitization extension to only run sanitization on a non-null string input.
   [<Extension>] 
   static member Sanitize (input : string, sanitization : Func<string, string>) = 
@@ -375,7 +375,6 @@ type SanitizeExtensions private () =
   [<Extension>]
   [<Obsolete("Use 'DenyList' instead for a more inclusive code base ♥")>]
   static member BlackList (input, [<ParamArray>] values : string array) = 
-    if isNull input then nullArg "input"
     if isNull values then nullArg "values"
     if Seq.exists isNull values then invalidArg "values" "cannot have a 'null' value in black list"
     Sanitize.denylist values input
@@ -383,7 +382,6 @@ type SanitizeExtensions private () =
   /// For example: `denylist ["foo"; "bar[0-9]+"] input`
   [<Extension>]
   static member DenyList (input, [<ParamArray>] values : string array) = 
-    if isNull input then nullArg "input"
     if isNull values then nullArg "values"
     if Seq.exists isNull values then invalidArg "values" "cannot have a 'null' value in black list"
     Sanitize.denylist values input
@@ -412,7 +410,6 @@ type SanitizeExtensions private () =
   /// A.k.a. `denylist`
   [<Extension>] 
   static member Removes (input, [<ParamArray>] values : string array) = 
-    if isNull values then nullArg "values"
     if Seq.exists isNull values then invalidArg "values" "cannot have a 'null' value in removal list"
     Sanitize.removes values input
   /// Removes all the spaces in the given input.
@@ -429,5 +426,3 @@ type SanitizeExtensions private () =
   [<Extension>] static member Header (input, value) = Sanitize.header value input
   /// Adds trailer if the input doesn't end with one.
   [<Extension>] static member Trailer (input, value) = Sanitize.trailer value input
-  /// Filters out only ASCII characters in the given input.
-  [<Extension>] static member Ascii (input) = Sanitize.ascii input

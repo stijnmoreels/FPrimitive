@@ -6,6 +6,8 @@ open FPrimitive.Tests
 open FsCheck
 open System
 open Microsoft.FSharp.Core
+open Microsoft.FSharp.Core.Result.Operators
+open System.Collections.Generic
 
 #nowarn "0059"
 #nowarn "1001"
@@ -320,6 +322,19 @@ let specTests =
             fun z -> z <> 0 ] "should match structure" }
         |> toProp
 
+    testProperty "structure w/ non-matching sequence length" <| fun msg ->
+      let gxs_plan = gen {
+        let! xs_length = Gen.choose (1, 10)
+        let! xs = Arb.generate<obj> |> Gen.listOfLength xs_length
+        let! glength = 
+          Gen.oneof [ 
+            Gen.choose (0, Seq.length xs - 1)
+            Gen.choose (Seq.length xs + 1, 20) ]
+        let! plan = Arb.generate<(obj -> bool)> |> Gen.listOfLength glength
+        return xs, plan }
+      withGen gxs_plan <| fun (xs, plan) ->
+        Expect.isError (specResult xs { structure plan msg }) "non-matching sequence length should always result in failure"
+
     testSpec "length" <| fun (xs : obj []) -> specResult xs { 
       length xs.Length "should have expected length" }
     
@@ -628,6 +643,13 @@ let specTests =
       |> Spec.add (fun (x, y, z) -> x < y && z <> null, "negative int should be less than positive int & non-empty string should not be 'null'")
       |> Spec.validate (x, y , z) |> toProp
 
+    testProperty "invarient priotize first failure" <| fun msg x ->
+      let spec1 = spec { verify (fun _ -> false) msg; cascade Continue }
+      let spec2 = spec { verify (fun _ -> false) msg; cascade FirstFailure }
+      let result = Spec.invariant spec1 spec2 |> Spec.validate x
+      let err = Expect.wantError result "should be error"
+      Expect.equal err.Values.Count 1 "first failure should always prioritize over contiue"
+
     testProperty "tags are made from strings starting with '@'" <| fun (PositiveInt x) ->
       Gen.subListOf [ yield! ['a'..'z']; yield! ['A'..'Z'] ]
       |> Gen.filter (fun xs -> xs.Length > 0)
@@ -685,6 +707,19 @@ let specTests =
         "spec model if via builder should result in same result as via regular composition from module"
   ]
 
+module Result =
+  let map2 fOk fError r1 r2 =
+    match r1, r2 with
+    | Error err1, Error err2 -> fError err1 err2 |> Error
+    | Error err1, Ok _ -> Error err1
+    | Ok _, Error err2 -> Error err2
+    | Ok x, Ok y -> fOk x y |> Ok
+
+
+  module Map =
+    let map2 fOk r1 r2 =
+      map2 fOk Map.append r1 r2
+
 [<Tests>]
 let specCSharpTests =
   testList "spec csharp" [
@@ -695,6 +730,39 @@ let specCSharpTests =
             .PreValidate(Func<_, _> (fun _ -> ValidationResult<_>.Failure (msg)))
             .Validate(x)
       Expect.isFalse result.IsValid "prevalidate on error should always result in error"
+
+    let gerrors =
+      Arb.generate<Map<Guid, NonEmptyArray<string>>> 
+      |> Gen.map (Map.toSeq >> Seq.map (fun (k, (NonEmptyArray v)) -> string k, List.ofArray v) >> ErrorsByTag >> Error)
+    let gok = Arb.generate<obj> |> Gen.map Ok
+    let gresult = Gen.oneof [ gok; gerrors ]
+
+    let valResult r = ValidationResult<_> (result=r)
+    let expectResult (actual : ValidationResult<_>) expected =
+      if actual.IsValid then actual.Value <=> (Expect.wantOk expected "final result should be OK")
+      else (Map.ofReadOnlyDict actual.Details |> Map.mapv List.ofArray <=> (Expect.wantError expected "final result should be Error"))
+
+    testProperty "validation result" <| fun () ->
+      withGen gresult <| fun result ->
+        expectResult (valResult result) result
+    
+    testProperty "validation result combine 2" <| fun () ->
+      withGen (Gen.two gresult) <| fun (result1, result2) ->
+        let actual = ValidationResult.Combine (valResult result1, valResult result2, Func<_, _, _> (fun x y -> x, y))
+        let expected = Result.applyMap (Result.applyMap (Ok <| fun x y -> x, y) result1) result2
+        expectResult actual expected
+    
+    testProperty "validation result combine 3" <| fun () ->
+      withGen (Gen.three gresult) <| fun (result1, result2, result3) ->
+        let actual = ValidationResult.Combine (valResult result1, valResult result2, valResult result3, Func<_, _, _, _> (fun x y z -> x, y, z))
+        let expected = Result.applyMap (Result.applyMap (Result.applyMap (Ok <| fun x y z -> x, y, z) result1) result2) result3
+        expectResult actual expected
+
+    testProperty "validation result combine 4" <| fun () ->
+      withGen (Gen.four gresult) <| fun (result1, result2, result3, result4) ->
+        let actual = ValidationResult.Combine (valResult result1, valResult result2, valResult result3, valResult result4, Func<_, _, _, _, _> (fun a b c d -> a, b, c, d))
+        let expected = Result.applyMap (Result.applyMap (Result.applyMap (Result.applyMap (Ok <| fun a b c d -> a, b, c, d) result1) result2) result3) result4
+        expectResult actual expected
   ]
 
 [<Tests>]

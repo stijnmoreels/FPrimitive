@@ -39,9 +39,14 @@ module Gen =
 [<Tests>]
  let sanitize_tests =
    testList "sanitize" [
+     testProperty "sanitize extension" <| fun (x : string) f ->
+       let actual = x.Sanitize (Func<_, _> f)
+       f x = actual .|. isNull actual
+
      testProperty "empty when null" <| fun x ->
        let actual = Sanitize.ofNull x
        Expect.isNotNull actual "can never be 'null'"
+       Expect.isNotNull (x.OfNull()) "can never be 'null' via csharp"
      
      testProperty "allow regex+match" <| fun (NonNull pre_noise) (PositiveInt x) (NonNull post_noise) ->
        (pre_noise <> string x && post_noise <> string x
@@ -97,8 +102,8 @@ module Gen =
 
      testProperty "ascii" <| fun (PositiveInt x) ->
        let input = sprintf "%i👍" x
-       let actual = sanitize input { ascii }
-       Expect.equal actual (string x) "should only get ASCII characters"
+       Expect.equal (sanitize input { ascii }) (string x) "should only get ASCII characters"
+       Expect.equal (input.ASCII()) (string x) "should only get ASCII characters via csharp"
      
      testProperty "all ascii chars allowed" <| fun () ->
        let input = Xeger("[\x00-\x7F]+").Generate()

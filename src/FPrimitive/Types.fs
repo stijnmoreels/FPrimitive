@@ -16,6 +16,7 @@ open System.Diagnostics.CodeAnalysis
 open System.Text.RegularExpressions
 
 #nowarn "1001"
+#nowarn "0044"
 
 /// Type alias for a result type with an exception as error.
 [<Obsolete("Remove unnecessary type in future rel")>]

@@ -51,3 +51,4 @@
 
 #### 3.2.2
 * Update `Sanitize` for a more inclusive code base ♥
+* Add sanitization composition expression
