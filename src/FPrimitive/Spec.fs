@@ -12,6 +12,8 @@ open Microsoft.Extensions.Logging
 open Microsoft.Extensions.Logging.Abstractions
 open Microsoft.FSharp.Core
 
+#nowarn "0044"
+
 /// Representation on how the model should be validated.
 type CascadeMode = 
   /// Continue even when a validation requirement failed.
@@ -42,6 +44,8 @@ type Spec<'T> =
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module Spec =
   /// Creates a specification with a name and logger.
+  [<ExcludeFromCodeCoverage>]
+  [<Obsolete("Removing logging capabilities in future releases")>]
   let create name logger = 
      { Tag = name
        Requirements = [] 
@@ -58,10 +62,12 @@ module Spec =
       Logger = NullLogger.Instance }
 
   /// Start defininig a specification for a type.
-  let def<'a> : Spec<'a> = tag "[without tag]"
+  let def<'a> : Spec<'a> = tag (typeof<'a>.Name)
 
   /// Starts defining a specification for a type, adding a logger while doing so.
-  let defl<'a> logger : Spec<'a> = create "[without tag]" logger
+  [<Obsolete("Removing logging capabilities in future release")>]
+  [<ExcludeFromCodeCoverage>]
+  let defl<'a> logger : Spec<'a> = create (typeof<'a>.Name) logger
 
   /// Creates an validation error from a tag and message.
   let error tag error = Error <| Map.create tag [error]
@@ -75,6 +81,8 @@ module Spec =
     { specification with Requirements = (fun x -> if predicate x then requirement x else true, "") :: specification.Requirements }
 
   /// Adds a logger to the specification.
+  [<Obsolete("Removing logging capabilities in future release")>]
+  [<ExcludeFromCodeCoverage>]
   let logger instance specification = { specification with Logger = instance }
 
   /// Adds a custom requirement to the specification.
@@ -594,9 +602,8 @@ module Spec =
 
   /// Validate the specified value to the domain specification, discarding the error messages.
   let validateOption value specification =
-    match validate value specification with
-    | Ok x -> Some x
-    | _ -> None
+    validate value specification
+    |> Result.toOption
 
   /// Create a domain model after the validation of the specifed value to the domain specification succeeds.
   let createModel f value specification =
@@ -755,6 +762,7 @@ module Spec =
       Logger = spec1.Logger }
 
 /// Computation expression builder for the domain specification `Spec<_>`.
+[<ExcludeFromCodeCoverage>]
 type SpecBuilder<'a, 'b> internal (validate : Spec<'a> -> 'b, ?start) =
   let start = Option.defaultValue Spec.def<'a> start
   /// Adds a custom requirement to the specification.
@@ -1109,10 +1117,12 @@ module SpecExposure =
   /// Computation builder to create an `Spec<_>` instance.
   let spec<'a> = new SpecBuilder<'a, Spec<'a>> (id)
   /// Computation builder to create a specification with a embedded logger.
+  [<Obsolete("Removing logging capabilities in future releases")>]
   let specLog<'a> logger = new SpecBuilder<'a, Spec<'a>> (id, Spec.defl<'a> logger)
   /// Computation builder to create a specification with a embedded model tag.
   let specTag<'a> tag = new SpecBuilder<'a, Spec<'a>> (id, Spec.tag tag)
   /// Computation builder to create a specification with a embedded model tag and logger.
+  [<Obsolete("Removing logging capabilities in future releases")>]
   let specWith<'a> tag logger = new SpecBuilder<'a, Spec<'a>> (id, Spec.create tag logger)
   /// Computation builder to build an `Spec<_>` instance that gets validated to a `Result<_, string list>` when runned.
   let specResult<'a> value = new SpecBuilder<'a, Result<'a, ErrorsByTag>> (Spec.validate value)
@@ -1132,6 +1142,7 @@ module SpecExposure =
   let specModelIf<'a, 'b> filter createModel value = new SpecBuilder<'a, Result<'b option, ErrorsByTag>> (Spec.createModelIf filter createModel value)
 
 /// Extra operations on the `Result<_, _>` type with `Map<_, _>` as error type.
+[<ExcludeFromCodeCoverage>]
 module Result =
   /// Lifts a two argument function to work with result types.
   let lift2Map f xResult yResult =
@@ -1146,8 +1157,6 @@ module Result =
   /// Transforms a sequence of results into a result of a sequence.
   let sequenceSeqMap m = traverseSeqMap id m
 
-module internal Map = let others xs = Map.create "other" xs
-
 /// Thrown when the value of a validation result is called on an invalid validation result.
 exception InvalidValidationResultException of string
 
@@ -1160,7 +1169,7 @@ exception InvalidValidationResultException of string
 [<CompilerMessage("Not designed for F#", 1001, IsHidden = true)>]
 [<DebuggerDisplay("{IsValid ? \"Success: \" + Value : \"Failure: \" + System.String.Join(\", \", Errors)}")>]
 [<ExcludeFromCodeCoverage>]
-type ValidationResult<'T> internal (result : Result<'T, ErrorsByTag>) =
+type ValidationResult<'T> (result : Result<'T, ErrorsByTag>) =
   /// <summary>
   /// Initializes a new instance of the <see cref="ValidationResult"/> class with a successful validation result.
   /// </summary>
@@ -1169,11 +1178,21 @@ type ValidationResult<'T> internal (result : Result<'T, ErrorsByTag>) =
   /// <summary>
   /// Initializes a new instance of the <see cref="ValidationResult"/> class with a faulted validation errors.
   /// </summary>
+  /// <param name="details">The error descriptions of the faulted validation result.</param>
+  /// <exception cref="ArgumentException">Thrown when the <paramref name="details"/> doesn't contain any validation errors.</exception>
+  new (details : IReadOnlyDictionary<string, string array>) =
+    if isNull details then nullArg "details"
+    if Seq.isEmpty details then invalidArg "details" "Requires at least a single validation error"
+    let details = Map.ofReadOnlyDict details |> Map.mapv List.ofArray |> Map.toSeq
+    ValidationResult<'T> (Error <| ErrorsByTag details)
+  /// <summary>
+  /// Initializes a new instance of the <see cref="ValidationResult"/> class with a faulted validation errors.
+  /// </summary>
   /// <param name="errors">The error descriptions of the faulted validation result.</param>
   /// <exception cref="ArgumentException">Thrown when the <paramref name="errors"/> doesn't contain any validation errors.</exception>
   new (errors : string seq) = 
     if Seq.isEmpty errors then invalidArg "errors" "Requires at least a single validation error"
-    ValidationResult<'T> (Error (Map.others (List.ofSeq errors)))
+    ValidationResult<'T> (Error (Map.create (typeof<'T>.Name) (List.ofSeq errors)))
   /// <summary>
   /// Initializes a new instance of the <see cref="ValidationResult"/> class with several faulted validation errors.
   /// </summary>
@@ -1181,7 +1200,7 @@ type ValidationResult<'T> internal (result : Result<'T, ErrorsByTag>) =
   /// <exception cref="ArgumentException">Thrown when the <paramref name="errors"/> doesn't contain any validation errors.</exception>
   internal new ([<ParamArray>] errors : string [] []) = 
     if Seq.isEmpty errors then invalidArg "errors" "Requires at least a single validation error"
-    ValidationResult<'T> (Error (Map.others (Array.concat errors |> List.ofArray)))
+    ValidationResult<'T> (Error (Map.create (typeof<'T>.Name) (Array.concat errors |> List.ofArray)))
   /// <summary>
   /// Initializes a new instance of the <see cref="ValidationResult"/> class with detailed faulted validation errors.
   /// </summary>
@@ -1203,8 +1222,10 @@ type ValidationResult<'T> internal (result : Result<'T, ErrorsByTag>) =
   /// Gets a value indicating whether the validation succeeded.
   member __.IsValid = Result.isOk result
   /// Gets the series of validation errors that describe to what domain requirements the validated value doesn't satisfy.
+  [<ExcludeFromCodeCoverage>]
   member __.Errors : string array = Result.either (fun _ -> Array.empty) (Map.values >> List.concat >> Array.ofList) result
   /// Gets the series of validation error details that describe what domain requirements for each validated property value doesn't satisfy.
+  [<ExcludeFromCodeCoverage>]
   member __.Details : IReadOnlyDictionary<string, string array> = Result.either (fun _ -> readOnlyDict []) (Map.mapv Array.ofList >> Map.toReadOnlyDict) result
 
   /// Creates a successful validation result with a specified value.
@@ -1216,9 +1237,6 @@ type ValidationResult<'T> internal (result : Result<'T, ErrorsByTag>) =
   /// <exception cref="ArgumentException">Thrown when the <paramref name="errors"/> doesn't contain any validation errors.</exception>
   static member Failure ([<ParamArray>] errors : string []) = ValidationResult<'T> (errors = errors)
 
-  static member op_Implicit (result : Result<'T, string list>) = 
-    ValidationResult<'T> (Result.mapError Map.others result)
-
   static member op_Implicit (result : Result<'T, ErrorsByTag>) =
     ValidationResult<'T> (result)
   
@@ -1228,7 +1246,7 @@ type ValidationResult<'T> internal (result : Result<'T, ErrorsByTag>) =
     |> Outcome.OfFSharpResult
   
   static member op_Implicit (outcome : Outcome<'T, string array>) = 
-    let result = Outcome.ToFSharpResult outcome |> Result.mapError (List.ofArray >> Map.others)
+    let result = Outcome.ToFSharpResult outcome |> Result.mapError (List.ofArray >> Map.create (typeof<'T>.Name))
     ValidationResult<'T> (result=result)
 
   static member op_Implicit (outcome : Outcome<'T, IDictionary<string, string array>>) = 
@@ -1264,18 +1282,21 @@ type ValidationResult private () =
     ( (validation1 : ValidationResult<'TFirst>), 
       (validation2 : ValidationResult<'TSecond>), 
       (resultSelector : Func<_, _, 'TResult>) ) =
-    if validation1.IsValid && validation2.IsValid
-    then ValidationResult<'TResult> (value=resultSelector.Invoke (validation1.Value, validation2.Value))
-    else ValidationResult<'TResult> (validation1.Details, validation2.Details)
+    let f = (Ok (fun x y -> resultSelector.Invoke (x, y)))
+    let result1 = validation1.Result
+    let result2 = validation2.Result
+    ValidationResult<_> (result=Result.applyMap (Result.applyMap f result1) result2)
   /// Combines validation results into a new validation result.
   static member Combine<'TFirst, 'TSecond, 'TThird, 'TResult>
     ( (validation1 : ValidationResult<'TFirst>),
       (validation2 : ValidationResult<'TSecond>),
       (validation3 : ValidationResult<'TThird>),
       (resultSelector : Func<'TFirst, 'TSecond, 'TThird, 'TResult>) ) =
-    if validation1.IsValid && validation2.IsValid && validation3.IsValid
-    then ValidationResult<'TResult> (value=resultSelector.Invoke (validation1.Value, validation2.Value, validation3.Value))
-    else ValidationResult<'TResult> (validation1.Details, validation2.Details, validation3.Details)
+    let f = (Ok (fun x y z -> resultSelector.Invoke (x, y, z)))
+    let result1 = validation1.Result
+    let result2 = validation2.Result
+    let result3 = validation3.Result
+    ValidationResult<_> (result=Result.applyMap (Result.applyMap (Result.applyMap f result1) result2) result3)
   /// Combines validation results into a new validation result.
   static member Combine<'TFirst, 'TSecond, 'TThird, 'TFourth, 'TResult>
     ( (validation1 : ValidationResult<'TFirst>),
@@ -1283,14 +1304,18 @@ type ValidationResult private () =
       (validation3 : ValidationResult<'TThird>),
       (validation4 : ValidationResult<'TFourth>),
       (resultSelector : Func<'TFirst, 'TSecond, 'TThird, 'TFourth, 'TResult>) ) =
-    if validation1.IsValid && validation2.IsValid && validation3.IsValid && validation4.IsValid
-    then ValidationResult<'TResult> (value=resultSelector.Invoke (validation1.Value, validation2.Value, validation3.Value, validation4.Value))
-    else ValidationResult<'TResult> (validation1.Details, validation2.Details, validation3.Details, validation4.Details)
+    let f = (Ok (fun a b c d -> resultSelector.Invoke (a, b, c, d)))
+    let result1 = validation1.Result
+    let result2 = validation2.Result
+    let result3 = validation3.Result
+    let result4 = validation4.Result
+    ValidationResult<_> (result=Result.applyMap (Result.applyMap (Result.applyMap (Result.applyMap f result1) result2) result3) result4)
   /// Creates an validation error for a given tag and a message.
   static member Error<'T> (tag, message) =
-    ValidationResult<'T> (result = Spec.error tag message)
+    ValidationResult<'T> (result=Spec.error tag message)
 
 /// Representation of a domain specification that contains the validation for the model.
+[<ExcludeFromCodeCoverage>]
 type Spec =
   /// Start defininig a specification for a type.
   static member Of<'T>() = Spec.def<'T>
@@ -1422,6 +1447,7 @@ exception ValidationFailureException of string
 /// Extensions on the `Spec<_>` type to use in C# context.
 [<Extension>]
 [<CompilerMessage("Not designed for F#", 1001, IsHidden = true)>]
+[<ExcludeFromCodeCoverage>]
 type SpecExtensions =
   /// <summary>
   /// Adds a custom requirement to the specification.
@@ -3669,7 +3695,7 @@ type SpecExtensions =
   /// <exception cref="ArgumentNullException">Thrown when the <paramref name="creator"/> or <paramref name="message"/> is <c>null</c>.</exception>
   /// <exception cref="ValidationFailureException">Thrown when the <paramref name="untrusted"/> is not valid according to the given <paramref name="specification"/></exception>
   [<Extension>]
-  static member CreateModelOrThrow (specification : Spec<'T>, untrusted, creator : Func<'T, 'TResult>, message) =
+  static member CreateModelOrThrow<'T, 'TResult> (specification : Spec<'T>, untrusted, creator : Func<'T, 'TResult>, message) =
     if isNull creator then nullArg "creator"
     if isNull message then nullArg "message"
     Spec.createModel creator.Invoke untrusted specification
@@ -3688,7 +3714,7 @@ type SpecExtensions =
   /// </param>
   /// <exception cref="ArgumentNullException">Thrown when the <paramref name="creator"/> is <c>null</c>.</exception>
   [<Extension>]
-  static member CreateModel (specification, untrusted, creator : Func<'T, 'TResult>) =
+  static member CreateModel<'T, 'TResult> (specification, untrusted, creator : Func<'T, 'TResult>) =
     if isNull creator then nullArg "creator"
     ValidationResult<'TResult> (
       result=Untrust.getWithResult (fun x -> Spec.createModel creator.Invoke x specification) untrusted)
@@ -3706,7 +3732,7 @@ type SpecExtensions =
   /// </param>
   /// <exception cref="ArgumentNullException">Thrown when the <paramref name="creator"/> is <c>null</c>.</exception>
   [<Extension>]
-  static member TryCreateModel (specification, untrusted, creator : Func<'T, 'TResult>, result : outref<'TResult>) =
+  static member TryCreateModel<'T, 'TResult> (specification, untrusted, creator : Func<'T, 'TResult>, result : outref<'TResult>) =
     if isNull creator then nullArg "creator"
     match Untrust.getWithResult (fun x -> Spec.createModel creator.Invoke x specification) untrusted with
     | Ok x -> result <- x; true
@@ -3724,7 +3750,7 @@ type SpecExtensions =
   /// <exception cref="ArgumentNullException">Thrown when the <paramref name="creator"/> or <paramref name="message"/> is <c>null</c>.</exception>
   /// <exception cref="ValidationFailureException">Thrown when the <paramref name="untrusted"/> is not valid according to the given <paramref name="specification"/></exception>
   [<Extension>]
-  static member CreateModelOrThrow (specification, untrusted, creator : Func<'T, 'TResult>, message) =
+  static member CreateModelOrThrow<'T, 'TResult> (specification, untrusted, creator : Func<'T, 'TResult>, message) =
     if isNull creator then nullArg "creator"
     if isNull message then nullArg "message"
     Untrust.getWithResult (fun x -> Spec.createModel creator.Invoke x specification) untrusted

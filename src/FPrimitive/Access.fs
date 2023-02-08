@@ -9,6 +9,7 @@ open Microsoft.FSharp.Core
 open System.Threading.Tasks
 open System.Collections.Generic
 open System.Security.Principal
+open System.Diagnostics.CodeAnalysis
 
 /// Represents an access-controlled function.
 type Access<'T, 'TResult> = 
@@ -219,6 +220,7 @@ module Access =
           else Error [ sprintf "access failure: user '%s' must be in role '%s' to access this resource" currentUser.Identity.Name roleName ] }
 
 /// Computation expression to control the access of functions.
+[<ExcludeFromCodeCoverage>]
 type AccessBuilder<'a, 'b> () =
   member __.Yield (_) = 
     { Revokable = None
@@ -326,6 +328,7 @@ type AccessResult<'T> internal (result : Result<'T, string list>) =
 
 /// Extensions on the `Access<_, _>` type to use in C# context.
 [<Extension>]
+[<ExcludeFromCodeCoverage>]
 type AccessExtensions () =
   /// Adds a requirement to the access-controlled function to only allow files with a certain extension.
   [<Extension>]
