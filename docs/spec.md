@@ -3,9 +3,9 @@
 The `FPrimitive` library contains a way to describe how domain models should look like by specifiying **specifications**.
 These specifications are a set of requirements that sets how a set of values should look like.
 
-> The return type is always a `Result<_, _>` where the `Error` is a `Map<_, _>` where the errors are grouped together (more on this later).
+> The return type is always a `Result<_, _>` where the `Error` is a `Map<_, _>` and the errors are grouped together (more on this later).
 
-For example, a model that only can contain positie numbers could be described as:
+For example, a model that only can contain positive numbers could be described as:
 
 ```fsharp
 type PositiveInt = 
@@ -15,7 +15,7 @@ type PositiveInt =
       else Error "integer should be greater than zero"
 ```
 
-When things start to get complicated, above approach can get really complicated and overly complex to maintain.
+When things start to get complicated, above approach can get really messy and overly complex to maintain.
 That's where this library can help with (following sample shows the same functionality implemented with the library).
 
 ```fsharp
@@ -45,7 +45,7 @@ Spec.Of<int>()
 ```
  
 Then, additional requirements can be added for that type. See the API reference of the `Spec` module for all the available built-in requirements.
-Each requirement will require an error message that all will be used when the validation fails.
+Each requirement will require an error message that will be used when the validation fails.
 
 ```fsharp
 // F#
@@ -66,7 +66,7 @@ Spec.Of<int>()
 
 ## Validate Your Specification
 
-When you want to validate an incoming value with your specification, there are several ways to do this:
+When you want to validate an incoming value with your specification, there are several ways to do it:
 
 ```fsharp
 // F#
@@ -179,7 +179,7 @@ let (x : Result<int option, _>) = specModel Some 5 {
   greaterThanOrEqualOf id 0 "should be greater than zero" }
 ```
 
-## Advanced Example
+## Advanced Examples
 
 Following sample shows how a ISBN13 book number can be expressed with specifications:
 
@@ -204,4 +204,40 @@ type ISBN13 =
         startsWith "987" "ISBN13 number should start with '987'"
         matches pattern (sprintf "ISBN13 number should match regular expression: %s" pattern)
         verify checksum "ISBN13 @checksum was invalid" }
+```
+
+And here is a sample `fsx` script for e-mail validation based on this [.NET documentation](https://learn.microsoft.com/en-us/dotnet/standard/base-types/how-to-verify-that-strings-are-in-valid-email-format#example):
+
+```fsharp
+#r "nuget: FPrimitive, 3.2.2"
+
+open FPrimitive
+
+type Email =
+    private
+    | Email of string
+
+    static member create x =
+        let pattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$"
+
+        specModel Email x {
+            tag "email"
+            notNullOrWhiteSpace "Email should not be blank!"
+            stringNotContains " " "E-mail should not contain empty spaces!"
+            matches pattern "Invalid e-mail!"
+        }
+
+// tests
+[ "test@microsoft.com"
+  "test@microsoft.com   "
+  "test@something@microsoft.com"
+  "123test.xyz@gmail.com"
+  ""
+  "hey.hello@123.abc.com" ]
+|> List.map (Email.create)
+|> List.iter (fun result ->
+
+    match result with
+    | Ok r -> printfn $"Ok result: {r}"
+    | Error r -> eprintfn $"Error result: {r}")
 ```
